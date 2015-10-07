@@ -1,6 +1,7 @@
 define(['src/util/api'], function (API) {
 
     function init(cookieName) {
+        if (API.getData(cookieName)) return;
         var options = {};
         try {
             options = JSON.parse(window.localStorage.getItem(cookieName)) || {};
