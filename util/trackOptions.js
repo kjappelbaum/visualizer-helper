@@ -1,4 +1,4 @@
-define(['src/util/api'], function ('API') {
+define(['src/util/api'], function (API) {
 
     function init(cookieName) {
         var options = {};
