@@ -8,11 +8,11 @@ define(['src/util/api'], function (API) {
             console.log(e);
         }
         ;
-        API.createData('options', options);
+        API.createData(cookieName, options);
 
         var data = require('src/util/versioning').getData();
         data.onChange(function (evt) {
-            if (evt.jpath.length == 1 && evt.jpath[0] == 'options') {
+            if (evt.jpath.length == 1 && evt.jpath[0] == cookieName) {
                 localStorage.setItem(cookieName, JSON.stringify(evt.target));
             }
         });
