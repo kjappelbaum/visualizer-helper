@@ -16,8 +16,8 @@ define(function () {
                 localStorage.setItem(cookieName, JSON.stringify(evt.target));
             }
         });
-
-        return init;
     }
+
+    return init;
 });
 
