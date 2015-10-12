@@ -7,11 +7,12 @@ require(['TrackOptions'], function(TrackOptions) {
 
 define(['src/util/api'], function (API) {
 
-    function track(cookieName) {
+    function track(cookieName, defaultValue) {
         if (API.getData(cookieName)) return;
         var options = {};
         try {
             options = JSON.parse(window.localStorage.getItem(cookieName)) || {};
+            if (defaultValue) $.extend(defaultValue, options);
         } catch (e) {
             console.log(e);
         }
