@@ -15,7 +15,10 @@ define(function () {
             "maxUnsaturation": 50,
             "useUnsaturation": false,
             "integerUnsaturation": false,
-            "massRange": 0.1
+            "massRange": 0.1,
+            "decimalsPPM":4,
+            "decimalsMass": 4,
+            "addExperimentalExtract":true
         }
     }
 });
