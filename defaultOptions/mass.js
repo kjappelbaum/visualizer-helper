@@ -1,0 +1,21 @@
+define(function () {
+    return {
+        "options": {
+            "minimalHeight": 0,
+            "widthTop": 0.1,
+            "widthBottom": 0.2,
+            "zone": {
+                "low": -0.5,
+                "high": 4.5
+            },
+            "maxResults": 200,
+            "bestOf": 0,
+            "minSimilarity": 50,
+            "minUnsaturation":-5,
+            "maxUnsaturation": 50,
+            "useUnsaturation": false,
+            "integerUnsaturation": false,
+            "massRange": 0.1
+        }
+    }
+});
