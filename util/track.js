@@ -12,7 +12,7 @@ define(['src/util/api'], function (API) {
         var options = {};
         try {
             options = JSON.parse(window.localStorage.getItem(cookieName)) || {};
-            if (defaultValue) $.extend(defaultValue, options);
+            if (defaultValue) options = $.extend(defaultValue, options);
         } catch (e) {
             console.log(e);
         }
