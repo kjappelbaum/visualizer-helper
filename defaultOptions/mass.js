@@ -8,7 +8,7 @@ define(function () {
                 "low": -0.5,
                 "high": 4.5
             },
-            "mfRange":"C0-30 H0-60 N0-5 O0-10 F0-3 Cl0-3",
+            "mfRange":"C0-100 H0-200 N0-10 O0-10 S0-5 F0-5 Cl0-5 Br0-5",
             "maxResults": 200,
             "bestOf": 0,
             "minSimilarity": 50,
