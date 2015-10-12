@@ -7,7 +7,7 @@ require(['TrackOptions'], function(TrackOptions) {
 
 define(['src/util/api'], function (API) {
 
-    function init(cookieName) {
+    function track(cookieName) {
         if (API.getData(cookieName)) return;
         var options = {};
         try {
@@ -26,6 +26,6 @@ define(['src/util/api'], function (API) {
         });
     }
 
-    return init;
+    return track;
 });
 
