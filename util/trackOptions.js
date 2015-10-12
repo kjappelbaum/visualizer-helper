@@ -1,3 +1,10 @@
+/*
+In the general preferences you should put something like:
+require(['TrackOptions'], function(TrackOptions) {
+    TrackOptions('massOptions');
+})
+*/
+
 define(['src/util/api'], function (API) {
 
     function init(cookieName) {
