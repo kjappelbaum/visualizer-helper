@@ -1,5 +1,11 @@
 define(function () {
     return {
+        "monoisotopicMass": 300.123,
+        "groups1":"(H+).(H+)2.(H+)3.K+.Na+",
+        "groups2":"",
+        "groups3":"",
+        "groups4":"",
+        "mfPattern":"Br2",
         "options": {
             "minimalHeight": 0,
             "widthTop": 0.1,
