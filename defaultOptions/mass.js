@@ -10,6 +10,7 @@ define(function () {
             "minimalHeight": 0,
             "widthTop": 0.1,
             "widthBottom": 0.2,
+            "widthFunction":"// var widthBottom = 0.01 + mass / 8000;\r\n// var widthTop = widthBottom / 2;",
             "zone": {
                 "low": -0.5,
                 "high": 4.5
