@@ -18,11 +18,17 @@ define([], function () {
         }
 
         exercises.onChange(function (evt) {
-            var target=evt.target.__parent;
-            if (target) {
-                myAnswers[target.id]=target.myResult;
-                window.localStorage.setItem(cookieName, JSON.stringify(myAnswers));
+            switch (evt.target.__name) {
+                case 'myResult':
+                    var target=evt.target.__parent;
+                    if (target) {
+                        myAnswers[target.id]=target.myResult;
+                    }
+                    break;
+                case 'exercises':
+                    myAnswers={};
             }
+            window.localStorage.setItem(cookieName, JSON.stringify(myAnswers));
         });
     }
     return watchAnswers;
