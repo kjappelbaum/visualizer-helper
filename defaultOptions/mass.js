@@ -6,7 +6,7 @@ define(function () {
         "groups3":"",
         "groups4":"",
         "groups5":"",
-        "sequence":"";
+        "sequence":"",
         "sequence2":"",
         "mfPattern":"Br2",
         "options": {
