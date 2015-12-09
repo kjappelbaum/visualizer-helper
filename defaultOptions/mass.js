@@ -5,8 +5,13 @@ define(function () {
         "groups2":"",
         "groups3":"",
         "groups4":"",
+        "groups5":"",
+        "sequence":"";
+        "sequence2":"",
         "mfPattern":"Br2",
         "options": {
+            "protonate": false,
+            "protonationPH": 0,
             "minimalHeight": 0,
             "widthTop": 0.1,
             "widthBottom": 0.2,
