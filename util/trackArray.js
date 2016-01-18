@@ -1,10 +1,3 @@
-/*
-In the general preferences you should put something like:
-require(['Track'], function(Track) {
-    Track('massOptions');
-})
-*/
-
 define(['src/util/api'], function (API) {
 
     function track(cookieName, defaultValue) {
@@ -14,19 +7,21 @@ define(['src/util/api'], function (API) {
             options = JSON.parse(window.localStorage.getItem(cookieName)) || [];
             if (defaultValue) options = $.extend(true, defaultValue, options);
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
         ;
         API.createData(cookieName, options);
 
+        
         var data = require('src/util/versioning').getData();
         data.onChange(function (evt) {
-            if (evt.jpath.length == 1 && evt.jpath[0] == cookieName) {
-                localStorage.setItem(cookieName, JSON.stringify(evt.target));
+            // If any part of the object changes, we resave the entire object
+            if (evt.jpath[0] == cookieName) {
+                var target = API.getData(cookieName);
+                localStorage.setItem(cookieName, JSON.stringify(target));
             }
         });
     }
 
     return track;
 });
-
