@@ -9,6 +9,24 @@ define(function () {
         "sequence":"",
         "sequence2":"",
         "mfPattern":"Br2",
+        "fragmentation": {
+            "a":false,
+            "b":false,
+            "c":true,
+            "x":false,
+            "y":false,
+            "z":true,
+            "i":false,
+            "ya":false,
+            "yb":false
+        },
+        "digestion": {
+            "enzyme":undefined,
+            "minMissed":undefined,
+            "maxMissed":undefined,
+            "minResidue":undefined,
+            "maxResidue":undefined
+        },
         "options": {
             "protonate": false,
             "protonationPH": 0,
