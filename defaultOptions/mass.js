@@ -18,7 +18,9 @@ define(function () {
             "z":true,
             "i":false,
             "ya":false,
-            "yb":false
+            "yb":false,
+            "minInternal":1,
+            "maxInternal":999
         },
         "digestion": {
             "enzyme":undefined,
