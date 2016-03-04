@@ -377,9 +377,7 @@ define([
         }
 
         function createOptions(options, type) {
-            if (options) {
-                var messages = Object.assign({}, defaultOptions.messages, messagesByType[type], options.messages);
-            }
+            var messages = Object.assign({}, defaultOptions.messages, messagesByType[type], options && options.messages);
             options = Object.assign({}, defaultOptions, options);
             if (messages) options.messages = messages;
             return options;
