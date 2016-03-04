@@ -142,9 +142,9 @@ define([
             }
 
             get(entry, options) {
+                options = createOptions(options, 'get');
                 return this.__ready.then(() => {
                     var uuid = getUuid(entry);
-                    options = createOptions(options, 'get');
                     if (options.fromCache) {
                         return this._findByUuid(uuid);
                     } else {
@@ -162,8 +162,8 @@ define([
             }
 
             getById(id, options) {
+                options = createOptions(options, 'get');
                 return this.__ready.then(() => {
-                    options = createOptions(options, 'get');
                     var entry = this._findById(id);
                     if (!entry || options.fromCache) {
                         return entry;
@@ -216,9 +216,9 @@ define([
             }
 
             deleteAttachment(entry, attachments, options) {
+                options = createOptions(options, 'deleteAttachment');
                 return this.__ready.then(() => {
                     var uuid = getUuid(entry);
-                    options = createOptions(options, 'deleteAttachment');
                     if (Array.isArray(attachments) && attachments.length === 0) return this.getAttachmentList(entry);
                     const cdb = this._getCdb(uuid);
                     return cdb.remove(attachments)
@@ -237,9 +237,9 @@ define([
             }
 
             getAttachment(entry, name, options) {
+                options = createOptions(options, 'getAttachment');
                 return this.__ready.then(() => {
                     const uuid = getUuid(entry);
-                    options = createOptions(options, 'getAttachment');
                     const cdb = this._getCdb(uuid);
                     return cdb.get(name);
                 });
@@ -254,9 +254,9 @@ define([
             }
 
             addAttachment(entry, attachments, options) {
+                options = createOptions(options, 'addAttachment');
                 return this.__ready.then(() => {
                     var uuid = getUuid(entry);
-                    options = createOptions(options, 'addAttachment');
                     const cdb = this._getCdb(uuid);
                     return cdb.inlineUploads(attachments)
                         .then(attachments => {
@@ -280,9 +280,9 @@ define([
 
 
             delete(entry, options) {
+                options = createOptions(options, 'delete');
                 return this.__ready.then(() => {
                         const uuid = getUuid(entry);
-                        options = createOptions(options, 'delete');
                         return superagent.del(`${this.entryUrl}/${uuid}`)
                             .withCredentials()
                             .end();
