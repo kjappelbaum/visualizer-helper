@@ -1,13 +1,13 @@
 'use strict';
 
 define([
-    'src/util/api',
-    'src/util/ui',
-    'superagent',
-    'uri/URI',
-    'lodash',
-    'src/util/couchdbAttachments'
-],
+        'src/util/api',
+        'src/util/ui',
+        'superagent',
+        'uri/URI',
+        'lodash',
+        'src/util/couchdbAttachments'
+    ],
     function (API, ui, superagent, URI, _, CDB) {
 
         const defaultOptions = {
@@ -57,14 +57,14 @@ define([
                                 API.createData(options.varName, res.body);
                             }
                         }
-                        return res;
+                        return res.body;
                     })
                     .then(handleSuccess(this, options))
                     .catch(handleError(this, options));
             }
 
             document(uuid, options) {
-                return this.getByUuid(uuid).then(doc => {
+                return this.get(uuid).then(doc => {
                     if (!doc) return;
                     if (options.varName) {
                         this.variables[options.varName] = {
@@ -77,9 +77,10 @@ define([
                 });
             }
 
-            getByUuid(uuid, options) {
-                options = createOptions(options);
+            get(entry, options) {
                 return this.__ready.then(() => {
+                    var uuid = getUuid(entry);
+                    options = createOptions(options);
                     if (options.fromCache) {
                         return this._findByUuid(uuid);
                     } else {
@@ -97,10 +98,147 @@ define([
             }
 
             getById(id, options) {
+                return this.__ready.then(() => {
+                    options = createOptions(options);
+                    var entry = this._findById(id);
+                    if (!entry || options.fromCache) {
+                        return entry;
+                    }
+                    return this.get(entry);
+                }).catch(handleError(this, options));
+            }
+
+            create(entry, options) {
+                options = createOptions(options);
+                return this.__ready
+                    .then(() => {
+                        return superagent.post(this.entryUrl)
+                            .withCredentials()
+                            .send(entry)
+                            .end();
+                    })
+                    .then(handleSuccess(this, options))
+                    .then(res => {
+                        if (res.body && (res.status == 200 || res.status == 201)) {
+                            return this.get(res.body.id);
+                        }
+                    })
+                    .then(entry => {
+                        if (!entry) return;
+                        for (var key in this.variables) {
+                            this.variables[key].data.push(_.cloneDeep(entry));
+                            this.variables[key].data.triggerChange();
+                        }
+                        return entry;
+                    }).catch(handleError(this, options));
+            }
+
+            update(entry, options) {
+                options = createOptions(options);
+                // Todo force
+                return this.__ready.then(() => {
+                        return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
+                            .withCredentials()
+                            .send(entry)
+                            .end();
+                    })
+                    .then(handleSuccess(this, options))
+                    .then(res => {
+                        if (res.body && res.status == 200) {
+                            entry._rev = res.body.rev;
+                            this._updateByUuid(entry._id, entry);
+                        }
+                        return res.body;
+                    }).catch(handleError(this, options));
+            }
+
+            removeAttachment(entry, attachments, options) {
+                return this.__ready.then(() => {
+                    var uuid = getUuid(entry);
+                    options = createOptions(options);
+                    if (Array.isArray(attachments) && attachments.length === 0) return this.getAttachmentList(entry);
+                    const cdb = this._getCdb(uuid);
+                    return cdb.remove(attachments)
+                        .then(attachments => {
+                            return this.get(uuid).then(data => {
+                                console.log('got doc', data);
+                                this._updateByUuid(uuid, data);
+                                return attachments;
+                            });
+                        });
+                }).catch(handleError(this, options));
+            }
+
+            getAttachment(entry, name) {
+                return this.__ready.then(() => {
+                    const uuid = getUuid(entry);
+                    const cdb = this._getCdb(uuid);
+                    return cdb.get(name);
+                });
+            }
+
+            getAttachmentList(entry) {
+                return this.__ready.then(() => {
+                    const uuid = getUuid(entry);
+                    const cdb = this._getCdb(uuid);
+                    return cdb.list();
+                });
+            }
+
+            addAttachment(entry, attachments, options) {
+                return this.__ready.then(() => {
+                    var uuid = getUuid(entry);
+                    options = createOptions(options);
+                    const cdb = this._getCdb(uuid);
+                    return cdb.inlineUploads(attachments)
+                        .then(attachments => {
+                            return this.get(uuid).then(data => {
+                                console.log('got doc add att', data);
+                                this._updateByUuid(uuid, data);
+                                return attachments;
+                            });
+                        });
+                }).catch(handleError(this, options));
+            }
+
+            addAttachmentById(id, attachment, options) {
                 options = createOptions(options);
                 return this.__ready.then(() => {
-                    return this._findById(id);
+                    var doc = this._findById(id);
+                    if (!doc) return;
+                    return this.addAttachment(doc._id, attachment);
                 }).catch(handleError(this, options));
+            }
+
+
+            delete(entry, options) {
+                return this.__ready.then(() => {
+                        const uuid = getUuid(entry);
+                        options = createOptions(options);
+                        return superagent.del(`${this.entryUrl}/${uuid}`)
+                            .withCredentials()
+                            .end();
+                    })
+                    .then(handleSuccess(this, options))
+                    .then(res => {
+                        if (res.body && res.status == 200) {
+                            for (let key in this.variables) {
+                                const idx = this._findIndexByUuid(uuid, key);
+                                if (idx !== -1) {
+                                    this.variables[key].data.splice(idx, 1);
+                                    this.variables[key].data.triggerChange();
+                                }
+                            }
+
+                        }
+                        return res.body;
+                    }).catch(handleError(this, options));
+            }
+
+            // Private
+            _getCdb(uuid) {
+                const docUrl = `${this.entryUrl}/${String(uuid)}`;
+                return new CDB(docUrl);
             }
 
             _findByUuid(uuid, key) {
@@ -164,124 +302,6 @@ define([
                 }
 
             }
-
-            create(toSave, options) {
-                options = createOptions(options);
-                return this.__ready
-                    .then(() => {
-                        return superagent.post(this.entryUrl)
-                            .withCredentials()
-                            .send(toSave)
-                            .end();
-                    })
-                    .then(handleSuccess(this, options))
-                    .then(res => {
-                        if (res.body && (res.status == 200 || res.status == 201)) {
-                            return this.getByUuid(res.body.id);
-                        }
-                    })
-                    .then(entry => {
-                        if (!entry) return;
-                        for (var key in this.variables) {
-                            this.variables[key].data.push(_.cloneDeep(entry));
-                            this.variables[key].data.triggerChange();
-                        }
-                    }).catch(handleError(this, options));
-            }
-
-            update(entry, options) {
-                options = createOptions(options);
-                // Todo force
-                return this.__ready.then(() => {
-                    return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
-                            .withCredentials()
-                            .send(entry)
-                            .end();
-                })
-                    .then(handleSuccess(this, options))
-                    .then(res => {
-                        if (res.body && res.status == 200) {
-                            entry._rev = res.body.rev;
-                            this._updateByUuid(entry._id, entry);
-                        }
-                        return res.body;
-                    }).catch(handleError(this, options));
-            }
-
-            _getCdb(uuid) {
-                const docUrl = `${this.entryUrl}/${String(uuid)}`;
-                return new CDB(docUrl);
-            }
-
-            removeAttachmentsByUuid(uuid, attachments, options) {
-                options = createOptions(options);
-                if (Array.isArray(attachments) && attachments.length === 0) return [];
-                return this.__ready.then(() => {
-                    const cdb = this._getCdb(uuid);
-                    return cdb.remove(attachments)
-                        .then(attachments => {
-                            return this.getByUuid(uuid).then(data => {
-                                console.log('got doc', data);
-                                this._updateByUuid(uuid, data);
-                                return attachments;
-                            });
-                        });
-                }).catch(handleError(this, options));
-            }
-
-            addAttachmentsByUuid(uuid, attachments, options) {
-                options = createOptions(options);
-                return this.__ready.then(() => {
-                    const cdb = this._getCdb(uuid);
-                    return cdb.inlineUploads(attachments)
-                        .then(attachments => {
-                            return this.getByUuid(uuid).then(data => {
-                                console.log('got doc add att', data);
-                                this._updateByUuid(uuid, data);
-                                return attachments;
-                            });
-                        });
-                }).catch(handleError(this, options));
-            }
-
-            addAttachmentsById(id, attachment, options) {
-                options = createOptions(options);
-                return this.__ready.then(() => {
-                    var doc = this._findById(id);
-                    if (!doc) return;
-                    return this.addAttachmentsByUuid(doc._id, attachment);
-                }).catch(handleError(this, options));
-            }
-
-
-            removeByUuid(uuid, options) {
-                options = createOptions(options);
-                uuid = String(uuid);
-                if (options.force) {
-                    var prom = Promise.resolve();
-                } else {
-                    prom = this.__ready;
-                }
-                return prom.then(() => {
-                    return superagent.del(`${this.entryUrl}/${uuid}`)
-                            .withCredentials()
-                            .end();
-                })
-                    .then(handleSuccess(this, options))
-                    .then(res => {
-                        if (res.body && res.status == 200) {
-                            for (let key in this.variables) {
-                                const idx = this._findIndexByUuid(uuid, key);
-                                if (idx !== -1) {
-                                    this.variables[key].data.splice(idx, 1);
-                                    this.variables[key].data.triggerChange();
-                                }
-                            }
-
-                        }
-                        return res;
-                    }).catch(handleError(this, options));
-            }
         }
 
         function createOptions(options) {
@@ -328,6 +348,19 @@ define([
                     ui.showNotification(message, 'error');
                 }
             }
+        }
+
+        function getUuid(entry) {
+            var uuid;
+            var type = DataObject.getType(entry);
+            if (type === 'string') {
+                uuid = entry;
+            } else if (type === 'object') {
+                uuid = entry._id;
+            } else {
+                throw new Error('Bad arguments');
+            }
+            return String(uuid);
         }
 
         return Roc;
