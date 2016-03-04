@@ -11,8 +11,64 @@ define([
     function (API, ui, superagent, URI, _, CDB) {
 
         const defaultOptions = {
-            messages: {}
+            messages: {
+                200: 'OK',
+                201: 'Created',
+                202: 'Accepted',
+                204: 'No content',
+                400: 'Bad request',
+                401: 'Unauthorized',
+                409: 'Conflict',
+                403: 'Forbidden',
+                408: 'Request timeout',
+                500: 'Internal server error',
+                502: 'Bad gateway'
+            }
         };
+
+        const getTypes = ['get', 'getAttachment', 'getView'];
+
+        const messagesByType = {
+            get: {
+                401: 'Unauthorized to get entry'
+            },
+            create: {
+                200: 'Entry created',
+                201: 'Entry created',
+                401: 'Unauthorized to create entry'
+            },
+            update: {
+                200: 'Entry updated',
+                401: 'Unauthorized to update entry'
+            },
+            delete: {
+                200: 'Entry deleted',
+                401: 'Unauthorized to delete entry'
+            },
+            addAttachment: {
+                200: 'Added attachment',
+                401: 'Unauthorized to add attachment'
+            },
+            deleteAttachment: {
+                200: 'Attachment deleted',
+                401: 'Unauthorized to delete attachment'
+            },
+            getAttachment: {
+                401: 'Unauthorized to get attachment'
+            },
+            getView: {
+                401: 'Unauthorized to get view'
+            }
+        };
+
+        for(let key in defaultOptions.messages) {
+            // For get requests default is not to show any messages
+            if(key < '300') {
+                for(let i=0; i<getTypes.length; i++) {
+                    messagesByType[getTypes[i]][key] = '';
+                }
+            }
+        }
 
         const viewSearch = ['key', 'startkey', 'endkey'];
         const mandatoryOptions = ['url', 'database'];
@@ -20,13 +76,13 @@ define([
         class Roc {
             constructor(opts) {
                 for (var key in opts) {
-                    if(opts.hasOwnProperty(key)) {
+                    if (opts.hasOwnProperty(key)) {
                         this[key] = opts[key];
                     }
                 }
 
-                for (let i=0; i<mandatoryOptions.length; i++) {
-                    if(!this[mandatoryOptions[i]]) {
+                for (let i = 0; i < mandatoryOptions.length; i++) {
+                    if (!this[mandatoryOptions[i]]) {
                         throw new Error(`${mandatoryOptions[i]} is a mandatory option`);
                     }
                 }
@@ -41,7 +97,7 @@ define([
             }
 
             view(viewName, options) {
-                options = createOptions(options);
+                options = createOptions(options, 'getView');
                 let requestUrl = new URI(`${this.databaseUrl}_view/${viewName}`);
 
                 for (let i = 0; i < viewSearch.length; i++) {
@@ -88,7 +144,7 @@ define([
             get(entry, options) {
                 return this.__ready.then(() => {
                     var uuid = getUuid(entry);
-                    options = createOptions(options);
+                    options = createOptions(options, 'get');
                     if (options.fromCache) {
                         return this._findByUuid(uuid);
                     } else {
@@ -107,7 +163,7 @@ define([
 
             getById(id, options) {
                 return this.__ready.then(() => {
-                    options = createOptions(options);
+                    options = createOptions(options, 'get');
                     var entry = this._findById(id);
                     if (!entry || options.fromCache) {
                         return entry;
@@ -117,7 +173,7 @@ define([
             }
 
             create(entry, options) {
-                options = createOptions(options);
+                options = createOptions(options, 'create');
                 return this.__ready
                     .then(() => {
                         return superagent.post(this.entryUrl)
@@ -142,8 +198,7 @@ define([
             }
 
             update(entry, options) {
-                options = createOptions(options);
-                // Todo force
+                options = createOptions(options, 'update');
                 return this.__ready.then(() => {
                         return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
                             .withCredentials()
@@ -160,10 +215,10 @@ define([
                     }).catch(handleError(this, options));
             }
 
-            removeAttachment(entry, attachments, options) {
+            deleteAttachment(entry, attachments, options) {
                 return this.__ready.then(() => {
                     var uuid = getUuid(entry);
-                    options = createOptions(options);
+                    options = createOptions(options, 'deleteAttachment');
                     if (Array.isArray(attachments) && attachments.length === 0) return this.getAttachmentList(entry);
                     const cdb = this._getCdb(uuid);
                     return cdb.remove(attachments)
@@ -177,9 +232,14 @@ define([
                 }).catch(handleError(this, options));
             }
 
-            getAttachment(entry, name) {
+            removeAttachment(entry, attachments, options) {
+                return this.deleteAttachment(entry, attachments, options);
+            }
+
+            getAttachment(entry, name, options) {
                 return this.__ready.then(() => {
                     const uuid = getUuid(entry);
+                    options = createOptions(options, 'getAttachment');
                     const cdb = this._getCdb(uuid);
                     return cdb.get(name);
                 });
@@ -196,7 +256,7 @@ define([
             addAttachment(entry, attachments, options) {
                 return this.__ready.then(() => {
                     var uuid = getUuid(entry);
-                    options = createOptions(options);
+                    options = createOptions(options, 'addAttachment');
                     const cdb = this._getCdb(uuid);
                     return cdb.inlineUploads(attachments)
                         .then(attachments => {
@@ -210,7 +270,7 @@ define([
             }
 
             addAttachmentById(id, attachment, options) {
-                options = createOptions(options);
+                options = createOptions(options, 'addAttachment');
                 return this.__ready.then(() => {
                     var doc = this._findById(id);
                     if (!doc) return;
@@ -222,7 +282,7 @@ define([
             delete(entry, options) {
                 return this.__ready.then(() => {
                         const uuid = getUuid(entry);
-                        options = createOptions(options);
+                        options = createOptions(options, 'delete');
                         return superagent.del(`${this.entryUrl}/${uuid}`)
                             .withCredentials()
                             .end();
@@ -316,9 +376,9 @@ define([
             }
         }
 
-        function createOptions(options) {
+        function createOptions(options, type) {
             if (options && options.message) {
-                var messages = Object.assign({}, defaultOptions.message, options.messages);
+                var messages = Object.assign({}, defaultOptions.messages, messagesByType[type], options.messages);
             }
             options = Object.assign({}, defaultOptions, options);
             if (messages) options.messages = messages;
@@ -345,20 +405,16 @@ define([
         }
 
         function handleSuperagentSuccess(data, ctx, options) {
-            if (ctx.showNotifications) {
-                const message = options.messages[data.status] || ctx.messages[data.status];
-                if (message) {
-                    ui.showNotification(message, 'success');
-                }
+            const message = options.messages[data.status] || ctx.messages[data.status];
+            if (message && !options.disableNotification) {
+                ui.showNotification(message, 'success');
             }
         }
 
         function handleSuperagentError(err, ctx, options) {
-            if (ctx.showNotifications) {
-                const message = options.messages[err.status] || ctx.messages[err.status];
-                if (message) {
-                    ui.showNotification(message, 'error');
-                }
+            const message = options.messages[err.status] || ctx.messages[err.status];
+            if (message && !options.disableNotification) {
+                ui.showNotification(message, 'error');
             }
         }
 
