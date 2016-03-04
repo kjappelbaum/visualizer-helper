@@ -61,10 +61,10 @@ define([
             }
         };
 
-        for(let key in defaultOptions.messages) {
+        for (let key in defaultOptions.messages) {
             // For get requests default is not to show any messages
-            if(key < '300') {
-                for(let i=0; i<getTypes.length; i++) {
+            if (key < '300') {
+                for (let i = 0; i < getTypes.length; i++) {
                     messagesByType[getTypes[i]][key] = '';
                 }
             }
@@ -142,9 +142,9 @@ define([
             }
 
             get(entry, options) {
-                options = createOptions(options, 'get');
                 return this.__ready.then(() => {
                     var uuid = getUuid(entry);
+                    options = createOptions(options, 'get');
                     if (options.fromCache) {
                         return this._findByUuid(uuid);
                     } else {
@@ -162,8 +162,8 @@ define([
             }
 
             getById(id, options) {
-                options = createOptions(options, 'get');
                 return this.__ready.then(() => {
+                    options = createOptions(options, 'get');
                     var entry = this._findById(id);
                     if (!entry || options.fromCache) {
                         return entry;
@@ -173,52 +173,52 @@ define([
             }
 
             create(entry, options) {
-                options = createOptions(options, 'create');
                 return this.__ready
                     .then(() => {
+                        options = createOptions(options, 'create');
                         return superagent.post(this.entryUrl)
                             .withCredentials()
                             .send(entry)
-                            .end();
+                            .then(handleSuccess(this, options))
+                            .then(res => {
+                                if (res.body && (res.status == 200 || res.status == 201)) {
+                                    return this.get(res.body.id);
+                                }
+                            })
+                            .then(entry => {
+                                if (!entry) return;
+                                for (var key in this.variables) {
+                                    this.variables[key].data.push(_.cloneDeep(entry));
+                                    this.variables[key].data.triggerChange();
+                                }
+                                return entry;
+                            });
                     })
-                    .then(handleSuccess(this, options))
-                    .then(res => {
-                        if (res.body && (res.status == 200 || res.status == 201)) {
-                            return this.get(res.body.id);
-                        }
-                    })
-                    .then(entry => {
-                        if (!entry) return;
-                        for (var key in this.variables) {
-                            this.variables[key].data.push(_.cloneDeep(entry));
-                            this.variables[key].data.triggerChange();
-                        }
-                        return entry;
-                    }).catch(handleError(this, options));
+                    .catch(handleError(this, options));
             }
 
             update(entry, options) {
-                options = createOptions(options, 'update');
                 return this.__ready.then(() => {
+                        options = createOptions(options, 'update');
                         return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
                             .withCredentials()
                             .send(entry)
-                            .end();
+                            .then(handleSuccess(this, options))
+                            .then(res => {
+                                if (res.body && res.status == 200) {
+                                    entry._rev = res.body.rev;
+                                    this._updateByUuid(entry._id, entry);
+                                }
+                                return res.body;
+                            });
                     })
-                    .then(handleSuccess(this, options))
-                    .then(res => {
-                        if (res.body && res.status == 200) {
-                            entry._rev = res.body.rev;
-                            this._updateByUuid(entry._id, entry);
-                        }
-                        return res.body;
-                    }).catch(handleError(this, options));
+                    .catch(handleError(this, options));
             }
 
             deleteAttachment(entry, attachments, options) {
-                options = createOptions(options, 'deleteAttachment');
                 return this.__ready.then(() => {
                     var uuid = getUuid(entry);
+                    options = createOptions(options, 'deleteAttachment');
                     if (Array.isArray(attachments) && attachments.length === 0) return this.getAttachmentList(entry);
                     const cdb = this._getCdb(uuid);
                     return cdb.remove(attachments)
@@ -237,9 +237,9 @@ define([
             }
 
             getAttachment(entry, name, options) {
-                options = createOptions(options, 'getAttachment');
                 return this.__ready.then(() => {
                     const uuid = getUuid(entry);
+                    options = createOptions(options, 'getAttachment');
                     const cdb = this._getCdb(uuid);
                     return cdb.get(name);
                 });
@@ -254,9 +254,9 @@ define([
             }
 
             addAttachment(entry, attachments, options) {
-                options = createOptions(options, 'addAttachment');
                 return this.__ready.then(() => {
                     var uuid = getUuid(entry);
+                    options = createOptions(options, 'addAttachment');
                     const cdb = this._getCdb(uuid);
                     return cdb.inlineUploads(attachments)
                         .then(attachments => {
@@ -280,27 +280,27 @@ define([
 
 
             delete(entry, options) {
-                options = createOptions(options, 'delete');
                 return this.__ready.then(() => {
                         const uuid = getUuid(entry);
+                        options = createOptions(options, 'delete');
                         return superagent.del(`${this.entryUrl}/${uuid}`)
                             .withCredentials()
-                            .end();
-                    })
-                    .then(handleSuccess(this, options))
-                    .then(res => {
-                        if (res.body && res.status == 200) {
-                            for (let key in this.variables) {
-                                const idx = this._findIndexByUuid(uuid, key);
-                                if (idx !== -1) {
-                                    this.variables[key].data.splice(idx, 1);
-                                    this.variables[key].data.triggerChange();
-                                }
-                            }
+                            .then(handleSuccess(this, options))
+                            .then(res => {
+                                if (res.body && res.status == 200) {
+                                    for (let key in this.variables) {
+                                        const idx = this._findIndexByUuid(uuid, key);
+                                        if (idx !== -1) {
+                                            this.variables[key].data.splice(idx, 1);
+                                            this.variables[key].data.triggerChange();
+                                        }
+                                    }
 
-                        }
-                        return res.body;
-                    }).catch(handleError(this, options));
+                                }
+                                return res.body;
+                            })
+                    })
+                    .catch(handleError(this, options));
             }
 
             remove(entry, options) {
