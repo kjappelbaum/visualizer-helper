@@ -20,7 +20,15 @@ define([
         class Roc {
             constructor(opts) {
                 for (var key in opts) {
-                    this[key] = opts[key];
+                    if(opts.hasOwnProperty(key)) {
+                        this[key] = opts[key];
+                    }
+                }
+
+                for (let i=0; i<mandatoryOptions.length; i++) {
+                    if(!this[mandatoryOptions[i]]) {
+                        throw new Error(`${mandatoryOptions[i]} is a mandatory option`);
+                    }
                 }
                 this.messages = this.messages || {};
                 this.variables = {};
@@ -233,6 +241,10 @@ define([
                         }
                         return res.body;
                     }).catch(handleError(this, options));
+            }
+
+            remove(entry, options) {
+                return this.delete(entry, options);
             }
 
             // Private
