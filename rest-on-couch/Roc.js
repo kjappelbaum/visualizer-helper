@@ -97,34 +97,36 @@ define([
             }
 
             view(viewName, options) {
-                options = createOptions(options, 'getView');
-                let requestUrl = new URI(`${this.databaseUrl}_view/${viewName}`);
+                return this.__ready.then(() => {
+                    options = createOptions(options, 'getView');
+                    let requestUrl = new URI(`${this.databaseUrl}_view/${viewName}`);
 
-                for (let i = 0; i < viewSearch.length; i++) {
-                    if (options[viewSearch[i]]) {
-                        requestUrl.addSearch(viewSearch[i], JSON.stringify(options[viewSearch[i]]));
-                    }
-                }
-
-                requestUrl = requestUrl.normalize().href();
-
-                return superagent.get(requestUrl)
-                    .withCredentials()
-                    .then(res => {
-                        if (res && res.body && res.status == 200) {
-                            if (options.varName) {
-                                this.variables[options.varName] = {
-                                    type: 'view',
-                                    requestUrl,
-                                    data: res.body
-                                };
-                                API.createData(options.varName, res.body);
-                            }
+                    for (let i = 0; i < viewSearch.length; i++) {
+                        if (options[viewSearch[i]]) {
+                            requestUrl.addSearch(viewSearch[i], JSON.stringify(options[viewSearch[i]]));
                         }
-                        return res.body;
-                    })
-                    .then(handleSuccess(this, options))
-                    .catch(handleError(this, options));
+                    }
+
+                    requestUrl = requestUrl.normalize().href();
+
+                    return superagent.get(requestUrl)
+                        .withCredentials()
+                        .then(res => {
+                            if (res && res.body && res.status == 200) {
+                                if (options.varName) {
+                                    this.variables[options.varName] = {
+                                        type: 'view',
+                                        requestUrl,
+                                        data: res.body
+                                    };
+                                    API.createData(options.varName, res.body);
+                                }
+                            }
+                            return res.body;
+                        })
+                        .then(handleSuccess(this, options))
+                        .catch(handleError(this, options));
+                });
             }
 
             document(uuid, options) {
@@ -168,8 +170,9 @@ define([
                     if (!entry || options.fromCache) {
                         return entry;
                     }
-                    return this.get(entry);
-                }).catch(handleError(this, options));
+                    return this.get(entry)
+                        .catch(handleError(this, options));
+                });
             }
 
             create(entry, options) {
@@ -187,14 +190,15 @@ define([
                             })
                             .then(entry => {
                                 if (!entry) return;
-                                for (var key in this.variables) {
-                                    this.variables[key].data.push(_.cloneDeep(entry));
-                                    this.variables[key].data.triggerChange();
+                                let keys = Object.keys(this.variables);
+                                for (let i=0; i<keys.length; i++) {
+                                    this.variables[keys[i]].data.push(_.cloneDeep(entry));
+                                    this.variables[keys[i]].data.triggerChange();
                                 }
                                 return entry;
-                            });
-                    })
-                    .catch(handleError(this, options));
+                            })
+                            .catch(handleError(this, options));
+                    });
             }
 
             update(entry, options) {
@@ -210,9 +214,9 @@ define([
                                     this._updateByUuid(entry._id, entry);
                                 }
                                 return res.body;
-                            });
-                    })
-                    .catch(handleError(this, options));
+                            })
+                            .catch(handleError(this, options));
+                    });
             }
 
             deleteAttachment(entry, attachments, options) {
@@ -228,8 +232,9 @@ define([
                                 this._updateByUuid(uuid, data);
                                 return attachments;
                             });
-                        });
-                }).catch(handleError(this, options));
+                        })
+                        .catch(handleError(this, options));;
+                });
             }
 
             removeAttachment(entry, attachments, options) {
@@ -241,7 +246,8 @@ define([
                     const uuid = getUuid(entry);
                     options = createOptions(options, 'getAttachment');
                     const cdb = this._getCdb(uuid);
-                    return cdb.get(name);
+                    return cdb.get(name)
+                        .catch(handleError(this, options));
                 });
             }
 
@@ -265,17 +271,17 @@ define([
                                 this._updateByUuid(uuid, data);
                                 return attachments;
                             });
-                        });
-                }).catch(handleError(this, options));
+                        })
+                        .catch(handleError(this, options));
+                })
             }
 
             addAttachmentById(id, attachment, options) {
-                options = createOptions(options, 'addAttachment');
                 return this.__ready.then(() => {
                     var doc = this._findById(id);
                     if (!doc) return;
-                    return this.addAttachment(doc._id, attachment);
-                }).catch(handleError(this, options));
+                    return this.addAttachment(doc._id, attachment, options);
+                });
             }
 
 
@@ -299,8 +305,8 @@ define([
                                 }
                                 return res.body;
                             })
-                    })
-                    .catch(handleError(this, options));
+                            .catch(handleError(this, options));
+                    });
             }
 
             remove(entry, options) {
