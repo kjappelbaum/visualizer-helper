@@ -245,7 +245,7 @@ define([
             attach(type, entry, attachment, options) {
                 return this.__ready.then(() => {
                     options = createOptions(options, 'addAttachment');
-                    return this.addAttachment(attachment)
+                    return this.addAttachment(entry, attachment, options)
                         .then(() => {
                             if(!this.processor) {
                                 throw new Error('no processor');
