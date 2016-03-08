@@ -191,7 +191,7 @@ define([
                             .then(entry => {
                                 if (!entry) return;
                                 let keys = Object.keys(this.variables);
-                                for (let i=0; i<keys.length; i++) {
+                                for (let i = 0; i < keys.length; i++) {
                                     this.variables[keys[i]].data.push(_.cloneDeep(entry));
                                     this.variables[keys[i]].data.triggerChange();
                                 }
@@ -203,20 +203,21 @@ define([
 
             update(entry, options) {
                 return this.__ready.then(() => {
-                        options = createOptions(options, 'update');
-                        return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
-                            .withCredentials()
-                            .send(entry)
-                            .then(handleSuccess(this, options))
-                            .then(res => {
-                                if (res.body && res.status == 200) {
-                                    entry._rev = res.body.rev;
-                                    this._updateByUuid(entry._id, entry);
-                                }
-                                return res.body;
-                            })
-                            .catch(handleError(this, options));
-                    });
+                    options = createOptions(options, 'update');
+                    entry = DataObject.resurrect(entry);
+                    return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
+                        .withCredentials()
+                        .send(entry)
+                        .then(handleSuccess(this, options))
+                        .then(res => {
+                            if (res.body && res.status == 200) {
+                                entry._rev = res.body.rev;
+                                this._updateByUuid(entry._id, entry);
+                            }
+                            return res.body;
+                        })
+                        .catch(handleError(this, options));
+                });
             }
 
             deleteAttachment(entry, attachments, options) {
@@ -233,7 +234,8 @@ define([
                                 return attachments;
                             });
                         })
-                        .catch(handleError(this, options));;
+                        .catch(handleError(this, options));
+                    ;
                 });
             }
 
@@ -261,7 +263,8 @@ define([
 
             addAttachment(entry, attachments, options) {
                 return this.__ready.then(() => {
-                    if(!Array.isArray(attachments)) {
+                    attachments = DataObject.resurrect(attachments);
+                    if (!Array.isArray(attachments)) {
                         attachments = [attachments];
                     }
                     var uuid = getUuid(entry);
@@ -290,26 +293,26 @@ define([
 
             delete(entry, options) {
                 return this.__ready.then(() => {
-                        const uuid = getUuid(entry);
-                        options = createOptions(options, 'delete');
-                        return superagent.del(`${this.entryUrl}/${uuid}`)
-                            .withCredentials()
-                            .then(handleSuccess(this, options))
-                            .then(res => {
-                                if (res.body && res.status == 200) {
-                                    for (let key in this.variables) {
-                                        const idx = this._findIndexByUuid(uuid, key);
-                                        if (idx !== -1) {
-                                            this.variables[key].data.splice(idx, 1);
-                                            this.variables[key].data.triggerChange();
-                                        }
+                    const uuid = getUuid(entry);
+                    options = createOptions(options, 'delete');
+                    return superagent.del(`${this.entryUrl}/${uuid}`)
+                        .withCredentials()
+                        .then(handleSuccess(this, options))
+                        .then(res => {
+                            if (res.body && res.status == 200) {
+                                for (let key in this.variables) {
+                                    const idx = this._findIndexByUuid(uuid, key);
+                                    if (idx !== -1) {
+                                        this.variables[key].data.splice(idx, 1);
+                                        this.variables[key].data.triggerChange();
                                     }
-
                                 }
-                                return res.body;
-                            })
-                            .catch(handleError(this, options));
-                    });
+
+                            }
+                            return res.body;
+                        })
+                        .catch(handleError(this, options));
+                });
             }
 
             remove(entry, options) {
