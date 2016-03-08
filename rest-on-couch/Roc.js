@@ -261,6 +261,9 @@ define([
 
             addAttachment(entry, attachments, options) {
                 return this.__ready.then(() => {
+                    if(!Array.isArray(attachments)) {
+                        attachments = [attachments];
+                    }
                     var uuid = getUuid(entry);
                     options = createOptions(options, 'addAttachment');
                     const cdb = this._getCdb(uuid);
