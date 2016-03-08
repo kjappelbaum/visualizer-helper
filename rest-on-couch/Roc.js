@@ -257,7 +257,7 @@ define([
                             return this.update(entry);
                         })
                         .then(handleSuccess(this, options))
-                        .then(handleError(this, options));
+                        .catch(handleError(this, options));
                 });
             }
 
