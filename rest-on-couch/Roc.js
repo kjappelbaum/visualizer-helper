@@ -235,12 +235,30 @@ define([
                             });
                         })
                         .catch(handleError(this, options));
-                    ;
                 });
             }
 
             removeAttachment(entry, attachments, options) {
                 return this.deleteAttachment(entry, attachments, options);
+            }
+
+            attach(type, entry, attachment, options) {
+                return this.__ready.then(() => {
+                    options = createOptions(options, 'addAttachment');
+                    return this.addAttachment(attachment)
+                        .then(() => {
+                            if(!this.processor) {
+                                throw new Error('no processor');
+                            }
+                            attachment.filename = this.processor.getFilename(type, attachment.filename);
+                            this.processor.process(type, entry, attachment);
+                        })
+                        .then(() => {
+                            return this.update(entry);
+                        })
+                        .then(handleSuccess(this, options))
+                        .then(handleError(this, options));
+                });
             }
 
             getAttachment(entry, name, options) {
@@ -399,6 +417,8 @@ define([
             return function (err) {
                 if (err.status || err.timeout) { // error comes from superagent
                     handleSuperagentError(err, ctx, options);
+                } else {
+                    defaultErrorHandler(err);
                 }
                 // Propagate error
                 throw err;
@@ -439,6 +459,10 @@ define([
                 throw new Error('Bad arguments');
             }
             return String(uuid);
+        }
+
+        function defaultErrorHandler(err) {
+            ui.showNotification(`Error: ${err.message}`);
         }
 
         return Roc;
