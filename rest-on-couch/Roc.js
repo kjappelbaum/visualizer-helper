@@ -247,14 +247,15 @@ define([
                     options = createOptions(options, 'addAttachment');
                     return this.addAttachment(entry, attachment, options)
                         .then(() => {
+                            return this.get(entry, {fromCache: true})
+                        })
+                        .then(entry => {
                             if(!this.processor) {
                                 throw new Error('no processor');
                             }
                             attachment.filename = this.processor.getFilename(type, attachment.filename);
                             this.processor.process(type, entry, attachment);
-                        })
-                        .then(() => {
-                            return this.get(entry, {fromCache: true})
+                            return entry;
                         })
                         .then(entry => {
                             return this.update(entry);
