@@ -272,7 +272,7 @@ define([
                         if(!attachment.contentType) {
                             attachment.contentType = fallbackContentType;
                         }
-                        return this.addAttachment(entry, attachment, options)
+                        return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment', {mute: true}))
                             .then(() => {
                                 return this.get(entry, {fromCache: true})
                             })
@@ -280,7 +280,7 @@ define([
                                 if(!this.processor) {
                                     throw new Error('no processor');
                                 }
-                                this.processor.process(type, entry, attachment);
+                                this.processor.process(type, entry.$content, attachment);
                                 return entry;
                             })
                             .then(entry => {
@@ -443,19 +443,21 @@ define([
             }
         }
 
-        function createOptions(options, type) {
+        function createOptions(options, type, custom) {
             var messages = Object.assign({}, defaultOptions.messages, messagesByType[type], options && options.messages);
-            options = Object.assign({}, defaultOptions, options);
+            options = Object.assign({}, defaultOptions, options, custom);
             if (messages) options.messages = messages;
             return options;
         }
 
         function handleError(ctx, options) {
             return function (err) {
-                if (err.status || err.timeout) { // error comes from superagent
-                    handleSuperagentError(err, ctx, options);
-                } else {
-                    defaultErrorHandler(err);
+                if(!options.mute) {
+                    if (err.status || err.timeout) { // error comes from superagent
+                        handleSuperagentError(err, ctx, options);
+                    } else {
+                        defaultErrorHandler(err);
+                    }
                 }
                 // Propagate error
                 throw err;
@@ -464,8 +466,10 @@ define([
 
         function handleSuccess(ctx, options) {
             return function (data) {
-                if (data.status) {
-                    handleSuperagentSuccess(data, ctx, options);
+                if(!options.mute) {
+                    if (data.status) {
+                        handleSuperagentSuccess(data, ctx, options);
+                    }
                 }
                 return data;
             };
