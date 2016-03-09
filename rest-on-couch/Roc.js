@@ -358,7 +358,13 @@ define([
                 }
 
                 if (!this.variables[key]) return null;
-                return this.variables[key].data.find(entry => String(entry._id) === String(uuid));
+                if(this.variables[key].type === 'view') {
+                    return this.variables[key].data.find(entry => String(entry._id) === String(uuid));
+                } else if(this.variables[key].type === 'document') {
+                    if(String(this.variables[key].data._id) === String(uuid)) {
+                        return this.variables[key].data;
+                    }
+                }
             }
 
             _findById(id, key) {
