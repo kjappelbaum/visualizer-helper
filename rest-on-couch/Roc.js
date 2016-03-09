@@ -245,12 +245,15 @@ define([
 
             attach(type, entry, attachment, options) {
                 return this.__ready.then(() => {
+                    var fallbackContentType = 'application/octet-stream';
                     options = createOptions(options, 'addAttachment');
                     var prom = Promise.resolve();
                     if(!attachment.filename) {
+                        fallbackContentType = 'plain/text';
+                        attachment.contentType = undefined;
                         prom =  ui.enterValue().then(val => {
                             attachment.filename = val;
-                        })
+                        });
                     }
 
                     return prom.then(() => {
@@ -267,7 +270,7 @@ define([
                             attachment.contentType = 'chemical/jcamp-dx';
                         }
                         if(!attachment.contentType) {
-                            attachment.contentType = 'application/octet-stream';
+                            attachment.contentType = fallbackContentType;
                         }
                         return this.addAttachment(entry, attachment, options)
                             .then(() => {
