@@ -192,7 +192,7 @@ define([
                                 if (!entry) return;
                                 let keys = Object.keys(this.variables);
                                 for (let i = 0; i < keys.length; i++) {
-                                    this.variables[keys[i]].data.push(_.cloneDeep(entry));
+                                    this.variables[keys[i]].data.push(entry);
                                     this.variables[keys[i]].data.triggerChange();
                                 }
                                 return entry;
@@ -400,13 +400,13 @@ define([
                     if (this.variables[key].type === 'view') {
                         const idx = this._findIndexByUuid(uuid, key);
                         if (idx !== -1) {
-                            this.variables[key].data.setChildSync([idx], _.cloneDeep(DataObject.resurrect(data)));
+                            this.variables[key].data.setChildSync([idx], data);
                         }
                     } else if (this.variables[key].type === 'document') {
                         uuid = String(uuid);
                         const _id = this.variables[key].data._id;
                         if (uuid === _id) {
-                            var newData = _.cloneDeep(DataObject.resurrect(data));
+                            var newData = DataObject.resurrect(data);
                             this.variables[key].data = newData;
                             API.createData(key, newData);
                         }
