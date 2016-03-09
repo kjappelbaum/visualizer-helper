@@ -247,7 +247,7 @@ define([
             attach(type, entry, attachment, options) {
                 return this.__ready.then(() => {
                     var fallbackContentType = 'application/octet-stream';
-                    options = createOptions(options, 'attach');
+                    var attachOptions = createOptions(options, 'attach');
                     var prom = Promise.resolve();
                     if(!attachment.filename) {
                         fallbackContentType = 'plain/text';
@@ -290,8 +290,8 @@ define([
                             }).then(() => {
                                 return this.get(entry, {fromCache: true});
                             })
-                            .then(handleSuccess(this, options))
-                            .catch(handleError(this, options));
+                            .then(handleSuccess(this, attachOptions))
+                            .catch(handleError(this, attachOptions));
                     });
                 });
             }
