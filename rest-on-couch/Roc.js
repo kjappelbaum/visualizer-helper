@@ -6,9 +6,10 @@ define([
         'superagent',
         'uri/URI',
         'lodash',
-        'src/util/couchdbAttachments'
+        'src/util/couchdbAttachments',
+        'mime-types'
     ],
-    function (API, ui, superagent, URI, _, CDB) {
+    function (API, ui, superagent, URI, _, CDB, mimeTypes) {
 
         const defaultOptions = {
             messages: {
@@ -245,23 +246,46 @@ define([
             attach(type, entry, attachment, options) {
                 return this.__ready.then(() => {
                     options = createOptions(options, 'addAttachment');
-                    return this.addAttachment(entry, attachment, options)
-                        .then(() => {
-                            return this.get(entry, {fromCache: true})
+                    var prom = Promise.resolve();
+                    if(!attachment.filename) {
+                        prom =  ui.enterValue().then(val => {
+                            attachment.filename = val;
                         })
-                        .then(entry => {
-                            if(!this.processor) {
-                                throw new Error('no processor');
-                            }
-                            attachment.filename = this.processor.getFilename(type, attachment.filename);
-                            this.processor.process(type, entry, attachment);
-                            return entry;
-                        })
-                        .then(entry => {
-                            return this.update(entry);
-                        })
-                        .then(handleSuccess(this, options))
-                        .catch(handleError(this, options));
+                    }
+
+                    return prom.then(() => {
+                        if(!attachment.filename) {
+                            return;
+                        }
+                        attachment.filename = this.processor.getFilename(type, attachment.filename);
+
+                        // Ideally jcamp extensions should be handled by mime-types
+                        if(!attachment.contentType || attachment.contentType === 'application/octet-stream') {
+                            attachment.contentType = mimeTypes.lookup(attachment.filename);
+                        }
+                        if(!attachment.contentType && /\.j?dx$/.test(attachment.filename)) {
+                            attachment.contentType = 'chemical/jcamp-dx';
+                        }
+                        if(!attachment.contentType) {
+                            attachment.contentType = 'application/octet-stream';
+                        }
+                        return this.addAttachment(entry, attachment, options)
+                            .then(() => {
+                                return this.get(entry, {fromCache: true})
+                            })
+                            .then(entry => {
+                                if(!this.processor) {
+                                    throw new Error('no processor');
+                                }
+                                this.processor.process(type, entry, attachment);
+                                return entry;
+                            })
+                            .then(entry => {
+                                return this.update(entry);
+                            })
+                            .then(handleSuccess(this, options))
+                            .catch(handleError(this, options));
+                    });
                 });
             }
 
