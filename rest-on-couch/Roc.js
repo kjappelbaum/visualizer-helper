@@ -272,7 +272,8 @@ define([
                         if(!attachment.contentType) {
                             attachment.contentType = fallbackContentType;
                         }
-                        return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment', {mute: true}))
+                        // Mute error so that it doesn't show up twice
+                        return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment', {muteError: true}))
                             .then(() => {
                                 return this.get(entry, {fromCache: true})
                             })
@@ -327,6 +328,7 @@ define([
                                 return attachments;
                             });
                         })
+                        .then(handleSuccess(this, options))
                         .catch(handleError(this, options));
                 })
             }
@@ -452,7 +454,7 @@ define([
 
         function handleError(ctx, options) {
             return function (err) {
-                if(!options.mute) {
+                if(!options.mute || !options.muteError) {
                     if (err.status || err.timeout) { // error comes from superagent
                         handleSuperagentError(err, ctx, options);
                     } else {
@@ -466,7 +468,7 @@ define([
 
         function handleSuccess(ctx, options) {
             return function (data) {
-                if(!options.mute) {
+                if(!options.mute && !options.muteSuccess) {
                     if (data.status) {
                         handleSuperagentSuccess(data, ctx, options);
                     }
