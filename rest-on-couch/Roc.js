@@ -235,6 +235,7 @@ define([
                                 return attachments;
                             });
                         })
+                        .then(handleSuccess(this, options))
                         .catch(handleError(this, options));
                 });
             }
@@ -441,7 +442,6 @@ define([
                         }
                     }
                 }
-
             }
         }
 
@@ -449,6 +449,7 @@ define([
             var messages = Object.assign({}, defaultOptions.messages, messagesByType[type], options && options.messages);
             options = Object.assign({}, defaultOptions, options, custom);
             if (messages) options.messages = messages;
+            options.type = type;
             return options;
         }
 
@@ -471,6 +472,8 @@ define([
                 if(!options.mute && !options.muteSuccess) {
                     if (data.status) {
                         handleSuperagentSuccess(data, ctx, options);
+                    } else if(options.type && options.type.match(/attachment/i)) {
+                        handleSuperagentSuccess({status: 200}, ctx, options);
                     }
                 }
                 return data;
