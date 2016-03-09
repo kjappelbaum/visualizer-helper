@@ -254,6 +254,9 @@ define([
                             this.processor.process(type, entry, attachment);
                         })
                         .then(() => {
+                            return this.get(entry, {fromCache: true})
+                        })
+                        .then(entry => {
                             return this.update(entry);
                         })
                         .then(handleSuccess(this, options))
@@ -462,7 +465,7 @@ define([
         }
 
         function defaultErrorHandler(err) {
-            ui.showNotification(`Error: ${err.message}`);
+            ui.showNotification(`Error: ${err.message}`, 'error');
         }
 
         return Roc;
