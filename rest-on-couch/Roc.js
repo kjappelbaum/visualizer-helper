@@ -413,7 +413,7 @@ define([
                 id = DataObject.resurrect(id);
                 if (this.variables[key].type === 'document' && _.isEqual(DataObject.resurrect(this.variables[key].data.$id), id)) {
                     return this.variables[key].data;
-                } else if (this.variables[key.type === 'view']) {
+                } else if (this.variables[key].type === 'view') {
                     return this.variables[key].data.find(entry => _.isEqual(id, DataObject.resurrect(entry.$id)));
                 }
                 return null;
