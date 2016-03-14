@@ -20,6 +20,7 @@ define([
                 204: 'No content',
                 400: 'Bad request',
                 401: 'Unauthorized',
+                404: 'Not Found',
                 409: 'Conflict',
                 403: 'Forbidden',
                 408: 'Request timeout',
@@ -41,25 +42,31 @@ define([
             },
             update: {
                 200: 'Entry updated',
-                401: 'Unauthorized to update entry'
+                401: 'Unauthorized to update entry',
+                404: 'Could not update entry: does not exist'
             },
             delete: {
                 200: 'Entry deleted',
-                401: 'Unauthorized to delete entry'
+                401: 'Unauthorized to delete entry',
+                404: 'Cannot delet entry: does not exist'
             },
             addAttachment: {
                 200: 'Added attachment',
-                401: 'Unauthorized to add attachment'
+                401: 'Unauthorized to add attachment',
+                404: 'Cannot add attachment: document does not exist'
             },
             deleteAttachment: {
                 200: 'Attachment deleted',
-                401: 'Unauthorized to delete attachment'
+                401: 'Unauthorized to delete attachment',
+                404: 'Cannot delete attachment: does not exist'
             },
             getAttachment: {
-                401: 'Unauthorized to get attachment'
+                401: 'Unauthorized to get attachment',
+                404: 'Attachment does not exist'
             },
             getView: {
-                401: 'Unauthorized to get view'
+                401: 'Unauthorized to get view',
+                404: 'View does not exist'
             }
         };
 
