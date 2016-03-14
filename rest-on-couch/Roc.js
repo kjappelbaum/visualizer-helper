@@ -474,7 +474,7 @@ define([
                 var i;
                 if (type === 'array') {
                     for (i = 0; i < v.length; i++) {
-                        this._typeUrl(v, entry);
+                        this._typeUrl(v[i], entry);
                     }
                 } else if (type === 'object') {
                     if (v.filename) {
