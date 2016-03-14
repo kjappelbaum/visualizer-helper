@@ -196,6 +196,7 @@ define([
                             })
                             .then(entry => {
                                 if (!entry) return;
+                                this._typeUrl(entry.$content, entry);
                                 let keys = Object.keys(this.variables);
                                 for (let i = 0; i < keys.length; i++) {
                                     this.variables[keys[i]].data.push(entry);
@@ -437,6 +438,7 @@ define([
                     if (this.variables[key].type === 'view') {
                         const idx = this._findIndexByUuid(uuid, key);
                         if (idx !== -1) {
+                            this._typeUrl(data.$content, data);
                             this.variables[key].data.setChildSync([idx], data);
                         }
                     } else if (this.variables[key].type === 'document') {
@@ -445,6 +447,7 @@ define([
                         if (uuid === _id) {
                             var newData = DataObject.resurrect(data);
                             this.variables[key].data = newData;
+                            this._typeUrl(newData.$content, newData);
                             API.createData(key, newData);
                         }
                     }
