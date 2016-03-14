@@ -466,7 +466,7 @@ define([
                         var contentType = att.content_type;
                         var vtype = Util.contentTypeToType(contentType);
                         var prop;
-                        if(typeValue.indexOf(vtype) !== 1) {
+                        if(typeValue.indexOf(vtype) !== -1) {
                             prop = 'value';
                         } else {
                             prop = 'url';
