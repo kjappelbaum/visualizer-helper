@@ -266,7 +266,7 @@ define([
                             return;
                         }
 
-                        var attachmentName = this.processor.getFilename(type, attachment.filename);
+                        attachment.filename = this.processor.getFilename(type, attachment.filename);
 
                         // Ideally jcamp extensions should be handled by mime-types
                         if (!attachment.contentType || attachment.contentType === 'application/octet-stream') {
