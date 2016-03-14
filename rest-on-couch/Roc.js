@@ -186,6 +186,10 @@ define([
                 return this.__ready
                     .then(() => {
                         options = createOptions(options, 'create');
+                        var kind = this.kind || options.kind;
+                        if(!entry.$kind) {
+                            entry.$kind = kind;
+                        }
                         return superagent.post(this.entryUrl)
                             .withCredentials()
                             .send(entry)
