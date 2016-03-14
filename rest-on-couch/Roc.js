@@ -235,7 +235,6 @@ define([
                     return cdb.remove(attachments)
                         .then(attachments => {
                             return this.get(uuid).then(data => {
-                                console.log('got doc', data);
                                 this._updateByUuid(uuid, data);
                                 return attachments;
                             });
@@ -266,7 +265,8 @@ define([
                         if (!attachment.filename) {
                             return;
                         }
-                        attachment.filename = this.processor.getFilename(type, attachment.filename);
+
+                        var attachmentName = this.processor.getFilename(type, attachment.filename);
 
                         // Ideally jcamp extensions should be handled by mime-types
                         if (!attachment.contentType || attachment.contentType === 'application/octet-stream') {
@@ -474,13 +474,15 @@ define([
 
                         Object.defineProperty(v, prop, {
                             value: `${this.entryUrl}/${entry._id}/${v.filename}`,
-                            enumerable: false
+                            enumerable: false,
+                            writable: true
                         });
 
 
                         Object.defineProperty(v, 'type', {
                             value: vtype,
-                            enumerable: false
+                            enumerable: false,
+                            writable: true
                         });
                     } else {
                         var keys = Object.keys(v);
