@@ -3,13 +3,14 @@
 define([
         'src/util/api',
         'src/util/ui',
+        'src/util/util',
         'superagent',
         'uri/URI',
         'lodash',
         'src/util/couchdbAttachments',
         'mime-types'
     ],
-    function (API, ui, superagent, URI, _, CDB, mimeTypes) {
+    function (API, ui, Util, superagent, URI, _, CDB, mimeTypes) {
 
         const defaultOptions = {
             messages: {
@@ -120,6 +121,9 @@ define([
                                         requestUrl,
                                         data: res.body
                                     };
+                                    for(var i=0; i<res.body.length; i++) {
+                                        this._typeUrl(res.body[i].$content, res.body[i]);
+                                    }
                                     API.createData(options.varName, res.body);
                                 }
                             }
@@ -138,6 +142,7 @@ define([
                             type: 'document',
                             data: doc
                         };
+                        this._typeUrl(doc.$content, doc);
                         API.createData(options.varName, doc);
                         return doc;
                     }
@@ -249,28 +254,28 @@ define([
                     var fallbackContentType = 'application/octet-stream';
                     var attachOptions = createOptions(options, 'attach');
                     var prom = Promise.resolve();
-                    if(!attachment.filename) {
+                    if (!attachment.filename) {
                         fallbackContentType = 'plain/text';
                         attachment.contentType = undefined;
-                        prom =  ui.enterValue().then(val => {
+                        prom = ui.enterValue().then(val => {
                             attachment.filename = val;
                         });
                     }
 
                     return prom.then(() => {
-                        if(!attachment.filename) {
+                        if (!attachment.filename) {
                             return;
                         }
                         attachment.filename = this.processor.getFilename(type, attachment.filename);
 
                         // Ideally jcamp extensions should be handled by mime-types
-                        if(!attachment.contentType || attachment.contentType === 'application/octet-stream') {
+                        if (!attachment.contentType || attachment.contentType === 'application/octet-stream') {
                             attachment.contentType = mimeTypes.lookup(attachment.filename);
                         }
-                        if(!attachment.contentType && /\.j?dx$/.test(attachment.filename)) {
+                        if (!attachment.contentType && /\.j?dx$/.test(attachment.filename)) {
                             attachment.contentType = 'chemical/jcamp-dx';
                         }
-                        if(!attachment.contentType) {
+                        if (!attachment.contentType) {
                             attachment.contentType = fallbackContentType;
                         }
                         // Mute error so that it doesn't show up twice
@@ -279,7 +284,7 @@ define([
                                 return this.get(entry, {fromCache: true})
                             })
                             .then(entry => {
-                                if(!this.processor) {
+                                if (!this.processor) {
                                     throw new Error('no processor');
                                 }
                                 this.processor.process(type, entry.$content, attachment);
@@ -391,10 +396,10 @@ define([
                 }
 
                 if (!this.variables[key]) return null;
-                if(this.variables[key].type === 'view') {
+                if (this.variables[key].type === 'view') {
                     return this.variables[key].data.find(entry => String(entry._id) === String(uuid));
-                } else if(this.variables[key].type === 'document') {
-                    if(String(this.variables[key].data._id) === String(uuid)) {
+                } else if (this.variables[key].type === 'document') {
+                    if (String(this.variables[key].data._id) === String(uuid)) {
                         return this.variables[key].data;
                     }
                 }
@@ -445,6 +450,46 @@ define([
                     }
                 }
             }
+
+            _typeUrl(v, entry) {
+                var type = DataObject.getType(v);
+                var i;
+                if (type === 'array') {
+                    for (i = 0; i < v.length; i++) {
+                        this._typeUrl(v, entry);
+                    }
+                } else if (type === 'object') {
+                    if (v.filename) {
+                        var filename = String(v.filename);
+                        var att = entry._attachments[filename];
+                        if(!att) return;
+                        var contentType = att.content_type;
+                        var vtype = Util.contentTypeToType(contentType);
+                        var prop;
+                        if(typeValue.indexOf(vtype) !== 1) {
+                            prop = 'value';
+                        } else {
+                            prop = 'url';
+                        }
+
+                        Object.defineProperty(v, prop, {
+                            value: `${this.entryUrl}/${entry._id}/${v.filename}`,
+                            enumerable: false
+                        });
+
+
+                        Object.defineProperty(v, 'type', {
+                            value: vtype,
+                            enumerable: false
+                        });
+                    } else {
+                        var keys = Object.keys(v);
+                        for (i = 0; i < keys.length; i++) {
+                            this._typeUrl(v[keys[i]], entry);
+                        }
+                    }
+                }
+            }
         }
 
         function createOptions(options, type, custom) {
@@ -457,7 +502,7 @@ define([
 
         function handleError(ctx, options) {
             return function (err) {
-                if(!options.mute || !options.muteError) {
+                if (!options.mute || !options.muteError) {
                     if (err.status || err.timeout) { // error comes from superagent
                         handleSuperagentError(err, ctx, options);
                     } else {
@@ -471,10 +516,10 @@ define([
 
         function handleSuccess(ctx, options) {
             return function (data) {
-                if(!options.mute && !options.muteSuccess) {
+                if (!options.mute && !options.muteSuccess) {
                     if (data.status) {
                         handleSuperagentSuccess(data, ctx, options);
-                    } else if(options.type && options.type.match(/attachment/i)) {
+                    } else if (options.type && options.type.match(/attachment/i)) {
                         handleSuperagentSuccess({status: 200}, ctx, options);
                     }
                 }
@@ -512,6 +557,9 @@ define([
         function defaultErrorHandler(err) {
             ui.showNotification(`Error: ${err.message}`, 'error');
         }
+
+        const typeValue = ['gif', 'tiff', 'jpeg', 'jpg', 'png'];
+
 
         return Roc;
     });
