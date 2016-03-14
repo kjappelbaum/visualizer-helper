@@ -190,6 +190,7 @@ define([
                         if(!entry.$kind) {
                             entry.$kind = kind;
                         }
+                        this._defaults(entry.$content, options);
                         return superagent.post(this.entryUrl)
                             .withCredentials()
                             .send(entry)
@@ -201,7 +202,6 @@ define([
                             })
                             .then(entry => {
                                 if (!entry) return;
-                                this._defaults(entry.$content, options);
                                 this._typeUrl(entry.$content, entry);
                                 let keys = Object.keys(this.variables);
                                 for (let i = 0; i < keys.length; i++) {
