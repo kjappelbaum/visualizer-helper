@@ -161,6 +161,7 @@ define([
                             .end()
                             .then(res => {
                                 if (res.body && res.status == 200) {
+                                    this._defaults(res.body.$content, options);
                                     this._updateByUuid(uuid, res.body);
                                     return res.body;
                                 }
@@ -196,6 +197,7 @@ define([
                             })
                             .then(entry => {
                                 if (!entry) return;
+                                this._defaults(entry.$content, options);
                                 this._typeUrl(entry.$content, entry);
                                 let keys = Object.keys(this.variables);
                                 for (let i = 0; i < keys.length; i++) {
@@ -450,6 +452,15 @@ define([
                             this._typeUrl(newData.$content, newData);
                             API.createData(key, newData);
                         }
+                    }
+                }
+            }
+
+            _defaults(content, options) {
+                if(this.processor) {
+                    var kind = options.kind || this.kind;
+                    if(kind) {
+                        this.processor.defaults(kind, content);
                     }
                 }
             }
