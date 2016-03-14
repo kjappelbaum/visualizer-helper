@@ -273,7 +273,7 @@ define([
                             attachment.contentType = mimeTypes.lookup(attachment.filename);
                         }
                         if (!attachment.contentType && /\.j?dx$/.test(attachment.filename)) {
-                            attachment.contentType = 'chemical/jcamp-dx';
+                            attachment.contentType = 'chemical/x-jcamp-dx';
                         }
                         if (!attachment.contentType) {
                             attachment.contentType = fallbackContentType;
