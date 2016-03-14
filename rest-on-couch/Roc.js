@@ -472,18 +472,20 @@ define([
                             prop = 'url';
                         }
 
-                        Object.defineProperty(v, prop, {
-                            value: `${this.entryUrl}/${entry._id}/${v.filename}`,
-                            enumerable: false,
-                            writable: true
-                        });
-
-
-                        Object.defineProperty(v, 'type', {
-                            value: vtype,
-                            enumerable: false,
-                            writable: true
-                        });
+                        v[prop] = `${this.entryUrl}/${entry._id}/${v.filename}`;
+                        v.type = vtype;
+                        //Object.defineProperty(v, prop, {
+                        //    value: `${this.entryUrl}/${entry._id}/${v.filename}`,
+                        //    enumerable: false,
+                        //    writable: true
+                        //});
+                        //
+                        //
+                        //Object.defineProperty(v, 'type', {
+                        //    value: vtype,
+                        //    enumerable: false,
+                        //    writable: true
+                        //});
                     } else {
                         var keys = Object.keys(v);
                         for (i = 0; i < keys.length; i++) {
