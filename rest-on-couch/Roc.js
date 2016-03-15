@@ -267,7 +267,7 @@ define([
                     if(!this.processor) throw new Error('no processor');
 
                     var arr = this.processor.getType('nmr', entry.$content, this.kind);
-                    var idx = arr.find(row);
+                    var idx = arr.indexOf(row);
                     if(idx === -1) {
                         console.warn('element to unattach not found');
                         return;
