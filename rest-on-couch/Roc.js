@@ -512,7 +512,7 @@ define([
             }
 
             _typeUrl(v, entry) {
-                this._traverseFilename(v, function(v) {
+                this._traverseFilename(v, v => {
                     var filename = String(v.filename);
                     var att = entry._attachments[filename];
                     if(!att) return;
