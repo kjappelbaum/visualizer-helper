@@ -266,7 +266,7 @@ define([
                     // Confirm?
                     if(!this.processor) throw new Error('no processor');
 
-                    var arr = this.processor.getFromJpath('nmr', entry.$content);
+                    var arr = this.processor.getType('nmr', entry.$content, this.kind);
                     var idx = arr.find(row);
                     if(idx === -1) {
                         console.warn('element to unattach not found');
