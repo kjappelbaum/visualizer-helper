@@ -241,19 +241,15 @@ define([
 
             deleteAttachment(entry, attachments, options) {
                 return this.__ready.then(() => {
-                    var uuid = getUuid(entry);
                     options = createOptions(options, 'deleteAttachment');
                     if (Array.isArray(attachments) && attachments.length === 0) return this.getAttachmentList(entry);
-                    const cdb = this._getCdb(uuid);
-                    return cdb.remove(attachments)
-                        .then(attachments => {
-                            return this.get(uuid).then(data => {
-                                this._updateByUuid(uuid, data);
-                                return attachments;
-                            });
-                        })
-                        .then(handleSuccess(this, options))
-                        .catch(handleError(this, options));
+                    if(!Array.isArray(attachments)) attachments = [attachments];
+
+                    this._deleteFilename(entry.$content, attachments);
+                    for(var i=0; i<attachments.length; i++) {
+                        delete entry._attachments[attachments[i]];
+                    }
+                    return this.update(entry, options);
                 });
             }
 
@@ -496,10 +492,12 @@ define([
 
             _findFilename(v, filename) {
                 var r = [];
+                if(!Array.isArray(filename) && typeof filename !== 'undefined') filename = [filename];
                 this._traverseFilename(v, function(v) {
-                    if(v.filename === filename)
+                    if(typeof filename === 'undefined') {
                         r.push(v);
-                    else if(typeof filename === 'undefined') {
+                    }
+                    else if(filename.indexOf(v.filename) !== -1) {
                         r.push(v);
                     }
                 });
