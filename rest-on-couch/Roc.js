@@ -275,6 +275,7 @@ define([
 
                     var toDelete = this._findFilename(row);
                     toDelete = toDelete.map(d => String(d.filename));
+                    arr.splice(idx, 1);
                     var toKeep = this._findFilename(entry.$content, toDelete);
                     toKeep = toKeep.map(k => String(k.filename));
                     toDelete = _.difference(toDelete, toKeep);
@@ -283,7 +284,7 @@ define([
                             delete entry._attachments[toDelete[i]];
                         }
                     }
-                    arr.splice(idx, 1);
+
                     return this.update(entry, options)
                 });
             }
