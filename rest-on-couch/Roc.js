@@ -83,9 +83,8 @@ define([
         const viewSearch = ['key', 'startkey', 'endkey'];
         const mandatoryOptions = ['url', 'database'];
 
-        class Roc extends EventEmitter {
+        class Roc {
             constructor(opts) {
-                super();
                 for (var key in opts) {
                     if (opts.hasOwnProperty(key)) {
                         this[key] = opts[key];
@@ -235,7 +234,7 @@ define([
                                 entry._rev = res.body.rev;
                                 this._updateByUuid(entry._id, entry);
                             }
-                            return res.body;
+                            return entry;
                         })
                         .catch(handleError(this, options));
                 });
@@ -253,9 +252,7 @@ define([
                     for(var i=0; i<attachments.length; i++) {
                         delete entry._attachments[attachments[i]];
                     }
-                    return this.update(entry, options).then(() => {
-                        this.emit('attachments', this.getAttachmentList(entry));
-                    });
+                    return this.update(entry, options);
                 });
             }
 
@@ -295,9 +292,6 @@ define([
                         }
                         // Mute error so that it doesn't show up twice
                         return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment', {muteError: true}))
-                            .then(() => {
-                                return this.get(entry, {fromCache: true})
-                            })
                             .then(entry => {
                                 if (!this.processor) {
                                     throw new Error('no processor');
@@ -307,8 +301,6 @@ define([
                             })
                             .then(entry => {
                                 return this.update(entry);
-                            }).then(() => {
-                                return this.get(entry, {fromCache: true});
                             })
                             .then(handleSuccess(this, attachOptions))
                             .catch(handleError(this, attachOptions));
@@ -344,11 +336,11 @@ define([
                     options = createOptions(options, 'addAttachment');
                     const cdb = this._getCdb(uuid);
                     return cdb.inlineUploads(attachments)
-                        .then(attachments => {
+                        .then(() => {
                             return this.get(uuid).then(data => {
                                 console.log('got doc add att', data);
                                 this._updateByUuid(uuid, data);
-                                return attachments;
+                                return data;
                             });
                         })
                         .then(handleSuccess(this, options))
