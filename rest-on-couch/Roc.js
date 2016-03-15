@@ -241,6 +241,7 @@ define([
 
             deleteAttachment(entry, attachments, options) {
                 return this.__ready.then(() => {
+                    if(!entry || !entry._attachments) return;
                     options = createOptions(options, 'deleteAttachment');
                     if (Array.isArray(attachments) && attachments.length === 0) return this.getAttachmentList(entry);
                     if(!Array.isArray(attachments)) attachments = [attachments];
@@ -514,6 +515,7 @@ define([
             _typeUrl(v, entry) {
                 this._traverseFilename(v, v => {
                     var filename = String(v.filename);
+                    if(!entry._attachments) return;
                     var att = entry._attachments[filename];
                     if(!att) return;
                     var contentType = att.content_type;
