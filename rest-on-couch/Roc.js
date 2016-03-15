@@ -496,15 +496,16 @@ define([
                         } else {
                             prop = 'url';
                         }
+                        v.data = {};
 
-                        Object.defineProperty(v, prop, {
+                        Object.defineProperty(v.data, prop, {
                             value: `${this.entryUrl}/${entry._id}/${v.filename}`,
                             enumerable: false,
                             writable: true
                         });
 
 
-                        Object.defineProperty(v, 'type', {
+                        Object.defineProperty(v.data, 'type', {
                             value: vtype,
                             enumerable: false,
                             writable: true
