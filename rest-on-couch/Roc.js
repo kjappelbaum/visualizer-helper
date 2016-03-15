@@ -476,7 +476,7 @@ define([
                 }
             }
 
-            _typeUrl(v, entry) {
+            _traverseFilename(v, cb) {
                 var type = DataObject.getType(v);
                 var i;
                 if (type === 'array') {
@@ -485,31 +485,7 @@ define([
                     }
                 } else if (type === 'object') {
                     if (v.filename) {
-                        var filename = String(v.filename);
-                        var att = entry._attachments[filename];
-                        if(!att) return;
-                        var contentType = att.content_type;
-                        var vtype = Util.contentTypeToType(contentType);
-                        var prop;
-                        if(typeValue.indexOf(vtype) !== -1) {
-                            prop = 'value';
-                        } else {
-                            prop = 'url';
-                        }
-                        v.data = {};
-
-                        Object.defineProperty(v.data, prop, {
-                            value: `${this.entryUrl}/${entry._id}/${v.filename}`,
-                            enumerable: false,
-                            writable: true
-                        });
-
-
-                        Object.defineProperty(v.data, 'type', {
-                            value: vtype,
-                            enumerable: false,
-                            writable: true
-                        });
+                        cb(v);
                     } else {
                         var keys = Object.keys(v);
                         for (i = 0; i < keys.length; i++) {
@@ -517,6 +493,36 @@ define([
                         }
                     }
                 }
+            }
+
+            _typeUrl(v, entry) {
+                this._traverseFilename(v, function(v) {
+                    var filename = String(v.filename);
+                    var att = entry._attachments[filename];
+                    if(!att) return;
+                    var contentType = att.content_type;
+                    var vtype = Util.contentTypeToType(contentType);
+                    var prop;
+                    if(typeValue.indexOf(vtype) !== -1) {
+                        prop = 'value';
+                    } else {
+                        prop = 'url';
+                    }
+                    v.data = {};
+
+                    Object.defineProperty(v.data, prop, {
+                        value: `${this.entryUrl}/${entry._id}/${v.filename}`,
+                        enumerable: false,
+                        writable: true
+                    });
+
+
+                    Object.defineProperty(v.data, 'type', {
+                        value: vtype,
+                        enumerable: false,
+                        writable: true
+                    });
+                })
             }
         }
 
