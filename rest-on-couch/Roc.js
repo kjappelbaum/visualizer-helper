@@ -476,7 +476,7 @@ define([
                 var i;
                 if (type === 'array') {
                     for (i = 0; i < v.length; i++) {
-                        this._typeUrl(v[i], entry);
+                        this._traverseFilename(v[i], cb);
                     }
                 } else if (type === 'object') {
                     if (v.filename) {
@@ -484,7 +484,7 @@ define([
                     } else {
                         var keys = Object.keys(v);
                         for (i = 0; i < keys.length; i++) {
-                            this._typeUrl(v[keys[i]], entry);
+                            this._traverseFilename(v[keys[i]], cb);
                         }
                     }
                 }
