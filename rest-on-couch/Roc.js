@@ -262,7 +262,7 @@ define([
 
             unattach(type, entry, row, options) {
                 return this.__ready.then(() => {
-                    options = createOptions(options, 'unattach');
+                    options = createOptions(options, 'update');
                     // Confirm?
                     if(!this.processor) throw new Error('no processor');
 
