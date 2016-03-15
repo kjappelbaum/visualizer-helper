@@ -8,9 +8,10 @@ define([
         'uri/URI',
         'lodash',
         'src/util/couchdbAttachments',
-        'mime-types'
+        'mime-types',
+        'components/eventEmitter/EventEmitter'
     ],
-    function (API, ui, Util, superagent, URI, _, CDB, mimeTypes) {
+    function (API, ui, Util, superagent, URI, _, CDB, mimeTypes, EventEmitter) {
 
         const defaultOptions = {
             messages: {
@@ -82,8 +83,9 @@ define([
         const viewSearch = ['key', 'startkey', 'endkey'];
         const mandatoryOptions = ['url', 'database'];
 
-        class Roc {
+        class Roc extends EventEmitter {
             constructor(opts) {
+                super();
                 for (var key in opts) {
                     if (opts.hasOwnProperty(key)) {
                         this[key] = opts[key];
@@ -243,7 +245,7 @@ define([
                 return this.__ready.then(() => {
                     if(!entry || !entry._attachments) return;
                     options = createOptions(options, 'deleteAttachment');
-                    if (Array.isArray(attachments) && attachments.length === 0) return this.getAttachmentList(entry);
+                    if (Array.isArray(attachments) && attachments.length === 0) return entry;
                     if(!Array.isArray(attachments)) attachments = [attachments];
 
                     attachments = attachments.map(String);
@@ -251,7 +253,9 @@ define([
                     for(var i=0; i<attachments.length; i++) {
                         delete entry._attachments[attachments[i]];
                     }
-                    return this.update(entry, options);
+                    return this.update(entry, options).then(() => {
+                        this.emit('attachments', this.getAttachmentList(entry));
+                    });
                 });
             }
 
