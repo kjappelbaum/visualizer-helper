@@ -246,6 +246,7 @@ define([
                     if (Array.isArray(attachments) && attachments.length === 0) return this.getAttachmentList(entry);
                     if(!Array.isArray(attachments)) attachments = [attachments];
 
+                    attachments = attachments.map(String);
                     this._deleteFilename(entry.$content, attachments);
                     for(var i=0; i<attachments.length; i++) {
                         delete entry._attachments[attachments[i]];
@@ -498,7 +499,7 @@ define([
                     if(typeof filename === 'undefined') {
                         r.push(v);
                     }
-                    else if(filename.indexOf(v.filename) !== -1) {
+                    else if(filename.indexOf(String(v.filename)) !== -1) {
                         r.push(v);
                     }
                 });
