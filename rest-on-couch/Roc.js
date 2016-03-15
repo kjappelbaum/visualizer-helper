@@ -168,7 +168,7 @@ define([
                             .end()
                             .then(res => {
                                 if (res.body && res.status == 200) {
-                                    this._defaults(res.body.$content, options);
+                                    this._defaults(res.body.$content);
                                     this._updateByUuid(uuid, res.body);
                                     return res.body;
                                 }
@@ -193,11 +193,10 @@ define([
                 return this.__ready
                     .then(() => {
                         options = createOptions(options, 'create');
-                        var kind = this.kind || options.kind;
                         if(!entry.$kind) {
-                            entry.$kind = kind;
+                            entry.$kind = this.kind;
                         }
-                        this._defaults(entry.$content, options);
+                        this._defaults(entry.$content);
                         return superagent.post(this.entryUrl)
                             .withCredentials()
                             .send(entry)
@@ -467,9 +466,9 @@ define([
                 }
             }
 
-            _defaults(content, options) {
+            _defaults(content) {
                 if(this.processor) {
-                    var kind = options.kind || this.kind;
+                    var kind = this.kind;
                     if(kind) {
                         this.processor.defaults(kind, content);
                     }
@@ -492,6 +491,25 @@ define([
                             this._typeUrl(v[keys[i]], entry);
                         }
                     }
+                }
+            }
+
+            _findFilename(v, filename) {
+                var r = [];
+                this._traverseFilename(v, function(v) {
+                    if(v.filename === filename)
+                        r.push(v);
+                    else if(typeof filename === 'undefined') {
+                        r.push(v);
+                    }
+                });
+                return r;
+            }
+
+            _deleteFilename(v, filename) {
+                var filenames = this._findFilename(v, filename);
+                for(var i=0; i<filenames.length; i++) {
+                    delete filenames[i].filename;
                 }
             }
 
