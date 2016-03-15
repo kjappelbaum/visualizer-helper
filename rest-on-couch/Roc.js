@@ -260,6 +260,34 @@ define([
                 return this.deleteAttachment(entry, attachments, options);
             }
 
+            unattach(type, entry, row, options) {
+                return this.__ready.then(() => {
+                    options = createOptions(options, 'unattach');
+                    // Confirm?
+                    if(!this.processor) throw new Error('no processor');
+
+                    var arr = this.processor.getFromJpath('nmr', entry.$content);
+                    var idx = arr.find(row);
+                    if(idx === -1) {
+                        console.warn('element to unattach not found');
+                        return;
+                    }
+
+                    var toDelete = this._findFilename(row);
+                    toDelete = toDelete.map(d => String(d.filename));
+                    var toKeep = this._findFilename(entry.$content, toDelete);
+                    toKeep = toKeep.map(k => String(k.filename));
+                    toDelete = _.difference(toDelete, toKeep);
+                    if(entry._attachments) {
+                        for(var i=0; i<toDelete.length; i++) {
+                            delete entry._attachments[toDelete[i]];
+                        }
+                    }
+                    arr.splice(idx, 1);
+                    return this.update(entry, options)
+                });
+            }
+
             attach(type, entry, attachment, options) {
                 return this.__ready.then(() => {
                     var fallbackContentType = 'application/octet-stream';
