@@ -259,13 +259,17 @@ define([
                 return this.deleteAttachment(entry, attachments, options);
             }
 
-            unattach(type, entry, row, options) {
+            unattach(entry, row, options) {
                 return this.__ready.then(() => {
                     options = createOptions(options, 'update');
                     // Confirm?
                     if(!this.processor) throw new Error('no processor');
 
-                    var arr = this.processor.getType('nmr', entry.$content, this.kind);
+                    //var arr = this.processor.getType('nmr', entry.$content, this.kind);
+                    if(!row.__parent) {
+                        throw new Error('row must be linked to parent for unattach to work');
+                    }
+                    var arr = row.__parent;
                     var idx = arr.indexOf(row);
                     if(idx === -1) {
                         console.warn('element to unattach not found');
