@@ -8,10 +8,9 @@ define([
         'uri/URI',
         'lodash',
         'src/util/couchdbAttachments',
-        'mime-types',
-        'components/eventEmitter/EventEmitter'
+        'mime-types'
     ],
-    function (API, ui, Util, superagent, URI, _, CDB, mimeTypes, EventEmitter) {
+    function (API, ui, Util, superagent, URI, _, CDB, mimeTypes) {
 
         const defaultOptions = {
             messages: {
