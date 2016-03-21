@@ -309,7 +309,13 @@ define([
                         attachment.filename = this.processor.getFilename(type, attachment.filename);
 
                         // If we had to ask for a filename, resolve content type
-                        if(filename) attachment.contentType = getContentType(filename, attachment.contentType);
+                        var fallback;
+                        if(filename) {
+                            fallback = attachment.contentType;
+                            attachment.contentType = undefined;
+                        }
+                        setContentType(attachment, fallback);
+
                         // Mute error so that it doesn't show up twice
                         return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment', {muteError: true}))
                             .then(entry => {
@@ -362,7 +368,9 @@ define([
                                     return;
                                 }
                                 // If we had to ask for a filename, resolve content type
-                                if (filename) attachments.contentType = getContentType(filename, attachments.contentType);
+                                var fallback = attachments.contentType;
+                                attachments.contentType = undefined;
+                                setContentType(attachments, fallback);
                                 attachments = [attachments];
                                 return filename;
                             });
@@ -370,6 +378,10 @@ define([
                             attachments = [attachments];
                         }
                     }
+
+                    attachments.forEach(attachment => {
+                        setContentType(attachment);
+                    });
 
 
 
@@ -653,17 +665,23 @@ define([
             console.error(err, err.stack);
         }
 
-        function getContentType(filename, fallback) {
+        function setContentType(attachment, fallback) {
             fallback = fallback || 'application/octet-stream';
+            var filename = attachment.filename;
+            var contentType = attachment.contentType;
+            if(contentType && contentType !== 'application/octet-stream') {
+                return;
+            }
+
             // Ideally jcamp extensions should be handled by mime-types
-            var contentType = mimeTypes.lookup(filename);
+            contentType = mimeTypes.lookup(filename);
             if (contentType && /\.j?dx$/.test(filename)) {
                 contentType = 'chemical/x-jcamp-dx';
             }
             if (!contentType) {
                 contentType = fallback;
             }
-            return contentType;
+            attachment.contentType = contentType;
         }
 
         const typeValue = ['gif', 'tiff', 'jpeg', 'jpg', 'png'];
