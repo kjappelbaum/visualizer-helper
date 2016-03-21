@@ -355,14 +355,14 @@ define([
                     }
 
                     if (!Array.isArray(attachments)) {
-                        if (!attachment.filename) {
+                        if (!attachments.filename) {
                             prom = ui.enterValue('Enter a filename').then(filename => {
-                                if (filename) attachment.filename = filename;
-                                if (!attachment.filename) {
+                                if (filename) attachments.filename = filename;
+                                if (!attachments.filename) {
                                     return;
                                 }
                                 // If we had to ask for a filename, resolve content type
-                                if (filename) attachment.contentType = getContentType(filename, attachment.contentType);
+                                if (filename) attachments.contentType = getContentType(filename, attachments.contentType);
                                 attachments = [attachments];
                                 return filename;
                             });
