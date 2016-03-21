@@ -348,7 +348,7 @@ define([
 
             addAttachment(entry, attachments, options) {
                 return this.__ready.then(() => {
-                    var prom = Promise.resolve();
+                    var prom = Promise.resolve(true);
                     attachments = DataObject.resurrect(attachments);
                     if(attachments.length === 1) {
                         attachments = attachments[0];
