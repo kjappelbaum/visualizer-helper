@@ -145,16 +145,17 @@ define([
                 return this.get(uuid).then(doc => {
                     if (!doc) return;
                     if (options.varName) {
-                        DataObject.check(doc);
                         this.variables[options.varName] = {
                             type: 'document',
                             data: doc
                         };
                         this._typeUrl(doc.$content, doc);
-                        doc.onChange(function(event) {
-                            console.log('document change', event);
-                        });
-                        API.createData(options.varName, doc);
+                        return API.createData(options.varName, doc)
+                            .then(doc => {
+                                doc.onChange(function(event) {
+                                    console.log('document changed', event);
+                                })
+                            });
                     }
                     return doc;
                 });
