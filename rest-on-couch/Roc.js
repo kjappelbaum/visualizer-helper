@@ -631,6 +631,7 @@ define([
             const message = options.messages[err.status] || ctx.messages[err.status];
             if (message && !options.disableNotification) {
                 ui.showNotification(message, 'error');
+                console.error(err, err.stack);
             }
         }
 
@@ -649,6 +650,7 @@ define([
 
         function defaultErrorHandler(err) {
             ui.showNotification(`Error: ${err.message}`, 'error');
+            console.error(err, err.stack);
         }
 
         function getContentType(filename, fallback) {
