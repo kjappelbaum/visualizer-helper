@@ -300,7 +300,7 @@ define([
                     if (!attachment.filename) {
                         fallbackContentType = 'plain/text';
                         attachment.contentType = undefined;
-                        prom = ui.enterValue().then(val => {
+                        prom = ui.enterValue('Enter a filename').then(val => {
                             attachment.filename = val;
                         });
                     }
