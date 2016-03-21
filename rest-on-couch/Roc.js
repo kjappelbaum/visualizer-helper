@@ -294,34 +294,22 @@ define([
 
             attach(type, entry, attachment, options) {
                 return this.__ready.then(() => {
-                    var fallbackContentType = 'application/octet-stream';
                     var attachOptions = createOptions(options, 'attach');
                     var prom = Promise.resolve();
                     if (!attachment.filename) {
-                        fallbackContentType = 'plain/text';
-                        attachment.contentType = undefined;
-                        prom = ui.enterValue('Enter a filename').then(val => {
-                            attachment.filename = val;
-                        });
+                        prom = ui.enterValue('Enter a filename');
                     }
 
-                    return prom.then(() => {
+                    return prom.then(filename => {
+                        if(filename) attachment.filename = filename;
                         if (!attachment.filename) {
                             return;
                         }
 
                         attachment.filename = this.processor.getFilename(type, attachment.filename);
 
-                        // Ideally jcamp extensions should be handled by mime-types
-                        if (!attachment.contentType || attachment.contentType === 'application/octet-stream') {
-                            attachment.contentType = mimeTypes.lookup(attachment.filename);
-                        }
-                        if (!attachment.contentType && /\.j?dx$/.test(attachment.filename)) {
-                            attachment.contentType = 'chemical/x-jcamp-dx';
-                        }
-                        if (!attachment.contentType) {
-                            attachment.contentType = fallbackContentType;
-                        }
+                        // If we had to ask for a filename, resolve content type
+                        if(filename) attachment.contentType = getContentType(filename, attachment.contentType);
                         // Mute error so that it doesn't show up twice
                         return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment', {muteError: true}))
                             .then(entry => {
@@ -360,23 +348,47 @@ define([
 
             addAttachment(entry, attachments, options) {
                 return this.__ready.then(() => {
+                    var prom = Promise.resolve();
                     attachments = DataObject.resurrect(attachments);
-                    if (!Array.isArray(attachments)) {
-                        attachments = [attachments];
+                    if(attachments.length === 1) {
+                        attachments = attachments[0];
                     }
-                    var uuid = getUuid(entry);
-                    options = createOptions(options, 'addAttachment');
-                    const cdb = this._getCdb(uuid);
-                    return cdb.inlineUploads(attachments)
-                        .then(() => {
-                            return this.get(uuid).then(data => {
-                                console.log('got doc add att', data);
-                                this._updateByUuid(uuid, data);
-                                return data;
+
+                    if (!Array.isArray(attachments)) {
+                        if (!attachment.filename) {
+                            prom = ui.enterValue('Enter a filename').then(filename => {
+                                if (filename) attachment.filename = filename;
+                                if (!attachment.filename) {
+                                    return;
+                                }
+                                // If we had to ask for a filename, resolve content type
+                                if (filename) attachment.contentType = getContentType(filename, attachment.contentType);
+                                attachments = [attachments];
+                                return filename;
                             });
-                        })
-                        .then(handleSuccess(this, options))
-                        .catch(handleError(this, options));
+                        } else {
+                            attachments = [attachments];
+                        }
+                    }
+
+
+
+                    return prom.then(filename => {
+                        if(!filename) return;
+                        var uuid = getUuid(entry);
+                        options = createOptions(options, 'addAttachment');
+                        const cdb = this._getCdb(uuid);
+                        return cdb.inlineUploads(attachments)
+                            .then(() => {
+                                return this.get(uuid).then(data => {
+                                    console.log('got doc add att', data);
+                                    this._updateByUuid(uuid, data);
+                                    return data;
+                                });
+                            })
+                            .then(handleSuccess(this, options))
+                            .catch(handleError(this, options));
+                    });
                 })
             }
 
@@ -637,6 +649,19 @@ define([
 
         function defaultErrorHandler(err) {
             ui.showNotification(`Error: ${err.message}`, 'error');
+        }
+
+        function getContentType(filename, fallback) {
+            fallback = fallback || 'application/octet-stream';
+            // Ideally jcamp extensions should be handled by mime-types
+            var contentType = mimeTypes.lookup(filename);
+            if (contentType && /\.j?dx$/.test(filename)) {
+                contentType = 'chemical/x-jcamp-dx';
+            }
+            if (!contentType) {
+                contentType = fallback;
+            }
+            return contentType;
         }
 
         const typeValue = ['gif', 'tiff', 'jpeg', 'jpg', 'png'];
