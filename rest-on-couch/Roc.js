@@ -228,14 +228,16 @@ define([
             update(entry, options) {
                 return this.__ready.then(() => {
                     options = createOptions(options, 'update');
-                    entry = DataObject.resurrect(entry);
+                    var reqEntry = DataObject.resurrect(entry);
                     return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
                         .withCredentials()
-                        .send(entry)
+                        .send(reqEntry)
                         .then(handleSuccess(this, options))
                         .then(res => {
                             if (res.body && res.status == 200) {
                                 entry._rev = res.body.rev;
+                                entry.$creationDate = res.body.$creationDate;
+                                entry.$modificationDate = res.body.$modificationDate;
                                 this._updateByUuid(entry._id, entry);
                             }
                             return entry;
@@ -599,6 +601,25 @@ define([
                         writable: true
                     });
                 })
+            }
+
+            _setSyncState(name, state) {
+                if(syncState[name] === undefined) {
+                    // create new div
+                }
+
+                if(syncState[name].state === state) return;
+                else {
+                    var bg;
+                    syncState[name].state = state;
+                    if(state) {
+                        bg = 'lightgreen';
+                        syncState[name].div.css('background-color', 'lightgreen');
+                    } else {
+                        syncState[name].div.css('ba')
+                    }
+                }
+
             }
         }
 
