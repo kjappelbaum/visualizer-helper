@@ -122,6 +122,9 @@ define([
                         .withCredentials()
                         .then(res => {
                             if (res && res.body && res.status == 200) {
+                                if(options.filter) {
+                                    res.body = res.body.filter(options.filter);
+                                }
                                 if (options.varName) {
                                     this.variables[options.varName] = {
                                         type: 'view',
