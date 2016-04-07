@@ -271,7 +271,9 @@ define([
                                     return entry;
                                 });
                             });
-                        });
+                        })
+                        .then(handleSuccess(this, options))
+                        .catch(handleError(this, options));
                 });
             }
 
