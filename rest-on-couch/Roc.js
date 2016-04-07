@@ -153,12 +153,7 @@ define([
                             data: doc
                         };
                         this._typeUrl(doc.$content, doc);
-                        return API.createData(options.varName, doc)
-                            .then(doc => {
-                                doc.onChange(function(event) {
-                                    console.log('document changed', event);
-                                })
-                            });
+                        return API.createData(options.varName, doc);
                     }
                     return doc;
                 });
@@ -511,18 +506,31 @@ define([
                         const idx = this._findIndexByUuid(uuid, key);
                         if (idx !== -1) {
                             this._typeUrl(data.$content, data);
-                            this.variables[key].data.setChildSync([idx], data);
+                            //this.variables[key].data.setChildSync([idx], data);
+                            let row = this.variables[key].data.getChildSync([idx]);
+                            this._updateDocument(row, data);
                         }
                     } else if (this.variables[key].type === 'document') {
                         uuid = String(uuid);
                         const _id = this.variables[key].data._id;
                         if (uuid === _id) {
-                            var newData = DataObject.resurrect(data);
-                            this.variables[key].data = newData;
-                            this._typeUrl(newData.$content, newData);
-                            API.createData(key, newData);
+                            //var newData = DataObject.resurrect(data);
+                            this._typeUrl(data.$content, data);
+                            let doc = this.variables[key].data;
+                            this._updateDocument(doc, data);
                         }
                     }
+                }
+            }
+
+            _updateDocument(doc, data) {
+                if(doc && data) {
+                    let keys = Object.keys(data);
+                    for(let i=0; i<keys.length; i++) {
+                        let key = keys[i];
+                        doc[key] = data[key];
+                    }
+                    doc.triggerChange();
                 }
             }
 
