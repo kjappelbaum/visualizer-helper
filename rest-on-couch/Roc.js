@@ -304,6 +304,7 @@ define([
                     return this.deleteAttachment(entry, toDelete, options).then(() => {
                         arr.splice(idx, 1);
                         arr.triggerChange();
+                        return entry;
                     });
                 });
             }
