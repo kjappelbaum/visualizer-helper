@@ -172,8 +172,8 @@ define([
                             .then(res => {
                                 if (res.body && res.status == 200) {
                                     this._defaults(res.body.$content);
-                                    if (!options.update) {
-                                        this._updateByUuid(uuid, res.body);
+                                    if (!options.noUpdate) {
+                                        return this._updateByUuid(uuid, res.body);
                                     }
                                     return res.body;
                                 }
@@ -262,7 +262,7 @@ define([
                             }
                             var cdb = this._getCdb(getUuid(entry));
                             return cdb.remove(attachments).then(() => {
-                                this.get(entry, {update: false}).then(data => {
+                                this.get(entry, {noUpdate: true}).then(data => {
                                     entry._rev = data._rev;
                                     entry._attachments = data._attachments;
                                     entry.$creationDate = data.$creationDate;
@@ -411,7 +411,7 @@ define([
                                 options = createOptions(options, 'addAttachment');
                                 const cdb = this._getCdb(uuid);
                                 return cdb.inlineUploads(attachments)
-                                    .then(() => this.get(uuid, {update: false}))
+                                    .then(() => this.get(uuid, {noUpdate: true}))
                                     .then(data => {
                                         entry._rev = data._rev;
                                         entry._attachments = data._attachments;
@@ -527,6 +527,7 @@ define([
                             //this.variables[key].data.setChildSync([idx], data);
                             let row = this.variables[key].data.getChildSync([idx]);
                             this._updateDocument(row, data);
+                            return row;
                         }
                     } else if (this.variables[key].type === 'document') {
                         uuid = String(uuid);
@@ -536,6 +537,7 @@ define([
                             this._typeUrl(data.$content, data);
                             let doc = this.variables[key].data;
                             this._updateDocument(doc, data);
+                            return doc;
                         }
                     }
                 }
