@@ -122,7 +122,7 @@ define([
                         .withCredentials()
                         .then(res => {
                             if (res && res.body && res.status == 200) {
-                                if(options.filter) {
+                                if (options.filter) {
                                     res.body = res.body.filter(options.filter);
                                 }
                                 if (options.varName) {
@@ -131,7 +131,7 @@ define([
                                         requestUrl,
                                         data: res.body
                                     };
-                                    for(var i=0; i<res.body.length; i++) {
+                                    for (var i = 0; i < res.body.length; i++) {
                                         this._typeUrl(res.body[i].$content, res.body[i]);
                                     }
                                     API.createData(options.varName, res.body);
@@ -172,7 +172,9 @@ define([
                             .then(res => {
                                 if (res.body && res.status == 200) {
                                     this._defaults(res.body.$content);
-                                    this._updateByUuid(uuid, res.body);
+                                    if (!options.update) {
+                                        this._updateByUuid(uuid, res.body);
+                                    }
                                     return res.body;
                                 }
                             }).catch(handleError(this, options));
@@ -196,7 +198,7 @@ define([
                 return this.__ready
                     .then(() => {
                         options = createOptions(options, 'create');
-                        if(!entry.$kind) {
+                        if (!entry.$kind) {
                             entry.$kind = this.kind;
                         }
                         this._defaults(entry.$content);
@@ -246,17 +248,28 @@ define([
 
             deleteAttachment(entry, attachments, options) {
                 return this.__ready.then(() => {
-                    if(!entry || !entry._attachments) return;
+                    if (!entry || !entry._attachments) return;
                     options = createOptions(options, 'deleteAttachment');
                     if (Array.isArray(attachments) && attachments.length === 0) return entry;
-                    if(!Array.isArray(attachments)) attachments = [attachments];
+                    if (!Array.isArray(attachments)) attachments = [attachments];
 
                     attachments = attachments.map(String);
+                    entry = this.get(entry, {fromCache: true});
                     this._deleteFilename(entry.$content, attachments);
-                    for(var i=0; i<attachments.length; i++) {
+                    for (var i = 0; i < attachments.length; i++) {
                         delete entry._attachments[attachments[i]];
                     }
-                    return this.update(entry, options);
+                    var cdb = this._getCdb(getUuid(entry));
+                    return cdb.remove(attachments).then(() => {
+                        this.get(entry, {update: false}).then(data => {
+                            entry._rev = data._rev;
+                            entry._attachments = data._attachments;
+                            entry.$creationDate = data.$creationDate;
+                            entry.$modificationDate = data.$modificationDate;
+                            entry.triggerChange();
+                            return entry;
+                        });
+                    });
                 });
             }
 
@@ -266,17 +279,16 @@ define([
 
             unattach(entry, row, options) {
                 return this.__ready.then(() => {
-                    options = createOptions(options, 'update');
+                    options = createOptions(options, 'deleteAttachment');
                     // Confirm?
-                    if(!this.processor) throw new Error('no processor');
+                    if (!this.processor) throw new Error('no processor');
 
-                    //var arr = this.processor.getType('nmr', entry.$content, this.kind);
-                    if(!row.__parent) {
+                    if (!row.__parent) {
                         throw new Error('row must be linked to parent for unattach to work');
                     }
                     var arr = row.__parent;
                     var idx = arr.indexOf(row);
-                    if(idx === -1) {
+                    if (idx === -1) {
                         console.warn('element to unattach not found');
                         return;
                     }
@@ -287,13 +299,7 @@ define([
                     var toKeep = this._findFilename(entry.$content, toDelete);
                     toKeep = toKeep.map(k => String(k.filename));
                     toDelete = _.difference(toDelete, toKeep);
-                    if(entry._attachments) {
-                        for(var i=0; i<toDelete.length; i++) {
-                            delete entry._attachments[toDelete[i]];
-                        }
-                    }
-
-                    return this.update(entry, options)
+                    return this.deleteAttachment(entry, toDelete, options);
                 });
             }
 
@@ -306,7 +312,7 @@ define([
                     }
 
                     return prom.then(filename => {
-                        if(filename) attachment.filename = filename;
+                        if (filename) attachment.filename = filename;
                         if (!attachment.filename) {
                             return;
                         }
@@ -315,7 +321,7 @@ define([
 
                         // If we had to ask for a filename, resolve content type
                         var fallback;
-                        if(filename) {
+                        if (filename) {
                             fallback = attachment.contentType;
                             attachment.contentType = undefined;
                         }
@@ -329,9 +335,6 @@ define([
                                 }
                                 this.processor.process(type, entry.$content, attachment);
                                 return entry;
-                            })
-                            .then(entry => {
-                                return this.update(entry);
                             })
                             .then(handleSuccess(this, attachOptions))
                             .catch(handleError(this, attachOptions));
@@ -361,7 +364,7 @@ define([
                 return this.__ready.then(() => {
                     var prom = Promise.resolve(true);
                     attachments = DataObject.resurrect(attachments);
-                    if(attachments.length === 1) {
+                    if (attachments.length === 1) {
                         attachments = attachments[0];
                     }
 
@@ -389,19 +392,19 @@ define([
                     });
 
 
-
                     return prom.then(filename => {
-                        if(!filename) return;
+                        if (!filename) return;
                         var uuid = getUuid(entry);
                         options = createOptions(options, 'addAttachment');
                         const cdb = this._getCdb(uuid);
                         return cdb.inlineUploads(attachments)
-                            .then(() => {
-                                return this.get(uuid).then(data => {
-                                    console.log('got doc add att', data);
-                                    this._updateByUuid(uuid, data);
-                                    return data;
-                                });
+                            .then(() => this.get(uuid, {update: false}))
+                            .then(data => {
+                                entry._rev = data._rev;
+                                entry._attachments = data._attachments;
+                                entry.$creationDate = data.$creationDate;
+                                entry.$modificationDate = data.$modificationDate;
+                                this._updateByUuid(uuid, entry);
                             })
                             .then(handleSuccess(this, options))
                             .catch(handleError(this, options));
@@ -524,9 +527,9 @@ define([
             }
 
             _updateDocument(doc, data) {
-                if(doc && data) {
+                if (doc && data) {
                     let keys = Object.keys(data);
-                    for(let i=0; i<keys.length; i++) {
+                    for (let i = 0; i < keys.length; i++) {
                         let key = keys[i];
                         doc[key] = data[key];
                     }
@@ -535,9 +538,9 @@ define([
             }
 
             _defaults(content) {
-                if(this.processor) {
+                if (this.processor) {
                     var kind = this.kind;
-                    if(kind) {
+                    if (kind) {
                         this.processor.defaults(kind, content);
                     }
                 }
@@ -564,12 +567,12 @@ define([
 
             _findFilename(v, filename) {
                 var r = [];
-                if(!Array.isArray(filename) && typeof filename !== 'undefined') filename = [filename];
-                this._traverseFilename(v, function(v) {
-                    if(typeof filename === 'undefined') {
+                if (!Array.isArray(filename) && typeof filename !== 'undefined') filename = [filename];
+                this._traverseFilename(v, function (v) {
+                    if (typeof filename === 'undefined') {
                         r.push(v);
                     }
-                    else if(filename.indexOf(String(v.filename)) !== -1) {
+                    else if (filename.indexOf(String(v.filename)) !== -1) {
                         r.push(v);
                     }
                 });
@@ -578,7 +581,7 @@ define([
 
             _deleteFilename(v, filename) {
                 var filenames = this._findFilename(v, filename);
-                for(var i=0; i<filenames.length; i++) {
+                for (var i = 0; i < filenames.length; i++) {
                     delete filenames[i].filename;
                 }
             }
@@ -586,13 +589,13 @@ define([
             _typeUrl(v, entry) {
                 this._traverseFilename(v, v => {
                     var filename = String(v.filename);
-                    if(!entry._attachments) return;
+                    if (!entry._attachments) return;
                     var att = entry._attachments[filename];
-                    if(!att) return;
+                    if (!att) return;
                     var contentType = att.content_type;
                     var vtype = Util.contentTypeToType(contentType);
                     var prop;
-                    if(typeValue.indexOf(vtype) !== -1) {
+                    if (typeValue.indexOf(vtype) !== -1) {
                         prop = 'value';
                     } else {
                         prop = 'url';
@@ -615,15 +618,15 @@ define([
             }
 
             _setSyncState(name, state) {
-                if(syncState[name] === undefined) {
+                if (syncState[name] === undefined) {
                     // create new div
                 }
 
-                if(syncState[name].state === state) return;
+                if (syncState[name].state === state) return;
                 else {
                     var bg;
                     syncState[name].state = state;
-                    if(state) {
+                    if (state) {
                         bg = 'lightgreen';
                         syncState[name].div.css('background-color', 'lightgreen');
                     } else {
@@ -706,7 +709,7 @@ define([
             fallback = fallback || 'application/octet-stream';
             var filename = attachment.filename;
             var contentType = attachment.contentType;
-            if(contentType && contentType !== 'application/octet-stream') {
+            if (contentType && contentType !== 'application/octet-stream') {
                 return;
             }
 
