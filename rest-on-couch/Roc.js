@@ -297,11 +297,14 @@ define([
 
                     var toDelete = this._findFilename(row);
                     toDelete = toDelete.map(d => String(d.filename));
-                    arr.splice(idx, 1);
+
                     var toKeep = this._findFilename(entry.$content, toDelete);
                     toKeep = toKeep.map(k => String(k.filename));
                     toDelete = _.difference(toDelete, toKeep);
-                    return this.deleteAttachment(entry, toDelete, options);
+                    return this.deleteAttachment(entry, toDelete, options).then(() => {
+                        arr.splice(idx, 1);
+                        arr.triggerChange();
+                    });
                 });
             }
 
