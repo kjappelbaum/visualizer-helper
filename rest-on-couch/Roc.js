@@ -394,6 +394,7 @@ define([
 
                     return prom.then(filename => {
                         if (!filename) return;
+                        entry = this.get(entry, {fromCache: true});
                         var uuid = getUuid(entry);
                         options = createOptions(options, 'addAttachment');
                         const cdb = this._getCdb(uuid);
@@ -404,7 +405,8 @@ define([
                                 entry._attachments = data._attachments;
                                 entry.$creationDate = data.$creationDate;
                                 entry.$modificationDate = data.$modificationDate;
-                                this._updateByUuid(uuid, entry);
+                                entry.triggerChange();
+                                return {status: 200};
                             })
                             .then(handleSuccess(this, options))
                             .catch(handleError(this, options));
