@@ -254,22 +254,24 @@ define([
                     if (!Array.isArray(attachments)) attachments = [attachments];
 
                     attachments = attachments.map(String);
-                    entry = this.get(entry, {fromCache: true});
-                    this._deleteFilename(entry.$content, attachments);
-                    for (var i = 0; i < attachments.length; i++) {
-                        delete entry._attachments[attachments[i]];
-                    }
-                    var cdb = this._getCdb(getUuid(entry));
-                    return cdb.remove(attachments).then(() => {
-                        this.get(entry, {update: false}).then(data => {
-                            entry._rev = data._rev;
-                            entry._attachments = data._attachments;
-                            entry.$creationDate = data.$creationDate;
-                            entry.$modificationDate = data.$modificationDate;
-                            entry.triggerChange();
-                            return entry;
+                    return this.get(entry, {fromCache: true})
+                        .then(entry => {
+                            this._deleteFilename(entry.$content, attachments);
+                            for (var i = 0; i < attachments.length; i++) {
+                                delete entry._attachments[attachments[i]];
+                            }
+                            var cdb = this._getCdb(getUuid(entry));
+                            return cdb.remove(attachments).then(() => {
+                                this.get(entry, {update: false}).then(data => {
+                                    entry._rev = data._rev;
+                                    entry._attachments = data._attachments;
+                                    entry.$creationDate = data.$creationDate;
+                                    entry.$modificationDate = data.$modificationDate;
+                                    entry.triggerChange();
+                                    return entry;
+                                });
+                            });
                         });
-                    });
                 });
             }
 
@@ -327,16 +329,17 @@ define([
                         }
                         setContentType(attachment, fallback);
 
-                        entry = this.get(entry, {fromCache: true});
-                        // Mute error so that it doesn't show up twice
-                        return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment', {muteError: true}))
+                        return this.get(entry, {fromCache: true})
                             .then(entry => {
-                                if (!this.processor) {
-                                    throw new Error('no processor');
-                                }
-                                this.processor.process(type, entry.$content, attachment);
-                                entry.triggerChange();
-                                return entry;
+                                return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment'))
+                                    .then(entry => {
+                                        if (!this.processor) {
+                                            throw new Error('no processor');
+                                        }
+                                        this.processor.process(type, entry.$content, attachment);
+                                        entry.triggerChange();
+                                        return entry;
+                                    })
                             })
                             .then(handleSuccess(this, attachOptions))
                             .catch(handleError(this, attachOptions));
@@ -396,19 +399,23 @@ define([
 
                     return prom.then(filename => {
                         if (!filename) return;
-                        entry = this.get(entry, {fromCache: true});
-                        var uuid = getUuid(entry);
-                        options = createOptions(options, 'addAttachment');
-                        const cdb = this._getCdb(uuid);
-                        return cdb.inlineUploads(attachments)
-                            .then(() => this.get(uuid, {update: false}))
-                            .then(data => {
-                                entry._rev = data._rev;
-                                entry._attachments = data._attachments;
-                                entry.$creationDate = data.$creationDate;
-                                entry.$modificationDate = data.$modificationDate;
-                                entry.triggerChange();
-                                return entry;
+
+
+                        return this.get(entry, {fromCache: true})
+                            .then(entry => {
+                                var uuid = getUuid(entry);
+                                options = createOptions(options, 'addAttachment');
+                                const cdb = this._getCdb(uuid);
+                                return cdb.inlineUploads(attachments)
+                                    .then(() => this.get(uuid, {update: false}))
+                                    .then(data => {
+                                        entry._rev = data._rev;
+                                        entry._attachments = data._attachments;
+                                        entry.$creationDate = data.$creationDate;
+                                        entry.$modificationDate = data.$modificationDate;
+                                        entry.triggerChange();
+                                        return entry;
+                                    })
                             })
                             .then(handleSuccess(this, options))
                             .catch(handleError(this, options));
