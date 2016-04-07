@@ -172,8 +172,8 @@ define([
                             .then(res => {
                                 if (res.body && res.status == 200) {
                                     this._defaults(res.body.$content);
-                                    if (!options.noUpdate) {
-                                        return this._updateByUuid(uuid, res.body);
+                                    if (options.noUpdate) {
+                                        this._updateByUuid(uuid, res.body);
                                     }
                                     return res.body;
                                 }
@@ -527,7 +527,6 @@ define([
                             //this.variables[key].data.setChildSync([idx], data);
                             let row = this.variables[key].data.getChildSync([idx]);
                             this._updateDocument(row, data);
-                            return row;
                         }
                     } else if (this.variables[key].type === 'document') {
                         uuid = String(uuid);
@@ -537,7 +536,6 @@ define([
                             this._typeUrl(data.$content, data);
                             let doc = this.variables[key].data;
                             this._updateDocument(doc, data);
-                            return doc;
                         }
                     }
                 }
