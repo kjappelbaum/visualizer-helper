@@ -327,6 +327,7 @@ define([
                         }
                         setContentType(attachment, fallback);
 
+                        entry = this.get(entry, {fromCache: true});
                         // Mute error so that it doesn't show up twice
                         return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment', {muteError: true}))
                             .then(entry => {
@@ -334,6 +335,7 @@ define([
                                     throw new Error('no processor');
                                 }
                                 this.processor.process(type, entry.$content, attachment);
+                                entry.triggerChange();
                                 return entry;
                             })
                             .then(handleSuccess(this, attachOptions))
@@ -406,7 +408,7 @@ define([
                                 entry.$creationDate = data.$creationDate;
                                 entry.$modificationDate = data.$modificationDate;
                                 entry.triggerChange();
-                                return {status: 200};
+                                return entry;
                             })
                             .then(handleSuccess(this, options))
                             .catch(handleError(this, options));
