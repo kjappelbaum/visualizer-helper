@@ -262,7 +262,7 @@ define([
                             }
                             var cdb = this._getCdb(getUuid(entry));
                             return cdb.remove(attachments).then(() => {
-                                this.get(entry, {noUpdate: true}).then(data => {
+                                return this.get(entry, {noUpdate: true}).then(data => {
                                     entry._rev = data._rev;
                                     entry._attachments = data._attachments;
                                     entry.$creationDate = data.$creationDate;
