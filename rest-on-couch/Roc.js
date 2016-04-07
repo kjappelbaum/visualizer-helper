@@ -172,7 +172,7 @@ define([
                             .then(res => {
                                 if (res.body && res.status == 200) {
                                     this._defaults(res.body.$content);
-                                    if (options.noUpdate) {
+                                    if (!options.noUpdate) {
                                         this._updateByUuid(uuid, res.body);
                                     }
                                     return res.body;
