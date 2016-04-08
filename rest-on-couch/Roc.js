@@ -134,7 +134,7 @@ define([
                                     for (var i = 0; i < res.body.length; i++) {
                                         this._typeUrl(res.body[i].$content, res.body[i]);
                                     }
-                                    API.createData(options.varName, res.body);
+                                    return API.createData(options.varName, res.body);
                                 }
                             }
                             return res.body;
@@ -347,9 +347,9 @@ define([
                                         return entry;
                                     })
                             })
-                            .then(handleSuccess(this, attachOptions))
-                            .catch(handleError(this, attachOptions));
-                    });
+                    })
+                        .then(handleSuccess(this, attachOptions))
+                        .catch(handleError(this, attachOptions));
                 });
             }
 
