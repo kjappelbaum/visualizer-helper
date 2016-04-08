@@ -8,9 +8,10 @@ define([
         'uri/URI',
         'lodash',
         'src/util/couchdbAttachments',
-        'mime-types'
+        'mime-types',
+        'src/util/IDBKeyValue'
     ],
-    function (API, ui, Util, superagent, URI, _, CDB, mimeTypes) {
+    function (API, ui, Util, superagent, URI, _, CDB, mimeTypes, IDB) {
 
         const defaultOptions = {
             messages: {
@@ -153,7 +154,20 @@ define([
                             data: doc
                         };
                         this._typeUrl(doc.$content, doc);
-                        return API.createData(options.varName, doc);
+                        var idb = new IDB('roc-documents');
+                        return API.createData(options.varName, doc).then(data => {
+                            data.onChange(() => {
+                                idb.set(data._id, data);
+                            });
+
+                            IDB.get(data._id, data).then(localEntry => {
+                                if(!localEntry) return;
+                                if(localEntry._rev === doc._rev) {
+                                    this._updateByUuid(data._id, localEntry);
+                                }
+                            });
+                            return data;
+                        });
                     }
                     return doc;
                 });
@@ -320,34 +334,34 @@ define([
                     }
 
                     return prom.then(filename => {
-                        if (filename) attachment.filename = filename;
-                        if (!attachment.filename) {
-                            return;
-                        }
+                            if (filename) attachment.filename = filename;
+                            if (!attachment.filename) {
+                                return;
+                            }
 
-                        attachment.filename = this.processor.getFilename(type, attachment.filename);
+                            attachment.filename = this.processor.getFilename(type, attachment.filename);
 
-                        // If we had to ask for a filename, resolve content type
-                        var fallback;
-                        if (filename) {
-                            fallback = attachment.contentType;
-                            attachment.contentType = undefined;
-                        }
-                        setContentType(attachment, fallback);
+                            // If we had to ask for a filename, resolve content type
+                            var fallback;
+                            if (filename) {
+                                fallback = attachment.contentType;
+                                attachment.contentType = undefined;
+                            }
+                            setContentType(attachment, fallback);
 
-                        return this.get(entry, {fromCache: true})
-                            .then(entry => {
-                                return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment'))
-                                    .then(entry => {
-                                        if (!this.processor) {
-                                            throw new Error('no processor');
-                                        }
-                                        this.processor.process(type, entry.$content, attachment);
-                                        entry.triggerChange();
-                                        return entry;
-                                    })
-                            })
-                    })
+                            return this.get(entry, {fromCache: true})
+                                .then(entry => {
+                                    return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment'))
+                                        .then(entry => {
+                                            if (!this.processor) {
+                                                throw new Error('no processor');
+                                            }
+                                            this.processor.process(type, entry.$content, attachment);
+                                            entry.triggerChange();
+                                            return entry;
+                                        })
+                                })
+                        })
                         .then(handleSuccess(this, attachOptions))
                         .catch(handleError(this, attachOptions));
                 });
