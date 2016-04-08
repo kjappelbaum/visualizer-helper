@@ -157,7 +157,7 @@ define([
                         var idb = new IDB('roc-documents');
                         return API.createData(options.varName, doc).then(data => {
                             data.onChange(() => {
-                                idb.set(data._id, data);
+                                idb.set(data._id, data.resurrect());
                             });
 
                             idb.get(data._id, data).then(localEntry => {
