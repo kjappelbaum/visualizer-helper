@@ -160,10 +160,12 @@ define([
                                 idb.set(data._id, data.resurrect());
                             });
 
-                            idb.get(data._id, data).then(localEntry => {
+                            idb.get(data._id).then(localEntry => {
                                 if(!localEntry) return;
                                 if(localEntry._rev === doc._rev) {
                                     this._updateByUuid(data._id, localEntry);
+                                } else {
+                                    idb.delete(data._id);
                                 }
                             });
                             return data;
