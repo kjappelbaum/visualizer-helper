@@ -649,25 +649,6 @@ define([
                     });
                 })
             }
-
-            _setSyncState(name, state) {
-                if (syncState[name] === undefined) {
-                    // create new div
-                }
-
-                if (syncState[name].state === state) return;
-                else {
-                    var bg;
-                    syncState[name].state = state;
-                    if (state) {
-                        bg = 'lightgreen';
-                        syncState[name].div.css('background-color', 'lightgreen');
-                    } else {
-                        syncState[name].div.css('ba')
-                    }
-                }
-
-            }
         }
 
         function createOptions(options, type, custom) {
