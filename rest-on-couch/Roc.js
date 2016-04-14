@@ -237,8 +237,13 @@ define([
                                 this._typeUrl(entry.$content, entry);
                                 let keys = Object.keys(this.variables);
                                 for (let i = 0; i < keys.length; i++) {
-                                    this.variables[keys[i]].data.push(entry);
-                                    this.variables[keys[i]].data.triggerChange();
+                                    let v = this.variables[keys[i]];
+                                    if(v.type === 'view') {
+                                        var idx = v.data.length;
+                                        v.data.push(entry);
+                                        v.data.traceSync([idx]);
+                                        v.data.triggerChange();
+                                    }
                                 }
                                 return entry;
                             })
