@@ -135,7 +135,12 @@ define([
                                     for (var i = 0; i < res.body.length; i++) {
                                         this._typeUrl(res.body[i].$content, res.body[i]);
                                     }
-                                    return API.createData(options.varName, res.body);
+                                    return API.createData(options.varName, res.body).then(data => {
+                                        for(var i=0; i<data.length; i++) {
+                                            data.traceSync([i]);
+                                        }
+                                        return data;
+                                    });
                                 }
                             }
                             return res.body;
