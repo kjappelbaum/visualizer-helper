@@ -359,6 +359,7 @@ define([
                                                 throw new Error('no processor');
                                             }
                                             this.processor.process(type, entry.$content, attachment);
+                                            this._typeUrl(entry.$content, entry);
                                             entry.triggerChange();
                                             return entry;
                                         })
