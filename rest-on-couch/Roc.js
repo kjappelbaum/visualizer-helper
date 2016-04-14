@@ -729,7 +729,7 @@ define([
 
             // Ideally jcamp extensions should be handled by mime-types
             contentType = mimeTypes.lookup(filename);
-            if (!contentType && /\.j?dx$/.test(filename)) {
+            if (!contentType && /\.j?dx$/i.test(filename)) {
                 contentType = 'chemical/x-jcamp-dx';
             }
             if (!contentType) {
