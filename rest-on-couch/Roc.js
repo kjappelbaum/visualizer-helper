@@ -255,6 +255,7 @@ define([
                 return this.__ready.then(() => {
                     options = createOptions(options, 'update');
                     var reqEntry = DataObject.resurrect(entry);
+                    this._untypeUrl(reqEntry.$content);
                     return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
                         .withCredentials()
                         .send(reqEntry)
@@ -630,6 +631,14 @@ define([
                 }
             }
 
+            _untypeUrl(v) {
+                this._traverseFilename(v, v => {
+                    if(v.data) {
+                        delete v.data;
+                    }
+                });
+            }
+
             _typeUrl(v, entry) {
                 this._traverseFilename(v, v => {
                     var filename = String(v.filename);
@@ -644,20 +653,10 @@ define([
                     } else {
                         prop = 'url';
                     }
-                    v.data = {};
-
-                    Object.defineProperty(v.data, prop, {
-                        value: `${this.entryUrl}/${entry._id}/${v.filename}`,
-                        enumerable: false,
-                        writable: true
-                    });
-
-
-                    Object.defineProperty(v.data, 'type', {
-                        value: vtype,
-                        enumerable: false,
-                        writable: true
-                    });
+                    v.data = {
+                        type: vtype
+                    };
+                    v.data[prop] = `${this.entryUrl}/${entry._id}/${v.filename}`;
                 })
             }
         }
