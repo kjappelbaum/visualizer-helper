@@ -8,7 +8,7 @@ define([
         'uri/URI',
         'lodash',
         'src/util/couchdbAttachments',
-        'mime-types',
+        'src/util/mimeTypes',
         'src/util/IDBKeyValue'
     ],
     function (API, ui, Util, superagent, URI, _, CDB, mimeTypes, IDB) {
@@ -738,14 +738,7 @@ define([
             }
 
             // Ideally jcamp extensions should be handled by mime-types
-            contentType = mimeTypes.lookup(filename);
-            if (!contentType && /\.j?dx$/i.test(filename)) {
-                contentType = 'chemical/x-jcamp-dx';
-            }
-            if (!contentType) {
-                contentType = fallback;
-            }
-            attachment.contentType = contentType;
+            attachment.contentType = mimeTypes.lookup(filename, fallback);
         }
 
         const typeValue = ['gif', 'tiff', 'jpeg', 'jpg', 'png'];
