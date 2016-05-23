@@ -738,7 +738,7 @@ define([
             }
 
             // Ideally jcamp extensions should be handled by mime-types
-            attachment.contentType = mimeTypes.lookup(filename, fallback);
+            attachment.contentType = mimeTypes.lookup(filename, fallback) || fallback;
         }
 
         const typeValue = ['gif', 'tiff', 'jpeg', 'jpg', 'png'];
