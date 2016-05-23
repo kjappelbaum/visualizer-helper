@@ -74,12 +74,15 @@ define(['http://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c81
                 p = `M${margin},2 ${margin},${rectHeight - (2 * arrowHeadSize + 1)}`
             }
 
-            paper.path(p).attr({
-                style: 'marker-end: url(#svgarrow);',
-                strokeWidth: arrowStrokeWidth,
-                stroke: '#000000',
-                dataClass: 'spin'
-            }).appendTo(group);
+            if(group) {
+                paper.path(p).attr({
+                    style: 'marker-end: url(#svgarrow);',
+                    strokeWidth: arrowStrokeWidth,
+                    stroke: '#000000',
+                    dataClass: 'spin'
+                }).appendTo(group);
+            }
+
         }
 
         function drawRect(posx, posy, id) {
