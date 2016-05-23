@@ -45,9 +45,9 @@ define(['http://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c81
         var sSpace = (drawHeight - levelHeight) / 6;
         var labelOffset = rectHeight + fontSize + 5;
         var columnOffset = (drawWidth - 16 * rectWidth - 12 * rectMargin) / 3;
-        var pOffset = [sSpace / 4, null, (drawHeight - levelHeight) * 5 / 6 - sSpace / 3, rectWidth + columnOffset];
-        var dOffset = [2 * sSpace / 4, null, (drawHeight - levelHeight) / 2 - sSpace / 3, 4 * rectWidth + 2 * rectMargin + 2 * columnOffset];
-        var fOffset = [3 * sSpace / 4, null, (drawHeight - levelHeight) / 2 - sSpace / 3, 9 * rectWidth + 6 * rectMargin + 3 * columnOffset];
+        var pOffset = [sSpace / 4, null, sSpace * 5 - sSpace / 3, rectWidth + columnOffset];
+        var dOffset = [2 * sSpace / 4, null, sSpace * 3 - sSpace / 3, 4 * rectWidth + 2 * rectMargin + 2 * columnOffset];
+        var fOffset = [-1 / 4 * sSpace, null, 3 / 4 * sSpace, 9 * rectWidth + 6 * rectMargin + 3 * columnOffset];
         var spinOuterMargin = rectWidth * spinOuterMarginRatio;
         var spinInnerMargin = rectWidth * (1 - 2 * spinOuterMarginRatio);
 
@@ -156,9 +156,9 @@ define(['http://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c81
         }
 
         // f
-        for (i = 0; i < 1; i++) {
-            label = '' + (4 - i) + 'f';
-            y = topBottomMargin + fOffset[0] + i * (drawHeight - fOffset[0] - (drawHeight - fOffset[2])) / 2;
+        for (i = 0; i < 2; i++) {
+            label = '' + (5 - i) + 'f';
+            y = topBottomMargin + fOffset[0] + i * (drawHeight - fOffset[0] - (drawHeight - fOffset[2]));
             for (j = 0; j < 7; j++) {
                 x = leftRightMargin + fOffset[3] + j * (rectWidth + rectMargin);
                 drawRect(x, y, label + (j + 1));
