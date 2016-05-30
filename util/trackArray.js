@@ -14,7 +14,7 @@ define(['src/util/api', 'lodash'], function (API, _) {
             console.error(e);
         }
 
-        API.createData(localName, localValue).then(function(data) {
+        return API.createData(localName, localValue).then(function(data) {
             data.onChange(function() {
                 localStorage.setItem(localName, JSON.stringify(data));
             });

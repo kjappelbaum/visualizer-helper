@@ -6,7 +6,6 @@ require(['Track'], function(Track) {
 */
 
 define(['src/util/api'], function (API) {
-
     function track(cookieName, defaultValue) {
         if (API.getData(cookieName)) return;
         var options = {};
