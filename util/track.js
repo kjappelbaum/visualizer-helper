@@ -7,7 +7,7 @@ require(['Track'], function(Track) {
 
 define(['src/util/api', 'src/util/versioning'], function (API, Versioning) {
     function track(cookieName, defaultValue) {
-        if (API.getData(cookieName)) return;
+        if (API.getData(cookieName)) return Promise.resolve();
         var options = {};
         try {
             options = JSON.parse(window.localStorage.getItem(cookieName)) || {};
