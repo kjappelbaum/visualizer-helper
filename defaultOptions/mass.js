@@ -1,6 +1,7 @@
 define(function () {
     return {
         "monoisotopicMass": 300.123,
+        "resolution": 100000,
         "groups1":"(H+).(H+)2.(H+)3.K+.Na+",
         "groups2":"",
         "groups3":"",

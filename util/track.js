@@ -5,10 +5,9 @@ require(['Track'], function(Track) {
 })
 */
 
-define(['src/util/api'], function (API) {
-
+define(['src/util/api', 'src/util/versioning'], function (API, Versioning) {
     function track(cookieName, defaultValue) {
-        if (API.getData(cookieName)) return;
+        if (API.getData(cookieName)) return Promise.resolve();
         var options = {};
         try {
             options = JSON.parse(window.localStorage.getItem(cookieName)) || {};
@@ -16,14 +15,14 @@ define(['src/util/api'], function (API) {
         } catch (e) {
             console.log(e);
         }
-        ;
-        API.createData(cookieName, options);
 
-        var data = require('src/util/versioning').getData();
-        data.onChange(function (evt) {
-            if (evt.jpath.length == 1 && evt.jpath[0] == cookieName) {
-                localStorage.setItem(cookieName, JSON.stringify(evt.target));
-            }
+        return API.createData(cookieName, options).then(function(result) {
+            var data = Versioning.getData();
+            data.onChange(function (evt) {
+                if (evt.jpath.length == 1 && evt.jpath[0] == cookieName) {
+                    localStorage.setItem(cookieName, JSON.stringify(evt.target));
+                }
+            });
         });
     }
 
