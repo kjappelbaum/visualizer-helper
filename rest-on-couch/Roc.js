@@ -154,13 +154,13 @@ define([
                 return this.get(uuid).then(doc => {
                     if (!doc) return;
                     if (options.varName) {
-                        this.variables[options.varName] = {
-                            type: 'document',
-                            data: doc
-                        };
                         this._typeUrl(doc.$content, doc);
                         var idb = new IDB('roc-documents');
                         return API.createData(options.varName, doc).then(data => {
+                            this.variables[options.varName] = {
+                                type: 'document',
+                                data: data
+                            };
                             data.onChange(() => {
                                 idb.set(data._id, data.resurrect());
                             });
