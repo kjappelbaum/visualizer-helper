@@ -127,15 +127,15 @@ define([
                                     res.body = res.body.filter(options.filter);
                                 }
                                 if (options.varName) {
-                                    this.variables[options.varName] = {
-                                        type: 'view',
-                                        requestUrl,
-                                        data: res.body
-                                    };
                                     for (var i = 0; i < res.body.length; i++) {
                                         this._typeUrl(res.body[i].$content, res.body[i]);
                                     }
                                     return API.createData(options.varName, res.body).then(data => {
+                                        this.variables[options.varName] = {
+                                            type: 'view',
+                                            requestUrl,
+                                            data: data
+                                        };
                                         for(var i=0; i<data.length; i++) {
                                             data.traceSync([i]);
                                         }
