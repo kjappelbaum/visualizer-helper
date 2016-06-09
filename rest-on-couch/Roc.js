@@ -177,6 +177,7 @@ define([
                                             viewName,
                                             data: data
                                         };
+                                        return data;
                                     })
                                 }
                             }
