@@ -30,7 +30,7 @@ define([
             }
         };
 
-        const getTypes = ['get', 'getAttachment', 'getView'];
+        const getTypes = ['get', 'getAttachment', 'getView', 'getQuery'];
 
         const messagesByType = {
             get: {
@@ -110,12 +110,7 @@ define([
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getView');
                     let requestUrl = new URI(`${this.databaseUrl}_view/${viewName}`);
-
-                    for (let i = 0; i < viewSearch.length; i++) {
-                        if (options[viewSearch[i]]) {
-                            requestUrl.addSearch(viewSearch[i], JSON.stringify(options[viewSearch[i]]));
-                        }
-                    }
+                    addSearch(requestUrl, options);
 
                     requestUrl = requestUrl.normalize().href();
 
@@ -133,14 +128,52 @@ define([
                                     return API.createData(options.varName, res.body).then(data => {
                                         this.variables[options.varName] = {
                                             type: 'view',
+                                            options,
+                                            viewName,
                                             requestUrl,
                                             data: data
                                         };
-                                        for(var i=0; i<data.length; i++) {
+                                        for (var i = 0; i < data.length; i++) {
                                             data.traceSync([i]);
                                         }
                                         return data;
                                     });
+                                }
+                            }
+                            return res.body;
+                        })
+                        .then(handleSuccess(this, options))
+                        .catch(handleError(this, options));
+                });
+            }
+
+            query(viewName, options) {
+                return this.__ready.then(() => {
+                    options = createOptions(options, 'getQuery');
+                    let requestUrl = new URI(`${this.databaseUrl}_query/${viewName}`);
+                    addSearch(requestUrl, options);
+                    requestUrl = requestUrl.normalize().href();
+
+                    return superagent.get(requestUrl)
+                        .withCredentials()
+                        .then(res => {
+                            if (res && res.body && res.status == 200) {
+                                if (options.filter) {
+                                    res.body = res.body.filter(options.filter);
+                                }
+                                if (options.varName) {
+                                    for (var i = 0; i < res.body.length; i++) {
+                                        this._typeUrl(res.body[i]);
+                                    }
+                                    return API.createData(options.varName, res.body).then(data => {
+                                        this.variables[options.varName] = {
+                                            type: 'query',
+                                            options,
+                                            requestUrl,
+                                            viewName,
+                                            data: data
+                                        };
+                                    })
                                 }
                             }
                             return res.body;
@@ -166,8 +199,8 @@ define([
                             });
 
                             idb.get(data._id).then(localEntry => {
-                                if(!localEntry) return;
-                                if(localEntry._rev === doc._rev) {
+                                if (!localEntry) return;
+                                if (localEntry._rev === doc._rev) {
                                     this._updateByUuid(data._id, localEntry);
                                 } else {
                                     idb.delete(data._id);
@@ -238,11 +271,13 @@ define([
                                 let keys = Object.keys(this.variables);
                                 for (let i = 0; i < keys.length; i++) {
                                     let v = this.variables[keys[i]];
-                                    if(v.type === 'view') {
+                                    if (v.type === 'view') {
                                         var idx = v.data.length;
                                         v.data.push(entry);
                                         v.data.traceSync([idx]);
                                         v.data.triggerChange();
+                                    } else if (v.type === 'query') {
+                                        this.query(v.viewName, v.options);
                                     }
                                 }
                                 return entry;
@@ -454,7 +489,7 @@ define([
                             .then(handleSuccess(this, options))
                             .catch(handleError(this, options));
                     });
-                })
+                });
             }
 
             addAttachmentById(id, attachment, options) {
@@ -544,8 +579,12 @@ define([
                 if (!this.variables[key]) return -1;
                 if (this.variables[key].type === 'document') {
                     return -1;
+                } else if (this.variables[key].type === 'view') {
+                    return this.variables[key].data.findIndex(entry => String(entry._id) === String(uuid));
+                } else if (this.variables[key].type === 'query') {
+                    return this.variables[key].data.findIndex(entry => String(entry.id) === String(uuid));
                 }
-                return this.variables[key].data.findIndex(entry => String(entry._id) === String(uuid));
+                return -1;
             }
 
             _updateByUuid(uuid, data) {
@@ -566,6 +605,12 @@ define([
                             this._typeUrl(data.$content, data);
                             let doc = this.variables[key].data;
                             this._updateDocument(doc, data);
+                        }
+                    } else if (this.variables[key].type === 'query' && this.queryAutoRefresh) {
+                        const idx = this._findIndexByUuid(uuid, key);
+                        if (idx !== -1) {
+                            // Redo the same query
+                            this.query(this.variables[key].viewName, this.variables[key].options);
                         }
                     }
                 }
@@ -633,7 +678,7 @@ define([
 
             _untypeUrl(v) {
                 this._traverseFilename(v, v => {
-                    if(v.data) {
+                    if (v.data) {
                         delete v.data;
                     }
                 });
@@ -739,6 +784,14 @@ define([
 
             // Ideally jcamp extensions should be handled by mime-types
             attachment.contentType = mimeTypes.lookup(filename, fallback) || fallback;
+        }
+
+        function addSearch(requestUrl, options) {
+            for (let i = 0; i < viewSearch.length; i++) {
+                if (options[viewSearch[i]]) {
+                    requestUrl.addSearch(viewSearch[i], JSON.stringify(options[viewSearch[i]]));
+                }
+            }
         }
 
         const typeValue = ['gif', 'tiff', 'jpeg', 'jpg', 'png'];
