@@ -68,6 +68,10 @@ define([
             getView: {
                 401: 'Unauthorized to get view',
                 404: 'View does not exist'
+            },
+            getQuery: {
+                401: 'Unauthorized to get query',
+                404: 'Query does not exist'
             }
         };
 
