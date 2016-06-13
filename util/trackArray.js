@@ -3,7 +3,8 @@
 define(['src/util/api', 'lodash'], function (API, _) {
 
     function track(localName, defaultValue, comparator) {
-        if (API.getData(localName)) return;
+        var data = API.getData(localName);
+        if (data) return Promise.resolve(data);
         var comparator = comparator || _.isEqual;
         var localValue = [];
         try {
@@ -13,6 +14,7 @@ define(['src/util/api', 'lodash'], function (API, _) {
             localValue = _.uniqWith(localValue, comparator);
         } catch (e) {
             console.error(e);
+            return Promise.reject(e);
         }
 
         return API.createData(localName, localValue).then(function(data) {
