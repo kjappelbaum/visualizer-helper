@@ -78,11 +78,6 @@ function isCorrect(sol, ans, options) {
                 correct: false,
                 reason: 'wrong answer (within relative error)'
             }
-        } else {
-            return {
-                correct: true,
-                reason: 'correct answer (within relative error)'
-            }
         }
     }
 
@@ -97,22 +92,27 @@ function isCorrect(sol, ans, options) {
         } else {
             return {
                 correct: true,
-                reason: 'correct answer (within absolute error)'
+                reason: relativeError === null ? 'correct answer (within absolute error)': 'correct answer (within relative and absolute error)'
             };
         }
     }
 
-    if(relativeError === null && absoluteError === null) {
-        if(ans !== sol) {
-            return {
-                correct: false,
-                reason: 'wrong answer (not equal)'
-            }
-        } else {
-            return {
-                correct: true,
-                reason: 'correct answer (is equal)'
-            }
+    if(relativeError !== null) {
+        return {
+            correct: true,
+            reason: 'correct answer (within relative error)'
+        }
+    }
+
+    if(ans !== sol) {
+        return {
+            correct: false,
+            reason: 'wrong answer (not equal)'
+        }
+    } else {
+        return {
+            correct: true,
+            reason: 'correct answer (is equal)'
         }
     }
 
