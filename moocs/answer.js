@@ -70,8 +70,10 @@ define(['mathjs'], function(mathjs) {
 });
 
 function isCorrect(sol, ans, options) {
-    if(options.relativeError != undefined && !isNaN(options.relativeError)) {
-        if(Math.abs(sol - ans) > options.relativeError * sol) {
+    var absoluteError = options.absoluteError != undefined && !isNaN(options.absoluteError) ? options.absoluteError : null;
+    var relativeError = options.relativeError != undefined && !isNaN(options.relativeError) ? options.relativeError : null;
+    if(relativeError !== null) {
+        if(Math.abs(sol - ans) > relativeError * sol) {
             return {
                 correct: false,
                 reason: 'wrong answer (within relative error)'
@@ -82,8 +84,10 @@ function isCorrect(sol, ans, options) {
                 reason: 'correct answer (within relative error)'
             }
         }
-    } else if(options.absoluteError != undefined && !isNaN(options.absoluteError)) {
-        var absoluteError = Math.abs(options.absoluteError);
+    }
+
+    if(absoluteError !== null) {
+        absoluteError = Math.abs(absoluteError);
         var err = Math.abs(sol -  ans);
         if(err > absoluteError) {
             return {
@@ -96,7 +100,9 @@ function isCorrect(sol, ans, options) {
                 reason: 'correct answer (within absolute error)'
             };
         }
-    }  else {
+    }
+
+    if(relativeError === null && absoluteError === null) {
         if(ans !== sol) {
             return {
                 correct: false,
@@ -109,4 +115,6 @@ function isCorrect(sol, ans, options) {
             }
         }
     }
+
+    // unreachable
 }
