@@ -53,7 +53,7 @@ define(['mathjs'], function(mathjs) {
 });
 
 function isCorrect(sol, ans, options) {
-    if(options.relativeError != undefined) {
+    if(options.relativeError != undefined && !isNaN(options.relativeError)) {
         if(Math.abs(sol - ans) > options.relativeError * sol) {
             return {
                 correct: false,
@@ -65,7 +65,7 @@ function isCorrect(sol, ans, options) {
                 reason: 'correct answer (within relative error)'
             }
         }
-    } else if(options.absoluteError != undefined) {
+    } else if(options.absoluteError != undefined && !isNaN(options.absoluteError)) {
         var absoluteError = Math.abs(options.absoluteError);
         var err = sol -  ans;
         if(err > absoluteError || err < -absoluteError) {
