@@ -28,7 +28,7 @@ define(['mathjs'], function(mathjs) {
         }
 
         try {
-            var ansUnit = math.js.unit(String(ans));
+            var ansUnit = mathjs.unit(String(ans));
             var solU = solUnit.formatUnits();
         } catch(e) {
             return {
