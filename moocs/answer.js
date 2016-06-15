@@ -4,7 +4,21 @@ define(['mathjs'], function(mathjs) {
     var exports = {};
 
     exports.isCorrect = function (sol, ans, options) {
-        options = options || {};
+        options = Object.assign({}, options);
+        // Absolute error
+        // if no units, same units as answer
+        if(options.absoluteError != undefined && !isNaN(options.absoluteError)) {
+            try {
+                var errorUnit = mathjs.unit(options.absoluteError);
+            } catch(e) {
+                if(e.message.match(/no units/)) {
+                    options.absoluteError = +options.absoluteError;
+                } else {
+                    options.absoluteError = null;
+                }
+            }
+        }
+
         try {
             var solUnit = mathjs.unit(String(sol));
         } catch(e) {
@@ -45,6 +59,9 @@ define(['mathjs'], function(mathjs) {
         } else {
             sol = solUnit.toNumber(solU);
             ans = ansUnit.toNumber(solU);
+            if(errorUnit) {
+                options.absoluteError = errorUnit.toNumber(solU);
+            }
             return isCorrect(sol, ans, options);
         }
     };
