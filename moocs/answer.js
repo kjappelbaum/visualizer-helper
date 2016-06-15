@@ -4,10 +4,14 @@ define(['mathjs'], function(mathjs) {
     var exports = {};
 
     exports.isCorrect = function (sol, ans, options) {
+        sol = String(sol);
+        ans = String(ans);
         options = Object.assign({}, options);
         // Absolute error
         // if no units, same units as answer
+        options.relativeError = Number(options.relativeError);
         if(options.absoluteError != undefined) {
+            options.absoluteError = String(options.absoluteError);
             try {
                 var errorUnit = mathjs.unit(options.absoluteError);
             } catch(e) {
