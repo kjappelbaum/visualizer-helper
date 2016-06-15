@@ -37,7 +37,7 @@ define(['mathjs'], function(mathjs) {
             }
         }
 
-        if(!solUnit.equalBase(ans)) {
+        if(!solUnit.equalBase(ansUnit)) {
             return {
                 correct: false,
                 reason: 'answer has wrong units'
