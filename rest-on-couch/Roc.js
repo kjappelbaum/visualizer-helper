@@ -168,6 +168,10 @@ define([
                                 if (options.varName) {
                                     for (var i = 0; i < res.body.length; i++) {
                                         this._typeUrl(res.body[i]);
+                                        res.body[i].data = {
+                                            type: 'object',
+                                            url: `${this.entryUrl}/${res.body[i].id}`
+                                        }
                                     }
                                     return API.createData(options.varName, res.body).then(data => {
                                         this.variables[options.varName] = {
