@@ -23,6 +23,7 @@ define(['src/util/api', 'src/util/versioning'], function (API, Versioning) {
                     localStorage.setItem(cookieName, JSON.stringify(evt.target));
                 }
             });
+            return result;
         });
     }
 
