@@ -168,7 +168,7 @@ define([
                                 if (options.varName) {
                                     for (var i = 0; i < res.body.length; i++) {
                                         this._typeUrl(res.body[i]);
-                                        res.body[i].data = {
+                                        res.body[i].document = {
                                             type: 'object',
                                             url: `${this.entryUrl}/${res.body[i].id}`
                                         }
