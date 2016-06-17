@@ -127,7 +127,7 @@ define([
                                 }
                                 if (options.varName) {
                                     for (var i = 0; i < res.body.length; i++) {
-                                        this._typeUrl(res.body[i].$content, res.body[i]);
+                                        this.typeUrl(res.body[i].$content, res.body[i]);
                                     }
                                     return API.createData(options.varName, res.body).then(data => {
                                         this.variables[options.varName] = {
@@ -167,7 +167,6 @@ define([
                                 }
                                 if (options.varName) {
                                     for (var i = 0; i < res.body.length; i++) {
-                                        this._typeUrl(res.body[i]);
                                         res.body[i].document = {
                                             type: 'object',
                                             url: `${this.entryUrl}/${res.body[i].id}`
@@ -196,7 +195,7 @@ define([
                 return this.get(uuid).then(doc => {
                     if (!doc) return;
                     if (options.varName) {
-                        this._typeUrl(doc.$content, doc);
+                        this.typeUrl(doc.$content, doc);
                         var idb = new IDB('roc-documents');
                         return API.createData(options.varName, doc).then(data => {
                             this.variables[options.varName] = {
@@ -276,7 +275,7 @@ define([
                             })
                             .then(entry => {
                                 if (!entry) return;
-                                this._typeUrl(entry.$content, entry);
+                                this.typeUrl(entry.$content, entry);
                                 let keys = Object.keys(this.variables);
                                 for (let i = 0; i < keys.length; i++) {
                                     let v = this.variables[keys[i]];
@@ -299,7 +298,7 @@ define([
                 return this.__ready.then(() => {
                     options = createOptions(options, 'update');
                     var reqEntry = DataObject.resurrect(entry);
-                    this._untypeUrl(reqEntry.$content);
+                    this.untypeUrl(reqEntry.$content);
                     return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
                         .withCredentials()
                         .send(reqEntry)
@@ -414,7 +413,7 @@ define([
                                                 throw new Error('no processor');
                                             }
                                             this.processor.process(type, entry.$content, attachment);
-                                            this._typeUrl(entry.$content, entry);
+                                            this.typeUrl(entry.$content, entry);
                                             entry.triggerChange();
                                             return entry;
                                         })
@@ -601,7 +600,7 @@ define([
                     if (this.variables[key].type === 'view') {
                         const idx = this._findIndexByUuid(uuid, key);
                         if (idx !== -1) {
-                            this._typeUrl(data.$content, data);
+                            this.typeUrl(data.$content, data);
                             //this.variables[key].data.setChildSync([idx], data);
                             let row = this.variables[key].data.getChildSync([idx]);
                             this._updateDocument(row, data);
@@ -611,7 +610,7 @@ define([
                         const _id = this.variables[key].data._id;
                         if (uuid === _id) {
                             //var newData = DataObject.resurrect(data);
-                            this._typeUrl(data.$content, data);
+                            this.typeUrl(data.$content, data);
                             let doc = this.variables[key].data;
                             this._updateDocument(doc, data);
                         }
@@ -685,7 +684,7 @@ define([
                 }
             }
 
-            _untypeUrl(v) {
+            untypeUrl(v) {
                 this._traverseFilename(v, v => {
                     if (v.data) {
                         delete v.data;
@@ -693,7 +692,7 @@ define([
                 });
             }
 
-            _typeUrl(v, entry) {
+            typeUrl(v, entry) {
                 this._traverseFilename(v, v => {
                     var filename = String(v.filename);
                     if (!entry._attachments) return;
@@ -711,7 +710,7 @@ define([
                         type: vtype
                     };
                     v.data[prop] = `${this.entryUrl}/${entry._id}/${v.filename}`;
-                })
+                });
             }
         }
 
