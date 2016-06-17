@@ -686,7 +686,7 @@ define([
 
             untypeUrl(v) {
                 this._traverseFilename(v, v => {
-                    if (v.data) {
+                    if (v.data && v.data.url) {
                         delete v.data;
                     }
                 });
