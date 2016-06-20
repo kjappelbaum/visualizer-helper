@@ -6,20 +6,22 @@ require(['Track'], function(Track) {
 */
 
 define(['src/util/api', 'src/util/versioning'], function (API, Versioning) {
-    function track(cookieName, defaultValue) {
-        if (API.getData(cookieName)) return Promise.resolve();
-        var options = {};
+    function track(cookieName, defaultValue, options) {
+        options = options || {};
+        var varName = options.varName || cookieName;
+        if (API.getData(varName)) return Promise.resolve();
+        var data = {};
         try {
-            options = JSON.parse(window.localStorage.getItem(cookieName)) || {};
-            if (defaultValue) options = $.extend(true, defaultValue, options);
+            data = JSON.parse(window.localStorage.getItem(cookieName)) || {};
+            if (defaultValue) data = $.extend(true, defaultValue, data);
         } catch (e) {
-            console.log(e);
+            return Promise.reject(e);
         }
 
-        return API.createData(cookieName, options).then(function(result) {
-            var data = Versioning.getData();
-            data.onChange(function (evt) {
-                if (evt.jpath.length == 1 && evt.jpath[0] == cookieName) {
+        return API.createData(varName, data).then(function(result) {
+            var mainData = Versioning.getData();
+            mainData.onChange(function (evt) {
+                if (evt.jpath.length == 1 && evt.jpath[0] == varName) {
                     localStorage.setItem(cookieName, JSON.stringify(evt.target));
                 }
             });
