@@ -9,8 +9,9 @@ define(['src/util/api', 'src/util/versioning'], function (API, Versioning) {
     function track(cookieName, defaultValue, options) {
         options = options || {};
         var varName = options.varName || cookieName;
-        if (API.getData(varName)) return Promise.resolve();
-        var data = {};
+        var data = API.getData(varName);
+        if (data) return Promise.resolve(data);
+        data = {};
         try {
             data = JSON.parse(window.localStorage.getItem(cookieName)) || {};
             if (defaultValue) data = $.extend(true, defaultValue, data);
