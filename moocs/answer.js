@@ -76,11 +76,13 @@ define(['mathjs'], function(mathjs) {
 function isCorrect(sol, ans, options) {
     var absoluteError = options.absoluteError != undefined && !isNaN(options.absoluteError) ? options.absoluteError : null;
     var relativeError = options.relativeError != undefined && !isNaN(options.relativeError) ? options.relativeError : null;
+    var order = getOrder(sol, ans);
     if(relativeError !== null) {
         if(Math.abs(sol - ans) > relativeError * sol) {
             return {
                 correct: false,
-                reason: 'wrong answer (within relative error)'
+                reason: 'wrong answer (within relative error)',
+                order: order
             }
         }
     }
@@ -91,12 +93,14 @@ function isCorrect(sol, ans, options) {
         if(err > absoluteError) {
             return {
                 correct: false,
-                reason: 'wrong answer (within absolute error)'
+                reason: 'wrong answer (within absolute error)',
+                order
             };
         } else {
             return {
                 correct: true,
-                reason: relativeError === null ? 'correct answer (within absolute error)': 'correct answer (within relative and absolute error)'
+                reason: relativeError === null ? 'correct answer (within absolute error)': 'correct answer (within relative and absolute error)',
+                order
             };
         }
     }
@@ -104,21 +108,29 @@ function isCorrect(sol, ans, options) {
     if(relativeError !== null) {
         return {
             correct: true,
-            reason: 'correct answer (within relative error)'
+            reason: 'correct answer (within relative error)',
+            order
         }
     }
 
     if(ans !== sol) {
         return {
             correct: false,
-            reason: 'wrong answer (not equal)'
+            reason: 'wrong answer (not equal)',
+            order
         }
     } else {
         return {
             correct: true,
-            reason: 'correct answer (is equal)'
+            reason: 'correct answer (is equal)',
+            order
         }
     }
 
     // unreachable
+}
+
+function getOrder(sol, ans) {
+    var ratio = ans / sol;
+    return Math.round(Math.log10(ratio));
 }
