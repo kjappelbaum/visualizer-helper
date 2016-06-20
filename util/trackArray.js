@@ -2,8 +2,10 @@
 
 define(['src/util/api', 'lodash'], function (API, _) {
 
-    function track(localName, defaultValue, comparator) {
-        var data = API.getData(localName);
+    function track(localName, defaultValue, comparator, options) {
+        options = options || {};
+        var varName = options.varName || localName;
+        var data = API.getData(varName);
         if (data) return Promise.resolve(data);
         var comparator = comparator || _.isEqual;
         var localValue = [];
@@ -13,11 +15,10 @@ define(['src/util/api', 'lodash'], function (API, _) {
             localValue = localValue.concat(defaultValue);
             localValue = _.uniqWith(localValue, comparator);
         } catch (e) {
-            console.error(e);
             return Promise.reject(e);
         }
 
-        return API.createData(localName, localValue).then(function(data) {
+        return API.createData(varName, localValue).then(function(data) {
             data.onChange(function() {
                 localStorage.setItem(localName, JSON.stringify(data));
             });
