@@ -22,6 +22,7 @@ define(['src/util/api', 'lodash'], function (API, _) {
             data.onChange(function() {
                 localStorage.setItem(localName, JSON.stringify(data));
             });
+            return data;
         });
     }
 
