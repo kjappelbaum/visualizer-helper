@@ -102,6 +102,8 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
             if (matrix[i][i] === 0 || matrix[i][i] === -0) return i;
         }
     }
+
+    return exports;
 });
 
 
