@@ -1,16 +1,6 @@
 'use strict';
 
-define([
-        'src/util/api',
-        'src/util/ui',
-        'src/util/util',
-        'superagent',
-        'uri/URI',
-        'lodash',
-        'src/util/couchdbAttachments',
-        'src/util/mimeTypes',
-        'src/util/IDBKeyValue'
-    ],
+define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI', 'lodash', 'src/util/couchdbAttachments', 'src/util/mimeTypes', 'src/util/IDBKeyValue'],
     function (API, ui, Util, superagent, URI, _, CDB, mimeTypes, IDB) {
 
         const defaultOptions = {
@@ -170,7 +160,7 @@ define([
                                         res.body[i].document = {
                                             type: 'object',
                                             url: `${this.entryUrl}/${res.body[i].id}`
-                                        }
+                                        };
                                     }
                                     return API.createData(options.varName, res.body).then(data => {
                                         this.variables[options.varName] = {
@@ -181,7 +171,7 @@ define([
                                             data: data
                                         };
                                         return data;
-                                    })
+                                    });
                                 }
                             }
                             return res.body;
@@ -389,7 +379,8 @@ define([
                         prom = ui.enterValue('Enter a filename');
                     }
 
-                    return prom.then(filename => {
+                    return prom
+                        .then(filename => {
                             if (filename) attachment.filename = filename;
                             if (!attachment.filename) {
                                 return;
@@ -405,19 +396,18 @@ define([
                             }
                             setContentType(attachment, fallback);
 
-                            return this.get(entry, {fromCache: true})
-                                .then(entry => {
-                                    return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment'))
-                                        .then(entry => {
-                                            if (!this.processor) {
-                                                throw new Error('no processor');
-                                            }
-                                            this.processor.process(type, entry.$content, attachment);
-                                            this.typeUrl(entry.$content, entry);
-                                            entry.triggerChange();
-                                            return entry;
-                                        })
-                                })
+                            return this.get(entry, {fromCache: true}).then(entry => {
+                                return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment'))
+                                    .then(entry => {
+                                        if (!this.processor) {
+                                            throw new Error('no processor');
+                                        }
+                                        this.processor.process(type, entry.$content, attachment);
+                                        this.typeUrl(entry.$content, entry);
+                                        entry.triggerChange();
+                                        return entry;
+                                    });
+                            });
                         })
                         .then(handleSuccess(this, attachOptions))
                         .catch(handleError(this, attachOptions));
@@ -492,7 +482,7 @@ define([
                                         entry.$modificationDate = data.$modificationDate;
                                         entry.triggerChange();
                                         return entry;
-                                    })
+                                    });
                             })
                             .then(handleSuccess(this, options))
                             .catch(handleError(this, options));
@@ -669,8 +659,7 @@ define([
                 this._traverseFilename(v, function (v) {
                     if (typeof filename === 'undefined') {
                         r.push(v);
-                    }
-                    else if (filename.indexOf(String(v.filename)) !== -1) {
+                    } else if (filename.indexOf(String(v.filename)) !== -1) {
                         r.push(v);
                     }
                 });
