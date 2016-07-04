@@ -109,13 +109,14 @@ define(['src/util/api', 'src/util/ui', 'OCLE'], function (API, UI, OCLE) {
         }
 
         updateMF() {
-            if(typeof UI !='undefined'){
+            if(typeof UI !='undefined')
                 UI.showNotification('Updated mf and mw', 'info');
             this.sample.$content.general.molfile = this.molfile;
             this.sample.$content.general.mf = this.mf;
             this.sample.$content.general.mw = this.mw;
         }
     }
+
     return ExpandableMolecule;
 });
 
