@@ -37,7 +37,7 @@ define(['src/util/api', 'src/util/ui', 'OCLE', './ExpandableMolecule','elnPlugin
                 API.setVariable('iupac', sampleVar, ['$content', 'general', 'iupac']);
                 API.setVariable('bp', sampleVar, ['$content', 'physical', 'bp']);
                 API.setVariable('nd', sampleVar, ['$content', 'physical', 'nd']);
-                /PI.setVariable('mp', sampleVar, ['$content', 'physical', 'mp']);
+                API.setVariable('mp', sampleVar, ['$content', 'physical', 'mp']);
                 API.setVariable('density', sampleVar, ['$content', 'physical', 'density']);
                 API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
                 API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
