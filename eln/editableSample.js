@@ -14,6 +14,7 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin',
         }
         if(options.couchDB){
             couchDB = options.couchDB;
+            API.cache('couchDB', couchDB);
         }
         else{
             couchDB = API.cache('couchDB');
@@ -77,8 +78,8 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin',
 
             var sample = API.getData('sample');
 
-            if (this.action) {
-                switch (this.action.name) {
+            if (action) {
+                switch (action.name) {
                     case 'refresh':
                         roc.get(uuid);
                         break;
