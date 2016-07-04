@@ -1,6 +1,6 @@
 'use strict';
 
-define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (NtSeq) {
+define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (Nt) {
     var exports = {};
     var MAX_MISMATCH = 3;
 
@@ -8,7 +8,7 @@ define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (NtSeq) {
         return data.filter(function (d) {
             loop1: for (var i = 0; i < selection.length; i++) {
                 for (var j = 0; j < keys.length; j++) {
-                    if (String(d[keys[j]]) !== String(positive[i][keys[j]])) continue loop1;
+                    if (String(d[keys[j]]) !== String(selection[i][keys[j]])) continue loop1;
                 }
                 return true;
             }
@@ -16,7 +16,7 @@ define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (NtSeq) {
         });
     };
 
-    exports.discriminate = function (posSeq, negSeq) {
+    exports.matchDistribution = function (posSeq, negSeq, useNtSeq) {
 
         console.log('number of species', posSeq.length + negSeq.length);
 
@@ -26,16 +26,31 @@ define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (NtSeq) {
         var result = new Array(primerSet.size);
         var counter = 0;
 
+        var fn;
+        if(!useNtSeq) {
+            fn = getMatchDistribution;
+        } else {
+            posSeq = posSeq.map(function (seq) {
+                return (new Nt.Seq()).read(seq);
+            });
+            negSeq = negSeq.map(function (seq) {
+                return (new Nt.Seq()).read(seq);
+            });
+            fn = getMatchDistributionNtSeq;
+        }
+
         console.log('primer set length', primerSet.size);
 
         primerSet.forEach(function (primer) {
             var r = {};
-            r.pos = getMatchDistribution(primer, posSeq);
-            r.neg = getMatchDistribution(primer, negSeq);
+            r.pos = fn(primer, posSeq);
+            r.neg = fn(primer, negSeq);
             r.primer = primer;
             result[counter] = r;
             counter++;
         });
+
+        console.log(result);
 
         // sort result
         result.sort(function (a, b) {
@@ -47,9 +62,9 @@ define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (NtSeq) {
             return 0;
         });
 
-        console.log('result', result);
         return result;
     };
+
 
 
     // Seq comparison functions
@@ -88,7 +103,6 @@ define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (NtSeq) {
         var bestMatches = sequences.map(function (seq) {
             return findBestMatch(primer, seq);
         });
-        debugger;
         var distribution = new Array(MAX_MISMATCH + 1).fill(0);
         bestMatches.forEach(best => {
             distribution[best]++;
@@ -97,6 +111,14 @@ define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (NtSeq) {
         return distribution.map(d => {
             return d / bestMatches.length;
         });
+    }
+
+    function getMatchDistributionNtSeq(primer, sequences) {
+        var bestMatches = sequences.map(function(seq) {
+            primer = (new Nt.Seq()).read(primer);
+            return seq.mapSequence(primer).best();
+        });
+        return bestMatches;
     }
 
     function countMismatches(seq1, seq2) {
@@ -110,5 +132,8 @@ define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (NtSeq) {
         return mismatch;
     }
 
+    return exports;
 });
+
+
 
