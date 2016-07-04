@@ -81,12 +81,12 @@ define(['src/util/api', 'src/util/ui', 'OCLE', './ExpandableMolecule','elnPlugin
                 }
             }
         }
-    }
 
-    function updateAttachments(entry) {
-        return roc.getAttachmentList(API.cache('couchDB').uuid).then(function (list) {
-            API.createData('sampleAttachments', list);
-        })
+        function updateAttachments(entry) {
+            return roc.getAttachmentList(API.cache('couchDB').uuid).then(function (list) {
+                API.createData('sampleAttachments', list);
+            })
+        }
     }
 
     return loadSampleOnVisualizer;
