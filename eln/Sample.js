@@ -19,11 +19,12 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin',
                 return;
             }
             this.varName = varName||"sample";
+            this.loadInstanceInVisualizer();
         }
 
         loadInstanceInVisualizer(){
             var that = this;
-            roc.document(uuid, {
+            roc.document(this.uuid, {
                 varName: this.varName
             }).then(function (sample) {
                 var sampleVar = API.getVar(that.varName);
