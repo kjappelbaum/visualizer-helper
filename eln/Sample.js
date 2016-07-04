@@ -2,7 +2,7 @@
 /**
  * Created by acastillo on 7/1/16.
  */
-define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin', 'Roc'], function (API, UI, OCLE, ExpandableMolecule, elnPlugin, Roc) {
+define(['src/util/api', 'src/util/ui', 'OCLE', 'elnPlugin', 'Roc'], function (API, UI, OCLE, elnPlugin, Roc) {
 
 
     class Sample{
@@ -24,7 +24,7 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin',
 
         loadInstanceInVisualizer(){
             var that = this;
-            roc.document(this.uuid, {
+            this.roc.document(this.uuid, {
                 varName: this.varName
             }).then(function (sample) {
                 var sampleVar = API.getVar(that.varName);
@@ -61,7 +61,7 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin',
         }
 
         updateAttachments(entry) {
-            return roc.getAttachmentList(couchDB.uuid).then(function (list) {
+            return this.roc.getAttachmentList(this.uuid).then(function (list) {
                 API.createData('sampleAttachments', list);
             })
         }
@@ -235,8 +235,6 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin',
             this.sample.$content.general.mw = this.mw;
         }
     }
-
-
 
     return Sample;
 });
