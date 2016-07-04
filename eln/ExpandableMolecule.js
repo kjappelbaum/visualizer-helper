@@ -3,7 +3,7 @@
  * Tested with OCLE https://www.lactame.com/lib/openchemlib-extended/1.4.0/openchemlib-extended
  * Created by acastillo on 7/1/16.
  */
-define(['src/util/api', 'OCLE'], function (API, OCLE) {
+define(['src/util/api', 'src/util/ui', 'OCLE'], function (API, UI, OCLE) {
 
     class ExpandableMolecule {
         constructor(sampleIn) {
@@ -109,7 +109,8 @@ define(['src/util/api', 'OCLE'], function (API, OCLE) {
         }
 
         updateMF() {
-            UI.showNotification('Updated mf and mw', 'info');
+            if(typeof UI !='undefined'){
+                UI.showNotification('Updated mf and mw', 'info');
             this.sample.$content.general.molfile = this.molfile;
             this.sample.$content.general.mf = this.mf;
             this.sample.$content.general.mw = this.mw;
