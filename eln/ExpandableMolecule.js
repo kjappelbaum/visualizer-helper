@@ -6,7 +6,7 @@
 define(['src/util/api', 'OCLE'], function (API, OCLE) {
 
     class ExpandableMolecule {
-        constructor(sampleIn, OCLE) {
+        constructor(sampleIn) {
             this.sample = sampleIn;
             this.molfile = this.sample.$content.general.molfile;
             var molecule = OCLE.Molecule.fromMolfile(this.molfile + '');
