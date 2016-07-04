@@ -2,11 +2,26 @@
 /**
  * Created by acastillo on 7/1/16.
  */
-define(['src/util/api', 'src/util/ui', 'OCLE', './ExpandableMolecule','elnPlugin', 'Roc'], function (API, UI, OCLE, ExpandableMolecule, elnPlugin, Roc) {
+define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin', 'Roc'], function (API, UI, OCLE, ExpandableMolecule, elnPlugin, Roc) {
 
-    function loadSampleOnVisualizer(){
-        var roc = API.cache('roc');
-        var couchDB = API.cache('couchDB');
+    function actionHandler(action, options){
+        var roc, couchDB;
+        if(options.roc){
+            roc = options.roc;
+        }
+        else{
+            roc = API.cache('roc');
+        }
+        if(options.couchDB){
+            couchDB = options.couchDB;
+        }
+        else{
+            couchDB = API.cache('couchDB');
+        }
+        if(!couchDB){
+            console.log("You need a couchDB target for this. Please define a couchUrl optional variable specifiying: database, kind and user before to try this");
+            return;
+        }
         var uuid = couchDB.uuid;
 
         if (!roc && uuid) {
