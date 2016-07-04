@@ -14,7 +14,7 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin',
         }
         if(options.couchDB){
             couchDB = options.couchDB;
-            API.cache('couchDB', couchDB);
+            //API.cache('couchDB', couchDB);
         }
         else{
             couchDB = API.cache('couchDB');
@@ -99,11 +99,11 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin',
         }
 
         function updateAttachments(entry) {
-            return roc.getAttachmentList(API.cache('couchDB').uuid).then(function (list) {
+            return roc.getAttachmentList(couchDB.uuid).then(function (list) {
                 API.createData('sampleAttachments', list);
             })
         }
     }
 
-    return loadSampleOnVisualizer;
+    return actionHandler;
 });
