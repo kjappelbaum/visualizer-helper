@@ -9,7 +9,7 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'elnPlugin', 'Roc'], function (AP
 
         constructor(roc, uuid, varName){
             this.roc = roc;
-            if(!this.uuid){
+            if(!this.roc){
                 console.log("Cannot create an editable sample without an active Roc");
                 return;
             }
