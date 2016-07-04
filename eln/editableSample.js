@@ -2,7 +2,7 @@
 /**
  * Created by acastillo on 7/1/16.
  */
-define(['src/util/api', 'src/util/ui', 'OCLE', './ExpandableMolecule','elnPlugin'], function (API, UI, OCLE, ExpandableMolecule, elnPlugin) {
+define(['src/util/api', 'src/util/ui', 'OCLE', './ExpandableMolecule','elnPlugin', 'Roc'], function (API, UI, OCLE, ExpandableMolecule, elnPlugin, Roc) {
 
     function loadSampleOnVisualizer(){
         var roc = API.cache('roc');
