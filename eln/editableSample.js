@@ -5,20 +5,9 @@
 define(['src/util/api', 'src/util/ui', 'OCLE', 'ExpandableMolecule','elnPlugin', 'Roc'], function (API, UI, OCLE, ExpandableMolecule, elnPlugin, Roc) {
 
     function actionHandler(action, options){
-        var roc, couchDB;
-        if(options.roc){
-            roc = options.roc;
-        }
-        else{
-            roc = API.cache('roc');
-        }
-        if(options.couchDB){
-            couchDB = options.couchDB;
-            //API.cache('couchDB', couchDB);
-        }
-        else{
-            couchDB = API.cache('couchDB');
-        }
+        var opt = Object.assign({},{roc:API.cache('roc'),couchDB:API.cache('couchDB')},options)
+        var roc = opt.roc;
+        var couchDB = options.couchDB;
         if(!couchDB){
             console.log("You need a couchDB target for this. Please define a couchUrl optional variable specifiying: database, kind and user before to try this");
             return;
