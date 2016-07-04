@@ -90,4 +90,4 @@ define(['src/util/api', 'src/util/ui', 'OCLE', './ExpandableMolecule','elnPlugin
     }
 
     return loadSampleOnVisualizer;
-}
+});
