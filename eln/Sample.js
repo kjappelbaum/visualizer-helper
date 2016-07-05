@@ -78,10 +78,8 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'elnPlugin', 'Roc'], function (AP
                     case 'save':
                         this.roc.update(sample).then(function () {
                             if(typeof IframeBridge !='undefined') {
-                                sample.onChange(function (event) {
-                                    IframeBridge.postMessage('tab.status', {
-                                        saved: true
-                                    });
+                                IframeBridge.postMessage('tab.status', {
+                                    saved: true
                                 });
                             }
                         });
