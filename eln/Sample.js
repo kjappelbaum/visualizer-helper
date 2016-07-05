@@ -104,15 +104,15 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'elnPlugin', 'Roc'], function (AP
                                 prom = prom.then(function() {
                                     var data = DataObject.resurrect(droppedDatas[i]);
                                     //console.log(data);
-                                    return this.roc.attach(type, sample, data);
+                                    return that.roc.attach(type, sample, data);
                                 });
                             })(i)
                         }
 
                         prom.then(function() {
-                            this.updateAttachments(sample);
+                            that.updateAttachments(sample);
                         }).catch(function() {
-                            this.updateAttachments(sample);
+                            that.updateAttachments(sample);
                         });
                         break;
                     default:
@@ -236,3 +236,4 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'elnPlugin', 'Roc'], function (AP
 
     return Sample;
 });
+
