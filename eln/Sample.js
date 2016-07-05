@@ -94,7 +94,7 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'elnPlugin', 'Roc'], function (AP
                     case 'attachNMR':
                     case 'attachIR':
                     case 'attachMass':
-                        var type = action.name.replace("attach").toLowerCase();
+                        var type = action.name.replace("attach","").toLowerCase();
                         var droppedDatas = data;
                         droppedDatas = droppedDatas.file || droppedDatas.str;
                         var prom = Promise.resolve();
