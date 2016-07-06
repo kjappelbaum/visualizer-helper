@@ -2,7 +2,7 @@
 /**
  * Created by acastillo on 7/1/16.
  */
-define(['src/util/api', 'src/util/ui', 'OCLE', 'Roc'], function (API, UI, OCLE, Roc) {
+define(['src/util/api', 'src/util/ui', 'OCLE'], function (API, UI, OCLE) {
 
 
     class Sample{
