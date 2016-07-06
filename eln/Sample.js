@@ -47,7 +47,7 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'Roc'], function (API, UI, OCLE, 
                 API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
                 API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
                 that.updateAttachments(sample);
-                if(typeof OCLE !='undefined'&&this.options.trackChanges){
+                if(typeof OCLE !='undefined'&&that.options.trackChanges){
                     var expandableMolecule = new ExpandableMolecule(sample);
                     API.cache('expandableMolecule', expandableMolecule);
                     if (typeof IframeBridge != 'undefined') {
