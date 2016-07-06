@@ -2,12 +2,13 @@
 /**
  * Created by acastillo on 7/1/16.
  */
-define(['src/util/api', 'src/util/ui', 'OCLE', 'elnPlugin', 'Roc'], function (API, UI, OCLE, elnPlugin, Roc) {
+define(['src/util/api', 'src/util/ui', 'OCLE', 'Roc'], function (API, UI, OCLE, Roc) {
 
 
     class Sample{
 
-        constructor(roc, uuid, varName){
+        constructor(roc, uuid, varName, options){
+            this.options = Object.assign({},{trackChanges:true},options);
             this.roc = roc;
             if(!this.roc){
                 console.log("Cannot create an editable sample without an active Roc");
@@ -46,17 +47,17 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'elnPlugin', 'Roc'], function (AP
                 API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
                 API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
                 that.updateAttachments(sample);
-
-                var expandableMolecule = new ExpandableMolecule(sample);
-                API.cache('expandableMolecule', expandableMolecule);
-                if (typeof IframeBridge != 'undefined') {
-                    sample.onChange(function (event) {
-                        IframeBridge.postMessage('tab.status', {
-                            saved: false
+                if(typeof OCLE !='undefined'&&this.options.trackChanges){
+                    var expandableMolecule = new ExpandableMolecule(sample);
+                    API.cache('expandableMolecule', expandableMolecule);
+                    if (typeof IframeBridge != 'undefined') {
+                        sample.onChange(function (event) {
+                            IframeBridge.postMessage('tab.status', {
+                                saved: false
+                            });
                         });
-                    });
+                    }
                 }
-
             });
         }
 
@@ -67,56 +68,58 @@ define(['src/util/api', 'src/util/ui', 'OCLE', 'elnPlugin', 'Roc'], function (AP
         }
 
         handleAction(action, data){
-
-            var sample = API.getData(this.varName);
-
             if (action) {
-                switch (action.name) {
-                    case 'refresh':
-                        this.roc.get(this.uuid);
-                        break;
-                    case 'save':
-                        this.roc.update(sample).then(function () {
-                            if(typeof IframeBridge !='undefined') {
-                                IframeBridge.postMessage('tab.status', {
-                                    saved: true
+                var sample = API.getData(this.varName);
+                if(action.name=='refresh'){
+                    this.roc.get(this.uuid);
+                }
+                else{
+                    if(this.options.trackChanges){
+                        switch (action.name) {
+                            case 'save':
+                                this.roc.update(sample).then(function () {
+                                    if(typeof IframeBridge !='undefined') {
+                                        IframeBridge.postMessage('tab.status', {
+                                            saved: true
+                                        });
+                                    }
                                 });
-                            }
-                        });
-                        break;
-                    case 'deleteAttachment':
-                        var attachment = action.value.name;
-                        this.roc.deleteAttachment(sample, attachment).then(this.updateAttachments);
-                        break;
-                    case 'deleteSpectra':
-                        this.roc.unattach(sample, action.value).then(this.updateAttachments);
-                        break;
-                    case 'attachNMR':
-                    case 'attachIR':
-                    case 'attachMass':
-                        var type = action.name.replace("attach","").toLowerCase();
-                        var droppedDatas = data;
-                        droppedDatas = droppedDatas.file || droppedDatas.str;
-                        var prom = Promise.resolve();
-                        var that = this;
-                        for(var i=0; i<droppedDatas.length; i++) {
-                            (function(i) {
-                                prom = prom.then(function() {
-                                    var data = DataObject.resurrect(droppedDatas[i]);
-                                    //console.log(data);
-                                    return that.roc.attach(type, sample, data);
-                                });
-                            })(i)
-                        }
+                                break;
+                            case 'deleteAttachment':
+                                var attachment = action.value.name;
+                                this.roc.deleteAttachment(sample, attachment).then(this.updateAttachments);
+                                break;
+                            case 'deleteSpectra':
+                                this.roc.unattach(sample, action.value).then(this.updateAttachments);
+                                break;
+                            case 'attachNMR':
+                            case 'attachIR':
+                            case 'attachMass':
+                                var type = action.name.replace("attach","").toLowerCase();
+                                var droppedDatas = data;
+                                droppedDatas = droppedDatas.file || droppedDatas.str;
+                                var prom = Promise.resolve();
+                                var that = this;
+                                for(var i=0; i<droppedDatas.length; i++) {
+                                    (function(i) {
+                                        prom = prom.then(function() {
+                                            var data = DataObject.resurrect(droppedDatas[i]);
+                                            //console.log(data);
+                                            return that.roc.attach(type, sample, data);
+                                        });
+                                    })(i)
+                                }
 
-                        prom.then(function() {
-                            that.updateAttachments(sample);
-                        }).catch(function() {
-                            that.updateAttachments(sample);
-                        });
-                        break;
-                    default:
-                        break
+                                prom.then(function() {
+                                    that.updateAttachments(sample);
+                                }).catch(function() {
+                                    that.updateAttachments(sample);
+                                });
+                                break;
+                            default:
+                                break
+                        }
+                    }
                 }
             }
         }
