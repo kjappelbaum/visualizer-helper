@@ -6,9 +6,8 @@ define(['src/util/api', 'src/util/ui', 'OCLE'], function (API, UI, OCLE) {
 
 
     class Sample{
-
         constructor(roc, uuid, varName, options){
-            this.options = Object.assign({},{trackChanges:true},options);
+            this.options = Object.assign({},{track:true},options);
             this.roc = roc;
             if(!this.roc){
                 console.log("Cannot create an editable sample without an active Roc");
@@ -47,7 +46,7 @@ define(['src/util/api', 'src/util/ui', 'OCLE'], function (API, UI, OCLE) {
                 API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
                 API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
                 that.updateAttachments(sample);
-                if(typeof OCLE !='undefined'&&that.options.trackChanges){
+                if(typeof OCLE !='undefined'&&that.options.track){
                     var expandableMolecule = new ExpandableMolecule(sample);
                     API.cache('expandableMolecule', expandableMolecule);
                     if (typeof IframeBridge != 'undefined') {
@@ -74,7 +73,7 @@ define(['src/util/api', 'src/util/ui', 'OCLE'], function (API, UI, OCLE) {
                     this.roc.get(this.uuid);
                 }
                 else{
-                    if(this.options.trackChanges){
+                    if(this.options.track){
                         switch (action.name) {
                             case 'save':
                                 this.roc.update(sample).then(function () {
