@@ -193,18 +193,20 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                                 type: 'document',
                                 data: data
                             };
-                            data.onChange(() => {
-                                idb.set(data._id, data.resurrect());
-                            });
+                            if(options.track) {
+                                data.onChange(() => {
+                                    idb.set(data._id, data.resurrect());
+                                });
 
-                            idb.get(data._id).then(localEntry => {
-                                if (!localEntry) return;
-                                if (localEntry._rev === doc._rev) {
-                                    this._updateByUuid(data._id, localEntry);
-                                } else {
-                                    idb.delete(data._id);
-                                }
-                            });
+                                idb.get(data._id).then(localEntry => {
+                                    if (!localEntry) return;
+                                    if (localEntry._rev === doc._rev) {
+                                        this._updateByUuid(data._id, localEntry);
+                                    } else {
+                                        idb.delete(data._id);
+                                    }
+                                });
+                            }
                             return data;
                         });
                     }
