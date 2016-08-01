@@ -219,21 +219,22 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                     var uuid = getUuid(entry);
                     options = createOptions(options, 'get');
                     if (options.fromCache) {
-                        return this._findByUuid(uuid);
-                    } else {
-                        return superagent.get(`${this.entryUrl}/${uuid}`)
-                            .withCredentials()
-                            .end()
-                            .then(res => {
-                                if (res.body && res.status == 200) {
-                                    this._defaults(res.body.$content);
-                                    if (!options.noUpdate) {
-                                        this._updateByUuid(uuid, res.body);
-                                    }
-                                    return res.body;
-                                }
-                            }).catch(handleError(this, options));
+                        var e = this._findByUuid(uuid);
+                        if(e) return e;
+                        if(!options.fallback) return e;
                     }
+                    return superagent.get(`${this.entryUrl}/${uuid}`)
+                        .withCredentials()
+                        .end()
+                        .then(res => {
+                            if (res.body && res.status == 200) {
+                                this._defaults(res.body.$content);
+                                if (!options.noUpdate) {
+                                    this._updateByUuid(uuid, res.body);
+                                }
+                                return res.body;
+                            }
+                        }).catch(handleError(this, options));
                 });
             }
 
@@ -318,7 +319,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                     if (!Array.isArray(attachments)) attachments = [attachments];
 
                     attachments = attachments.map(String);
-                    return this.get(entry, {fromCache: true})
+                    return this.get(entry, {fromCache: true, fallback: true})
                         .then(entry => {
                             this._deleteFilename(entry.$content, attachments);
                             for (var i = 0; i < attachments.length; i++) {
@@ -333,7 +334,9 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                                     entry._attachments = data._attachments;
                                     entry.$creationDate = data.$creationDate;
                                     entry.$modificationDate = data.$modificationDate;
-                                    entry.triggerChange();
+                                    if(entry.triggerChange) {
+                                        entry.triggerChange();
+                                    }
                                     return entry;
                                 });
                             });
@@ -402,16 +405,20 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                             }
                             setContentType(attachment, fallback);
 
-                            return this.get(entry, {fromCache: true}).then(entry => {
+                            return this.get(entry, {fromCache: true, fallback: true}).then(entry => {
                                 return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment'))
                                     .then(entry => {
                                         if (!this.processor) {
                                             throw new Error('no processor');
                                         }
-                                        this.processor.process(type, entry.$content, attachment);
-                                        this.typeUrl(entry.$content, entry);
-                                        entry.triggerChange();
-                                        return entry;
+
+                                        return this.processor.process(type, entry.$content, attachment).then(() => {
+                                            this.typeUrl(entry.$content, entry);
+                                            if(entry.triggerChange) {
+                                                entry.triggerChange();
+                                            }
+                                            return entry;
+                                        });
                                     });
                             });
                         })
@@ -473,19 +480,21 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
 
 
                         options = createOptions(options, 'addAttachment');
-                        return this.get(entry, {fromCache: true})
+                        return this.get(entry, {fromCache: true, fallback: true})
                             .then(entry => {
                                 const cdb = this._getCdb(entry);
                                 return cdb.inlineUploads(attachments, {
-                                        noRefresh: true
-                                    })
+                                    noRefresh: true
+                                })
                                     .then(() => this.get(entry, {noUpdate: true}))
                                     .then(data => {
                                         entry._rev = data._rev;
                                         entry._attachments = data._attachments;
                                         entry.$creationDate = data.$creationDate;
                                         entry.$modificationDate = data.$modificationDate;
-                                        entry.triggerChange();
+                                        if(entry.triggerChange) {
+                                            entry.triggerChange();
+                                        }
                                         return entry;
                                     });
                             })
@@ -815,4 +824,3 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
 
         return Roc;
     });
-
