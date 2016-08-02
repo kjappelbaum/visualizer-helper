@@ -724,7 +724,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                         prop = 'url';
                     }
                     v.data = {
-                        type: vtype
+                        type: vtype || 'string'
                     };
                     v.data[prop] = `${this.entryUrl}/${entry._id}/${v.filename}`;
                 });
