@@ -16,6 +16,7 @@ if (typeof IframeBridge != 'undefined') {
         }
     });
 } else {
+    var API = require('src/util/api');
     // we retrieve the cache if it exists
     var externalInfo = JSON.parse(window.localStorage.getItem('external_cache') || "{}");
     var smiles = externalInfo.smiles;
