@@ -1,6 +1,6 @@
 
-
-if (typeof IframeBridge != 'undefined') {
+require(['src/util/api'], function(API) {
+    if (typeof IframeBridge != 'undefined') {
     require(['Roc','Sample'], function(Roc, Sample) {
         IframeBridge.onMessage(onMessage);
         IframeBridge.ready();
@@ -11,12 +11,10 @@ if (typeof IframeBridge != 'undefined') {
                     database: data.message.database
                 });
                 var sample = new Sample(roc, data.message.uuid, 'sample', {track:false});
-
             }
         }
     });
 } else {
-    var API = require('src/util/api');
     // we retrieve the cache if it exists
     var externalInfo = JSON.parse(window.localStorage.getItem('external_cache') || "{}");
     var smiles = externalInfo.smiles;
@@ -57,3 +55,5 @@ if (typeof IframeBridge != 'undefined') {
         }
     });
 }
+})
+
