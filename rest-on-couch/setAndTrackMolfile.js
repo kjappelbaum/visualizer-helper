@@ -11,8 +11,6 @@ require(['src/util/api'], function(API) {
                         database: data.message.database
                     });
                     var sample = new Sample(roc, data.message.uuid, 'sample', {track:false});
-                    // TODO should only be executed if there is a molfile ... but how to check ?????
-                    API.doAction('molfileInitialized');
                 }
                 
             }
@@ -35,19 +33,16 @@ require(['src/util/api'], function(API) {
                 require(["OCLE"], function (OCLE) {
                     var molecule=OCLE.Molecule.fromMolfile(molfile);
                     API.createData('molfile', molecule.toMolfile());
-                    API.doAction('molfileInitialized');
                 });
             } else if(smiles) {
                 require(["OCLE"], function (OCLE) {
                     var molecule=OCLE.Molecule.fromSmiles(smiles);
                     API.createData('molfile', molecule.toMolfile());
-                    API.doAction('molfileInitialized');
                 });
             } else {
                 molfile=window.localStorage.getItem('molfile');
                 if (molfile) {
             		API.createData('molfile', molfile);
-            		API.doAction('molfileInitialized');
             	} else {
             	    API.createData('molfile', '');
             	}
