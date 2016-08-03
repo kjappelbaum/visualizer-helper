@@ -47,7 +47,7 @@ if (typeof IframeBridge != 'undefined') {
         }
      })
     
-    define('src/util/versioning', function(Versioning) {
+    define(['src/util/versioning'], function(Versioning) {
         var data = Versioning.getDaata();
         data.onChange(function (evt) {
             if (evt.jpath.length==1 && evt.jpath[0]=='molfile') {
