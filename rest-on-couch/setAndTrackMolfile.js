@@ -47,10 +47,12 @@ if (typeof IframeBridge != 'undefined') {
         }
      })
     
-    var data = define('src/util/versioning').getData();
-    data.onChange(function (evt) {
-        if(evt.jpath.length==1 && evt.jpath[0]=='molfile') {
-            localStorage.setItem('molfile', evt.target.get());
-        }
+    define('src/util/versioning', function(Versioning) {
+        var data = Versioning.getDaata();
+        data.onChange(function (evt) {
+            if (evt.jpath.length==1 && evt.jpath[0]=='molfile') {
+                localStorage.setItem('molfile', evt.target.get());
+            }
+        });
     });
 }
