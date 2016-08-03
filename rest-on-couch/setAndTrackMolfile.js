@@ -1,5 +1,7 @@
+
+
 if (typeof IframeBridge != 'undefined') {
-    define(['Roc','Sample'], function(Roc, Sample) {
+    require(['Roc','Sample'], function(Roc, Sample) {
         IframeBridge.onMessage(onMessage);
         IframeBridge.ready();
         function onMessage(data) {
@@ -20,7 +22,7 @@ if (typeof IframeBridge != 'undefined') {
     var molfile = externalInfo.molfile;
     var nmr = API.createData('nmr',[]);    
     
-    define(["uri/URI"], function(URI) {
+    require(["uri/URI"], function(URI) {
         var uri = new URI(document.location.href);
         var search = uri.search(true);
         if (search.smiles) {
@@ -28,12 +30,12 @@ if (typeof IframeBridge != 'undefined') {
         }
         
         if (molfile) {
-            define(["OCLE"], function (OCLE) {
+            require(["OCLE"], function (OCLE) {
                 var molecule=OCLE.Molecule.fromMolfile(molfile);
                 API.createData('molfile', molecule.toMolfile());
             });
         } else if(smiles) {
-            define(["OCLE"], function (OCLE) {
+            require(["OCLE"], function (OCLE) {
                 var molecule=OCLE.Molecule.fromSmiles(smiles);
                 API.createData('molfile', molecule.toMolfile());
             });
@@ -47,12 +49,10 @@ if (typeof IframeBridge != 'undefined') {
         }
      })
     
-    define(['src/util/versioning'], function(Versioning) {
-        var data = Versioning.getDaata();
-        data.onChange(function (evt) {
-            if (evt.jpath.length==1 && evt.jpath[0]=='molfile') {
-                localStorage.setItem('molfile', evt.target.get());
-            }
-        });
+    var data = require('src/util/versioning').getData();
+    data.onChange(function (evt) {
+        if(evt.jpath.length==1 && evt.jpath[0]=='molfile') {
+            localStorage.setItem('molfile', evt.target.get());
+        }
     });
 }
