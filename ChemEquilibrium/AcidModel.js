@@ -37,14 +37,12 @@ define(['lodash'], function (_) {
                     return String(c.label) === String(pka.specie.label);
                 });
             });
-            console.log('involved pkas', pkas);
 
             // group pkas by component
             var grouped = _.groupBy(pkas, function(pka) {
                 return String(pka.specie.label);
             });
 
-            console.log('grouped pkas', grouped);
 
             var keys = Object.keys(grouped);
             var nbComponents = this.components.length + 1;
