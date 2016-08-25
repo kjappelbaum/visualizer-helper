@@ -39,7 +39,7 @@ define(['lodash'], function (_) {
         }
 
         addComponent(label, total) {
-            if(label = 'OH-') {
+            if(label === 'OH-') {
                 label = 'H+';
                 total = -total;
             }
