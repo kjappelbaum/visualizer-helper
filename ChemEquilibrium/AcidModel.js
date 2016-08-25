@@ -39,6 +39,10 @@ define(['lodash'], function (_) {
         }
 
         addComponent(label, total) {
+            if(label = 'OH-') {
+                label = 'H+';
+                total = -total;
+            }
             if(!total) total = 0;
             var comp = this.components.find(c => c.label === label);
             if(comp) comp.total += total;
