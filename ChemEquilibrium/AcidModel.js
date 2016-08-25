@@ -75,7 +75,6 @@ define(['lodash'], function (_) {
             });
 
 
-            var keys = Object.keys(grouped);
             var nbComponents = this.components.length;
 
             var protonIndex = this.components.findIndex(c => c.label === 'H+');
@@ -118,9 +117,11 @@ define(['lodash'], function (_) {
 
 
 
-            for(var i=0; i<keys.length; i++) {
+            for(var i=0; i<this.components.length; i++) {
                 let idx = (i<protonIndex ? i : i + 1);
-                var group = grouped[keys[i]];
+                var group = grouped[this.components[i].label];
+                if(!group) throw new Error('Should be unreachable');
+
                 for(var j=0; j<group.length; j++) {
                     var el = group[j];
                     model.formedSpecies.push({
