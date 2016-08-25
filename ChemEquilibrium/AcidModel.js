@@ -46,7 +46,13 @@ define(['lodash'], function (_) {
 
 
             var keys = Object.keys(grouped);
-            var nbComponents = this.components.length + 1;
+            var nbComponents = this.components.length;
+
+            var protonIndex = this.components.findIndex(c => c.label === 'H+');
+            var hasProton = (protonIndex !== -1);
+            if(!hasProton) {
+                nbComponents++;
+            }
 
 
             //
@@ -58,12 +64,18 @@ define(['lodash'], function (_) {
             // Model components
             // First component always proton
             model.components = new Array(nbComponents);
-            model.components[0] = {
-                label: 'H+'
-            };
+            if(!hasProton) {
+                model.components[0] = {
+                    label: 'H+'
+                };
+                protonIndex = 0;
+            }
+
+
 
             for(i = 0; i<this.components.length; i++) {
-                model.components[i+1] = this.components[i];
+                let idx = hasProton ? i : i + 1;
+                model.components[idx] = this.components[i];
             }
 
             model.formedSpecies = [{
@@ -72,11 +84,12 @@ define(['lodash'], function (_) {
                 components: new Array(nbComponents).fill(0)
             }];
 
-            model.formedSpecies[0].components[0] = -1;
+            model.formedSpecies[0].components[protonIndex] = -1;
 
 
 
             for(var i=0; i<keys.length; i++) {
+                let idx = (i<protonIndex ? i : i + 1);
                 var group = grouped[keys[i]];
                 for(var j=0; j<group.length; j++) {
                     var el = group[j];
@@ -85,8 +98,8 @@ define(['lodash'], function (_) {
                         beta: Math.pow(10, Number(el.specie.pka)),
                         components: new Array(nbComponents).fill(0)
                     });
-                    model.formedSpecies[model.formedSpecies.length -1].components[i+1] = 1;
-                    model.formedSpecies[model.formedSpecies.length -1].components[0] = Number(el.specie.number);
+                    model.formedSpecies[model.formedSpecies.length -1].components[idx] = 1;
+                    model.formedSpecies[model.formedSpecies.length -1].components[protonIndex] = Number(el.specie.number);
                 }
             }
 
