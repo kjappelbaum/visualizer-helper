@@ -33,6 +33,7 @@ define(['lodash'], function (_) {
                 else {
                     if(label === 'OH-') {
                         this.addComponent('OH-', total);
+                        return;
                     } else {
                         throw new Error('Could not find acid/base');
                     }
