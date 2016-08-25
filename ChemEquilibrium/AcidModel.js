@@ -30,7 +30,13 @@ define(['lodash'], function (_) {
                     return pka.a === label;
                 });
                 if(titrSpecie) titrProtonCount = 0;
-                else throw new Error('Could not find acid/base');
+                else {
+                    if(label === 'OH-') {
+                        this.addComponent('OH-', total);
+                    } else {
+                        throw new Error('Could not find acid/base');
+                    }
+                }
                 titrSpecie = titrSpecie.specie.label;
             }
 
