@@ -8,6 +8,36 @@ define(['lodash'], function (_) {
             this.components = [];
         }
 
+        static getAllAcidBaseLabels() {
+            var species = new Set();
+            for(var i=0; i<pkas.length; i++) {
+                species.add(pkas[i].ha);
+                species.add(pkas[i].a);
+            }
+            return Array.from(species);
+        }
+
+        addAcidBase(label, total) {
+            var titrProtonCount;
+            var titrSpecie = pkas.find(function(pka) {
+                return pka.ha === label
+            });
+            if(titrSpecie) {
+                titrProtonCount = titrSpecie.specie.number;
+                titrSpecie = titrSpecie.specie.label;
+            } else {
+                titrSpecie = pkas.find(function(pka) {
+                    return pka.a === label;
+                });
+                if(titrSpecie) titrProtonCount = 0;
+                else throw new Error('Could not find acid/base');
+                titrSpecie = titrSpecie.specie.label;
+            }
+
+            this.addComponent(titrSpecie, total);
+            this.addComponent('H+', titrProtonCount * total);
+        }
+
         addComponent(label, total) {
             if(!total) total = 0;
             var comp = this.components.find(c => c.label === label);
