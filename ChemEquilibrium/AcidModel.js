@@ -78,35 +78,17 @@ define(['lodash'], function (_) {
             var nbComponents = this.components.length;
 
             var protonIndex = this.components.findIndex(c => c.label === 'H+');
-            var hasProton = (protonIndex !== -1);
-            if(!hasProton) {
-                nbComponents++;
-            }
+            if(protonIndex === -1) throw new Error('Acid-base model has no proton');
 
-
-            //
             var model = {};
-            var options = {
-                volume: 1
-            };
 
             // Model components
-            // First component always proton
             model.components = new Array(nbComponents);
-            if(!hasProton) {
-                model.components[0] = {
-                    label: 'H+'
-                };
-                protonIndex = 0;
-            }
-
-
-
             for(i = 0; i<this.components.length; i++) {
-                let idx = hasProton ? i : i + 1;
-                model.components[idx] = this.components[i];
+                model.components[i] = Object.assign({}, this.components[i]);
             }
 
+            // Model formed species
             model.formedSpecies = [{
                 label: 'OH-',
                 beta: Math.pow(10, -14),
@@ -118,7 +100,7 @@ define(['lodash'], function (_) {
 
 
             for(var i=0; i<this.components.length; i++) {
-                let idx = (i<protonIndex ? i : i + 1);
+                if(i === protonIndex) continue;
                 var group = grouped[this.components[i].label];
                 if(!group) throw new Error('Should be unreachable');
 
@@ -129,7 +111,7 @@ define(['lodash'], function (_) {
                         beta: Math.pow(10, Number(el.specie.pka)),
                         components: new Array(nbComponents).fill(0)
                     });
-                    model.formedSpecies[model.formedSpecies.length -1].components[idx] = 1;
+                    model.formedSpecies[model.formedSpecies.length -1].components[i] = 1;
                     model.formedSpecies[model.formedSpecies.length -1].components[protonIndex] = Number(el.specie.number);
                 }
             }
