@@ -3,6 +3,7 @@
 define(['src/util/color'], function (Color) {
     return {
         getChart(x, y, options) {
+            options = options || {};
             if(x.length !== y.length || y.length === 0) {
                 throw new Error('Invalid data length');
             }
