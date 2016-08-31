@@ -16,9 +16,10 @@ define(['src/util/color'], function (Color) {
                 }]
             };
 
-            var colors = Color.getDistinctColors(species.length);
 
             var species = Object.keys(y[0]);
+            var colors = Color.getDistinctColors(species.length);
+
             for (var i = 0; i < species.length; i++) {
                 var data = {};
                 chart.data.push(data);
