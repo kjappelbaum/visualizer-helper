@@ -1,6 +1,6 @@
 'use strict';
 
-define(['src/util/Color'], function (Color) {
+define(['src/util/color'], function (Color) {
     return {
         getChart(x, y, options) {
             if(x.length !== y.length || y.length === 0) {
