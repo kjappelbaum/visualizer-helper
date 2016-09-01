@@ -62,7 +62,8 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
             getQuery: {
                 401: 'Unauthorized to get query',
                 404: 'Query does not exist'
-            }
+            },
+            getGroups: {}
         };
 
         for (let key in defaultOptions.messages) {
@@ -249,6 +250,14 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                     return this.get(entry)
                         .catch(handleError(this, options));
                 });
+            }
+
+            getGroups(options) {
+                return this.__ready.then(() => {
+                    options = createOptions(options, 'getGroups');
+                    return superagent.get(`${this.databaseUrl}/groups`).then(res => {
+                    }).catch(handleError(this, options));
+                })
             }
 
             create(entry, options) {
