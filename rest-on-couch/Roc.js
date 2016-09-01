@@ -76,7 +76,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
         }
 
         const viewSearchJsonify = ['key', 'startkey', 'endkey'];
-        const viewSearch = ['limit'];
+        const viewSearch = ['limit', 'mine', 'groups'];
         const mandatoryOptions = ['url', 'database'];
 
         const idb = new IDB('roc-documents');
