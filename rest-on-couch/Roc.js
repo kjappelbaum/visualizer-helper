@@ -255,7 +255,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
             getGroups(options) {
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getGroups');
-                    return superagent.get(`${this.databaseUrl}/groups`).then(res => {
+                    return superagent.get(`${this.databaseUrl}groups`).then(res => {
                     }).catch(handleError(this, options));
                 })
             }
