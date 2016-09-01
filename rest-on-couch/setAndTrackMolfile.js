@@ -6,11 +6,8 @@ require(['src/util/api'], function(API) {
             IframeBridge.ready();
             function onMessage(data) {
                 if(data.type === 'tab.data' || data.type === 'tab.focus') {
-                    var roc = new Roc({
-                        url: data.message.couchUrl,
-                        database: data.message.database
-                    });
-                    var sample = new Sample(roc, data.message.uuid, 'sample', {track:false});
+                    var roc = new Roc(data.message.couchDB);
+                    var sample = new Sample(roc, data.message.uuid, data.message.couchDB.kind, {track:false});
                 }
                 
             }
