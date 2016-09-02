@@ -118,6 +118,8 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                             if (res && res.body && res.status == 200) {
                                 if (options.filter) {
                                     res.body = res.body.filter(options.filter);
+                                } if(options.sort) {
+                                    res.body = res.body.sort(options.sort);
                                 }
                                 if (options.varName) {
                                     for (var i = 0; i < res.body.length; i++) {
@@ -158,6 +160,9 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                             if (res && res.body && res.status == 200) {
                                 if (options.filter) {
                                     res.body = res.body.filter(options.filter);
+                                }
+                                if(options.sort) {
+                                    res.body = res.body.sort(options.sort);
                                 }
                                 if (options.varName) {
                                     for (var i = 0; i < res.body.length; i++) {
