@@ -430,7 +430,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                                             throw new Error('no processor');
                                         }
 
-                                        return this.processor.process(type, entry.$content, attachment).then(() => {
+                                        return Promise.resolve(this.processor.process(type, entry.$content, attachment)).then(() => {
                                             this.typeUrl(entry.$content, entry);
                                             if (entry.triggerChange && !options.noTrigger) {
                                                 entry.triggerChange();
