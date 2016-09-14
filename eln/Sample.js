@@ -381,10 +381,8 @@ define([
                         }
                     }
                 }
-            });
-            promise=promise.then(function(nmr1hOndeTemplates) {
-                API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short);
-            });
+            }));
+            promise=promise.then(() => API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short));
             return promise;
         }
     }
