@@ -43,12 +43,11 @@ define([
         }
 
         _loadInstanceInVisualizer() {
-            var that = this;
             this.roc.document(this.uuid, {
                 varName: this.options.varName
-            }).then(function (sample) {
+            }).then(sample => {
                 this.sample = sample;
-                var sampleVar = API.getVar(that.options.varName);
+                var sampleVar = API.getVar(this.options.varName);
                 API.setVariable('sampleCode', sampleVar, ['$id', 0]);
                 API.setVariable('batchCode', sampleVar, ['$id', 1]);
                 API.setVariable('creationDate', sampleVar, ['$creationDate']);
@@ -66,9 +65,9 @@ define([
                 API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
                 API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
                 API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
-                that.updateAttachments(sample);
+                this.updateAttachments(sample);
 
-                sample.onChange(function (event) {
+                sample.onChange((event) => {
                     if (typeof IframeBridge !== 'undefined') {
                         IframeBridge.postMessage('tab.status', {
                             saved: false
@@ -87,7 +86,7 @@ define([
                     }
                 });
 
-                if (typeof OCLE != 'undefined' && that.options.track) {
+                if (typeof OCLE != 'undefined' && this.options.track) {
                     var expandableMolecule = new ExpandableMolecule(sample);
                     API.cache('expandableMolecule', expandableMolecule);
                 }
@@ -131,21 +130,17 @@ define([
                     var droppedDatas = data;
                     droppedDatas = droppedDatas.file || droppedDatas.str;
                     var prom = Promise.resolve();
-                    var that = this;
-                    for (var i = 0; i < droppedDatas.length; i++) {
-                        (function (i) {
-                            prom = prom.then(function () {
-                                var data = DataObject.resurrect(droppedDatas[i]);
-                                //console.log(data);
-                                return that.roc.attach(type, sample, data);
-                            });
-                        })(i)
+                    for (let i = 0; i < droppedDatas.length; i++) {
+                        prom = prom.then(() => {
+                            var data = DataObject.resurrect(droppedDatas[i]);
+                            return this.roc.attach(type, sample, data);
+                        });
                     }
 
-                    prom.then(function () {
-                        that.updateAttachments(sample);
-                    }).catch(function () {
-                        that.updateAttachments(sample);
+                    prom.then(() => {
+                        this.updateAttachments(sample);
+                    }).catch(() => {
+                        this.updateAttachments(sample);
                     });
                     break;
                 default:
@@ -162,27 +157,26 @@ define([
             this.idCode = molecule.getIDCode();
             this.expandedHydrogens = false;
             this.jsmeEditionMode = false;
-            var that = this;
             API.createData('editableMolfile', this.molfile).then(
-                function (editableMolfile) {
-                    editableMolfile.onChange(function (event) {
+                (editableMolfile) => {
+                    editableMolfile.onChange( (event) => {
                         // us this really a modification ? or a loop event ...
                         // need to compare former oclID with new oclID
                         var idCode = OCLE.Molecule.fromMolfile(event.target + '').getIDCode();
-                        if (idCode != that.idCode) {
-                            that.idCode = idCode;
-                            that.molfile = event.target + '';
-                            that.sample.setChildSync('$content.general.molfile', that.molfile);
+                        if (idCode != this.idCode) {
+                            this.idCode = idCode;
+                            this.molfile = event.target + '';
+                            this.sample.setChildSync('$content.general.molfile', this.molfile);
                         } else {
                             console.log('no update');
                         }
 
                         // by default we would like the depict mode
-                        that.updateMolfiles();
-                        that.updateMF();
+                        this.updateMolfiles();
+                        this.updateMF();
                     });
-                    that.updateMolfiles();
-                    that.toggleJSMEEdition(false);
+                    this.updateMolfiles();
+                    this.toggleJSMEEdition(false);
                 }
             );
         }
