@@ -102,6 +102,9 @@ define([
             if (this.sample.general && this.sample.general.mf) {
                 try {
                     this.chemcalc=CC.analyzeMF(this.sample.general.mf);
+                } catch () {
+                    UI.showNotification('Could not calculate molecular formula: '+e);
+                    console.log(e);
                 }
             }
         }
