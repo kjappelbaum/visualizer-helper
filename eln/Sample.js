@@ -4,13 +4,14 @@
  */
 define([
     './ExpandableMolecule.js',
+    './Nmr1dManager.js',
     'file-saver',
     'src/util/api',
     'src/util/ui',
     'https://www.lactame.com/lib/chemcalc-extended/1.27.0/chemcalc-extended.js',
     'https://www.lactame.com/lib/eln-plugin/0.0.2/eln-plugin.js',
     'https://www.lactame.com/github/cheminfo-js/visualizer-helper/7f9c4d2c296389ed263a43826bafeba1164d13de/rest-on-couch/Roc.js'
-], function (ExpandableMolecule, fileSaver, API, UI, CCE, elnPlugin, Roc) {
+], function (Nmr1dManager, ExpandableMolecule, fileSaver, API, UI, CCE, elnPlugin, Roc) {
 
     var defaultOptions = {
         varName: 'sample',
@@ -248,6 +249,7 @@ define([
             if (this.handleActionSD(action)) return;
 
             if (this.expandableMolecule && this.expandableMolecule.handleAction(action)) return;
+            if (this.nmr1dManager && this.nmr1dManager.handleAction(action)) return;
 
             switch (action.name) {
                 case 'refresh':
@@ -309,82 +311,6 @@ define([
                 default:
                     break
             }
-        }
-
-
-
-        _initializeNMRAssignment() {
-            var promise = Promise.resolve();
-            promise = promise.then(() => API.createData('nmr1hOptions', {
-                    "noiseFactor": 0.8,
-                    "clean": true,
-                    "compile": true,
-                    "optimize": false,
-                    "integralFn": "sum",
-                    "integral": 30,
-                    "type": "1H"
-                })
-            );
-
-            promise=promise.then(() => API.createData('nmr1hOndeTemplates', {
-                "full": {
-                    "type": "object",
-                    "properties": {
-                        "integral": {
-                            "type": "number",
-                            "title": "value to fit the spectrum integral",
-                            "label": "Integral"
-                        },
-                        "noiseFactor": {
-                            "type": "number",
-                            "title": "Mutiplier of the auto-detected noise level",
-                            "label": "noiseFactor"
-                        },
-                        "clean": {
-                            "type": "boolean",
-                            "title": "Delete signals with integration less than 0.5",
-                            "label": "clean"
-                        },
-                        "compile": {
-                            "type": "boolean",
-                            "title": "Compile the multiplets",
-                            "label": "compile"
-                        },
-                        "optimize": {
-                            "type": "boolean",
-                            "title": "Optimize the peaks to fit the spectrum",
-                            "label": "optimize"
-                        },
-                        "integralFn": {
-                            "type": "string",
-                            "title": "Type of integration",
-                            "label": "Integral type",
-                            "enum": [
-                                "sum",
-                                "peaks"
-                            ]
-                        },
-                        "type": {
-                            "type": "string",
-                            "title": "Nucleus",
-                            "label": "Nucleus",
-                            "editable": false
-                        }
-                    }
-                },
-                "short": {
-                    "type": "object",
-                    "properties": {
-                        "integral": {
-                            "type": "number",
-                            "title": "value to fit the spectrum integral",
-                            "label": "Integral"
-                        }
-                    }
-                }
-            }));
-            promise=promise.then((nmr1hOndeTemplates) => API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short));
-            return promise;
         }
     }
 
