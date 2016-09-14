@@ -100,9 +100,9 @@ define([
         updateChemcalc() {
             this.chemcalc=undefined;
             console.log('updateChemcalc',this.sample);
-            if (this.sample.general && this.sample.general.mf) {
+            if (this.sample['$content'].general && this.sample['$content'].general.mf) {
                 try {
-                    this.chemcalc=CC.analyzeMF(this.sample.general.mf);
+                    this.chemcalc=CC.analyzeMF(this.sample['$content'].general.mf+'');
                 } catch (e) {
                     UI.showNotification('Could not calculate molecular formula: '+e);
                     console.log(e);
