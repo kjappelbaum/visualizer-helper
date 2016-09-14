@@ -95,4 +95,5 @@ define([
         }
     }
 
+    return ExpandableMolecule;
 });
