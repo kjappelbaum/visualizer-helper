@@ -3,13 +3,14 @@
  * Created by acastillo on 7/1/16.
  */
 define([
+    'file-saver',
     'src/util/api',
     'src/util/ui',
     'https://www.lactame.com/lib/openchemlib-extended/1.11.0/openchemlib-extended.js',
     'https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js',
     'https://www.lactame.com/lib/eln-plugin/0.0.2/eln-plugin.js',
     'https://www.lactame.com/github/cheminfo-js/visualizer-helper/7f9c4d2c296389ed263a43826bafeba1164d13de/rest-on-couch/Roc.js'
-], function (API, UI, OCLE, CC, elnPlugin, Roc) {
+], function (fileSaver, API, UI, OCLE, CC, elnPlugin, Roc) {
 
     var defaultOptions = {
         varName: 'sample',
@@ -116,6 +117,32 @@ define([
                         }
                     });
                     break;
+
+                case 'toggleJSMEEdition':
+                    API.cache("expandableMolecule").toggleJSMEEdition();
+                    break;
+                case 'clearMolfile':
+                    var molfile=API.getData('editableMolfile');
+                    molfile.setValue('');
+                    break;
+                case 'swapHydrogens':
+                    API.cache("expandableMolecule").setExpandedHydrogens();
+                    break;
+                case 'toggleAdvancedOptions1H':
+                    API.cache('advancedOptions1H', ! API.cache('advancedOptions1H'));
+                case 'createOptions':
+                    var advancedOptions1H = API.cache("advancedOptions1H");
+                    if (advancedOptions1H) {
+                        API.createData("onde", API.getData("ondeOptions").full);
+                    } else {
+                        API.createData("onde", API.getData("ondeOptions").short);
+                    }
+                    break;
+                case 'downloadSVG':
+                    var blob = new Blob([this.action.value+""], {type: "application/jcamp-dx;charset=utf-8"});
+                    fileSaver(blob, 'spectra.svg');
+                    break;
+
                 case 'deleteAttachment':
                     var attachment = action.value.name;
                     this.roc.deleteAttachment(sample, attachment).then(this.updateAttachments);
