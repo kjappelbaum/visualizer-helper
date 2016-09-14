@@ -68,8 +68,7 @@ define([
                 API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
                 this.updateAttachments(sample);
 
-                var expandableMolecule = new ExpandableMolecule(sample);
-                API.cache('expandableMolecule', expandableMolecule);
+                this.expandableMolecule = new ExpandableMolecule(sample);
 
                 var self=this;
 
@@ -247,6 +246,8 @@ define([
             if (!action) return;
 
             if (this.handleActionSD(action)) return;
+            
+            if (this.expandableMolecule && this.expandableMolecule.handleAction(action)) return;
 
             switch (action.name) {
                 case 'refresh':
@@ -262,18 +263,7 @@ define([
                     });
                     break;
 
-                case 'toggleJSMEEdition':
-                    API.cache("expandableMolecule").toggleJSMEEdition();
-                    break;
-                case 'clearMolfile':
-                    var molfile=API.getData('editableMolfile');
-                    molfile.setValue('');
-                    break;
-                case 'swapHydrogens':
-                    API.cache("expandableMolecule").setExpandedHydrogens();
-                    break;
-                case 'toggleNMR1hAdvancedOptions':
-                    API.cache('nmr1hAdvancedOptions', ! API.cache('nmr1hAdvancedOptions'));
+
                 case 'createOptions':
                     var advancedOptions1H = API.cache("nmr1hAdvancedOptions");
                     if (advancedOptions1H) {

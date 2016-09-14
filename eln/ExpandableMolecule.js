@@ -93,6 +93,28 @@ define([
             molecule.addImplicitHydrogens();
             this.viewMolfileExpandedH = molecule.toVisualizerMolfile();
         }
+
+        handleAction(action) {
+            if (!action) return;
+            switch (action.name) {
+                case 'toggleJSMEEdition':
+                    API.cache("expandableMolecule").toggleJSMEEdition();
+                    break;
+                case 'clearMolfile':
+                    var molfile = API.getData('editableMolfile');
+                    molfile.setValue('');
+                    break;
+                case 'swapHydrogens':
+                    API.cache("expandableMolecule").setExpandedHydrogens();
+                    break;
+                case 'toggleNMR1hAdvancedOptions':
+                    API.cache('nmr1hAdvancedOptions', ! API.cache('nmr1hAdvancedOptions'));
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        }
     }
 
     return ExpandableMolecule;
