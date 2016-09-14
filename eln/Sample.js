@@ -93,9 +93,10 @@ define([
                     }
                 });
 
-                var promise=new Promise().resolve();
-                promise.then(() => this._initializeNMRAssignment());
-                promise.then(() => this._updateMF());
+                var promise = Promise.resolve();
+                promise = promise.then(this._initializeNMRAssignment);
+                promise = promise.then(this._updatedMF);
+                return promise;
             });
         }
 
@@ -313,8 +314,8 @@ define([
 
 
         _initializeNMRAssignment() {
-            var promise=new Promise.resolve();
-            promise=promise.then(() => API.createData('nmr1hOptions', {
+            var promise = Promise.resolve();
+            promise = promise.then(() => API.createData('nmr1hOptions', {
                     "noiseFactor": 0.8,
                     "clean": true,
                     "compile": true,
