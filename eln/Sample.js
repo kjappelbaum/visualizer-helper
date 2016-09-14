@@ -69,7 +69,7 @@ define([
                 this.updateAttachments(sample);
 
                 this.updateChemcalc();
-                initializeNMRAssignment();
+                this.initializeNMRAssignment();
 
                 sample.onChange((event) => {
                     if (typeof IframeBridge !== 'undefined') {
