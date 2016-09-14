@@ -82,13 +82,17 @@ define([
                     console.log("change event received", event.jpath.join('.'), event);
 
                     switch (event.jpath.join('.')) {
-                        case 'general.molfile':
+                        case '$content.general.molfile':
 
                             break;
-                        case 'general.mf':
+                        case '$content.general.mf':
+                            var previousEM=this.sample.$content.general.em;
                             this._updatedMF();
-                            this.sample.$content.general.mw = this.chemcalc.mw;
-                            this.sample.$content.general.em = this.chemcalc.em;
+                            if (previousEM!==this.chemcalc.em) {
+                                this.sample.$content.general.mw = this.chemcalc.mw;
+                                this.sample.$content.general.em = this.chemcalc.em;
+                                this.sample.$content.general.triggerChange();
+                            }
                             break;
                     }
                 });
@@ -412,7 +416,7 @@ define([
 
                         // by default we would like the depict mode
                         this.updateMolfiles();
-                        this.updateMF();
+                        this._updateMF();
                     });
                     this.updateMolfiles();
                     this.toggleJSMEEdition(false);
@@ -473,12 +477,11 @@ define([
             // prevent the loop by checking actelionID
             var molecule = OCLE.Molecule.fromMolfile(this.molfile);
             this.viewMolfile = molecule.toVisualizerMolfile();
-
             molecule.addImplicitHydrogens();
             this.viewMolfileExpandedH = molecule.toVisualizerMolfile();
-            this.mf = molecule.getMolecularFormula().formula;
-            this.mw = molecule.getMolecularFormula().relativeWeight;
-            this.nH = molecule.getNumberOfAtoms('H');
+
+            var mf = molecule.getMolecularFormula().formula;
+            this.sample.setChildSync('$content.general.mf', mf);
         }
 
     }
