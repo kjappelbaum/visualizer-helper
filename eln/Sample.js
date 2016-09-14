@@ -5,9 +5,9 @@
 define([
     'src/util/api',
     'src/util/ui',
-    'OCLE',
+    'https://www.lactame.com/lib/openchemlib-extended/1.11.0/openchemlib-extended.js',
     'https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js'
-], function (API, UI, OCLE) {
+], function (API, UI, OCLE, CC) {
 
 
     class Sample {
