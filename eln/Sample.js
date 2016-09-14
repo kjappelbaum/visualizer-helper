@@ -11,12 +11,18 @@ define([
     'https://www.lactame.com/github/cheminfo-js/visualizer-helper/7f9c4d2c296389ed263a43826bafeba1164d13de/rest-on-couch/Roc.js'
 ], function (API, UI, OCLE, CC, elnPlugin, Roc) {
 
+    var defautOptions = {
+        varName: 'sample',
+        track: true
+    };
 
     class Sample {
-        constructor(couchDB, uuid, varName, options){
+        constructor(couchDB, uuid, options) {
+            this.options = Object.assign({}, defaultOptions, options);
 
-            var roc=API.cache('roc');
-            if (! roc) {
+
+            var roc = API.cache('roc');
+            if (!roc) {
                 roc = new Roc({
                     url: couchDB.url,
                     database: couchDB.database,
@@ -25,29 +31,24 @@ define([
                 });
                 API.cache('roc', roc);
             }
-
-
-            this.options = Object.assign({},{track:true},options);
             this.roc = roc;
-            if (!this.roc) {
-                console.log("Cannot create an editable sample without an active Roc");
-                return;
-            }
+
+
             this.uuid = uuid;
             if (!this.uuid) {
-                console.log("Cannot create an editable sample without an uuid");
+                UI.showNotification("Cannot create an editable sample without an uuid", 'error');
                 return;
             }
-            this.varName = varName || "sample";
-            this.loadInstanceInVisualizer();
+            this._loadInstanceInVisualizer();
         }
 
-        loadInstanceInVisualizer(){
+        _loadInstanceInVisualizer() {
             var that = this;
             this.roc.document(this.uuid, {
-                varName: this.varName
+                varName: this.options.varName
             }).then(function (sample) {
-                var sampleVar = API.getVar(that.varName);
+                this.sample = sample;
+                var sampleVar = API.getVar(that.options.varName);
                 API.setVariable('sampleCode', sampleVar, ['$id', 0]);
                 API.setVariable('batchCode', sampleVar, ['$id', 1]);
                 API.setVariable('creationDate', sampleVar, ['$creationDate']);
@@ -86,7 +87,7 @@ define([
                     }
                 });
 
-                if (typeof OCLE !='undefined' && that.options.track){
+                if (typeof OCLE != 'undefined' && that.options.track) {
                     var expandableMolecule = new ExpandableMolecule(sample);
                     API.cache('expandableMolecule', expandableMolecule);
                 }
@@ -99,57 +100,56 @@ define([
             })
         }
 
-        handleAction(action, data){
-            if (action) {
-                var sample = API.getData(this.varName);
-                if (action.name=='refresh'){
-                    this.roc.get(this.uuid);
-                } else if (this.options.track){
-                    switch (action.name) {
-                        case 'save':
-                            this.roc.update(sample).then(function () {
-                                if (typeof IframeBridge != 'undefined') {
-                                    IframeBridge.postMessage('tab.status', {
-                                        saved: true
-                                    });
-                                }
-                            });
-                            break;
-                        case 'deleteAttachment':
-                            var attachment = action.value.name;
-                            this.roc.deleteAttachment(sample, attachment).then(this.updateAttachments);
-                            break;
-                        case 'deleteSpectra':
-                            this.roc.unattach(sample, action.value).then(this.updateAttachments);
-                            break;
-                        case 'attachNMR':
-                        case 'attachIR':
-                        case 'attachMass':
-                            var type = action.name.replace("attach", "").toLowerCase();
-                            var droppedDatas = data;
-                            droppedDatas = droppedDatas.file || droppedDatas.str;
-                            var prom = Promise.resolve();
-                            var that = this;
-                            for (var i = 0; i < droppedDatas.length; i++) {
-                                (function (i) {
-                                    prom = prom.then(function () {
-                                        var data = DataObject.resurrect(droppedDatas[i]);
-                                        //console.log(data);
-                                        return that.roc.attach(type, sample, data);
-                                    });
-                                })(i)
-                            }
 
-                            prom.then(function () {
-                                that.updateAttachments(sample);
-                            }).catch(function () {
-                                that.updateAttachments(sample);
+        handleAction(action) {
+            if (!action) return;
+
+            switch (action.name) {
+                case 'refresh':
+                    this.roc.get(this.uuid);
+                    break;
+                case 'save':
+                    this.roc.update(this.sample).then(function () {
+                        if (typeof IframeBridge != 'undefined') {
+                            IframeBridge.postMessage('tab.status', {
+                                saved: true
                             });
-                            break;
-                        default:
-                            break
+                        }
+                    });
+                    break;
+                case 'deleteAttachment':
+                    var attachment = action.value.name;
+                    this.roc.deleteAttachment(sample, attachment).then(this.updateAttachments);
+                    break;
+                case 'deleteSpectra':
+                    this.roc.unattach(sample, action.value).then(this.updateAttachments);
+                    break;
+                case 'attachNMR':
+                case 'attachIR':
+                case 'attachMass':
+                    var type = action.name.replace("attach", "").toLowerCase();
+                    var droppedDatas = data;
+                    droppedDatas = droppedDatas.file || droppedDatas.str;
+                    var prom = Promise.resolve();
+                    var that = this;
+                    for (var i = 0; i < droppedDatas.length; i++) {
+                        (function (i) {
+                            prom = prom.then(function () {
+                                var data = DataObject.resurrect(droppedDatas[i]);
+                                //console.log(data);
+                                return that.roc.attach(type, sample, data);
+                            });
+                        })(i)
                     }
-                }
+
+                    prom.then(function () {
+                        that.updateAttachments(sample);
+                    }).catch(function () {
+                        that.updateAttachments(sample);
+                    });
+                    break;
+                default:
+                    break
             }
         }
     }
@@ -249,7 +249,7 @@ define([
         }
 
         updateMF() {
-            if(typeof UI !='undefined')
+            if (typeof UI != 'undefined')
                 UI.showNotification('Updated mf and mw', 'info');
             this.sample.$content.general.molfile = this.molfile;
             this.sample.$content.general.mf = this.mf;
