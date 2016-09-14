@@ -94,8 +94,8 @@ define([
                 });
 
                 var promise = Promise.resolve();
-                promise = promise.then(this._initializeNMRAssignment);
-                promise = promise.then(this._updatedMF);
+                promise = promise.then(this._initializeNMRAssignment.bind(this));
+                promise = promise.then(this._updatedMF.bind(this));
                 return promise;
             });
         }
@@ -282,10 +282,10 @@ define([
 
                 case 'deleteAttachment':
                     var attachment = action.value.name;
-                    this.roc.deleteAttachment(sample, attachment).then(this.updateAttachments);
+                    this.roc.deleteAttachment(sample, attachment).then(this.updateAttachments.bind(this));
                     break;
                 case 'deleteSpectra':
-                    this.roc.unattach(sample, action.value).then(this.updateAttachments);
+                    this.roc.unattach(sample, action.value).then(this.updateAttachments.bind(this));
                     break;
                 case 'attachNMR':
                 case 'attachIR':
