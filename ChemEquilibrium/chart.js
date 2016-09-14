@@ -26,7 +26,11 @@ define(['src/util/color'], function (Color) {
                 data.y = y.map(function (y) {
                     return y[species[i]];
                 });
-                data.x = x;
+                if(options.xLog) {
+                    data.x = x.map(v => Math.pow(10, -v));
+                } else {
+                    data.x = x;
+                }
                 data.label = species[i];
                 data.xAxis = 0;
                 data.yAxis = 1;
