@@ -102,7 +102,7 @@ define([
             if (this.sample.general && this.sample.general.mf) {
                 try {
                     this.chemcalc=CC.analyzeMF(this.sample.general.mf);
-                } catch () {
+                } catch (e) {
                     UI.showNotification('Could not calculate molecular formula: '+e);
                     console.log(e);
                 }
@@ -300,80 +300,80 @@ define([
                 default:
                     break
             }
+        }
 
-            initializeNMRAssignment() {
-                console.log(this.chemcalc);
+        initializeNMRAssignment() {
+            console.log(this.chemcalc);
 
-                API.createData('nmr1hOptions', {
-                    "noiseFactor": 0.8,
-                    "clean": true,
-                    "compile": true,
-                    "optimize": false,
-                    "integralFn": "sum",
-                    "integral": 30,
-                    "type": "1H"
-                });
+            API.createData('nmr1hOptions', {
+                "noiseFactor": 0.8,
+                "clean": true,
+                "compile": true,
+                "optimize": false,
+                "integralFn": "sum",
+                "integral": 30,
+                "type": "1H"
+            });
 
-                API.createData('nmr1hOndeTemplates', {
-                    "full": {
-                        "type": "object",
-                        "properties": {
-                            "integral": {
-                                "type": "number",
-                                "title": "value to fit the spectrum integral",
-                                "label": "Integral"
-                            },
-                            "noiseFactor": {
-                                "type": "number",
-                                "title": "Mutiplier of the auto-detected noise level",
-                                "label": "noiseFactor"
-                            },
-                            "clean": {
-                                "type": "boolean",
-                                "title": "Delete signals with integration less than 0.5",
-                                "label": "clean"
-                            },
-                            "compile": {
-                                "type": "boolean",
-                                "title": "Compile the multiplets",
-                                "label": "compile"
-                            },
-                            "optimize": {
-                                "type": "boolean",
-                                "title": "Optimize the peaks to fit the spectrum",
-                                "label": "optimize"
-                            },
-                            "integralFn": {
-                                "type": "string",
-                                "title": "Type of integration",
-                                "label": "Integral type",
-                                "enum": [
-                                    "sum",
-                                    "peaks"
-                                ]
-                            },
-                            "type": {
-                                "type": "string",
-                                "title": "Nucleus",
-                                "label": "Nucleus",
-                                "editable": false
-                            }
-                        }
-                    },
-                    "short": {
-                        "type": "object",
-                        "properties": {
-                            "integral": {
-                                "type": "number",
-                                "title": "value to fit the spectrum integral",
-                                "label": "Integral"
-                            }
+            API.createData('nmr1hOndeTemplates', {
+                "full": {
+                    "type": "object",
+                    "properties": {
+                        "integral": {
+                            "type": "number",
+                            "title": "value to fit the spectrum integral",
+                            "label": "Integral"
+                        },
+                        "noiseFactor": {
+                            "type": "number",
+                            "title": "Mutiplier of the auto-detected noise level",
+                            "label": "noiseFactor"
+                        },
+                        "clean": {
+                            "type": "boolean",
+                            "title": "Delete signals with integration less than 0.5",
+                            "label": "clean"
+                        },
+                        "compile": {
+                            "type": "boolean",
+                            "title": "Compile the multiplets",
+                            "label": "compile"
+                        },
+                        "optimize": {
+                            "type": "boolean",
+                            "title": "Optimize the peaks to fit the spectrum",
+                            "label": "optimize"
+                        },
+                        "integralFn": {
+                            "type": "string",
+                            "title": "Type of integration",
+                            "label": "Integral type",
+                            "enum": [
+                                "sum",
+                                "peaks"
+                            ]
+                        },
+                        "type": {
+                            "type": "string",
+                            "title": "Nucleus",
+                            "label": "Nucleus",
+                            "editable": false
                         }
                     }
-                }).then(function(nmr1hOndeTemplates) {
-                    API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short);
-                });
-            }
+                },
+                "short": {
+                    "type": "object",
+                    "properties": {
+                        "integral": {
+                            "type": "number",
+                            "title": "value to fit the spectrum integral",
+                            "label": "Integral"
+                        }
+                    }
+                }
+            }).then(function(nmr1hOndeTemplates) {
+                API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short);
+            });
         }
     }
 
