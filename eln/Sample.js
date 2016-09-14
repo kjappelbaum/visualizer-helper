@@ -111,12 +111,10 @@ define([
                     console.log(e);
                 }
             }
-            console.log('updateChemcalc',this.chemcalc);
             if (this.chemcalc && this.chemcalc.atoms && this.chemcalc.atoms.H) {
                 var nmr1hOptions=API.getData('nmr1hOptions');
-                console.log('nmr1hOptions', nmr1hOptions);
-                debugger;
                 if (nmr1hOptions) nmr1hOptions.integral=this.chemcalc.atoms.H;
+                nmr1hOptions.triggerChange();
             }
         }
 
