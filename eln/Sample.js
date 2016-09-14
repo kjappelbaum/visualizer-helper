@@ -141,7 +141,7 @@ define([
         constructor(sampleIn) {
             this.sample = sampleIn;
             this.molfile = this.sample.$content.general.molfile + '';
-            var molecule = OCLE.Molecule.fromMolfile(molfile);
+            var molecule = OCLE.Molecule.fromMolfile(this.molfile);
             this.idCode = molecule.getIDCode();
             this.expandedHydrogens = false;
             this.jsmeEditionMode = false;
