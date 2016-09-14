@@ -27,7 +27,7 @@ define(['src/util/color'], function (Color) {
                     return y[species[i]];
                 });
                 if(options.xLog) {
-                    data.x = x.map(v => Math.pow(10, -v));
+                    data.x = x.map(v => -Math.log10(v));
                 } else {
                     data.x = x;
                 }
