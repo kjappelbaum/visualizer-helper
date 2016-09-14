@@ -68,8 +68,12 @@ define([
                 API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
                 this.updateAttachments(sample);
 
-                this.updateChemcalc();
-                this._initializeNMRAssignment();
+                var expandableMolecule = new ExpandableMolecule(sample);
+                API.cache('expandableMolecule', expandableMolecule);
+
+
+
+
 
                 sample.onChange((event) => {
                     if (typeof IframeBridge !== 'undefined') {
@@ -85,19 +89,19 @@ define([
 
                             break;
                         case 'general.mf':
-                            this.updateChemcalc();
+                            this._updatedMF();
+                            this.sample.$content.general.mw = this.chemcalc.mw;
+                            this.sample.$content.general.em = this.chemcalc.em;
                             break;
                     }
                 });
 
-                if (typeof OCLE != 'undefined' && this.options.track) {
-                    var expandableMolecule = new ExpandableMolecule(sample);
-                    API.cache('expandableMolecule', expandableMolecule);
-                }
+                this._initializeNMRAssignment();
+                this._updatedMF();
             });
         }
 
-        updateChemcalc() {
+        _updatedMF() {
             this.chemcalc=undefined;
             console.log('updateChemcalc',this.sample);
             if (this.sample['$content'].general && this.sample['$content'].general.mf) {
@@ -107,6 +111,11 @@ define([
                     UI.showNotification('Could not calculate molecular formula: '+e);
                     console.log(e);
                 }
+            }
+
+            if (this.chemcalc && this.chemcalc.atoms && this.chemcalc.atoms.H) {
+                var nmr1hOptions=API.getData('nmr1hOptions');
+                if (nmr1hOptions) nmr1hOptions.integral=this.chemcalc.atoms.H;
             }
         }
 
@@ -230,7 +239,7 @@ define([
         handleAction(action) {
             if (!action) return;
 
-            if (handleActionSD(action)) return;
+            if (this.handleActionSD(action)) return;
 
             switch (action.name) {
                 case 'refresh':
@@ -303,9 +312,9 @@ define([
             }
         }
 
-        _initializeNMRAssignment() {
-            console.log(this.chemcalc);
 
+
+        _initializeNMRAssignment() {
             API.createData('nmr1hOptions', {
                 "noiseFactor": 0.8,
                 "clean": true,
@@ -471,13 +480,6 @@ define([
             this.nH = molecule.getNumberOfAtoms('H');
         }
 
-        updateMF() {
-            if (typeof UI != 'undefined')
-                UI.showNotification('Updated mf and mw', 'info');
-            this.sample.$content.general.molfile = this.molfile;
-            this.sample.$content.general.mf = this.mf;
-            this.sample.$content.general.mw = this.mw;
-        }
     }
 
     return Sample;
