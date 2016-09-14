@@ -11,7 +11,7 @@ define([
     'https://www.lactame.com/github/cheminfo-js/visualizer-helper/7f9c4d2c296389ed263a43826bafeba1164d13de/rest-on-couch/Roc.js'
 ], function (API, UI, OCLE, CC, elnPlugin, Roc) {
 
-    var defautOptions = {
+    var defaultOptions = {
         varName: 'sample',
         track: true
     };
