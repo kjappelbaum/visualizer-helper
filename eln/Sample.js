@@ -7,7 +7,7 @@ define([
     'src/util/ui',
     'https://www.lactame.com/lib/openchemlib-extended/1.11.0/openchemlib-extended.js',
     'https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js',
-    'https://www.lactame.com/lib/eln-plugin/0.0.2/eln-plugin',
+    'https://www.lactame.com/lib/eln-plugin/0.0.2/eln-plugin.js',
     'https://www.lactame.com/github/cheminfo-js/visualizer-helper/7f9c4d2c296389ed263a43826bafeba1164d13de/rest-on-couch/Roc.js'
 ], function (API, UI, OCLE, CC, elnPlugin, Roc) {
 
