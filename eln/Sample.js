@@ -101,6 +101,7 @@ define([
         }
 
         _updatedMF() {
+            console.log('this', this);
             this.chemcalc=undefined;
 
             if (this.sample['$content'].general && this.sample['$content'].general.mf) {
