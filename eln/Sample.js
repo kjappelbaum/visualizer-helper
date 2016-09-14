@@ -6,12 +6,27 @@ define([
     'src/util/api',
     'src/util/ui',
     'https://www.lactame.com/lib/openchemlib-extended/1.11.0/openchemlib-extended.js',
-    'https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js'
-], function (API, UI, OCLE, CC) {
+    'https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js',
+    'https://www.lactame.com/lib/eln-plugin/0.0.2/eln-plugin',
+    'https://www.lactame.com/github/cheminfo-js/visualizer-helper/7f9c4d2c296389ed263a43826bafeba1164d13de/rest-on-couch/Roc.js'
+], function (API, UI, OCLE, CC, elnPlugin, Roc) {
 
 
     class Sample {
-        constructor(roc, uuid, varName, options){
+        constructor(couchDB, uuid, varName, options){
+
+            var roc=API.cache('roc');
+            if (! roc) {
+                roc = new Roc({
+                    url: couchDB.url,
+                    database: couchDB.database,
+                    processor: elnPlugin,
+                    kind: couchDB.kind
+                });
+                API.cache('roc', roc);
+            }
+
+
             this.options = Object.assign({},{track:true},options);
             this.roc = roc;
             if (!this.roc) {
@@ -62,10 +77,12 @@ define([
                     console.log("change event received", event.jpath.join('.'), event);
 
                     switch (event.jpath.join('.')) {
-                        case '$content.general.molfile':
+                        case 'general.molfile':
 
                             break;
+                        case 'general.mf':
 
+                            break;
                     }
                 });
 
