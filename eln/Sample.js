@@ -72,9 +72,6 @@ define([
                 API.cache('expandableMolecule', expandableMolecule);
 
 
-
-
-
                 sample.onChange((event) => {
                     if (typeof IframeBridge !== 'undefined') {
                         IframeBridge.postMessage('tab.status', {
@@ -96,14 +93,15 @@ define([
                     }
                 });
 
-                this._initializeNMRAssignment();
-                this._updatedMF();
+                var promise=new Promise().resolve();
+                promise.then(() => this._initializeNMRAssignment());
+                promise.then(() => this._updateMF());
             });
         }
 
         _updatedMF() {
             this.chemcalc=undefined;
-            console.log('updateChemcalc',this.sample);
+
             if (this.sample['$content'].general && this.sample['$content'].general.mf) {
                 try {
                     this.chemcalc=CCE.analyseMF(this.sample['$content'].general.mf+'');
@@ -112,7 +110,7 @@ define([
                     console.log(e);
                 }
             }
-
+            console.log('updateChemcalc',this.chemcalc);
             if (this.chemcalc && this.chemcalc.atoms && this.chemcalc.atoms.H) {
                 var nmr1hOptions=API.getData('nmr1hOptions');
                 if (nmr1hOptions) nmr1hOptions.integral=this.chemcalc.atoms.H;
@@ -315,17 +313,19 @@ define([
 
 
         _initializeNMRAssignment() {
-            API.createData('nmr1hOptions', {
-                "noiseFactor": 0.8,
-                "clean": true,
-                "compile": true,
-                "optimize": false,
-                "integralFn": "sum",
-                "integral": 30,
-                "type": "1H"
-            });
+            var promise=new Promise.resolve();
+            promise=promise.then(() => API.createData('nmr1hOptions', {
+                    "noiseFactor": 0.8,
+                    "clean": true,
+                    "compile": true,
+                    "optimize": false,
+                    "integralFn": "sum",
+                    "integral": 30,
+                    "type": "1H"
+                })
+            );
 
-            API.createData('nmr1hOndeTemplates', {
+            promise=promise.then(() => API.createData('nmr1hOndeTemplates', {
                 "full": {
                     "type": "object",
                     "properties": {
@@ -381,9 +381,11 @@ define([
                         }
                     }
                 }
-            }).then(function(nmr1hOndeTemplates) {
+            });
+            promise=promise.then(function(nmr1hOndeTemplates) {
                 API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short);
             });
+            return promise;
         }
     }
 
