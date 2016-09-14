@@ -246,7 +246,7 @@ define([
             if (!action) return;
 
             if (this.handleActionSD(action)) return;
-            
+
             if (this.expandableMolecule && this.expandableMolecule.handleAction(action)) return;
 
             switch (action.name) {
@@ -276,7 +276,9 @@ define([
                     var blob = new Blob([this.action.value+""], {type: "application/jcamp-dx;charset=utf-8"});
                     fileSaver(blob, 'spectra.svg');
                     break;
-
+                case 'toggleNMR1hAdvancedOptions':
+                    API.cache('nmr1hAdvancedOptions', ! API.cache('nmr1hAdvancedOptions'));
+                    break;
                 case 'deleteAttachment':
                     var attachment = action.value.name;
                     this.roc.deleteAttachment(sample, attachment).then(this.updateAttachments.bind(this));
