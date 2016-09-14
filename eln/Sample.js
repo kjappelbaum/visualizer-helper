@@ -101,7 +101,6 @@ define([
         }
 
         _updatedMF() {
-            console.log('this', this);
             this.chemcalc=undefined;
 
             if (this.sample['$content'].general && this.sample['$content'].general.mf) {
@@ -115,6 +114,8 @@ define([
             console.log('updateChemcalc',this.chemcalc);
             if (this.chemcalc && this.chemcalc.atoms && this.chemcalc.atoms.H) {
                 var nmr1hOptions=API.getData('nmr1hOptions');
+                console.log('nmr1hOptions', nmr1hOptions);
+                debugger;
                 if (nmr1hOptions) nmr1hOptions.integral=this.chemcalc.atoms.H;
             }
         }
