@@ -7,10 +7,10 @@ define([
     'src/util/api',
     'src/util/ui',
     'https://www.lactame.com/lib/openchemlib-extended/1.11.0/openchemlib-extended.js',
-    'https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js',
+    'https://www.lactame.com/lib/chemcalc-extended/1.27.0/chemcalc-extended.js',
     'https://www.lactame.com/lib/eln-plugin/0.0.2/eln-plugin.js',
     'https://www.lactame.com/github/cheminfo-js/visualizer-helper/7f9c4d2c296389ed263a43826bafeba1164d13de/rest-on-couch/Roc.js'
-], function (fileSaver, API, UI, OCLE, CC, elnPlugin, Roc) {
+], function (fileSaver, API, UI, OCLE, CCE, elnPlugin, Roc) {
 
     var defaultOptions = {
         varName: 'sample',
@@ -102,7 +102,7 @@ define([
             console.log('updateChemcalc',this.sample);
             if (this.sample['$content'].general && this.sample['$content'].general.mf) {
                 try {
-                    this.chemcalc=CC.analyseMF(this.sample['$content'].general.mf+'');
+                    this.chemcalc=CCE.analyseMF(this.sample['$content'].general.mf+'');
                 } catch (e) {
                     UI.showNotification('Could not calculate molecular formula: '+e);
                     console.log(e);
