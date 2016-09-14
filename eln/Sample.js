@@ -71,6 +71,7 @@ define([
                 var expandableMolecule = new ExpandableMolecule(sample);
                 API.cache('expandableMolecule', expandableMolecule);
 
+                var self=this;
 
                 sample.onChange((event) => {
                     if (typeof IframeBridge !== 'undefined') {
@@ -416,7 +417,8 @@ define([
 
                         // by default we would like the depict mode
                         this.updateMolfiles();
-                        this._updateMF();
+                        var mf = molecule.getMolecularFormula().formula;
+                        this.sample.setChildSync('$content.general.mf', mf);
                     });
                     this.updateMolfiles();
                     this.toggleJSMEEdition(false);
@@ -479,9 +481,6 @@ define([
             this.viewMolfile = molecule.toVisualizerMolfile();
             molecule.addImplicitHydrogens();
             this.viewMolfileExpandedH = molecule.toVisualizerMolfile();
-
-            var mf = molecule.getMolecularFormula().formula;
-            this.sample.setChildSync('$content.general.mf', mf);
         }
 
     }
