@@ -69,7 +69,7 @@ define([
                 this.updateAttachments(sample);
 
                 this.updateChemcalc();
-                this.initializeNMRAssignment();
+                this._initializeNMRAssignment();
 
                 sample.onChange((event) => {
                     if (typeof IframeBridge !== 'undefined') {
@@ -99,6 +99,7 @@ define([
 
         updateChemcalc() {
             this.chemcalc=undefined;
+            console.log('updateChemcalc',this.sample);
             if (this.sample.general && this.sample.general.mf) {
                 try {
                     this.chemcalc=CC.analyzeMF(this.sample.general.mf);
@@ -302,7 +303,7 @@ define([
             }
         }
 
-        initializeNMRAssignment() {
+        _initializeNMRAssignment() {
             console.log(this.chemcalc);
 
             API.createData('nmr1hOptions', {
