@@ -59,7 +59,7 @@ define([
                         });
                     }
 
-                    console.log(event);
+                    console.log("change event received", event.jpath.join('.'), event);
 
                     switch (event.jpath.join('.')) {
                         case '$content.general.molfile':
