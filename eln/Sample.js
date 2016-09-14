@@ -182,12 +182,10 @@ define([
                         }
                     }
                     if (action.value.integral) {//Fired from button
-                        doAssignment();
+                        doNmrAssignement();
                     } else {
-                        if (!currentNmr.range || !currentNmr.range.length) {
-                            doAssignment();
-                        } else {
-                            API.setVariable("currentRange", API.getVariable('currentNmr'), ["range"]);
+                        if (!currentNmr.range || ! currentNmr.range.length) {
+                            doNmrAssignement();
                         }
                     }
                     API.createData("nmrParams", {
@@ -204,9 +202,9 @@ define([
 
 
 
-         doAssignment() {
+        doNmrAssignement() {
             var jcamp = currentNmr.getChild(['jcamp', 'data']);
-
+            console.log(doNmrAssignement);
              console.log('jcamp',jcamp.length);
 
             jcamp.then(function(jcamp) {
@@ -240,7 +238,6 @@ define([
                     format:"new"
                 });
                 currentNmr.setChildSync(['range'], peakPicking);
-                API.setVariable("currentRange",API.getVariable('currentNmr'),["range"]);
             });
 
         }
