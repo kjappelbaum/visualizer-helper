@@ -70,7 +70,7 @@ define([
                 this.updateAttachments(sample);
 
                 this.expandableMolecule = new ExpandableMolecule(sample);
-                this.nmr1dManager = new Nmr1dManager(sample);
+                this.nmr1dManager = new Nmr1dManager();
 
                 var self=this;
 
@@ -100,7 +100,7 @@ define([
                 });
 
                 var promise = Promise.resolve();
-                promise = promise.then(() => this.nmr1dManager._initializeNMRAssignment());
+                promise = promise.then(() => this.nmr1dManager.initializeNMRAssignment());
                 promise = promise.then(() => this._updatedMF());
                 return promise;
             });
@@ -132,7 +132,7 @@ define([
 
         handleAction(action) {
             if (!action) return;
-            
+
             if (this.expandableMolecule && this.expandableMolecule.handleAction(action)) return;
             if (this.nmr1dManager && this.nmr1dManager.handleAction(action)) return;
 
