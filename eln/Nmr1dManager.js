@@ -4,7 +4,7 @@ define([
     'file-saver',
     'src/util/api',
     'src/util/ui',
- , function (fileSaver, API, UI) {
+] , function (fileSaver, API, UI) {
 
     
     class Nmr1dManager {
