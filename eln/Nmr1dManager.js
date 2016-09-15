@@ -110,11 +110,10 @@ define([
                 currentNmr.setChildSync(['range'], peakPicking);
                 // API.setVariable("editedRange",API.getVariable('currentNmr'),["range"]);
                 this._createNMRannotations(
-                        {
-                            nucleus: currentNmr.nucleus[0],
-                            observe:Math.round(currentNmr.frequency/10)*10
-                        }
-                    );
+                    {
+                        nucleus: currentNmr.nucleus[0],
+                        observe:Math.round(currentNmr.frequency/10)*10
+                    }
                 );
             });
         }
