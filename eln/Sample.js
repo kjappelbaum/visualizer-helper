@@ -132,9 +132,7 @@ define([
 
         handleAction(action) {
             if (!action) return;
-
-            if (this.handleActionSD(action)) return;
-
+            
             if (this.expandableMolecule && this.expandableMolecule.handleAction(action)) return;
             if (this.nmr1dManager && this.nmr1dManager.handleAction(action)) return;
 
