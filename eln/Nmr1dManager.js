@@ -76,12 +76,6 @@ define([
                             // API.setVariable("editedRange",API.getVariable('currentNmr'),["range"]);
                         }
                     }
-                    API.createData("nmrParameters",
-                        {
-                            "nucleus":currentNmr.nucleus[0],
-                            "observe":Math.floor(currentNmr.frequency/10)*10
-                        }
-                    );
                     break;
                 default:
                     return false;
@@ -91,7 +85,6 @@ define([
 
 
         _doAssignment(currentNmr) {
-            console.log(doAssignment);
             var jcamp = currentNmr.getChild(['jcamp', 'data']);
             console.log("doAssignment");
             jcamp.then(function(jcamp) {
@@ -116,14 +109,19 @@ define([
                 });
                 currentNmr.setChildSync(['range'], peakPicking);
                 // API.setVariable("editedRange",API.getVariable('currentNmr'),["range"]);
-                this._createNMRannotations();
+                this._createNMRannotations(
+                        {
+                            nucleus: currentNmr.nucleus[0],
+                            observe:Math.round(currentNmr.frequency/10)*10
+                        }
+                    );
+                );
             });
         }
 
 
-        _createNMRannotations() {
+        _createNMRannotations(options) {
             console.log('create annoations');
-            var params = API.getData("nmrParameters");
             var peakPicking = JSON.parse(JSON.stringify(API.getData("currentNmrRanges")));
     
             //Recompile multiplicity
@@ -147,8 +145,8 @@ define([
             }));
             API.createData("acsNMR1d",SD.formatter.toACS(peakPicking, {
                 rangeForMultiplet:true,
-                nucleus:params.nucleus,
-                observe:params.observe
+                nucleus:options.nucleus,
+                observe:options.observe
             }));
         }
 
