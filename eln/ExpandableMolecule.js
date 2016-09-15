@@ -1,9 +1,10 @@
 define([
     'src/util/api',
     'src/util/ui',
-    'https://www.lactame.com/lib/openchemlib-extended/1.11.0/openchemlib-extended.js'
-    ], function (API, UI, OCLE) {
-
+    './lib'
+    ], function (API, UI, libs) {
+    var OCLE = libs.OCLE;
+    
     class ExpandableMolecule {
         constructor(sampleIn) {
             this.sample = sampleIn;
