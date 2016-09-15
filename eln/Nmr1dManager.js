@@ -74,6 +74,8 @@ define([
                             this._doAssignment(currentNmr);
                             // } else {
                             // API.setVariable("editedRange",API.getVariable('currentNmr'),["range"]);
+                        } else {
+                            this._createNMRannotationsAndACS(currentNmr);
                         }
                     }
                     break;
@@ -106,17 +108,12 @@ define([
                     format:"new"
                 });
                 currentNmr.setChildSync(['range'], peakPicking);
-                this._createNMRannotations(
-                    {
-                        nucleus: currentNmr.nucleus[0],
-                        observe:Math.round(currentNmr.frequency/10)*10
-                    }
-                );
+                this._createNMRannotationsAndACS(currentNmr);
             });
         }
 
 
-        _createNMRannotations(options) {
+        _createNMRannotationsAndACS(currentNmr) {
             console.log('create annoations');
             var peakPicking = JSON.parse(JSON.stringify(API.getData("currentNmrRanges")));
     
@@ -141,8 +138,8 @@ define([
             }));
             API.createData("acsNMR1d",SD.formatter.toACS(peakPicking, {
                 rangeForMultiplet:true,
-                nucleus:options.nucleus,
-                observe:options.observe
+                nucleus:currentNmr.nucleus[0],
+                observe:Math.round(currentNmr.frequency/10)*10
             }));
         }
 
