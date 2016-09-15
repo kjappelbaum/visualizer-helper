@@ -3,8 +3,8 @@
  * Created by acastillo on 7/1/16.
  */
 define([
-    './ExpandableMolecule',
-    './Nmr1dManager',
+    'Sample/ExpandableMolecule',
+    'Sample/Nmr1dManager',
     'file-saver',
     'src/util/api',
     'src/util/ui',
