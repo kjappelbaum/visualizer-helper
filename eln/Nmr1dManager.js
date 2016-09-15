@@ -4,20 +4,26 @@ define([
     'file-saver',
     'src/util/api',
     'src/util/ui',
-] , function (fileSaver, API, UI) {
+    'file-saver',
+] , function (fileSaver, API, UI, fileSaver) {
 
     
     class Nmr1dManager {
-        constructor(couchDB) {
+        constructor() {
            
         }
 
         handleAction(action) {
             switch (action.name) {
+                case 'downloadSVG':
+                    var blob = new Blob([action.value+""], {type: "application/jcamp-dx;charset=utf-8"});
+                    fileSaver(blob, 'spectra.svg');
+                    break;
+                case 'toggleNMR1hAdvancedOptions':
+                    API.cache('nmr1hAdvancedOptions', ! API.cache('nmr1hAdvancedOptions'));
+                    break;
                 case 'reset1d':
                 case 'reset2d':
-                    if (this.event !== 'action') return;
-
                     var type;
                     if (action.name === 'reset1d') type = '1'
                     else if (action.name === 'reset2d') type = '2'
@@ -66,10 +72,10 @@ define([
                         }
                     }
                     if (action.value.integral) {//Fired from button
-                        doNmrAssignement();
+                        this.doNmrAssignement();
                     } else {
                         if (!currentNmr.range || ! currentNmr.range.length) {
-                            doNmrAssignement();
+                            this.doNmrAssignement();
                         }
                     }
                     API.createData("nmrParams", {
@@ -83,10 +89,8 @@ define([
             return true;
         }
 
-
-
-
         doNmrAssignement() {
+            var currentNmr=API.getData('currentNmr');
             var jcamp = currentNmr.getChild(['jcamp', 'data']);
             console.log(doNmrAssignement);
             console.log('jcamp',jcamp.length);

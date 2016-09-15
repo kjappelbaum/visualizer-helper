@@ -5,13 +5,12 @@
 define([
     './ExpandableMolecule',
     './Nmr1dManager',
-    'file-saver',
     'src/util/api',
     'src/util/ui',
     'https://www.lactame.com/lib/chemcalc-extended/1.27.0/chemcalc-extended.js',
     'https://www.lactame.com/lib/eln-plugin/0.0.2/eln-plugin.js',
     'https://www.lactame.com/github/cheminfo-js/visualizer-helper/7f9c4d2c296389ed263a43826bafeba1164d13de/rest-on-couch/Roc.js'
-], function (Nmr1dManager, ExpandableMolecule, fileSaver, API, UI, CCE, elnPlugin, Roc) {
+], function (Nmr1dManager, ExpandableMolecule, API, UI, CCE, elnPlugin, Roc) {
 
     var defaultOptions = {
         varName: 'sample',
@@ -159,13 +158,6 @@ define([
                     } else {
                         API.createData("nmr1hOndeTemplate", API.getData("nmr1hOndeTemplates").short);
                     }
-                    break;
-                case 'downloadSVG':
-                    var blob = new Blob([this.action.value+""], {type: "application/jcamp-dx;charset=utf-8"});
-                    fileSaver(blob, 'spectra.svg');
-                    break;
-                case 'toggleNMR1hAdvancedOptions':
-                    API.cache('nmr1hAdvancedOptions', ! API.cache('nmr1hAdvancedOptions'));
                     break;
                 case 'deleteAttachment':
                     var attachment = action.value.name;
