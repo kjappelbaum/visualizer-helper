@@ -78,8 +78,6 @@ define([
                     if (typeof IframeBridge !== 'undefined') {
                         IframeBridge.postMessage('tab.status', {
                             saved: false
-                        }).catch(function(error) {
-                            console.log('tab.status error', error);
                         });
                     }
 
@@ -147,8 +145,6 @@ define([
                         if (typeof IframeBridge != 'undefined') {
                             IframeBridge.postMessage('tab.status', {
                                 saved: true
-                            }).catch(function(error) {
-                                console.log('tab.status error', error);
                             });
                         }
                     });
