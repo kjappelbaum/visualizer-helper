@@ -85,9 +85,7 @@ define([
 
 
         _doAssignment(currentNmr) {
-            var jcamp = currentNmr.getChild(['jcamp', 'data']);
-            console.log("doAssignment");
-            jcamp.then(function(jcamp) {
+            currentNmr.getChild(['jcamp', 'data']).then((jcamp) => {
                 jcamp = String(jcamp.get());
                 var ppOptions = API.getData("nmr1hOptions").resurrect();
                 var spectrum = SD.NMR.fromJcamp(jcamp);
@@ -108,7 +106,6 @@ define([
                     format:"new"
                 });
                 currentNmr.setChildSync(['range'], peakPicking);
-                // API.setVariable("editedRange",API.getVariable('currentNmr'),["range"]);
                 this._createNMRannotations(
                     {
                         nucleus: currentNmr.nucleus[0],
