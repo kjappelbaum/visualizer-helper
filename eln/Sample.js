@@ -145,7 +145,7 @@ define([
                         if (typeof IframeBridge != 'undefined') {
                             IframeBridge.postMessage('tab.status', {
                                 saved: true
-                            }).catch(function() {
+                            }).catch(function(error) {
                                 console.log('tab.status error', error);
                             });
                         }
