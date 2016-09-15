@@ -19,7 +19,14 @@ define([
                     fileSaver(blob, 'spectra.svg');
                     break;
                 case 'toggleNMR1hAdvancedOptions':
-                    API.cache('nmr1hAdvancedOptions', ! API.cache('nmr1hAdvancedOptions'));
+                    var advancedOptions1H = ! API.cache("nmr1hAdvancedOptions");
+                    API.cache("nmr1hAdvancedOptions", advancedOptions1H);
+                    if (advancedOptions1H) {
+                        API.createData("nmr1hOndeTemplate", API.getData("nmr1hOndeTemplates").full);
+                    } else {
+                        API.createData("nmr1hOndeTemplate", API.getData("nmr1hOndeTemplates").short);
+                    }
+
                     break;
                 case 'reset1d':
                 case 'reset2d':
