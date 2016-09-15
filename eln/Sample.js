@@ -71,6 +71,7 @@ define([
                 this.updateAttachments(sample);
 
                 this.expandableMolecule = new ExpandableMolecule(sample);
+                this.nmr1hManager = new Nmr1hManager(sample);
 
                 var self=this;
 
@@ -100,7 +101,7 @@ define([
                 });
 
                 var promise = Promise.resolve();
-                promise = promise.then(() => this._initializeNMRAssignment());
+                promise = promise.then(() => nmr1hManager._initializeNMRAssignment());
                 promise = promise.then(() => this._updatedMF());
                 return promise;
             });
