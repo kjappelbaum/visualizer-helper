@@ -1,7 +1,7 @@
 define([
     'src/util/api',
     'src/util/ui',
-    './lib'
+    './libs'
     ], function (API, UI, libs) {
     var OCLE = libs.OCLE;
     

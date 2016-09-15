@@ -78,6 +78,8 @@ define([
                     if (typeof IframeBridge !== 'undefined') {
                         IframeBridge.postMessage('tab.status', {
                             saved: false
+                        }).catch(function(error) {
+                            console.log('tab.status error', error);
                         });
                     }
 

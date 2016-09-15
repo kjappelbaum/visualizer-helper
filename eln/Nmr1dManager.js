@@ -4,9 +4,10 @@ define([
     'file-saver',
     'src/util/api',
     'src/util/ui',
-    'https://www.lactame.com/lib/sdv/0.1.11/sdv.js'
-] , function (fileSaver, API, UI, SD) {
+    './libs'
+] , function (fileSaver, API, UI, libs) {
 
+    var SD=libs.SD;
     
     class Nmr1dManager {
         constructor() {
@@ -49,11 +50,11 @@ define([
                         if (currentNmr.dimension>1) {
                             API.createData('blackNMR2d', currentNmr.jcamp.data);
                             // No peak picking currently for 2D
-                            API.switchToLayer('2D');
+                            API.switchToLayer('nmr2D');
                             return;
                         } else {
-                            //         API.switchToLayer('Default layer');
                             API.createData('blackNMR1d', currentNmr.jcamp.data);
+                            API.switchToLayer('Default layer');
                         }
                     } else { // we click on the button to redo assignment
                         currentNmr = API.getData('currentNmr');
