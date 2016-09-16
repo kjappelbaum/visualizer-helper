@@ -20,6 +20,7 @@ define([
 
         fromMolfile() {
             var chemcalc=this._chemcalcFromMolfile();
+            console.log('fromMolfile', chemcalc);
             if (chemcalc && this.previousEM !== chemcalc.em) {
                 this.previousEM = chemcalc.em;
 
