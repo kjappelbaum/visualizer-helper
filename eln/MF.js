@@ -47,7 +47,9 @@ define([
         }
 
         fromMF() {
+
             var chemcalc=CCE.analyseMF(API.getData('mf')+'');
+            console.log('new MF', chemcalc);
             if (chemcalc && this.previousEM !== chemcalc.em) {
                 this.previousEM = chemcalc.em;
                 var general=API.getData('general');
