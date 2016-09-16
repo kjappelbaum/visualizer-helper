@@ -20,7 +20,6 @@ define([
 
         fromMolfile() {
             var chemcalc=this._chemcalcFromMolfile();
-            console.log('fromMolfile', chemcalc);
             if (chemcalc && this.previousEM !== chemcalc.em) {
                 this.previousEM = chemcalc.em;
 
@@ -29,6 +28,7 @@ define([
                 general.em=chemcalc.em;
                 general.mw=chemcalc.mw;
                 general.triggerChange();
+                console.log('Changed to mf to ', general.mf)
             }
             API.createData('mfBGColor','white');
         }
@@ -48,7 +48,6 @@ define([
         }
 
         fromMF() {
-
             var chemcalc=CCE.analyseMF(API.getData('mf')+'');
             console.log('new MF', chemcalc);
             if (chemcalc && this.previousEM !== chemcalc.em) {
