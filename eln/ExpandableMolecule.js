@@ -6,8 +6,8 @@ define([
     var OCLE = libs.OCLE;
     
     class ExpandableMolecule {
-        constructor(sampleIn) {
-            this.sample = sampleIn;
+        constructor(sample) {
+            this.sample = sample;
             this.molfile = this.sample.$content.general.molfile + '';
             var molecule = OCLE.Molecule.fromMolfile(this.molfile);
             this.idCode = molecule.getIDCode();

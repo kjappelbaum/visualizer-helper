@@ -8,6 +8,7 @@ define([
 ] , function (fileSaver, API, UI, libs) {
 
     var SD=libs.SD;
+    var CCE=libs.CCE;
     
     class Nmr1dManager {
         constructor() {
@@ -48,12 +49,18 @@ define([
                     if (action.value.dimension) {
                         currentNmr = action.value;
                         if (currentNmr.dimension>1) {
-                            API.createData('blackNMR2d', currentNmr.jcamp.data);
+                            if (this.blackNMR2d !== currentNmr.jcamp) {
+                                API.createData('blackNMR2d', currentNmr.jcamp.data);
+                                this.blackNMR2d = currentNmr.jcamp;
+                            }
                             // No peak picking currently for 2D
                             API.switchToLayer('nmr2D');
                             return;
                         } else {
-                            API.createData('blackNMR1d', currentNmr.jcamp.data);
+                            if (this.blackNMR1d !== currentNmr.jcamp) {
+                                API.createData('blackNMR1d', currentNmr.jcamp.data);
+                                this.blackNMR1d = currentNmr.jcamp;
+                            }
                             API.switchToLayer('Default layer');
                         }
                     } else { // we click on the button to redo assignment
@@ -122,7 +129,7 @@ define([
                 var peak = peakPicking[i];
                 for (var j=0; j<peak.signal.length; j++){
                     var signal = peak.signal[j];
-                    if (signal.j) {
+                    if (signal.j && ! signal.multiplicity) {
                         signal.multiplicity = "";
                         for (var k=0; k<signal.j.length;k++){
                             signal.multiplicity+=signal.j[k].multiplicity;
@@ -143,6 +150,14 @@ define([
             }));
         }
 
+        updateIntegral() {
+            var chemcalc=CCE.analseMF(getData('mf')+'');
+            if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
+                var nmr1hOptions=API.getData('nmr1hOptions');
+                if (nmr1hOptions) nmr1hOptions.integral=this.chemcalc.atoms.H;
+                nmr1hOptions.triggerChange();
+            }
+        }
 
         initializeNMRAssignment() {
             var promise = Promise.resolve();
