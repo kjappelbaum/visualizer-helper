@@ -24,6 +24,7 @@ define([
                 this.previousEM = chemcalc.em;
 
                 var general=API.getData('general');
+                // TODO : can not set the value like that
                 general.mf=chemcalc.mf;
                 general.em=chemcalc.em;
                 general.mw=chemcalc.mw;

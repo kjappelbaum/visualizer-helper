@@ -123,7 +123,8 @@ define([
         _createNMRannotationsAndACS(currentNmr) {
             console.log('create annoations');
             var peakPicking = JSON.parse(JSON.stringify(API.getData("currentNmrRanges")));
-    
+
+            // TODO : this code hsould not be here !
             //Recompile multiplicity
             for (var i=0; i<peakPicking.length; i++){
                 var peak = peakPicking[i];
