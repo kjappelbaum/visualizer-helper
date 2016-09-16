@@ -12,7 +12,8 @@ define([
 
             // if no mf we calculate from molfile
             if (! API.getData('mf')+'') {
-                this.mfFromMolfile();
+                console.log("No MF ?!",API.getData('mf'))
+                this.fromMolfile();
             }
         }
 
