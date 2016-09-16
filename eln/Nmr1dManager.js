@@ -154,7 +154,7 @@ define([
             var chemcalc=CCE.analyseMF(API.getData('mf')+'');
             if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
                 var nmr1hOptions=API.getData('nmr1hOptions');
-                if (nmr1hOptions) nmr1hOptions.integral=this.chemcalc.atoms.H;
+                if (nmr1hOptions) nmr1hOptions.integral=chemcalc.atoms.H;
                 nmr1hOptions.triggerChange();
             }
         }
