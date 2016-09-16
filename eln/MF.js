@@ -11,7 +11,7 @@ define([
             this.sample = sample;
 
             // if no mf we calculate from molfile
-            console.log(API.getData('mf')+'');)
+            console.log(API.getData('mf')+'');
             if (! (API.getData('mf')+'')) {
                 console.log("No MF ?!",API.getData('mf'))
                 this.fromMolfile();
