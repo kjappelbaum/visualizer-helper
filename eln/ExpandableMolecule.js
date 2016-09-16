@@ -22,7 +22,7 @@ define([
                         if (idCode != this.idCode) {
                             this.idCode = idCode;
                             this.molfile = event.target + '';
-                            this.sample.setChildSync('$content.general.molfile', this.molfile);
+                            this.sample.setChildSync(['$content','general','molfile'], this.molfile);
                         } else {
                             console.log('no update');
                         }
@@ -30,7 +30,7 @@ define([
                         // by default we would like the depict mode
                         this.updateMolfiles();
                         var mf = molecule.getMolecularFormula().formula;
-                        this.sample.setChildSync('$content.general.mf', mf);
+                        this.sample.setChildSync(['$content','general','mf'], mf);
                     });
                     this.updateMolfiles();
                     this.toggleJSMEEdition(false);
