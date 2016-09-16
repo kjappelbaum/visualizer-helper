@@ -151,7 +151,7 @@ define([
         }
 
         updateIntegral() {
-            var chemcalc=CCE.analseMF(getData('mf')+'');
+            var chemcalc=CCE.analyseMF(API.getData('mf')+'');
             if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
                 var nmr1hOptions=API.getData('nmr1hOptions');
                 if (nmr1hOptions) nmr1hOptions.integral=this.chemcalc.atoms.H;
