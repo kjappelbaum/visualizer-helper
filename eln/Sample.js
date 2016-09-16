@@ -5,11 +5,12 @@
 define([
     './ExpandableMolecule',
     './Nmr1dManager',
+    './MF',
     'src/util/api',
     'src/util/ui',
     'lodash',
     './libs'
- ], function (ExpandableMolecule, Nmr1dManager, API, UI, _, libs) {
+ ], function (ExpandableMolecule, Nmr1dManager, MF, API, UI, _, libs) {
     var CCE = libs.CCE;
     var elnPlugin = libs.elnPlugin;
     var Roc = libs.Roc;
