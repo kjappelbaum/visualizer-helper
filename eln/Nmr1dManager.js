@@ -12,7 +12,7 @@ define([
     
     class Nmr1dManager {
         constructor() {
-           
+
         }
 
         handleAction(action) {
@@ -231,6 +231,10 @@ define([
                 }
             }));
             promise=promise.then((nmr1hOndeTemplates) => API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short));
+
+            promise=promise.then(() => this.updateIntegral());
+            // TODO we should recalculate the integration : updateIntegral
+            
             return promise;
         }
     }

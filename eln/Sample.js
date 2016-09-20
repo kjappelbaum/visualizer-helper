@@ -76,6 +76,7 @@ define([
                 API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
                 API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
                 API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
+                
                 this.updateAttachments(sample);
 
                 this.expandableMolecule = new ExpandableMolecule(this.sample);
@@ -103,6 +104,7 @@ define([
                 });
 
                 var promise = Promise.resolve();
+                // todo : initiaizeNMRAssignemnt should be done in the constructor ?
                 promise = promise.then(() => this.nmr1dManager.initializeNMRAssignment());
                 promise = promise.then(() => this.mf = new MF(this.sample));
                 return promise;

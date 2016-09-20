@@ -28,7 +28,7 @@ define([
                 API.getData('em').setValue(chemcalc.em, true);
                 API.getData('mw').setValue(chemcalc.mw, true);
                 general.triggerChange();
-                console.log('Changed to mf to ', general.mf)
+                console.log('Changed mf to ', general.mf)
             }
             API.createData('mfBGColor', 'white');
         }
