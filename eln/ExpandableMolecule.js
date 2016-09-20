@@ -9,8 +9,7 @@ define([
         constructor(sample) {
             this.sample = sample;
             this.molfile = this.sample.$content.general.molfile + '';
-            var molecule = OCLE.Molecule.fromMolfile(this.molfile);
-            this.idCode = molecule.getIDCode();
+            this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
             this.expandedHydrogens = false;
             this.jsmeEditionMode = false;
             API.createData('editableMolfile', this.molfile).then(
@@ -18,7 +17,8 @@ define([
                     editableMolfile.onChange((event) => {
                         // us this really a modification ? or a loop event ...
                         // need to compare former oclID with new oclID
-                        var idCode = OCLE.Molecule.fromMolfile(event.target + '').getIDCode();
+                        var newMolecule = OCLE.Molecule.fromMolfile(event.target + '');
+                        var idCode = newMolecule.getIDCode();
                         if (idCode != this.idCode) {
                             this.idCode = idCode;
                             this.molfile = event.target + '';
@@ -26,11 +26,6 @@ define([
                         } else {
                             console.log('no update');
                         }
-
-                        // by default we would like the depict mode
-                        this.updateMolfiles();
-                        var mf = molecule.getMolecularFormula().formula;
-                        this.sample.setChildSync(['$content','general','mf'], mf);
                     });
                     this.updateMolfiles();
                     this.toggleJSMEEdition(false);
