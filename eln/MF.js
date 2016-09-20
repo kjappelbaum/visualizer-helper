@@ -23,12 +23,14 @@ define([
             if (chemcalc && this.previousEM !== chemcalc.em) {
                 this.previousEM = chemcalc.em;
 
-                var general = API.getData('general');
-                API.getData('mf').setValue(chemcalc.mf, true);
-                API.getData('em').setValue(chemcalc.em, true);
-                API.getData('mw').setValue(chemcalc.mw, true);
-                general.triggerChange();
-                console.log('Changed mf to ', general.mf)
+                this.sample.setChildSync(['$content','general','mf'], chemcalc.mf);
+
+                // var general = API.getData('general');
+                // API.getData('mf').setValue(chemcalc.mf, true);
+                // API.getData('em').setValue(chemcalc.em, true);
+                // API.getData('mw').setValue(chemcalc.mw, true);
+                // general.triggerChange();
+                console.log('Changed mf to ', chamcalc.mf)
             }
             API.createData('mfBGColor', 'white');
         }
@@ -52,10 +54,12 @@ define([
             console.log('new MF', chemcalc);
             if (chemcalc && this.previousEM !== chemcalc.em) {
                 this.previousEM = chemcalc.em;
-                var general = API.getData('general');
-                general.mw = chemcalc.mw;
-                general.em = chemcalc.em;
-                general.triggerChange();
+                this.sample.setChildSync(['$content','general','mw'], chemcalc.mw);
+                this.sample.setChildSync(['$content','general','em'], chemcalc.em);
+                // var general = API.getData('general');
+                // general.mw = chemcalc.mw;
+                // general.em = chemcalc.em;
+                // general.triggerChange();
             }
         }
 
