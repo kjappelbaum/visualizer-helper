@@ -24,10 +24,9 @@ define([
                 this.previousEM = chemcalc.em;
 
                 var general = API.getData('general');
-                // TODO : can not set the value like that
-                general.mf.setValue(chemcalc.mf, true);
-                general.em.setValue(chemcalc.em, true);
-                general.mw.setValue(chemcalc.mw, true);
+                API.getData('mf').setValue(chemcalc.mf, true);
+                API.getData('em').setValue(chemcalc.em, true);
+                API.getData('mw').setValue(chemcalc.mw, true);
                 general.triggerChange();
                 console.log('Changed to mf to ', general.mf)
             }
