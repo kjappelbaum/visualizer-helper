@@ -25,7 +25,7 @@ define([
 
                 var general = API.getData('general');
                 // TODO : can not set the value like that
-                general.mf.setValue(chemcal.mf, true);
+                general.mf.setValue(chemcalc.mf, true);
                 general.em.setValue(chemcalc.em, true);
                 general.mw.setValue(chemcalc.mw, true);
                 general.triggerChange();
