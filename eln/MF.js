@@ -30,7 +30,7 @@ define([
                 // API.getData('em').setValue(chemcalc.em, true);
                 // API.getData('mw').setValue(chemcalc.mw, true);
                 // general.triggerChange();
-                console.log('Changed mf to ', chamcalc.mf)
+                console.log('Changed mf to ', chemcalc.mf)
             }
             API.createData('mfBGColor', 'white');
         }
