@@ -11,9 +11,7 @@ define([
             this.sample = sample;
 
             // if no mf we calculate from molfile
-            console.log(API.getData('mf') + '');
-            if (!(API.getData('mf') + '')) {
-                console.log("No MF ?!", API.getData('mf'))
+            if (!this.getMF()) {
                 this.fromMolfile();
             }
         }
@@ -36,7 +34,7 @@ define([
         }
 
         _chemcalcFromMolfile() {
-            var molfile = API.getData('molfile') + '';
+            var molfile = this.getMolfile();
             if (molfile) {
                 var molecule = OCLE.Molecule.fromMolfile(molfile);
                 var mf = molecule.getMolecularFormula().formula;
@@ -49,13 +47,29 @@ define([
             return undefined;
         }
 
+        getMF() {
+            return String(this.sample.getChildSync(['$content', 'general', 'mf']));
+        }
+
+        getMolfile() {
+            return String(this.sample.getChildSync(['$content', 'general', 'molfile']));
+        }
+
+        setMW(mw) {
+            this.sample.setChildSync(['$content','general','mw'], mw);
+        }
+
+        setEM(em) {
+            this.sample.setChildSync(['$content','general','em'], em);
+        }
+
         fromMF() {
-            var chemcalc = CCE.analyseMF(API.getData('mf') + '');
+            var chemcalc = CCE.analyseMF(this.getMF());
             console.log('new MF', chemcalc);
             if (chemcalc && this.previousEM !== chemcalc.em) {
                 this.previousEM = chemcalc.em;
-                this.sample.setChildSync(['$content','general','mw'], chemcalc.mw);
-                this.sample.setChildSync(['$content','general','em'], chemcalc.em);
+                this.setMW(chemcalc.mw);
+                this.setEM(chemcalc.em);
                 // var general = API.getData('general');
                 // general.mw = chemcalc.mw;
                 // general.em = chemcalc.em;
@@ -64,7 +78,7 @@ define([
         }
 
         _mfColor() {
-            var existingMF = API.getData('mf') + "";
+            var existingMF = this.getMF();
             if (molfile) {
                 var molecule = OCLE.Molecule.fromMolfile(molfile);
                 var mf = molecule.getMolecularFormula().formula;
