@@ -18,10 +18,9 @@ define([
 
         fromMolfile() {
             var chemcalc = this._chemcalcFromMolfile();
-            if (chemcalc && this.previousEM !== chemcalc.em) {
-                this.previousEM = chemcalc.em;
-
-                this.sample.setChildSync(['$content','general','mf'], chemcalc.mf);
+            if (chemcalc && this.previousEMMolfile !== chemcalc.em) {
+                this.previousEMMolfile = chemcalc.em;
+                this.setMF(chemcalc.mf);
 
                 // var general = API.getData('general');
                 // API.getData('mf').setValue(chemcalc.mf, true);
@@ -55,6 +54,10 @@ define([
             return String(this.sample.getChildSync(['$content', 'general', 'molfile']));
         }
 
+        setMF(mf) {
+            this.sample.setChildSync(['$content','general','mf'], mf);
+        }
+
         setMW(mw) {
             this.sample.setChildSync(['$content','general','mw'], mw);
         }
@@ -66,8 +69,8 @@ define([
         fromMF() {
             var chemcalc = CCE.analyseMF(this.getMF());
             console.log('new MF', chemcalc);
-            if (chemcalc && this.previousEM !== chemcalc.em) {
-                this.previousEM = chemcalc.em;
+            if (chemcalc && this.previousEMMF !== chemcalc.em) {
+                this.previousEMMF = chemcalc.em;
                 this.setMW(chemcalc.mw);
                 this.setEM(chemcalc.em);
                 // var general = API.getData('general');
