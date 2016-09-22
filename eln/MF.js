@@ -67,16 +67,19 @@ define([
         }
 
         fromMF() {
+            if (! this.getMF()) {
+                this.previousEMMF = 0;
+                this.setMW(0);
+                this.setEM(0);
+                return;
+            }
             var chemcalc = CCE.analyseMF(this.getMF());
             console.log('new MF', chemcalc);
             if (chemcalc && this.previousEMMF !== chemcalc.em) {
                 this.previousEMMF = chemcalc.em;
                 this.setMW(chemcalc.mw);
                 this.setEM(chemcalc.em);
-                // var general = API.getData('general');
-                // general.mw = chemcalc.mw;
-                // general.em = chemcalc.em;
-                // general.triggerChange();
+
             }
         }
 
