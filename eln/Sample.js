@@ -52,9 +52,7 @@ define([
         }
 
         _loadInstanceInVisualizer() {
-            this.roc.document(this.uuid, {
-                varName: this.options.varName
-            }).then(sample => {
+            this.roc.document(this.uuid, this.options).then(sample => {
                 this.sample = sample;
                 var sampleVar = API.getVar(this.options.varName);
                 API.setVariable('sampleCode', sampleVar, ['$id', 0]);
