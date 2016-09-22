@@ -63,7 +63,11 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                 401: 'Unauthorized to get query',
                 404: 'Query does not exist'
             },
-            getGroups: {}
+            getGroups: {},
+            addGroup: {
+                401: 'Unauthorized to add group',
+                200: 'Group added to entry'
+            }
         };
 
         for (let key in defaultOptions.messages) {
@@ -527,6 +531,23 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                     var doc = this._findById(id);
                     if (!doc) return;
                     return this.addAttachment(doc._id, attachment, options);
+                });
+            }
+
+            addGroup(entry, group, options) {
+                return this.__ready.then(() => {
+                    const uuid = getUuid(entry);
+                    options = createOptions(options, 'addGroup');
+                    return superagent.put(`${this.entryUrl}/${uuid}/_owner/${String(group)}`)
+                        .withCredentials()
+                        .then(handleSuccess(this, options))
+                        .then(res => {
+                            if(!options.noUpdate) {
+                                this.get(uuid).then(() => res.body);
+                            } else {
+                                return res.body;
+                            }
+                        })
                 });
             }
 
