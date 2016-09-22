@@ -81,7 +81,9 @@ define([
 
                 this.expandableMolecule = new ExpandableMolecule(this.sample);
                 this.nmr1dManager = new Nmr1dManager();
-                
+                this.nmr1dManager.initializeNMRAssignment();
+                this.mf = new MF(this.sample);
+                this.mf.fromMF();
 
                 sample.onChange((event) => {
                     if (typeof IframeBridge !== 'undefined') {
@@ -102,12 +104,6 @@ define([
                             break;
                     }
                 });
-
-                var promise = Promise.resolve();
-                // todo : initiaizeNMRAssignemnt should be done in the constructor ?
-                promise = promise.then(() => this.nmr1dManager.initializeNMRAssignment());
-                promise = promise.then(() => this.mf = new MF(this.sample));
-                return promise;
             });
         }
 
