@@ -20,7 +20,7 @@ define([
                 case 'updateRanges':
                     var ppOptions = API.getData("nmr1hOptions").resurrect();
                     var currentRanges = API.getData("currentNmrRanges");
-                    SD.formatter(currentRanges, {sum: ppOptions.integral});
+                    SD.formatter.updateRanges(currentRanges, {sum: ppOptions.integral});
                     currentRanges.triggerChange();
                     break;
                 case 'downloadSVG':
