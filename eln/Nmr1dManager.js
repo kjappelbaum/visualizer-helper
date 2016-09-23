@@ -17,6 +17,12 @@ define([
 
         handleAction(action) {
             switch (action.name) {
+                case 'updateRanges':
+                    var ppOptions = API.getData("nmr1hOptions").resurrect();
+                    var currentRanges = API.getData("currentNmrRanges");
+                    SD.formatter(currentRanges, {sum: ppOptions.integral});
+                    currentRanges.triggerChange();
+                    break;
                 case 'downloadSVG':
                     var blob = new Blob([action.value+""], {type: "application/jcamp-dx;charset=utf-8"});
                     fileSaver(blob, 'spectra.svg');
