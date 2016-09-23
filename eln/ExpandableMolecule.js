@@ -61,6 +61,7 @@ define([
                 prefs.prefs.push('depict');
                 if (!noDepictUpdate) {
                     this.expandedHydrogens = false;
+                    this.updateMolfiles();
                     API.createData("viewMolfile", this.viewMolfile);
                 }
 
