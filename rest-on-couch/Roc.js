@@ -534,11 +534,12 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                 });
             }
 
-            addGroup(entry, group, options) {
+            addGroup(entry, group, options, remove) {
+                var method = remove ? 'del' : 'put';
                 return this.__ready.then(() => {
                     const uuid = getUuid(entry);
                     options = createOptions(options, 'addGroup');
-                    return superagent.put(`${this.entryUrl}/${uuid}/_owner/${String(group)}`)
+                    return superagent[method](`${this.entryUrl}/${uuid}/_owner/${String(group)}`)
                         .withCredentials()
                         .then(handleSuccess(this, options))
                         .then(res => {
@@ -549,6 +550,10 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                             }
                         })
                 });
+            }
+
+            deleteGroup(entry, group, options) {
+                return this.addGroup(entry, group, options, true)
             }
 
 
