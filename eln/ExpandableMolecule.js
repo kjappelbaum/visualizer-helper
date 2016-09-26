@@ -86,7 +86,9 @@ define([
         updateMolfiles() {
             // prevent the loop by checking actelionID
             var molecule = OCLE.Molecule.fromMolfile(this.molfile);
-            this.viewMolfile = molecule.toVisualizerMolfile();
+            this.viewMolfile = molecule.toVisualizerMolfile({
+                heavyAtomHydrogen: true
+            });
             molecule.addImplicitHydrogens();
             this.viewMolfileExpandedH = molecule.toVisualizerMolfile();
         }
