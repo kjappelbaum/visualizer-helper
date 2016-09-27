@@ -93,6 +93,17 @@ define([
 
                     console.log("change event received", event.jpath.join('.'), event);
 
+                    //              executePeakPicking        
+                    
+                    
+                    if (event.jpath.replace(/\.\d+\..*/,'')==='$content.spectra.nmr') {
+                        // we are changing NMR ...
+                        // if there is no assignment we should recalculate it
+                        
+                        // we should check that the integrals are correct
+                    }
+                    
+
                     switch (event.jpath.join('.')) {
                         case '$content.general.molfile':
                             this.mf.fromMolfile();
