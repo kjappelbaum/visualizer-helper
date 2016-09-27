@@ -181,6 +181,12 @@ define([
                         this.updateAttachments(sample);
                     });
                     break;
+                case 'discardLocalModifications':
+                    this.roc.discardLocal(this.sample);
+                    IframeBridge.postMessage('tab.status', {
+                        saved: true
+                    });
+                    break;
                 default:
                     break
             }
