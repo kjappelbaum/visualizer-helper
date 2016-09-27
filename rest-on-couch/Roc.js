@@ -451,7 +451,10 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
 
             discardLocal(entry) {
                 var uuid = getUuid(entry);
-                idb.delete(uuid);
+                idb.delete(uuid).then(() => {
+                    // Get from server again
+                    this.get(entry);
+                });
             }
 
             getAttachment(entry, name, options) {

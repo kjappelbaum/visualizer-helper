@@ -72,7 +72,6 @@ define([
                     this._doAssignment(currentNmr);
                     break;
                 case 'nmrChanged':
-                    debugger;
                     this.executePeakPicking(action.value);
                     break;
                 default:
