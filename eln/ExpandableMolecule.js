@@ -28,18 +28,14 @@ define([
                         }
                     });
                     this.updateMolfiles();
-                    this.toggleJSMEEdition(false);
+                    this.setJSMEEdition(false);
                 }
             );
         }
 
-        toggleJSMEEdition(force, noDepictUpdate) {
-            if (force !== undefined && force === this.jsmeEditionMode) return;
-            if (force === undefined) {
-                this.jsmeEditionMode = !this.jsmeEditionMode;
-            } else {
-                this.jsmeEditionMode = force;
-            }
+        setJSMEEdition(value, noDepictUpdate) {
+            this.jsmeEditionMode = value;
+
             var prefs = {
                 "prefs": [
                     "oldlook",
@@ -59,7 +55,7 @@ define([
                 this.expandedHydrogens = false;
             } else {
                 prefs.prefs.push('depict');
-                if (!noDepictUpdate) {
+                if (!noDepictUpdate && false) { // TODO when we should not updateMolfile
                     this.expandedHydrogens = false;
                     this.updateMolfiles();
                     API.createData("viewMolfile", this.viewMolfile);
@@ -77,7 +73,7 @@ define([
             }
             if (this.expandedHydrogens) {
                 API.createData("viewMolfileExpandedH", this.viewMolfileExpandedH);
-                this.toggleJSMEEdition(false, true);
+                this.setJSMEEdition(false, true);
             } else {
                 API.createData("viewMolfile", this.viewMolfile);
             }
@@ -97,7 +93,7 @@ define([
             if (!action) return;
             switch (action.name) {
                 case 'toggleJSMEEdition':
-                    this.toggleJSMEEdition();
+                    this.setJSMEEdition(!this.jsmeEditionMode);
                     break;
                 case 'clearMolfile':
                     var molfile = API.getData('editableMolfile');
