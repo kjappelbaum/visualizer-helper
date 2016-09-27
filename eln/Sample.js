@@ -107,6 +107,10 @@ define([
                     
 
                     switch (event.jpath.join('.')) {
+                        case '':
+                            this.nmr1dManager.initializeNMRAssignment(this.sample.getChildSync(['$content', 'spectra', 'nmr']));
+                            API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
+                            break;
                         case '$content.general.molfile':
                             this.mf.fromMolfile();
                             break;
