@@ -11,7 +11,6 @@ define([
     'lodash',
     './libs'
  ], function (ExpandableMolecule, Nmr1dManager, MF, API, UI, _, libs) {
-    var CCE = libs.CCE;
     var elnPlugin = libs.elnPlugin;
     var Roc = libs.Roc;
     
