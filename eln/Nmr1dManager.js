@@ -38,7 +38,6 @@ define([
 
                     break;
                 case 'resetNMR1d':
-                case 'resetNMR1d':
                     var type = action.name.replace(/[^0-9]/g,'');
 
                     type = type + 'd';
@@ -155,6 +154,9 @@ define([
                 nucleus:currentNmr.nucleus[0],
                 observe:Math.round(currentNmr.frequency/10)*10
             }));
+
+            this.updateHighlights();
+
         }
 
         updateIntegral() {
@@ -166,7 +168,35 @@ define([
             }
         }
 
-        initializeNMRAssignment() {
+        updateHighlights() {
+             var   ranges = API.getData("currentNmrRanges");
+            if(!ranges) return;
+            for(var i=0; i<ranges.length; i++) {
+                var range = ranges[i];
+                Object.defineProperty(range, '_highlight', {
+                    enumerable: false,
+                    writable: true
+                });
+                range._highlight = [];
+                if(!range.signal) continue;
+                for(var j=0; j<range.signal.length; j++) {
+                    var signal = range.signal[j];
+                    if(!signal.diaID) continue;
+                    for(var k=0; k<signal.diaID.length; k++) {
+                        var diaID = signal.diaID[k];
+                        range._highlight.push(diaID);
+                    }
+                }
+            }
+        }
+
+        initializeNMRAssignment(nmr) {
+            // if(nmr && nmr.length) {
+            //     for(var i=0; i<nmr.length; i++) {
+            //         this.updateHighlights(nmr[i].range);
+            //     }
+            // }
+            // nmr.triggerChange();
             var promise = Promise.resolve();
             promise = promise.then(() => API.createData('nmr1hOptions', {
                     "noiseFactor": 0.8,
@@ -237,10 +267,9 @@ define([
                 }
             }));
             promise=promise.then((nmr1hOndeTemplates) => API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short));
-
-            promise=promise.then(() => this.updateIntegral());
-            // TODO we should recalculate the integration : updateIntegral
-            
+            promise=promise.then(() => {
+                this.updateIntegral();
+            });
             return promise;
         }
     }
