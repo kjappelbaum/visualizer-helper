@@ -55,7 +55,7 @@ define([
                 this.expandedHydrogens = false;
             } else {
                 prefs.prefs.push('depict');
-                if (!noDepictUpdate && false) { // TODO when we should not updateMolfile
+                if (!noDepictUpdate) { // TODO when we should not updateMolfile
                     this.expandedHydrogens = false;
                     this.updateMolfiles();
                     API.createData("viewMolfile", this.viewMolfile);

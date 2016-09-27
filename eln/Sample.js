@@ -72,7 +72,7 @@ define([
                 API.setVariable('density', sampleVar, ['$content', 'physical', 'density']);
                 API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
                 API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
-                
+
                 this.updateAttachments(sample);
 
                 this.expandableMolecule = new ExpandableMolecule(this.sample);
@@ -91,11 +91,14 @@ define([
                     }
 
                     console.log("change event received", event.jpath.join('.'), event);
+                    var jpathStr = event.jpath.join('.');
 
-                    //              executePeakPicking        
-                    
-                    
-                    if (event.jpath.replace(/\.\d+\..*/,'')==='$content.spectra.nmr') {
+
+                    if (jpathStr.replace(/\.\d+\..*/,'')==='$content.spectra.nmr') {
+                        // execute peak picking
+                        console.log('range changed, execute peak picking');
+                        var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
+                        this.nmr1dManager.executePeakPicking(currentNmr);
                         // we are changing NMR ...
                         // if there is no assignment we should recalculate it
                         
