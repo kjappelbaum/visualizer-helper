@@ -77,7 +77,7 @@ define([
                             return;
                         }
                     }
-                    console.log('action.value', action.value)
+                    console.log('action.value', action.value);
                     if (action.value.integral){//Fired from button
                         this._doAssignment(currentNmr);
                     } else {
@@ -154,9 +154,6 @@ define([
                 nucleus:currentNmr.nucleus[0],
                 observe:Math.round(currentNmr.frequency/10)*10
             }));
-
-            this.updateHighlights();
-
         }
 
         updateIntegral() {
@@ -168,15 +165,16 @@ define([
             }
         }
 
-        updateHighlights() {
-             var   ranges = API.getData("currentNmrRanges");
+        updateHighlights(ranges) {
+            ranges = ranges || API.getData("currentNmrRanges");
             if(!ranges) return;
             for(var i=0; i<ranges.length; i++) {
                 var range = ranges[i];
-                Object.defineProperty(range, '_highlight', {
-                    enumerable: false,
-                    writable: true
-                });
+                range._highlight = [];
+                // Object.defineProperty(range, '_highlight', {
+                //     enumerable: false,
+                //     writable: true
+                // });
                 range._highlight = [];
                 if(!range.signal) continue;
                 for(var j=0; j<range.signal.length; j++) {
@@ -191,12 +189,11 @@ define([
         }
 
         initializeNMRAssignment(nmr) {
-            // if(nmr && nmr.length) {
-            //     for(var i=0; i<nmr.length; i++) {
-            //         this.updateHighlights(nmr[i].range);
-            //     }
-            // }
-            // nmr.triggerChange();
+            if(nmr && nmr.length) {
+                for(var i=0; i<nmr.length; i++) {
+                    this.updateHighlights(nmr[i].range);
+                }
+            }
             var promise = Promise.resolve();
             promise = promise.then(() => API.createData('nmr1hOptions', {
                     "noiseFactor": 0.8,

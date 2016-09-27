@@ -71,7 +71,6 @@ define([
                 API.setVariable('nd', sampleVar, ['$content', 'physical', 'nd']);
                 API.setVariable('mp', sampleVar, ['$content', 'physical', 'mp']);
                 API.setVariable('density', sampleVar, ['$content', 'physical', 'density']);
-                API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
                 API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
                 API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
                 
@@ -79,7 +78,9 @@ define([
 
                 this.expandableMolecule = new ExpandableMolecule(this.sample);
                 this.nmr1dManager = new Nmr1dManager();
-                this.nmr1dManager.initializeNMRAssignment();
+                this.nmr1dManager.initializeNMRAssignment(this.sample.getChildSync(['$content', 'spectra', 'nmr']));
+                API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
+
                 this.mf = new MF(this.sample);
                 this.mf.fromMF();
 
