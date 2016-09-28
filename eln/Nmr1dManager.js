@@ -69,7 +69,9 @@ define([
                     this._doAssignment(currentNmr);
                     break;
                 case 'nmrChanged':
-                    this.executePeakPicking(action.value);
+                    if(action.value.dimension <= 1) {
+                        this.executePeakPicking(action.value);
+                    }
                     break;
                 default:
                     return false;
