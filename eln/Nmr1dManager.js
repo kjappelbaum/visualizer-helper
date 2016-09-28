@@ -89,7 +89,7 @@ define([
             var ppOptions = API.getData("nmr1hOptions");
             var currentRanges = API.getData("currentNmrRanges");
             SD.formatter.updateIntegrals(currentRanges, {sum: Number(ppOptions.integral)});
-            currentRanges.triggerChange();
+            currentRanges.triggerChange(true); // no bubbling
         }
 
         _doAssignment(currentNmr) {
