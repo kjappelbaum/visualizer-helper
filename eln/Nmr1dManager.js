@@ -18,10 +18,7 @@ define([
         handleAction(action) {
             switch (action.name) {
                 case 'updateRanges':
-                    var ppOptions = API.getData("nmr1hOptions").resurrect();
-                    var currentRanges = API.getData("currentNmrRanges");
-                    SD.formatter.updateIntegrals(currentRanges, {sum: ppOptions.integral});
-                    currentRanges.triggerChange();
+                    this.updateIntegrals();
                     break;
                 case 'downloadSVG':
                     var blob = new Blob([action.value+""], {type: "application/jcamp-dx;charset=utf-8"});
@@ -86,6 +83,13 @@ define([
             } else {
                 this._createNMRannotationsAndACS(nmr);
             }
+        }
+
+        updateIntegrals() {
+            var ppOptions = API.getData("nmr1hOptions");
+            var currentRanges = API.getData("currentNmrRanges");
+            SD.formatter.updateIntegrals(currentRanges, {sum: Number(ppOptions.integral)});
+            currentRanges.triggerChange();
         }
 
         _doAssignment(currentNmr) {

@@ -99,6 +99,7 @@ define([
                         console.log('range changed, execute peak picking');
                         var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
                         this.nmr1dManager.executePeakPicking(currentNmr);
+                        this.nmr1dManager.updateIntegrals();
                         // we are changing NMR ...
                         // if there is no assignment we should recalculate it
                         
