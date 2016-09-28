@@ -83,7 +83,7 @@ define([
                 this.mf = new MF(this.sample);
                 this.mf.fromMF();
 
-                sample.onChange((event) => {
+                this.onChange = (event) => {
                     if (typeof IframeBridge !== 'undefined') {
                         IframeBridge.postMessage('tab.status', {
                             saved: false
@@ -102,10 +102,10 @@ define([
                         this.nmr1dManager.updateIntegrals();
                         // we are changing NMR ...
                         // if there is no assignment we should recalculate it
-                        
+
                         // we should check that the integrals are correct
                     }
-                    
+
 
                     switch (event.jpath.join('.')) {
                         case '':
@@ -120,8 +120,19 @@ define([
                             this.nmr1dManager.updateIntegral();
                             break;
                     }
-                });
+                };
+
+                this.bindChange();
             });
+        }
+
+        bindChange() {
+            this.sample.unbindChange(this.onChange);
+            this.sample.onChange(this.onChange);
+        }
+
+        unbindChange() {
+            this.sample.unbindChange(this.onChange);
         }
 
 
@@ -139,9 +150,6 @@ define([
             if (this.nmr1dManager && this.nmr1dManager.handleAction(action)) return;
 
             switch (action.name) {
-                case 'refresh':
-                    this.roc.get(this.uuid);
-                    break;
                 case 'save':
                     this.roc.update(this.sample).then(function () {
                         if (typeof IframeBridge != 'undefined') {
@@ -186,11 +194,16 @@ define([
                         this.updateAttachments(sample);
                     });
                     break;
-                case 'discardLocalModifications':
-                    this.roc.discardLocal(this.sample);
-                    IframeBridge.postMessage('tab.status', {
-                        saved: true
+                case 'refresh':
+                    UI.confirm('Are you sure you want to refresh? This will discard your local modifications.').then(ok => {
+                        if(!ok) return;
+                        this.unbindChange();
+                        this.roc.discardLocal(this.sample).then(() => this.bindChange());
+                        IframeBridge.postMessage('tab.status', {
+                            saved: true
+                        });
                     });
+
                     break;
                 default:
                     break
