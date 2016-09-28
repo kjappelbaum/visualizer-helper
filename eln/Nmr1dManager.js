@@ -127,7 +127,7 @@ define([
 
             // TODO : this code hsould not be here !
             //Recompile multiplicity
-            /*for (var i=0; i<peakPicking.length; i++){
+            for (var i=0; i<peakPicking.length; i++){
                 var peak = peakPicking[i];
                 for (var j=0; j<peak.signal.length; j++){
                     var signal = peak.signal[j];
@@ -138,8 +138,8 @@ define([
                         }
                     }
                 }
-            }*/
-            SD.formatter.update(peakPicking);
+            }
+            //SD.formatter.update(peakPicking);
     
             API.createData("annotationsNMR1d", SD.GUI.annotations1D(peakPicking, {
                 line:1,
