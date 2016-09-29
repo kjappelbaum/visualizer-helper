@@ -175,6 +175,9 @@ define([
                 nucleus:nmr.nucleus[0],
                 observe:Math.round(nmr.frequency/10)*10
             }));
+            
+             //Is this possible. I need to add the highligth on the ranges
+            nmr.setChildSync(['range'], peakPicking);
         }
 
         updateIntegral() {
