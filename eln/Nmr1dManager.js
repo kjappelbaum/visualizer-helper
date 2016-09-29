@@ -139,15 +139,17 @@ define([
                     gsdOptions:{minMaxRatio:0.001, smoothY:false, broadWidth:0},
                     format:"new"
                 });
+                //nmr.setChildSync(['range'], peakPicking);
+                this._createNMRannotationsAndACS(peakPicking);          
+                //Is this possible. I need to add the highligth on the ranges
                 nmr.setChildSync(['range'], peakPicking);
-                this._createNMRannotationsAndACS(nmr);
             });
         }
 
 
-        _createNMRannotationsAndACS(nmr) {
+        _createNMRannotationsAndACS(peakPicking) {
             console.log('create annoations');
-            var peakPicking = JSON.parse(JSON.stringify(nmr.getChildSync(['range'])));
+           // var peakPicking = JSON.parse(JSON.stringify(nmr.getChildSync(['range'])));
 
             // TODO : this code hsould not be here !
             //Recompile multiplicity
@@ -175,9 +177,6 @@ define([
                 nucleus:nmr.nucleus[0],
                 observe:Math.round(nmr.frequency/10)*10
             }));
-            
-             //Is this possible. I need to add the highligth on the ranges
-            nmr.setChildSync(['range'], peakPicking);
         }
 
         updateIntegral() {
