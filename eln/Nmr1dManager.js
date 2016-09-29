@@ -139,17 +139,17 @@ define([
                     gsdOptions:{minMaxRatio:0.001, smoothY:false, broadWidth:0},
                     format:"new"
                 });
-                //nmr.setChildSync(['range'], peakPicking);
-                this._createNMRannotationsAndACS(peakPicking, nmr);          
-                //Is this possible. I need to add the highligth on the ranges
                 nmr.setChildSync(['range'], peakPicking);
+                this._createNMRannotationsAndACS(nmr);          
+                //Is this possible. I need to add the highligth on the ranges
+                //nmr.setChildSync(['range'], peakPicking);
             });
         }
 
 
-        _createNMRannotationsAndACS(peakPicking, nmr) {
+        _createNMRannotationsAndACS(nmr) {
             console.log('create annoations');
-           // var peakPicking = JSON.parse(JSON.stringify(nmr.getChildSync(['range'])));
+            var peakPicking = JSON.parse(JSON.stringify(nmr.getChildSync(['range'])));
 
             // TODO : this code hsould not be here !
             //Recompile multiplicity
@@ -198,7 +198,7 @@ define([
                     enumerable: false,
                     writable: true
                 });
-                range._highlight = [];
+                range._highlight = [range.signalID];
                 if(!range.signal) continue;
                 for(var j=0; j<range.signal.length; j++) {
                     var signal = range.signal[j];
