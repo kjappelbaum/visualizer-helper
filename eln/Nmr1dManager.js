@@ -83,8 +83,16 @@ define([
             if(!nmr.range || ! nmr.range.length) {
                 this._autoRanges(nmr);
             } else {
-                this._createNMRannotationsAndACS(nmr);
+                this._updateAnnotations(nmr);
             }
+        }
+
+        _updateAnnotations(nmr) {
+            var ppOptions = API.getData('nmr1hOptions');
+            this._getSpectrum(nmr).then(spectrum => {
+                spectrum.updateIntegrals(nmr.getChildSync(['range']), {nH: Number(ppOptions.integral)});
+                this._createNMRannotationsAndACS(nmr);
+            });
         }
 
         updateIntegrals() {
@@ -94,10 +102,10 @@ define([
             currentRanges.triggerChange(true); // no bubbling
         }
 
-        _autoRanges(currentNmr) {
+        _getSpectrum(nmr) {
             var spectrum;
-            var filename = String(currentNmr.getChildSync(['jcamp', 'filename']));
-            currentNmr.getChild(['jcamp', 'data']).then((jcamp) => {
+            var filename = String(nmr.getChildSync(['jcamp', 'filename']));
+            return nmr.getChild(['jcamp', 'data']).then((jcamp) => {
                 if(filename && this.spectra[filename]) {
                     console.log('load spectrum from cache', filename);
                     spectrum = this.spectra[filename];
@@ -108,6 +116,12 @@ define([
                         this.spectra[filename] = spectrum;
                     }
                 }
+                return spectrum;
+            });
+        }
+
+        _autoRanges(nmr) {
+            this._getSpectrum(nmr).then(spectrum => {
                 var ppOptions = API.getData("nmr1hOptions").resurrect();
                 var intFN = 0;
                 if(ppOptions.integralFn=="peaks"){
@@ -125,15 +139,15 @@ define([
                     gsdOptions:{minMaxRatio:0.001, smoothY:false, broadWidth:0},
                     format:"new"
                 });
-                currentNmr.setChildSync(['range'], peakPicking);
-                this._createNMRannotationsAndACS(currentNmr);
+                nmr.setChildSync(['range'], peakPicking);
+                this._createNMRannotationsAndACS(nmr);
             });
         }
 
 
-        _createNMRannotationsAndACS(currentNmr) {
+        _createNMRannotationsAndACS(nmr) {
             console.log('create annoations');
-            var peakPicking = JSON.parse(JSON.stringify(currentNmr.getChildSync(['range'])));
+            var peakPicking = JSON.parse(JSON.stringify(nmr.getChildSync(['range'])));
 
             // TODO : this code hsould not be here !
             //Recompile multiplicity
@@ -158,8 +172,8 @@ define([
             }));
             API.createData("acsNMR1d",SD.formatter.toACS(peakPicking, {
                 rangeForMultiplet:true,
-                nucleus:currentNmr.nucleus[0],
-                observe:Math.round(currentNmr.frequency/10)*10
+                nucleus:nmr.nucleus[0],
+                observe:Math.round(nmr.frequency/10)*10
             }));
         }
 
