@@ -140,14 +140,14 @@ define([
                     format:"new"
                 });
                 //nmr.setChildSync(['range'], peakPicking);
-                this._createNMRannotationsAndACS(peakPicking);          
+                this._createNMRannotationsAndACS(peakPicking, nmr);          
                 //Is this possible. I need to add the highligth on the ranges
                 nmr.setChildSync(['range'], peakPicking);
             });
         }
 
 
-        _createNMRannotationsAndACS(peakPicking) {
+        _createNMRannotationsAndACS(peakPicking, nmr) {
             console.log('create annoations');
            // var peakPicking = JSON.parse(JSON.stringify(nmr.getChildSync(['range'])));
 
