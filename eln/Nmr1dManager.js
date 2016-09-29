@@ -12,7 +12,7 @@ define([
     
     class Nmr1dManager {
         constructor() {
-
+            this.spectra = {};
         }
 
         handleAction(action) {
@@ -66,7 +66,7 @@ define([
                         }
                         return;
                     }
-                    this._doAssignment(currentNmr);
+                    this._autoRanges(currentNmr);
                     break;
                 case 'nmrChanged':
                     if(action.value.dimension <= 1) {
@@ -81,7 +81,7 @@ define([
 
         executePeakPicking(nmr) {
             if(!nmr.range || ! nmr.range.length) {
-                this._doAssignment(nmr);
+                this._autoRanges(nmr);
             } else {
                 this._createNMRannotationsAndACS(nmr);
             }
@@ -94,11 +94,21 @@ define([
             currentRanges.triggerChange(true); // no bubbling
         }
 
-        _doAssignment(currentNmr) {
+        _autoRanges(currentNmr) {
+            var spectrum;
+            var filename = String(currentNmr.getChildSync(['jcamp', 'filename']));
             currentNmr.getChild(['jcamp', 'data']).then((jcamp) => {
-                jcamp = String(jcamp.get());
+                if(filename && this.spectra[filename]) {
+                    console.log('load spectrum from cache', filename);
+                    spectrum = this.spectra[filename];
+                } else {
+                    jcamp = String(jcamp.get());
+                    var spectrum = SD.NMR.fromJcamp(jcamp);
+                    if(filename) {
+                        this.spectra[filename] = spectrum;
+                    }
+                }
                 var ppOptions = API.getData("nmr1hOptions").resurrect();
-                var spectrum = SD.NMR.fromJcamp(jcamp);
                 var intFN = 0;
                 if(ppOptions.integralFn=="peaks"){
                     intFN=1;
