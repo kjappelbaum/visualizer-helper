@@ -191,11 +191,11 @@ define([
             if(!ranges) return;
             for(var i=0; i<ranges.length; i++) {
                 var range = ranges[i];
-                range._highlight = [];
-                // Object.defineProperty(range, '_highlight', {
-                //     enumerable: false,
-                //     writable: true
-                // });
+                // range._highlight = [];
+                Object.defineProperty(range, '_highlight', {
+                    enumerable: false,
+                    writable: true
+                });
                 range._highlight = [];
                 if(!range.signal) continue;
                 for(var j=0; j<range.signal.length; j++) {
