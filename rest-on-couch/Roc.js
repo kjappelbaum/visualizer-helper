@@ -68,7 +68,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                 401: 'Unauthorized to add group',
                 200: 'Group added to entry'
             },
-            getTokens:{},
+            getTokens: {},
             getToken: {},
             createToken: {
                 200: 'Token created',
@@ -132,7 +132,8 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                             if (res && res.body && res.status == 200) {
                                 if (options.filter) {
                                     res.body = res.body.filter(options.filter);
-                                } if(options.sort) {
+                                }
+                                if (options.sort) {
                                     res.body = res.body.sort(options.sort);
                                 }
                                 if (options.varName) {
@@ -175,10 +176,22 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                                 if (options.filter) {
                                     res.body = res.body.filter(options.filter);
                                 }
-                                if(options.sort) {
+                                if (options.sort) {
                                     res.body = res.body.sort(options.sort);
                                 }
                                 if (options.varName) {
+                                    if (options.addRightsInfo) {
+                                        for (var i = 0; i < res.body.length; i++) {
+                                            res.body[i].anonymousRead = {
+                                                type: 'boolean',
+                                                url: `${this.entryUrl}/${res.body[i].id}/_rights/read?asAnonymous=true`
+                                            };
+                                            res.body[i].userWrite = {
+                                                type: 'boolean',
+                                                url: `${this.entryUrl}/${res.body[i].id}/_rights/write`
+                                            }
+                                        }
+                                    }
                                     for (var i = 0; i < res.body.length; i++) {
                                         res.body[i].document = {
                                             type: 'object',
@@ -608,7 +621,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'superagent', 'uri/URI',
                         .withCredentials()
                         .then(handleSuccess(this, options))
                         .then(res => {
-                            if(!options.noUpdate) {
+                            if (!options.noUpdate) {
                                 this.get(uuid).then(() => res.body);
                             } else {
                                 return res.body;
