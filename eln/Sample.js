@@ -117,7 +117,9 @@ define([
                             this.mf.fromMolfile();
                             break;
                         case '$content.general.mf':
-                            this.mf.fromMF();
+                            try {
+                                this.mf.fromMF();
+                            } catch(e) {console.log('ignore error', e)}
                             this.nmr1dManager.updateIntegral();
                             break;
                     }
@@ -175,7 +177,7 @@ define([
             prom.then(() => {
                 this.updateAttachments();
             }).catch(err =>  {
-                Debug.error('Error in handle dorp', err);
+                Debug.error('Error in handle drop', err);
                 // Even if it failed it could be that some of them succeeded
                 this.updateAttachments();
             });
