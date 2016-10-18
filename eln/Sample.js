@@ -119,8 +119,8 @@ define([
                         case '$content.general.mf':
                             try {
                                 this.mf.fromMF();
+                                this.nmr1dManager.updateIntegral();
                             } catch(e) {console.log('ignore error', e)}
-                            this.nmr1dManager.updateIntegral();
                             break;
                     }
                 };
