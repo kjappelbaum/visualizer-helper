@@ -168,7 +168,7 @@ define([
             for(let i=0; i<droppedDatas.length; i++) {
                 prom = prom.then(() => {
                     var data = DataObject.resurrect(droppedDatas[i]);
-                    return this.roc.attach(types[name], sample, data);
+                    return this.roc.attach(types[name], this.sample, data);
                 });
             }
 
