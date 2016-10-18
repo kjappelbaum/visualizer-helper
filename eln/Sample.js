@@ -8,7 +8,7 @@ define([
     './MF',
     'src/util/api',
     'src/util/ui',
-    'src/util/Debug',
+    'src/util/debug',
     'lodash',
     './libs'
  ], function (ExpandableMolecule, Nmr1dManager, MF, API, UI, Debug, _, libs) {
