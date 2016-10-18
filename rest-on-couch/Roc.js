@@ -451,7 +451,8 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                             setContentType(attachment, fallback);
 
                             return this.get(entry, {fromCache: true, fallback: true}).then(entry => {
-                                return this.addAttachment(entry, attachment, createOptions(options, 'addAttachment'))
+                                var addAttachmentOptions = createOptions(options, 'addAttachment');
+                                return this.addAttachment(entry, attachment, addAttachmentOptions)
                                     .then(entry => {
                                         if (!this.processor) {
                                             throw new Error('no processor');
@@ -459,7 +460,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
 
                                         return Promise.resolve(this.processor.process(type, entry.$content, attachment)).then(() => {
                                             this.typeUrl(entry.$content, entry);
-                                            if (entry.triggerChange && !options.noTrigger) {
+                                            if (entry.triggerChange && !addAttachmentOptions.noTrigger) {
                                                 entry.triggerChange();
                                             }
                                             return entry;
