@@ -143,6 +143,42 @@ define([
             })
         }
 
+        handleDrop(name) {
+            if(!name) {
+                throw new Error('handleDrop expects a variable name');
+            }
+            name = String(name);
+            // maps name of variable to type of data
+            var types = {
+                'droppedNmr': 'nmr',
+                'droppedIR': 'ir',
+                'droppedMS': 'mass'
+            };
+
+            if(!types[name]) {
+                throw new Error('Unexpected variable name');
+            }
+
+            // Dropped data can be an array
+            // Expecting format as from drag and drop module
+            var droppedDatas = API.getData(name);
+            droppedDatas = droppedDatas.file || droppedDatas.str;
+            var prom = Promise.resolve();
+            for(let i=0; i<droppedDatas.length; i++) {
+                prom = prom.then(() => {
+                    var data = DataObject.resurrect(droppedDatas[i]);
+                    return this.roc.attach(types[name], sample, data);
+                });
+            }
+
+            prom.then(function() {
+                this.updateAttachments();
+            }).catch(function() {
+                // Even if it failed it could be that some of them succeeded
+                this.updateAttachments();
+            });
+        }
+
         handleAction(action) {
             if (!action) return;
 
