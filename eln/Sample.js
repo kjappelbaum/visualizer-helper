@@ -8,9 +8,10 @@ define([
     './MF',
     'src/util/api',
     'src/util/ui',
+    'src/util/Debug',
     'lodash',
     './libs'
- ], function (ExpandableMolecule, Nmr1dManager, MF, API, UI, _, libs) {
+ ], function (ExpandableMolecule, Nmr1dManager, MF, API, UI, Debug, _, libs) {
     var elnPlugin = libs.elnPlugin;
     var Roc = libs.Roc;
     
@@ -171,9 +172,10 @@ define([
                 });
             }
 
-            prom.then(function() {
+            prom.then(() => {
                 this.updateAttachments();
-            }).catch(function() {
+            }).catch(err =>  {
+                Debug.error('Error in handle dorp', err);
                 // Even if it failed it could be that some of them succeeded
                 this.updateAttachments();
             });
