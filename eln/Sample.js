@@ -140,7 +140,7 @@ define([
 
 
 
-        updateAttachments(entry) {
+        updateAttachments() {
             return this.roc.getAttachmentList(this.uuid).then(function (list) {
                 API.createData('sampleAttachments', list);
             })
@@ -213,6 +213,9 @@ define([
                     break;
                 case 'deleteNmr':
                     this.roc.unattach(this.sample, action.value).then(this.updateAttachments.bind(this));
+                    break;
+                case 'updateAttachments':
+                    this.updateAttachments();
                     break;
                 case 'attachNMR':
                 case 'attachIR':
