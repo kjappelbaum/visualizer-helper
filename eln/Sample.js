@@ -209,10 +209,10 @@ define([
                     break;
                 case 'deleteAttachment':
                     var attachment = action.value.name;
-                    this.roc.deleteAttachment(sample, attachment).then(this.updateAttachments.bind(this));
+                    this.roc.deleteAttachment(this.sample, attachment).then(this.updateAttachments.bind(this));
                     break;
-                case 'deleteSpectra':
-                    this.roc.unattach(sample, action.value).then(this.updateAttachments.bind(this));
+                case 'deleteNmr':
+                    this.roc.unattach(this.sample, action.value).then(this.updateAttachments.bind(this));
                     break;
                 case 'attachNMR':
                 case 'attachIR':
