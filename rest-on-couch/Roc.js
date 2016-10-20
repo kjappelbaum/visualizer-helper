@@ -854,7 +854,15 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     v.data = {
                         type: vtype || 'string'
                     };
-                    v.data[prop] = `${this.entryUrl}/${entry._id}/${v.filename}`;
+                    var dUrl = `${this.entryUrl}/${entry._id}/${v.filename}`;
+                    v.data[prop] = dUrl;
+                    Object.defineProperty(v, 'dUrl', {
+                        value: dUrl,
+                        enumerable: false,
+                        writable: false,
+                        configurable: false
+                    });
+                    v.dUrl = dUrl;
                 });
             }
         }
