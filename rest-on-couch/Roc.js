@@ -859,7 +859,6 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     Object.defineProperty(v, 'dUrl', {
                         value: dUrl,
                         enumerable: false,
-                        writable: false,
                         configurable: false
                     });
                     v.dUrl = dUrl;
