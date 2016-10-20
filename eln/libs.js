@@ -6,7 +6,7 @@ define([
     'https://www.lactame.com/lib/sdv/0.1.20/sdv.js',
     'https://www.lactame.com/lib/chemcalc-extended/1.27.0/chemcalc-extended.js',
     'https://www.lactame.com/lib/eln-plugin/0.0.2/eln-plugin.js',
-    'https://www.lactame.com/github/cheminfo-js/visualizer-helper/4637a1fac4599774be055137bd3a2b92509cbf85/rest-on-couch/Roc.js'
+    'https://www.lactame.com/github/cheminfo-js/visualizer-helper/ad7593e5618360bdd234a682dd7f35a6c480f9a1/rest-on-couch/Roc.js'
 ], function (OCLE, SD, CCE, elnPlugin, Roc) {
 
     return {
