@@ -1,6 +1,8 @@
 define([
-    'src/util/api'
-], function (API) {
+    'src/util/api',
+    'src/util/versioning'
+
+], function (API, Versioning) {
     var externalInfo = JSON.parse(window.localStorage.getItem('external_cache') || "{}");
     var smiles = externalInfo.smiles;
     var molfile = externalInfo.molfile;
