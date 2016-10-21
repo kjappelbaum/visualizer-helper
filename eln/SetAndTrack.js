@@ -1,5 +1,5 @@
 define([
-    'src/util/api',
+    'src/util/api'
 ], function (API) {
     var externalInfo = JSON.parse(window.localStorage.getItem('external_cache') || "{}");
     var smiles = externalInfo.smiles;
@@ -35,4 +35,4 @@ define([
             localStorage.setItem('molfile', evt.target.get());
         }
     });
-}
+});
