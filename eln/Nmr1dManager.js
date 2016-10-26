@@ -140,6 +140,7 @@ define([
                     format:"new"
                 });
                 nmr.setChildSync(['range'], peakPicking);
+                API.craeteData("currentNmrRanges",peakPicking);
                 this._createNMRannotationsAndACS(nmr);          
                 //Is this possible. I need to add the highligth on the ranges
                 //nmr.setChildSync(['range'], peakPicking);
