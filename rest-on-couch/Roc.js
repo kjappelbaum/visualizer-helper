@@ -259,7 +259,6 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     }
                     return superagent.get(`${this.entryUrl}/${uuid}`)
                         .withCredentials()
-                        .end()
                         .then(res => {
                             if (res.body && res.status == 200) {
                                 this._defaults(res.body.$content);
