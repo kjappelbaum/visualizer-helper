@@ -21,6 +21,8 @@ define([
             if (chemcalc && this.previousEMMolfile !== chemcalc.em) {
                 this.previousEMMolfile = chemcalc.em;
                 this.setMF(chemcalc.mf);
+            } else {
+                this.setMF('');
             }
             API.createData('mfBGColor', 'white');
         }
