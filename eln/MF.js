@@ -35,7 +35,9 @@ define([
                 try {
                     return CCE.analyseMF(mf);
                 } catch (e) {
-                    UI.showNotification('Could not calculate molecular formula: ' + e);
+                    if(mf !== '') {
+                        UI.showNotification('Could not calculate molecular formula: ' + e);
+                    }
                 }
             }
             return undefined;
