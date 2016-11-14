@@ -16,7 +16,7 @@ define([
             this.sample = JSON.parse(JSON.stringify(sample));
             this.options = Object.assign({}, defaultOptions, options);
 
-            API.createData(this.options.varName, sample).then(sample => {
+            API.createData(this.options.varName, this.sample).then(sample => {
                 this.sample = sample;
                 var sampleVar = API.getVar(this.options.varName);
 
