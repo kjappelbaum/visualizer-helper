@@ -21,13 +21,6 @@ define([
             if (chemcalc && this.previousEMMolfile !== chemcalc.em) {
                 this.previousEMMolfile = chemcalc.em;
                 this.setMF(chemcalc.mf);
-
-                // var general = API.getData('general');
-                // API.getData('mf').setValue(chemcalc.mf, true);
-                // API.getData('em').setValue(chemcalc.em, true);
-                // API.getData('mw').setValue(chemcalc.mw, true);
-                // general.triggerChange();
-                console.log('Changed mf to ', chemcalc.mf)
             }
             API.createData('mfBGColor', 'white');
         }
@@ -74,7 +67,6 @@ define([
                 return;
             }
             var chemcalc = CCE.analyseMF(this.getMF());
-            console.log('new MF', chemcalc);
             if (chemcalc && this.previousEMMF !== chemcalc.em) {
                 this.previousEMMF = chemcalc.em;
                 this.setMW(chemcalc.mw);

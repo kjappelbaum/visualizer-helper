@@ -23,8 +23,6 @@ define([
                             this.idCode = idCode;
                             this.molfile = event.target + '';
                             this.sample.setChildSync(['$content','general','molfile'], this.molfile);
-                        } else {
-                            console.log('no update');
                         }
                     });
                     this.updateMolfiles();

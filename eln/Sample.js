@@ -91,13 +91,11 @@ define([
                         });
                     }
 
-                    console.log("change event received", event.jpath.join('.'), event);
                     var jpathStr = event.jpath.join('.');
 
 
                     if (jpathStr.replace(/\.\d+\..*/,'')==='$content.spectra.nmr') {
                         // execute peak picking
-                        console.log('range changed, execute peak picking');
                         var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
                         this.nmr1dManager.executePeakPicking(currentNmr);
                         this.nmr1dManager.updateIntegrals();
@@ -120,7 +118,7 @@ define([
                             try {
                                 this.mf.fromMF();
                                 this.nmr1dManager.updateIntegral();
-                            } catch(e) {console.log('ignore error', e)}
+                            } catch(e) {}
                             break;
                     }
                 };

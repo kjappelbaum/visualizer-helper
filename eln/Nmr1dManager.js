@@ -107,7 +107,6 @@ define([
             var filename = String(nmr.getChildSync(['jcamp', 'filename']));
             return nmr.getChild(['jcamp', 'data']).then((jcamp) => {
                 if(filename && this.spectra[filename]) {
-                    console.log('load spectrum from cache', filename);
                     spectrum = this.spectra[filename];
                 } else {
                     jcamp = String(jcamp.get());
@@ -149,7 +148,6 @@ define([
 
 
         _createNMRannotationsAndACS(nmr) {
-            console.log('create annoations');
             var peakPicking = JSON.parse(JSON.stringify(nmr.getChildSync(['range'])));
 
             // TODO : this code hsould not be here !
