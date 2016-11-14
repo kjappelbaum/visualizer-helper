@@ -8,7 +8,7 @@ define([
     class ExpandableMolecule {
         constructor(sample) {
             this.sample = sample;
-            this.molfile = this.sample.$content.general.molfile + '';
+            this.molfile = String(this.sample.getChildSync(['$content', 'general', 'molfile']) || '');
             this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
             this.expandedHydrogens = false;
             this.jsmeEditionMode = false;
