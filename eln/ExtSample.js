@@ -13,7 +13,7 @@ define([
 
     class Sample {
         constructor(sample, options) {
-            this.sample = DataObject.resurrect(sample);
+            this.sample = JSON.parse(JSON.stringify(sample));
             this.options = Object.assign({}, defaultOptions, options);
 
             API.createData(this.options.varName, sample).then(sample => {
