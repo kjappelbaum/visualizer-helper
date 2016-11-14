@@ -179,25 +179,25 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                                 if (options.sort) {
                                     res.body = res.body.sort(options.sort);
                                 }
-                                if (options.varName) {
-                                    if (options.addRightsInfo) {
-                                        for (var i = 0; i < res.body.length; i++) {
-                                            res.body[i].anonymousRead = {
-                                                type: 'boolean',
-                                                url: `${this.entryUrl}/${res.body[i].id}/_rights/read?asAnonymous=true`
-                                            };
-                                            res.body[i].userWrite = {
-                                                type: 'boolean',
-                                                url: `${this.entryUrl}/${res.body[i].id}/_rights/write`
-                                            };
-                                        }
-                                    }
+                                if (options.addRightsInfo) {
                                     for (var i = 0; i < res.body.length; i++) {
-                                        res.body[i].document = {
-                                            type: 'object',
-                                            url: `${this.entryUrl}/${res.body[i].id}`
+                                        res.body[i].anonymousRead = {
+                                            type: 'boolean',
+                                            url: `${this.entryUrl}/${res.body[i].id}/_rights/read?asAnonymous=true`
+                                        };
+                                        res.body[i].userWrite = {
+                                            type: 'boolean',
+                                            url: `${this.entryUrl}/${res.body[i].id}/_rights/write`
                                         };
                                     }
+                                }
+                                for (var i = 0; i < res.body.length; i++) {
+                                    res.body[i].document = {
+                                        type: 'object',
+                                        url: `${this.entryUrl}/${res.body[i].id}`
+                                    };
+                                }
+                                if (options.varName) {
                                     return API.createData(options.varName, res.body).then(data => {
                                         this.variables[options.varName] = {
                                             type: 'query',
