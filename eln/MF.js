@@ -42,7 +42,7 @@ define([
         }
 
         getMF() {
-            return String(this.sample.getChildSync(['$content', 'general', 'mf']));
+            return String(this.sample.getChildSync(['$content', 'general', 'mf']) || '');
         }
 
         getMolfile() {
