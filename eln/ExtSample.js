@@ -7,13 +7,21 @@ define([
     'src/util/ui',
     'src/util/debug'
 ], function (ExpandableMolecule, Nmr1dManager, MF, API, UI, Debug) {
-    var defaultOptions = {
+    const defaultOptions = {
         varName: 'sample',
     };
 
     class Sample {
         constructor(sample, options) {
-            this.sample = JSON.parse(JSON.stringify(sample));
+            // make sure we don't copy attachment metadata
+            const s = {
+                $content: {
+                    general: sample.$content.general,
+                    identifier: sample.$content.identifier
+                }
+            };
+
+            this.sample = JSON.parse(JSON.stringify(s));
             this.options = Object.assign({}, defaultOptions, options);
 
             API.createData(this.options.varName, this.sample).then(sample => {
