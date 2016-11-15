@@ -121,7 +121,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
 
             getUser() {
                 return this.__ready.then(() => {
-                    return superagent.get(this.sessionUrl);
+                    return superagent.get(this.sessionUrl).then(res => res.body);
                 });
             }
 
