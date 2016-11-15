@@ -13,7 +13,7 @@ define([
         OCLE,
         SD,
         CCE,
-        elnPlugin,\
+        elnPlugin,
         Roc
     }
 });
