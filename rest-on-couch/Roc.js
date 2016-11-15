@@ -113,9 +113,16 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
 
 
                 this.requestUrl = new URI(opts.url);
-                this.databaseUrl = this.requestUrl.directory(`${this.requestUrl.directory()}/db/${this.database}`).normalize().href();
+                this.sessionUrl = this.requestUrl.directory('auth/session').normalize().href();
+                this.databaseUrl = this.requestUrl.directory(`db/${this.database}`).normalize().href();
                 this.entryUrl = `${this.databaseUrl}entry`;
                 this.__ready = Promise.resolve();
+            }
+
+            getUser() {
+                return this.__ready.then(() => {
+                    return superagent.get(this.sessionUrl);
+                });
             }
 
             view(viewName, options) {
