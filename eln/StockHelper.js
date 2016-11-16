@@ -19,7 +19,7 @@ define(['src/util/typerenderer'], function (typerenderer) {
         $element.html(StockHelper.getStatusDescription(+value));
     }
 
-    typerenderer.addType('stockStatus', {toscreen});
+    typerenderer.addType('stockstatus', {toscreen});
 
     const StockHelper = {
         getStatusDescription(code) {
