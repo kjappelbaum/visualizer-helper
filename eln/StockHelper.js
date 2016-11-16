@@ -60,6 +60,9 @@ define(['src/util/typerenderer'], function (typerenderer) {
         getStatusColor(code) {
             if(!status[code]) return '#FFFFFF';
             return status[code].color;
+        },
+        getAllStatus() {
+            return JSON.parse(JSON.stringify(status));
         }
     };
 
