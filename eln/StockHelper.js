@@ -16,11 +16,11 @@ define(['src/util/typerenderer'], function (typerenderer) {
         },
         400: {
             description: 'Product arrived',
-            color: 'lightgreen'
+            color: 'lightgray'
         },
         500: {
             description: 'Product released',
-            color: 'green'
+            color: 'lightgreen'
         },
         600: {
             description: 'Product to revalidate',
@@ -47,6 +47,9 @@ define(['src/util/typerenderer'], function (typerenderer) {
     // register type renderer
     function toscreen($element, value, root, options) {
         $element.html(StockHelper.getStatusDescription(+value));
+        if(options.withColor) {
+            $element.css('background-color', StockHelper.getStatusColor(+value));
+        }
     }
 
     typerenderer.addType('stockstatus', {toscreen});
