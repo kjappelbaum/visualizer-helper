@@ -34,25 +34,16 @@ define([
         setJSMEEdition(value, noDepictUpdate) {
             this.jsmeEditionMode = value;
 
-            var prefs = {
-                "prefs": [
-                    "oldlook",
-                    "nozoom"
-                ],
-                "labelsize": "14",
-                "bondwidth": "1",
-                "defaultaction": "105",
-                "highlightColor": "3",
-                "outputResult": [
-                    "yes"
-                ]
+            var options = {
+                prefs: []
             };
 
             if (this.jsmeEditionMode) {
+                options.prefs.push('nodepict');
                 API.getData("editableMolfile").triggerChange();
                 this.expandedHydrogens = false;
             } else {
-                prefs.prefs.push('depict');
+                options.prefs.push('depict');
                 if (!noDepictUpdate) { // TODO when we should not updateMolfile
                     this.expandedHydrogens = false;
                     this.updateMolfiles();
@@ -60,7 +51,7 @@ define([
                 }
 
             }
-            API.doAction('setJSMEPreferences', prefs)
+            API.doAction('setJSMEOptions', options)
         }
 
         setExpandedHydrogens(force) {
@@ -70,8 +61,11 @@ define([
                 this.expandedHydrogens = force;
             }
             if (this.expandedHydrogens) {
-                API.createData("viewMolfileExpandedH", this.viewMolfileExpandedH);
                 this.setJSMEEdition(false, true);
+                setTimeout(() => {
+                    API.createData("viewMolfileExpandedH", this.viewMolfileExpandedH);
+                }, 1000);
+
             } else {
                 API.createData("viewMolfile", this.viewMolfile);
             }
