@@ -62,9 +62,7 @@ define([
             }
             if (this.expandedHydrogens) {
                 this.setJSMEEdition(false, true);
-                setTimeout(() => {
-                    API.createData("viewMolfileExpandedH", this.viewMolfileExpandedH);
-                }, 1000);
+                API.createData("viewMolfileExpandedH", this.viewMolfileExpandedH);
 
             } else {
                 API.createData("viewMolfile", this.viewMolfile);
