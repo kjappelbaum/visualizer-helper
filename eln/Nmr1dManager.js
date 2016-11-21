@@ -44,7 +44,7 @@ define([
                     break;
 
 
-                case 'switchNMRLayer': {
+                case 'switchNMRLayer':
                     var layer = API.getActiveLayerName();
                     var goToLayer = action.value.dimension > 1 ? 'nmr2D' : 'Default layer';
                     if (layer !== goToLayer) {
@@ -56,7 +56,6 @@ define([
                         API.createData('blackNMR1d', action.value.jcamp.data);
                     }
                     break;
-                }
                 case 'executePeakPicking':
                     // Execute pickPeacking button was clicked
                     var currentNmr = API.getData('currentNmr');
@@ -100,6 +99,7 @@ define([
             var currentRanges = API.getData("currentNmrRanges");
             SD.formatter.updateIntegrals(currentRanges, {sum: Number(ppOptions.integral)});
             currentRanges.triggerChange(true); // no bubbling
+            API.doAction('rerenderRanges');
         }
 
         _getSpectrum(nmr) {

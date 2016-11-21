@@ -239,7 +239,10 @@ define([
                     UI.confirm('Are you sure you want to refresh? This will discard your local modifications.').then(ok => {
                         if(!ok) return;
                         this.unbindChange();
-                        this.roc.discardLocal(this.sample).then(() => this.bindChange());
+                        this.roc.discardLocal(this.sample).then(() => {
+                            this.nmr1dManager.initializeNMRAssignment(API.getData('currentNmr'));
+                            this.bindChange();
+                        });
                         IframeBridge.postMessage('tab.status', {
                             saved: true
                         });
