@@ -113,9 +113,9 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
 
 
                 this.requestUrl = new URI(opts.url);
-                this.sessionUrl = this.requestUrl.directory('auth/session').normalize().href();
-                this.databaseUrl = this.requestUrl.directory(`db/${this.database}`).normalize().href();
-                this.entryUrl = `${this.databaseUrl}entry`;
+                this.sessionUrl = new URI(opts.url).segment('auth/session').normalize().href();
+                this.databaseUrl = new URI(opts.url).segment(`db/${this.database}`).normalize().href();
+                this.entryUrl = new URI(this.databaseUrl).segment('entry').normalize().href();
                 this.__ready = Promise.resolve();
             }
 
@@ -131,7 +131,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             view(viewName, options) {
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getView');
-                    let requestUrl = new URI(`${this.databaseUrl}_view/${viewName}`);
+                    let requestUrl = new URI(this.databaseUrl).segment(`_view/${viewName}`));
                     addSearch(requestUrl, options);
 
                     requestUrl = requestUrl.normalize().href();
@@ -175,7 +175,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             query(viewName, options) {
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getQuery');
-                    let requestUrl = new URI(`${this.databaseUrl}_query/${viewName}`);
+                    let requestUrl = new URI(this.databaseUrl).segment(`_query/${viewName}`);
                     addSearch(requestUrl, options);
                     requestUrl = requestUrl.normalize().href();
 
@@ -296,7 +296,8 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             getGroups(options) {
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getGroups');
-                    return superagent.get(`${this.databaseUrl}groups`).then(res => res.body).catch(handleError(this, options));
+                    var groupUrl = new URI(this.databaseUrl).segment('groups').normalize().href();
+                    return superagent.get(groupUrl).then(res => res.body).catch(handleError(this, options));
                 });
             }
 
@@ -578,7 +579,8 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             getTokens(options) {
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getTokens');
-                    return superagent.get(`${this.databaseUrl}token`)
+                    var tokenUrl = new URI(this.databaseUrl).segment('token').normalize().href();
+                    return superagent.get(tokenUrl)
                         .withCredentials()
                         .then(handleSuccess(this, options))
                         .then(res => res.body)
@@ -590,7 +592,8 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getToken');
                     var tokenId = getTokenId(token);
-                    return superagent.get(`${this.databaseUrl}token/${tokenId}`)
+                    var tokenUrl = new URI(this.databaseUrl).segment(`token/${tokenId}`).normalize().href();
+                    return superagent.get(tokenUrl)
                         .withCredentials()
                         .then(handleSuccess(this, options))
                         .then(res => res.body)
@@ -614,7 +617,8 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                 return this.__ready.then(() => {
                     options = createOptions(options, 'deleteToken');
                     var tokenId = getTokenId(token);
-                    return superagent.del(`${this.databaseUrl}token/${tokenId}`)
+                    var tokenUrl = new URI(this.databaseUrl).segment(`token/${tokenId}`).normalize().href();
+                    return superagent.del(tokenUrl)
                         .withCredentials()
                         .then(handleSuccess(this, options))
                         .then(res => res.body)
