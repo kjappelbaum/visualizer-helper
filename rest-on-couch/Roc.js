@@ -131,7 +131,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             view(viewName, options) {
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getView');
-                    let requestUrl = new URI(this.databaseUrl).segment(`_view/${viewName}`));
+                    let requestUrl = new URI(this.databaseUrl).segment(`_view/${viewName}`);
                     addSearch(requestUrl, options);
 
                     requestUrl = requestUrl.normalize().href();
