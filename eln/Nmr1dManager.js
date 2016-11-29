@@ -184,6 +184,7 @@ define([
                 var nmr1hOptions = API.getData('nmr1hOptions');
                 if (nmr1hOptions) nmr1hOptions.integral = chemcalc.atoms.H;
                 nmr1hOptions.triggerChange();
+                this.updateIntegrals();
             }
         }
 
