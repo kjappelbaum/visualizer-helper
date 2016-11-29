@@ -10,8 +10,9 @@ define([
     'src/util/ui',
     'src/util/debug',
     'lodash',
+    './jpaths',
     './libs'
- ], function (ExpandableMolecule, Nmr1dManager, MF, API, UI, Debug, _, libs) {
+ ], function (ExpandableMolecule, Nmr1dManager, MF, API, UI, Debug, _, jpaths, libs) {
     var elnPlugin = libs.elnPlugin;
     var Roc = libs.Roc;
     
@@ -55,31 +56,35 @@ define([
             this.roc.document(this.uuid, this.options).then(sample => {
                 this.sample = sample;
                 var sampleVar = API.getVar(this.options.varName);
-                API.setVariable('sampleCode', sampleVar, ['$id', 0]);
-                API.setVariable('batchCode', sampleVar, ['$id', 1]);
-                API.setVariable('creationDate', sampleVar, ['$creationDate']);
-                API.setVariable('modificationDate', sampleVar, ['$modificationDate']);
-                API.setVariable('content', sampleVar, ['$content']);
-                API.setVariable('general', sampleVar, ['$content', 'general']);
-                API.setVariable('molfile', sampleVar, ['$content', 'general', 'molfile']);
-                API.setVariable('mf', sampleVar, ['$content', 'general', 'mf']);
-                API.setVariable('mw', sampleVar, ['$content', 'general', 'mw']);
-                API.setVariable('em', sampleVar, ['$content', 'general', 'em']);
-                API.setVariable('description', sampleVar, ['$content', 'general', 'description']);
-                API.setVariable('iupac', sampleVar, ['$content', 'general', 'iupac']);
-                API.setVariable('bp', sampleVar, ['$content', 'physical', 'bp']);
-                API.setVariable('nd', sampleVar, ['$content', 'physical', 'nd']);
-                API.setVariable('mp', sampleVar, ['$content', 'physical', 'mp']);
-                API.setVariable('density', sampleVar, ['$content', 'physical', 'density']);
-                API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
-                API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
+
+                jpaths.createVar(sampleVar, 'sampleCode');
+                jpaths.createVar(sampleVar, 'batchCode');
+                jpaths.createVar(sampleVar, 'creationDate');
+                jpaths.createVar(sampleVar, 'modificationDate');
+                jpaths.createVar(sampleVar, 'content');
+                jpaths.createVar(sampleVar, 'general');
+                jpaths.createVar(sampleVar, 'molfile');
+                jpaths.createVar(sampleVar, 'mf');
+                jpaths.createVar(sampleVar, 'mw');
+                jpaths.createVar(sampleVar, 'em');
+                jpaths.createVar(sampleVar, 'description');
+                jpaths.createVar(sampleVar, 'iupac');
+                jpaths.createVar(sampleVar, 'bp');
+                jpaths.createVar(sampleVar, 'nd');
+                jpaths.createVar(sampleVar, 'mp');
+                jpaths.createVar(sampleVar, 'density');
+                jpaths.createVar(sampleVar, 'ir');
+                jpaths.createVar(sampleVar, 'mass');
+                jpaths.createVar(sampleVar, 'sampleCode');
+                jpaths.createVar(sampleVar, 'sampleCode');
 
                 this.updateAttachments(sample);
 
                 this.expandableMolecule = new ExpandableMolecule(this.sample);
-                this.nmr1dManager = new Nmr1dManager();
+                this.nmr1dManager = new Nmr1dManager(this.sample);
                 this.nmr1dManager.initializeNMRAssignment(this.sample.getChildSync(['$content', 'spectra', 'nmr']));
-                API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
+                jpaths.createVar(sampleVar, 'nmr');
+
 
                 this.mf = new MF(this.sample);
                 this.mf.fromMF();
@@ -109,7 +114,7 @@ define([
                     switch (event.jpath.join('.')) {
                         case '':
                             this.nmr1dManager.initializeNMRAssignment(this.sample.getChildSync(['$content', 'spectra', 'nmr']));
-                            API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
+                            jpaths.createVar(sampleVar, 'nmr');
                             break;
                         case '$content.general.molfile':
                             this.mf.fromMolfile();

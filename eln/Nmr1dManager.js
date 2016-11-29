@@ -4,15 +4,17 @@ define([
     'file-saver',
     'src/util/api',
     'src/util/ui',
+    './jpaths',
     './libs'
-], function (fileSaver, API, UI, libs) {
+], function (fileSaver, API, UI, jpaths, libs) {
 
     var SD = libs.SD;
     var CCE = libs.CCE;
 
     class Nmr1dManager {
-        constructor() {
+        constructor(sample) {
             this.spectra = {};
+            this.sample = sample;
         }
 
         handleAction(action) {
@@ -177,7 +179,7 @@ define([
         }
 
         updateIntegral() {
-            var chemcalc = CCE.analyseMF(API.getData('mf') + '');
+            var chemcalc = CCE.analyseMF(jpaths.getData(this.sample, 'mf') + '');
             if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
                 var nmr1hOptions = API.getData('nmr1hOptions');
                 if (nmr1hOptions) nmr1hOptions.integral = chemcalc.atoms.H;
