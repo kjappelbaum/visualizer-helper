@@ -102,11 +102,14 @@ define([
             var ppOptions = API.getData("nmr1hOptions");
             var currentRanges = API.getData("currentNmrRanges");
             if(!currentRanges) return;
-            var ranges = new Ranges(currentRanges.resurrect());
+
+            // We initialize ranges with the DataObject so that
+            // the integral update is inplace
+            var ranges = new Ranges(currentRanges);
             ranges.updateIntegrals({sum: Number(ppOptions.integral)});
-            // currentRanges.triggerChange(true); // no bubbling
-            API.createData('currentNmrRanges', ranges);
-            console.log(ranges);
+
+            // Trigger change of currentRanges would cause an infinite loop
+            // So we just send an action for notifying modules
             API.doAction('rerenderRanges');
         }
 
