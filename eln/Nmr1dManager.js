@@ -9,6 +9,8 @@ define([
 ], function (fileSaver, API, UI, jpaths, libs) {
 
     var SD = libs.SD;
+    var Ranges = SD.Ranges;
+    var NMR = SD.NMR;
     var CCE = libs.CCE;
 
     class Nmr1dManager {
@@ -89,29 +91,33 @@ define([
         }
 
         _updateAnnotations(nmr) {
-            var ppOptions = API.getData('nmr1hOptions');
-            this._getSpectrum(nmr).then(spectrum => {
-                spectrum.updateIntegrals(nmr.getChildSync(['range']), {nH: Number(ppOptions.integral)});
-                this._createNMRannotationsAndACS(nmr);
+            // var ppOptions = API.getData('nmr1hOptions');
+            this._getNMR(nmr).then(spectrum => {
+                // spectrum.updateIntegrals(nmr.getChildSync(['range']), {nH: Number(ppOptions.integral)});
+                this._createNMRannotationsAndACS(spectrum, new Ranges(DataObject.resurrect(nmr.range)));
             });
         }
 
         updateIntegrals() {
             var ppOptions = API.getData("nmr1hOptions");
             var currentRanges = API.getData("currentNmrRanges");
-            SD.formatter.updateIntegrals(currentRanges, {sum: Number(ppOptions.integral)});
-            currentRanges.triggerChange(true); // no bubbling
+            if(!currentRanges) return;
+            var ranges = new Ranges(currentRanges.resurrect());
+            ranges.updateIntegrals({sum: Number(ppOptions.integral)});
+            // currentRanges.triggerChange(true); // no bubbling
+            API.createData('currentNmrRanges', ranges);
+            console.log(ranges);
             API.doAction('rerenderRanges');
         }
 
-        _getSpectrum(nmr) {
+        _getNMR(nmr) {
             var filename = String(nmr.getChildSync(['jcamp', 'filename']));
             return nmr.getChild(['jcamp', 'data']).then((jcamp) => {
                 if (filename && this.spectra[filename]) {
                     var spectrum = this.spectra[filename];
                 } else {
                     jcamp = String(jcamp.get());
-                    spectrum = SD.NMR.fromJcamp(jcamp);
+                    spectrum = NMR.fromJcamp(jcamp);
                     if (filename) {
                         this.spectra[filename] = spectrum;
                     }
@@ -120,14 +126,14 @@ define([
             });
         }
 
-        _autoRanges(nmr) {
-            this._getSpectrum(nmr).then(spectrum => {
+        _autoRanges(currentNmr) {
+            this._getNMR(currentNmr).then(nmr => {
                 var ppOptions = API.getData("nmr1hOptions").resurrect();
                 var intFN = 0;
                 if (ppOptions.integralFn == "peaks") {
                     intFN = 1;
                 }
-                var peakPicking = spectrum.nmrPeakDetection({
+                var ranges = nmr.getRanges({
                     nH: ppOptions.integral,
                     realTop: true,
                     thresholdFactor: ppOptions.noiseFactor,
@@ -135,47 +141,47 @@ define([
                     compile: ppOptions.compile,
                     optimize: ppOptions.optimize,
                     integralFn: intFN,
-                    idPrefix: spectrum.getNucleus() + "",
+                    idPrefix: nmr.getNucleus() + "",
                     gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0},
                     format: "new"
                 });
-                nmr.setChildSync(['range'], peakPicking);
-                this._createNMRannotationsAndACS(nmr);
+                currentNmr.setChildSync(['range'], ranges);
+                this._createNMRannotationsAndACS(nmr, ranges);
                 //Is this possible. I need to add the highligth on the ranges
                 //nmr.setChildSync(['range'], peakPicking);
             });
         }
 
 
-        _createNMRannotationsAndACS(nmr) {
-            var peakPicking = JSON.parse(JSON.stringify(nmr.getChildSync(['range'])));
+        _createNMRannotationsAndACS(nmr, ranges) {
+            ranges.updateMultiplicity();
 
             // TODO : this code hsould not be here !
             //Recompile multiplicity
-            for (var i = 0; i < peakPicking.length; i++) {
-                var peak = peakPicking[i];
-                for (var j = 0; j < peak.signal.length; j++) {
-                    var signal = peak.signal[j];
-                    if (signal.j && !signal.multiplicity) {
-                        signal.multiplicity = "";
-                        for (var k = 0; k < signal.j.length; k++) {
-                            signal.multiplicity += signal.j[k].multiplicity;
-                        }
-                    }
-                }
-            }
+            // for (var i = 0; i < ranges.length; i++) {
+            //     var peak = ranges[i];
+            //     for (var j = 0; j < peak.signal.length; j++) {
+            //         var signal = peak.signal[j];
+            //         if (signal.j && !signal.multiplicity) {
+            //             signal.multiplicity = "";
+            //             for (var k = 0; k < signal.j.length; k++) {
+            //                 signal.multiplicity += signal.j[k].multiplicity;
+            //             }
+            //         }
+            //     }
+            // }
             //SD.formatter.update(peakPicking);
 
-            API.createData("annotationsNMR1d", SD.GUI.annotations1D(peakPicking, {
+            API.createData("annotationsNMR1d", ranges.getAnnotations({
                 line: 1,
                 fillColor: "green",
                 strokeWidth: 0
             }));
-            API.createData("acsNMR1d", SD.formatter.toACS(peakPicking, {
+            API.createData('acsNMR1d', ranges.getACS({
                 rangeForMultiplet: true,
-                nucleus: nmr.nucleus[0],
-                observe: Math.round(nmr.frequency / 10) * 10
-            }));
+                nucleus: nmr.getNucleus(0),
+                observe: Math.round(nmr.observeFrequencyX() / 10) * 10
+            }))
         }
 
         updateIntegral() {
