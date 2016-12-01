@@ -17,7 +17,7 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
 
         async ports() {
             const url = new URI(this.url).segment('ports').href();
-            return (await superagent.get(url)).body;
+            return await getData(url);
         }
 
         async deleteFormat(format) {
@@ -32,18 +32,36 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
 
         async getFormat(format) {
             const url = new URI(this.url).segment('db/format').segmentCoded(format).href();
-            return (await superagent.get(url)).body;
+            return await getData(url);
         }
 
         async getAllFormats() {
-            const url = new URI(this.url).segment('db/format').href();
-            return (await superagent.get(url)).body;
+            return getFormats();
         }
 
-        async getFormatNames() {
-            const url = new URI(this.url).segment('db/format/names').href();
-            return (await superagent.get(url)).body;
+        async getFormats(kind) {
+            if(!kind) {
+                const url = new URI(this.url).segment('db/format').href();
+                return (await superagent.get(url)).body;
+            } else {
+                const url = new URI(this.url).segment('db/format').segmentCoded(kind).href();
+                return await getData(url);
+            }
         }
+
+        async getFormatNames(kind) {
+            if(kind) {
+                const url = new URI(this.url).segment('db/format/names').href();
+                return await getData(url);
+            } else {
+                const url = new URI(this.url).segment('db/format').segmentCoded(kind).segment('names').href();
+                return await getData(url);
+            }
+        }
+    }
+
+    async function getData(url) {
+        return (await superagent.get(url)).body;
     }
 
 
