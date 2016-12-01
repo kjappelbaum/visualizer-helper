@@ -50,7 +50,7 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
         }
 
         async getFormatNames(kind) {
-            if(kind) {
+            if(!kind) {
                 const url = new URI(this.url).segment('db/format/names').href();
                 return await getData(url);
             } else {
