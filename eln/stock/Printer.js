@@ -36,7 +36,7 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
         }
 
         async getAllFormats() {
-            return getFormats();
+            return this.getFormats();
         }
 
         async getFormats(kind) {
