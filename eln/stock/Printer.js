@@ -44,7 +44,7 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
                 const url = new URI(this.url).segment('db/format').href();
                 return (await superagent.get(url)).body;
             } else {
-                const url = new URI(this.url).segment('db/format').segmentCoded(kind).href();
+                const url = new URI(this.url).segment('db/format/kind').segmentCoded(kind).href();
                 return await getData(url);
             }
         }
@@ -54,7 +54,7 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
                 const url = new URI(this.url).segment('db/format/names').href();
                 return await getData(url);
             } else {
-                const url = new URI(this.url).segment('db/format').segmentCoded(kind).segment('names').href();
+                const url = new URI(this.url).segment('db/format/kind').segmentCoded(kind).segment('names').href();
                 return await getData(url);
             }
         }
