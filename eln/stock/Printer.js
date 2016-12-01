@@ -39,6 +39,11 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
             const url = new URI(this.url).segment('db/format').href();
             return (await superagent.get(url)).body;
         }
+
+        async getFormatNames() {
+            const url = new URI(this.url).segment('db/format/names').href();
+            return (await superagent.get(url)).body;
+        }
     }
 
 
