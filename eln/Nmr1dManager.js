@@ -3,7 +3,7 @@
 import fileSaver from 'file-saver';
 import API from 'src/util/api';
 import UI from 'src/util/ui';
-import jpaths from './jpaths';
+import {getData} from './jpaths';
 import {SD, CCE} from './libs';
 
 const Ranges = SD.Ranges;
@@ -184,7 +184,7 @@ class Nmr1dManager {
     }
 
     updateIntegral() {
-        var chemcalc = CCE.analyseMF(jpaths.getData(this.sample, 'mf') + '');
+        var chemcalc = CCE.analyseMF(getData(this.sample, 'mf') + '');
         if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
             var nmr1hOptions = API.getData('nmr1hOptions');
             if (nmr1hOptions) nmr1hOptions.integral = chemcalc.atoms.H;
