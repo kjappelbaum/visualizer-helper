@@ -41,6 +41,17 @@ export function convertParametersToSchema(parameters) {
     };
 }
 
+export function getSchemaFromExperiment(experiment) {
+    var schema;
+    var custom = experiment.customOnde;
+    if (custom && String(custom)) {
+        schema = JSON.parse(String(custom));
+    } else {
+        schema = convertParametersToSchema(experiment.parameters);
+    }
+    return schema;
+}
+
 function getConverter(type) {
     switch(type) {
         case 'number':
