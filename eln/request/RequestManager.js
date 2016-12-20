@@ -4,11 +4,11 @@ import {confirm} from 'src/util/ui';
 
 const statuses = {
     // statusCode: [statusName, statusColor]
-    0: ['Cancelled', 'grey'],
-    10: ['Pending', 'yellow'],
-    20: ['Processing', 'blue'],
-    30: ['Finished', 'green'],
-    90: ['Error', 'red']
+    0: ['Cancelled', '#AAAAAA'],
+    10: ['Pending', '#FFDC00'],
+    20: ['Processing', '#0074D9'],
+    30: ['Finished', '#01FF70'],
+    90: ['Error', '#FF4136']
 };
 const disableNotification = {disableNotification: true};
 
@@ -78,4 +78,31 @@ export default class RequestManager {
             await this.roc.create(requestObject, disableNotification);
         }
     }
+
+    async view(name, options) {
+        const viewData = await this.roc.view(name, options);
+        addChangeListener(viewData);
+        return viewData;
+    }
+}
+
+function addChangeListener(view) {
+    const id = view.onChange((event, maybeId) => {
+        if (maybeId && maybeId !== id) {
+            updateView(view, id);
+        }
+    });
+    updateView(view, id);
+}
+
+function updateView(view, id) {
+    view.forEach(updateRequest);
+    view.triggerChange(false, id);
+}
+
+function updateRequest(request) {
+    const lastStatus = request.$content.status[0];
+    const status = getStatus(lastStatus.status);
+    request.statusText = status[0];
+    request.statusColor = status[1];
 }
