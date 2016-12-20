@@ -87,8 +87,8 @@ export default class RequestManager {
 }
 
 function addChangeListener(view) {
-    const id = view.onChange((event, maybeId) => {
-        if (maybeId && maybeId !== id) {
+    const id = view.onChange((event, triggerId) => {
+        if (triggerId !== id) {
             updateView(view, id);
         }
     });
