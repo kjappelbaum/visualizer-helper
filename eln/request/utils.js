@@ -68,3 +68,45 @@ function castBool(val) {
     if (val === '0' || val === 'f' || val === 'false') return false;
     return true;
 }
+
+export function getServiceAndSetTree(services, sets) {
+    const treeSets = {
+        label: 'Sets',
+        children: sets.map(formatSet)
+    };
+
+    const treeServices = {
+        label: 'Services',
+        children: services.map(formatService)
+    };
+
+    return {
+        children: [treeSets, treeServices]
+    };
+}
+
+function formatSet(theset) {
+    return {
+        label: theset.$content.name,
+        info: theset
+    }
+}
+
+function formatService(service) {
+    return {
+        label: service.$content.name + ' (' + service.$id + ')',
+        children: service.$content.instruments.map(formatInstrument)
+    };
+    function formatInstrument(instrument) {
+        return {
+            label: instrument.name,
+            children: instrument.experiments.map(formatExperiment)
+        };
+        function formatExperiment(experiment) {
+            return {
+                label: experiment.name,
+                info: {service, instrument, experiment}
+            };
+        }
+    }
+}
