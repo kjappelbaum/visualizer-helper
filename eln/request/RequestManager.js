@@ -95,6 +95,10 @@ export default class RequestManager {
         }
     }
 
+    async getSample(request) {
+        return this.sampleRoc.document(request.$content.productUuid);
+    }
+
     async getPrintTemplate(analysis) {
         const experiment = await this.getExperiment(analysis);
         return experiment.twig;
