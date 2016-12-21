@@ -129,6 +129,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             view(viewName, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getView');
                     let requestUrl = new URI(this.databaseUrl).segment(`_view/${viewName}`);
@@ -173,6 +174,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             query(viewName, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getQuery');
                     let requestUrl = new URI(this.databaseUrl).segment(`_query/${viewName}`);
@@ -228,6 +230,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             document(uuid, options) {
+                options = options || {};
                 return this.get(uuid).then(doc => {
                     if (!doc) return;
                     if (options.varName) {
@@ -259,6 +262,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             get(entry, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     var uuid = getUuid(entry);
                     options = createOptions(options, 'get');
@@ -282,6 +286,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             getById(id, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     options = createOptions(options, 'get');
                     var entry = this._findById(id);
@@ -294,6 +299,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             getGroups(options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getGroups');
                     var groupUrl = new URI(this.databaseUrl).segment('groups').normalize().href();
@@ -302,6 +308,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             create(entry, options) {
+                options = options || {};
                 return this.__ready
                     .then(() => {
                         options = createOptions(options, 'create');
@@ -342,6 +349,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             update(entry, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     options = createOptions(options, 'update');
                     var reqEntry = DataObject.resurrect(entry);
@@ -365,6 +373,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             deleteAttachment(entry, attachments, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     if (!entry || !entry._attachments) return;
                     options = createOptions(options, 'deleteAttachment');
@@ -404,6 +413,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             unattach(entry, row, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     options = createOptions(options, 'deleteAttachment');
                     // Confirm?
@@ -436,6 +446,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             attach(type, entry, attachment, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     var attachOptions = createOptions(options, 'attach');
                     var prom = Promise.resolve();
@@ -492,6 +503,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             getAttachment(entry, name, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getAttachment');
                     const cdb = this._getCdb(entry);
@@ -508,6 +520,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             addAttachment(entry, attachments, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     var prom = Promise.resolve(true);
                     attachments = DataObject.resurrect(attachments);
@@ -569,6 +582,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             addAttachmentById(id, attachment, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     var doc = this._findById(id);
                     if (!doc) return;
@@ -577,6 +591,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             getTokens(options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getTokens');
                     var tokenUrl = new URI(this.databaseUrl).segment('token').normalize().href();
@@ -589,6 +604,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             getToken(token, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     options = createOptions(options, 'getToken');
                     var tokenId = getTokenId(token);
@@ -602,6 +618,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             createToken(entry, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     options = createOptions(options, 'createToken');
                     var uuid = getUuid(entry);
@@ -627,6 +644,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
             addGroup(entry, group, options, remove) {
+                options = options || {};
                 var method = remove ? 'del' : 'put';
                 return this.__ready.then(() => {
                     const uuid = getUuid(entry);
@@ -652,6 +670,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
 
 
             delete(entry, options) {
+                options = options || {};
                 return this.__ready.then(() => {
                     const uuid = getUuid(entry);
                     options = createOptions(options, 'delete');
