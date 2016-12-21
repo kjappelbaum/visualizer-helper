@@ -103,8 +103,8 @@ export default class RequestManager {
     async getExperiment(analysis) {
         const services = await this.initServices();
         const serviceId = analysis.kind;
-        const instrument = value.instrument;
-        const configName = value.configuration;
+        const instrument = analysis.instrument;
+        const configName = analysis.configuration;
         return services
             .find(s => s.$id == serviceId).$content.instruments
             .find(i => i.name == instrument).experiments
