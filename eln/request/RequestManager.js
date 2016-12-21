@@ -41,6 +41,8 @@ export default class RequestManager {
         options = options || {};
         this.roc = roc;
         this.sampleRoc = options.sampleRoc || null;
+        this.servicesRoc = options.servicesRoc || null;
+        this.servicesView = null;
     }
 
     async cancel(request) {
@@ -83,6 +85,30 @@ export default class RequestManager {
         const viewData = await this.roc.view(name, options);
         addChangeListener(viewData);
         return viewData;
+    }
+
+    async initServices(name, options) {
+        if (this.servicesView) {
+            return this.servicesView;
+        } else {
+            return this.servicesView = this.servicesRoc.view(name, options);
+        }
+    }
+
+    async getPrintTemplate(analysis) {
+        const experiment = await this.getExperiment(analysis);
+        return experiment.twig;
+    }
+
+    async getExperiment(analysis) {
+        const services = await this.initServices();
+        const serviceId = analysis.kind;
+        const instrument = value.instrument;
+        const configName = value.configuration;
+        return services
+            .find(s => s.$id == serviceId).$content.instruments
+            .find(i => i.name == instrument).experiments
+            .find(e => e.name == configName);
     }
 }
 
