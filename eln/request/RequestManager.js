@@ -83,6 +83,7 @@ export default class RequestManager {
 
     async view(name, options) {
         const viewData = await this.roc.view(name, options);
+        viewData.sort(sortRequestsByStatus);
         addChangeListener(viewData);
         return viewData;
     }
@@ -135,4 +136,8 @@ function updateRequest(request) {
     const status = getStatus(lastStatus.status);
     request.statusText = status[0];
     request.statusColor = status[1];
+}
+
+function sortRequestsByStatus(req1, req2) {
+    return req1.$content.status[0].status - req2.$content.status[0].status;
 }
