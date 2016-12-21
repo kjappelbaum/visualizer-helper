@@ -4,7 +4,7 @@ define([
     'src/util/api',
     'browserified/twig/twig',
     'canvg',
-    'https://www.lactame.com/lib/image-js/0.9.0/image.js',
+    'https://www.lactame.com/lib/image-js/0.9.1/image.js',
     'src/util/typerenderer',
     'jquery'
 ], function (API, twig, canvg, IJS, typerenderer, $) {
@@ -26,7 +26,7 @@ define([
 
         molecule: async function (printFormat, data) {
             var molfile = data.molfile;
-            const $el = $('<div>').css({width: 200, height: 200}).appendTo($('body'));
+            const $el = $('<div>').css({width: 190, height: 190}).appendTo($('body'));
             // const $el = $('<div>');
             await typerenderer.render($el, molfile, {forceType: 'mol2d'});
 
@@ -54,7 +54,7 @@ define([
             const bmp = mask.toBase64('bmp');
             const encoder = new TextEncoder();
             const bmpArr = decode(bmp);
-            const part1 = encoder.encode(`! 0 90 193 1\nVARIABLE DARKNESS 500\nPITCH 200\nWIDTH 240\nGRAPHIC BMP 0 0\n`);
+            const part1 = encoder.encode(`! 0 90 193 1\nVARIABLE DARKNESS 500\nPITCH 200\nWIDTH 240\nGRAPHIC BMP 1 1\n`);
             const part2 = encoder.encode('!+ 0 100 200 1\nEND');
             const toSend = concatenate(Uint8Array, part1, bmpArr, part2);
             return toSend;
