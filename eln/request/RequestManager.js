@@ -110,9 +110,9 @@ export default class RequestManager {
         const instrument = analysis.instrument;
         const configName = analysis.configuration;
         return services
-            .find(s => s.$id == serviceId).$content.instruments
-            .find(i => i.name == instrument).experiments
-            .find(e => e.name == configName);
+            .find(s => String(s.$id) === String(serviceId)).$content.instruments
+            .find(i => String(i.name) === String(instrument)).experiments
+            .find(e => String(e.name) === String(configName));
     }
 }
 
