@@ -10,7 +10,7 @@ const statuses = {
     30: ['Finished', '#01FF70'],
     90: ['Error', '#FF4136']
 };
-const disableNotification = {disableNotification: true};
+const muteSuccess = {muteSuccess: true};
 
 export function getStatus(code) {
     if (statuses[code]) {
@@ -54,7 +54,7 @@ export default class RequestManager {
                 date: Date.now(),
                 status: 0
             });
-            await this.roc.update(request, disableNotification);
+            await this.roc.update(request, muteSuccess);
         }
     }
 
@@ -62,7 +62,7 @@ export default class RequestManager {
         const groups = Array.from(new Set(list.map(el => el.kind)));
         // allow each lab to edit the entry
         for (const group of groups) {
-            await this.sampleRoc.addGroup(sample, group, disableNotification);
+            await this.sampleRoc.addGroup(sample, group, muteSuccess);
         }
         for (const req of list) {
             const requestObject = {
@@ -77,7 +77,7 @@ export default class RequestManager {
                 },
                 $owners: [req.kind]
             };
-            await this.roc.create(requestObject, disableNotification);
+            await this.roc.create(requestObject, muteSuccess);
         }
     }
 
