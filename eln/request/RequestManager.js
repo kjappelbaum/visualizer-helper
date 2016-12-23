@@ -46,11 +46,19 @@ export default class RequestManager {
     }
 
     getStatus(request) {
-        return Number(request.$content.status[0].status);
+        return request.$content.status[0];
+    }
+
+    getStatusCode(request) {
+        return Number(this.getStatus(request).status);
+    }
+
+    getLastStatus(request) {
+        return request.$content.status[request.$content.status.length - 1];
     }
 
     async cancel(request) {
-        if (this.getStatus(request) === 0) {
+        if (this.getStatusCode(request) === 0) {
             return;
         }
         if (await confirm('cancel request?')) {
@@ -62,7 +70,7 @@ export default class RequestManager {
         if (typeof status !== 'number') {
             status = getStatusCode(status);
         }
-        if (this.getStatus(request) === status) {
+        if (this.getStatusCode(request) === status) {
             return;
         }
         request.$content.status.unshift({
