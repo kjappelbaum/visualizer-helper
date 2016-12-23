@@ -115,6 +115,10 @@ export default class RequestManager {
             .find(i => String(i.name) === String(instrument)).experiments
             .find(e => String(e.name) === String(configName));
     }
+
+    async getUserInfo() {
+        return this.roc.getUserInfo();
+    }
 }
 
 function addChangeListener(view) {

@@ -119,548 +119,513 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                 this.__ready = Promise.resolve();
             }
 
-            getUser() {
-                return this.__ready.then(() => {
-                    return superagent
-                        .get(this.sessionUrl)
-                        .withCredentials()
-                        .then(res => res.body);
-                });
+            async getUser() {
+                await this.__ready;
+                const res = await superagent
+                    .get(this.sessionUrl)
+                    .withCredentials();
+                return res.body;
             }
 
-            view(viewName, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'getView');
-                    let requestUrl = new URI(this.databaseUrl).segment(`_view/${viewName}`);
-                    addSearch(requestUrl, options);
+            async getUserInfo() {
+                await this.__ready;
+                const res = await superagent
+                    .get(`${this.databaseUrl}/userInfo/_me`)
+                    .withCredentials();
+                return res.body;
+            }
 
-                    requestUrl = requestUrl.normalize().href();
+            async view(viewName, options) {
+                await this.__ready;
+                options = createOptions(options, 'getView');
+                let requestUrl = new URI(this.databaseUrl).segment(`_view/${viewName}`);
+                addSearch(requestUrl, options);
 
-                    return superagent.get(requestUrl)
-                        .withCredentials()
-                        .then(res => {
-                            if (res && res.body && res.status == 200) {
-                                if (options.filter) {
-                                    res.body = res.body.filter(options.filter);
-                                }
-                                if (options.sort) {
-                                    res.body = res.body.sort(options.sort);
-                                }
-                                if (options.varName) {
-                                    for (var i = 0; i < res.body.length; i++) {
-                                        this.typeUrl(res.body[i].$content, res.body[i]);
-                                    }
-                                    return API.createData(options.varName, res.body).then(data => {
-                                        this.variables[options.varName] = {
-                                            type: 'view',
-                                            options,
-                                            viewName,
-                                            requestUrl,
-                                            data: data
-                                        };
-                                        for (var i = 0; i < data.length; i++) {
-                                            data.traceSync([i]);
-                                        }
-                                        return data;
-                                    });
-                                }
+                requestUrl = requestUrl.normalize().href();
+
+                return superagent.get(requestUrl)
+                    .withCredentials()
+                    .then(res => {
+                        if (res && res.body && res.status == 200) {
+                            if (options.filter) {
+                                res.body = res.body.filter(options.filter);
                             }
-                            return res.body;
-                        })
-                        .then(handleSuccess(this, options))
-                        .catch(handleError(this, options));
-                });
+                            if (options.sort) {
+                                res.body = res.body.sort(options.sort);
+                            }
+                            if (options.varName) {
+                                for (var i = 0; i < res.body.length; i++) {
+                                    this.typeUrl(res.body[i].$content, res.body[i]);
+                                }
+                                return API.createData(options.varName, res.body).then(data => {
+                                    this.variables[options.varName] = {
+                                        type: 'view',
+                                        options,
+                                        viewName,
+                                        requestUrl,
+                                        data: data
+                                    };
+                                    for (var i = 0; i < data.length; i++) {
+                                        data.traceSync([i]);
+                                    }
+                                    return data;
+                                });
+                            }
+                        }
+                        return res.body;
+                    })
+                    .then(handleSuccess(this, options))
+                    .catch(handleError(this, options));
             }
 
-            query(viewName, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'getQuery');
-                    let requestUrl = new URI(this.databaseUrl).segment(`_query/${viewName}`);
-                    addSearch(requestUrl, options);
-                    requestUrl = requestUrl.normalize().href();
+            async query(viewName, options) {
+                await this.__ready;
+                options = createOptions(options, 'getQuery');
+                let requestUrl = new URI(this.databaseUrl).segment(`_query/${viewName}`);
+                addSearch(requestUrl, options);
+                requestUrl = requestUrl.normalize().href();
 
-                    return superagent.get(requestUrl)
-                        .withCredentials()
-                        .then(res => {
-                            if (res && res.body && res.status == 200) {
-                                if (options.filter) {
-                                    res.body = res.body.filter(options.filter);
-                                }
-                                if (options.sort) {
-                                    res.body = res.body.sort(options.sort);
-                                }
-                                if (options.addRightsInfo) {
-                                    for (var i = 0; i < res.body.length; i++) {
-                                        res.body[i].anonymousRead = {
-                                            type: 'boolean',
-                                            url: `${this.entryUrl}/${res.body[i].id}/_rights/read?asAnonymous=true`
-                                        };
-                                        res.body[i].userWrite = {
-                                            type: 'boolean',
-                                            url: `${this.entryUrl}/${res.body[i].id}/_rights/write`
-                                        };
-                                    }
-                                }
+                return superagent.get(requestUrl)
+                    .withCredentials()
+                    .then(res => {
+                        if (res && res.body && res.status == 200) {
+                            if (options.filter) {
+                                res.body = res.body.filter(options.filter);
+                            }
+                            if (options.sort) {
+                                res.body = res.body.sort(options.sort);
+                            }
+                            if (options.addRightsInfo) {
                                 for (var i = 0; i < res.body.length; i++) {
-                                    res.body[i].document = {
-                                        type: 'object',
-                                        url: `${this.entryUrl}/${res.body[i].id}`
+                                    res.body[i].anonymousRead = {
+                                        type: 'boolean',
+                                        url: `${this.entryUrl}/${res.body[i].id}/_rights/read?asAnonymous=true`
+                                    };
+                                    res.body[i].userWrite = {
+                                        type: 'boolean',
+                                        url: `${this.entryUrl}/${res.body[i].id}/_rights/write`
                                     };
                                 }
-                                if (options.varName) {
-                                    return API.createData(options.varName, res.body).then(data => {
-                                        this.variables[options.varName] = {
-                                            type: 'query',
-                                            options,
-                                            requestUrl,
-                                            viewName,
-                                            data: data
-                                        };
-                                        return data;
-                                    });
-                                }
                             }
-                            return res.body;
-                        })
-                        .then(handleSuccess(this, options))
-                        .catch(handleError(this, options));
-                });
+                            for (var i = 0; i < res.body.length; i++) {
+                                res.body[i].document = {
+                                    type: 'object',
+                                    url: `${this.entryUrl}/${res.body[i].id}`
+                                };
+                            }
+                            if (options.varName) {
+                                return API.createData(options.varName, res.body).then(data => {
+                                    this.variables[options.varName] = {
+                                        type: 'query',
+                                        options,
+                                        requestUrl,
+                                        viewName,
+                                        data: data
+                                    };
+                                    return data;
+                                });
+                            }
+                        }
+                        return res.body;
+                    })
+                    .then(handleSuccess(this, options))
+                    .catch(handleError(this, options));
             }
 
-            document(uuid, options) {
+            async document(uuid, options) {
                 options = options || {};
-                return this.get(uuid).then(doc => {
-                    if (!doc) return;
-                    if (options.varName) {
-                        this.typeUrl(doc.$content, doc);
-                        return API.createData(options.varName, doc).then(data => {
-                            this.variables[options.varName] = {
-                                type: 'document',
-                                data: data
-                            };
-                            if (options.track) {
-                                data.onChange(() => {
-                                    idb.set(data._id, data.resurrect());
-                                });
+                const doc = await this.get(uuid);
+                if (!doc) return;
+                if (options.varName) {
+                    this.typeUrl(doc.$content, doc);
+                    const data = await API.createData(options.varName, doc);
+                    this.variables[options.varName] = {
+                        type: 'document',
+                        data: data
+                    };
+                    if (options.track) {
+                        data.onChange(() => {
+                            idb.set(data._id, data.resurrect());
+                        });
 
-                                idb.get(data._id).then(localEntry => {
-                                    if (!localEntry) return;
-                                    if (localEntry._rev === doc._rev) {
-                                        this._updateByUuid(data._id, localEntry, options);
-                                    } else {
-                                        idb.delete(data._id);
-                                    }
-                                });
+                        idb.get(data._id).then(localEntry => {
+                            if (!localEntry) return;
+                            if (localEntry._rev === doc._rev) {
+                                this._updateByUuid(data._id, localEntry, options);
+                            } else {
+                                idb.delete(data._id);
                             }
-                            return data;
                         });
                     }
-                    return doc;
-                });
+                    return data;
+                }
+                return doc;
             }
 
-            get(entry, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    var uuid = getUuid(entry);
-                    options = createOptions(options, 'get');
-                    if (options.fromCache) {
-                        var e = this._findByUuid(uuid);
-                        if (e) return e;
-                        if (!options.fallback) return e;
-                    }
-                    return superagent.get(`${this.entryUrl}/${uuid}`)
-                        .withCredentials()
-                        .then(res => {
-                            if (res.body && res.status == 200) {
-                                this._defaults(res.body.$content);
-                                if (!options.noUpdate) {
-                                    this._updateByUuid(uuid, res.body, options);
-                                }
-                                return res.body;
+            async get(entry, options) {
+                await this.__ready;
+                const uuid = getUuid(entry);
+                options = createOptions(options, 'get');
+                if (options.fromCache) {
+                    const e = this._findByUuid(uuid);
+                    if (e) return e;
+                    if (!options.fallback) return e;
+                }
+                return superagent.get(`${this.entryUrl}/${uuid}`)
+                    .withCredentials()
+                    .then(res => {
+                        if (res.body && res.status == 200) {
+                            this._defaults(res.body.$content);
+                            if (!options.noUpdate) {
+                                this._updateByUuid(uuid, res.body, options);
                             }
-                        }).catch(handleError(this, options));
-                });
-            }
-
-            getById(id, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'get');
-                    var entry = this._findById(id);
-                    if (!entry || options.fromCache) {
-                        return entry;
-                    }
-                    return this.get(entry)
-                        .catch(handleError(this, options));
-                });
-            }
-
-            getGroups(options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'getGroups');
-                    var groupUrl = new URI(this.databaseUrl).segment('groups').normalize().href();
-                    return superagent.get(groupUrl).then(res => res.body).catch(handleError(this, options));
-                });
-            }
-
-            create(entry, options) {
-                options = options || {};
-                return this.__ready
-                    .then(() => {
-                        options = createOptions(options, 'create');
-                        if (!entry.$kind) {
-                            entry.$kind = this.kind;
+                            return res.body;
                         }
-                        this._defaults(entry.$content);
-                        return superagent.post(this.entryUrl)
-                            .withCredentials()
-                            .send(entry)
-                            .then(handleSuccess(this, options))
-                            .then(res => {
-                                if (res.body && (res.status == 200 || res.status == 201)) {
-                                    return this.get(res.body.id);
+                    }).catch(handleError(this, options));
+            }
+
+            async getById(id, options) {
+                await this.__ready;
+                options = createOptions(options, 'get');
+                const entry = this._findById(id);
+                if (!entry || options.fromCache) {
+                    return entry;
+                }
+                return this.get(entry)
+                    .catch(handleError(this, options));
+            }
+
+            async getGroups(options) {
+                await this.__ready;
+                options = createOptions(options, 'getGroups');
+                const groupUrl = new URI(this.databaseUrl).segment('groups').normalize().href();
+                return superagent.get(groupUrl).then(res => res.body).catch(handleError(this, options));
+            }
+
+            async create(entry, options) {
+                await this.__ready;
+                options = createOptions(options, 'create');
+                if (!entry.$kind) {
+                    entry.$kind = this.kind;
+                }
+                this._defaults(entry.$content);
+                return superagent.post(this.entryUrl)
+                    .withCredentials()
+                    .send(entry)
+                    .then(handleSuccess(this, options))
+                    .then(res => {
+                        if (res.body && (res.status == 200 || res.status == 201)) {
+                            return this.get(res.body.id);
+                        }
+                    })
+                    .then(entry => {
+                        if (!entry) return;
+                        this.typeUrl(entry.$content, entry);
+                        let keys = Object.keys(this.variables);
+                        for (let i = 0; i < keys.length; i++) {
+                            let v = this.variables[keys[i]];
+                            if (v.type === 'view') {
+                                var idx = v.data.length;
+                                v.data.push(entry);
+                                v.data.traceSync([idx]);
+                                if (!options.noTrigger) {
+                                    v.data.triggerChange();
                                 }
-                            })
-                            .then(entry => {
-                                if (!entry) return;
-                                this.typeUrl(entry.$content, entry);
-                                let keys = Object.keys(this.variables);
-                                for (let i = 0; i < keys.length; i++) {
-                                    let v = this.variables[keys[i]];
-                                    if (v.type === 'view') {
-                                        var idx = v.data.length;
-                                        v.data.push(entry);
-                                        v.data.traceSync([idx]);
-                                        if (!options.noTrigger) {
-                                            v.data.triggerChange();
-                                        }
-                                    } else if (v.type === 'query') {
-                                        this.query(v.viewName, v.options);
-                                    }
+                            } else if (v.type === 'query') {
+                                this.query(v.viewName, v.options);
+                            }
+                        }
+                        return entry;
+                    })
+                    .catch(handleError(this, options));
+            }
+
+            async update(entry, options) {
+                await this.__ready;
+                options = createOptions(options, 'update');
+                var reqEntry = DataObject.resurrect(entry);
+                this.untypeUrl(reqEntry.$content);
+                return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
+                    .withCredentials()
+                    .send(reqEntry)
+                    .then(handleSuccess(this, options))
+                    .then(res => {
+                        if (res.body && res.status == 200) {
+                            entry._rev = res.body.rev;
+                            entry.$creationDate = res.body.$creationDate;
+                            entry.$modificationDate = res.body.$modificationDate;
+                            this._updateByUuid(entry._id, entry, options);
+                            idb.delete(entry._id);
+                        }
+                        return entry;
+                    })
+                    .catch(handleError(this, options));
+            }
+
+            async deleteAttachment(entry, attachments, options) {
+                await this.__ready;
+                if (!entry || !entry._attachments) return;
+                options = createOptions(options, 'deleteAttachment');
+                if (Array.isArray(attachments) && attachments.length === 0) return entry;
+                if (!Array.isArray(attachments)) attachments = [attachments];
+
+                attachments = attachments.map(String);
+                return this.get(entry, {fromCache: true, fallback: true})
+                    .then(entry => {
+                        this._deleteFilename(entry.$content, attachments);
+                        for (var i = 0; i < attachments.length; i++) {
+                            delete entry._attachments[attachments[i]];
+                        }
+                        var cdb = this._getCdb(entry);
+                        return cdb.remove(attachments, {
+                            noRefresh: true
+                        }).then(() => {
+                            return this.get(entry, {noUpdate: true}).then(data => {
+                                entry._rev = data._rev;
+                                entry._attachments = data._attachments;
+                                entry.$creationDate = data.$creationDate;
+                                entry.$modificationDate = data.$modificationDate;
+                                if (entry.triggerChange && !options.noTrigger) {
+                                    entry.triggerChange();
                                 }
                                 return entry;
-                            })
-                            .catch(handleError(this, options));
-                    });
-            }
-
-            update(entry, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'update');
-                    var reqEntry = DataObject.resurrect(entry);
-                    this.untypeUrl(reqEntry.$content);
-                    return superagent.put(`${this.entryUrl}/${String(entry._id)}`)
-                        .withCredentials()
-                        .send(reqEntry)
-                        .then(handleSuccess(this, options))
-                        .then(res => {
-                            if (res.body && res.status == 200) {
-                                entry._rev = res.body.rev;
-                                entry.$creationDate = res.body.$creationDate;
-                                entry.$modificationDate = res.body.$modificationDate;
-                                this._updateByUuid(entry._id, entry, options);
-                                idb.delete(entry._id);
-                            }
-                            return entry;
-                        })
-                        .catch(handleError(this, options));
-                });
-            }
-
-            deleteAttachment(entry, attachments, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    if (!entry || !entry._attachments) return;
-                    options = createOptions(options, 'deleteAttachment');
-                    if (Array.isArray(attachments) && attachments.length === 0) return entry;
-                    if (!Array.isArray(attachments)) attachments = [attachments];
-
-                    attachments = attachments.map(String);
-                    return this.get(entry, {fromCache: true, fallback: true})
-                        .then(entry => {
-                            this._deleteFilename(entry.$content, attachments);
-                            for (var i = 0; i < attachments.length; i++) {
-                                delete entry._attachments[attachments[i]];
-                            }
-                            var cdb = this._getCdb(entry);
-                            return cdb.remove(attachments, {
-                                noRefresh: true
-                            }).then(() => {
-                                return this.get(entry, {noUpdate: true}).then(data => {
-                                    entry._rev = data._rev;
-                                    entry._attachments = data._attachments;
-                                    entry.$creationDate = data.$creationDate;
-                                    entry.$modificationDate = data.$modificationDate;
-                                    if (entry.triggerChange && !options.noTrigger) {
-                                        entry.triggerChange();
-                                    }
-                                    return entry;
-                                });
                             });
-                        })
-                        .then(handleSuccess(this, options))
-                        .catch(handleError(this, options));
-                });
+                        });
+                    })
+                    .then(handleSuccess(this, options))
+                    .catch(handleError(this, options));
             }
 
             removeAttachment(entry, attachments, options) {
                 return this.deleteAttachment(entry, attachments, options);
             }
 
-            unattach(entry, row, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'deleteAttachment');
-                    // Confirm?
-                    if (!this.processor) throw new Error('no processor');
+            async unattach(entry, row, options) {
+                await this.__ready;
+                options = createOptions(options, 'deleteAttachment');
+                // Confirm?
+                if (!this.processor) throw new Error('no processor');
 
-                    if (!row.__parent) {
-                        throw new Error('row must be linked to parent for unattach to work');
-                    }
-                    var arr = row.__parent;
-                    var idx = arr.indexOf(row);
-                    if (idx === -1) {
-                        Debug.warn('element to unattach not found');
-                        return;
-                    }
+                if (!row.__parent) {
+                    throw new Error('row must be linked to parent for unattach to work');
+                }
+                var arr = row.__parent;
+                var idx = arr.indexOf(row);
+                if (idx === -1) {
+                    Debug.warn('element to unattach not found');
+                    return;
+                }
 
-                    var toDelete = this._findFilename(row);
-                    toDelete = toDelete.map(d => String(d.filename));
-                    arr.splice(idx, 1);
-                    var toKeep = this._findFilename(entry.$content, toDelete);
-                    toKeep = toKeep.map(k => String(k.filename));
-                    toDelete = _.difference(toDelete, toKeep);
-                    return this.deleteAttachment(entry, toDelete, options).then(() => {
-                        arr.splice(idx, 1);
-                        if (!options.noTrigger) {
-                            arr.triggerChange();
+                var toDelete = this._findFilename(row);
+                toDelete = toDelete.map(d => String(d.filename));
+                arr.splice(idx, 1);
+                var toKeep = this._findFilename(entry.$content, toDelete);
+                toKeep = toKeep.map(k => String(k.filename));
+                toDelete = _.difference(toDelete, toKeep);
+                await this.deleteAttachment(entry, toDelete, options);
+                arr.splice(idx, 1);
+                if (!options.noTrigger) {
+                    arr.triggerChange();
+                }
+                return entry;
+            }
+
+            async attach(type, entry, attachment, options) {
+                await this.__ready;
+                var attachOptions = createOptions(options, 'attach');
+                var prom = Promise.resolve();
+                if (!attachment.filename) {
+                    prom = ui.enterValue('Enter a filename');
+                }
+
+                return prom
+                    .then(filename => {
+                        if (filename) attachment.filename = filename;
+                        if (!attachment.filename) {
+                            return;
                         }
-                        return entry;
-                    });
-                });
-            }
 
-            attach(type, entry, attachment, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    var attachOptions = createOptions(options, 'attach');
-                    var prom = Promise.resolve();
-                    if (!attachment.filename) {
-                        prom = ui.enterValue('Enter a filename');
-                    }
+                        attachment.filename = this.processor.getFilename(type, attachment.filename);
 
-                    return prom
-                        .then(filename => {
-                            if (filename) attachment.filename = filename;
-                            if (!attachment.filename) {
-                                return;
-                            }
-
-                            attachment.filename = this.processor.getFilename(type, attachment.filename);
-
-                            // If we had to ask for a filename, resolve content type
-                            var fallback;
-                            if (filename) {
-                                fallback = attachment.contentType;
-                                attachment.contentType = undefined;
-                            }
-                            setContentType(attachment, fallback);
-
-                            return this.get(entry, {fromCache: true, fallback: true}).then(entry => {
-                                var addAttachmentOptions = createOptions(options, 'addAttachment');
-                                return this.addAttachment(entry, attachment, addAttachmentOptions)
-                                    .then(entry => {
-                                        if (!this.processor) {
-                                            throw new Error('no processor');
-                                        }
-
-                                        return Promise.resolve(this.processor.process(type, entry.$content, attachment)).then(() => {
-                                            this.typeUrl(entry.$content, entry);
-                                            if (entry.triggerChange && !addAttachmentOptions.noTrigger) {
-                                                entry.triggerChange();
-                                            }
-                                            return entry;
-                                        });
-                                    });
-                            });
-                        })
-                        .then(handleSuccess(this, attachOptions))
-                        .catch(handleError(this, attachOptions));
-                });
-            }
-
-            discardLocal(entry) {
-                var uuid = getUuid(entry);
-                return idb.delete(uuid).then(() => {
-                    // Get from server again
-                    return this.get(entry);
-                });
-            }
-
-            getAttachment(entry, name, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'getAttachment');
-                    const cdb = this._getCdb(entry);
-                    return cdb.get(name)
-                        .catch(handleError(this, options));
-                });
-            }
-
-            getAttachmentList(entry) {
-                return this.__ready.then(() => {
-                    const cdb = this._getCdb(entry);
-                    return cdb.list();
-                });
-            }
-
-            addAttachment(entry, attachments, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    var prom = Promise.resolve(true);
-                    attachments = DataObject.resurrect(attachments);
-                    if (attachments.length === 1) {
-                        attachments = attachments[0];
-                    }
-
-                    if (!Array.isArray(attachments)) {
-                        if (!attachments.filename) {
-                            prom = ui.enterValue('Enter a filename').then(filename => {
-                                if (filename) attachments.filename = filename;
-                                if (!attachments.filename) {
-                                    return;
-                                }
-                                // If we had to ask for a filename, resolve content type
-                                var fallback = attachments.contentType;
-                                attachments.contentType = undefined;
-                                setContentType(attachments, fallback);
-                                attachments = [attachments];
-                                return filename;
-                            });
-                        } else {
-                            attachments = [attachments];
+                        // If we had to ask for a filename, resolve content type
+                        var fallback;
+                        if (filename) {
+                            fallback = attachment.contentType;
+                            attachment.contentType = undefined;
                         }
-                    }
+                        setContentType(attachment, fallback);
 
-                    attachments.forEach(attachment => {
-                        setContentType(attachment);
-                    });
+                        return this.get(entry, {fromCache: true, fallback: true}).then(entry => {
+                            var addAttachmentOptions = createOptions(options, 'addAttachment');
+                            return this.addAttachment(entry, attachment, addAttachmentOptions)
+                                .then(entry => {
+                                    if (!this.processor) {
+                                        throw new Error('no processor');
+                                    }
 
-
-                    return prom.then(filename => {
-                        if (!filename) return;
-
-
-                        options = createOptions(options, 'addAttachment');
-                        return this.get(entry, {fromCache: true, fallback: true})
-                            .then(entry => {
-                                const cdb = this._getCdb(entry);
-                                return cdb.inlineUploads(attachments, {
-                                    noRefresh: true
-                                })
-                                    .then(() => this.get(entry, {noUpdate: true}))
-                                    .then(data => {
-                                        entry._rev = data._rev;
-                                        entry._attachments = data._attachments;
-                                        entry.$creationDate = data.$creationDate;
-                                        entry.$modificationDate = data.$modificationDate;
-                                        if (entry.triggerChange && !options.noTrigger) {
+                                    return Promise.resolve(this.processor.process(type, entry.$content, attachment)).then(() => {
+                                        this.typeUrl(entry.$content, entry);
+                                        if (entry.triggerChange && !addAttachmentOptions.noTrigger) {
                                             entry.triggerChange();
                                         }
                                         return entry;
                                     });
-                            })
-                            .then(handleSuccess(this, options))
-                            .catch(handleError(this, options));
-                    });
-                });
+                                });
+                        });
+                    })
+                    .then(handleSuccess(this, attachOptions))
+                    .catch(handleError(this, attachOptions));
             }
 
-            addAttachmentById(id, attachment, options) {
+            async discardLocal(entry) {
+                const uuid = getUuid(entry);
+                await idb.delete(uuid);
+                // Get from server again
+                return this.get(entry);
+            }
+
+            async getAttachment(entry, name, options) {
+                await this.__ready;
+                options = createOptions(options, 'getAttachment');
+                const cdb = this._getCdb(entry);
+                return cdb.get(name)
+                    .catch(handleError(this, options));
+            }
+
+            async getAttachmentList(entry) {
+                await this.__ready;
+                const cdb = this._getCdb(entry);
+                return cdb.list();
+            }
+
+            async addAttachment(entry, attachments, options) {
                 options = options || {};
-                return this.__ready.then(() => {
-                    var doc = this._findById(id);
-                    if (!doc) return;
-                    return this.addAttachment(doc._id, attachment, options);
-                });
-            }
+                await this.__ready;
+                var prom = Promise.resolve(true);
+                attachments = DataObject.resurrect(attachments);
+                if (attachments.length === 1) {
+                    attachments = attachments[0];
+                }
 
-            getTokens(options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'getTokens');
-                    var tokenUrl = new URI(this.databaseUrl).segment('token').normalize().href();
-                    return superagent.get(tokenUrl)
-                        .withCredentials()
-                        .then(handleSuccess(this, options))
-                        .then(res => res.body)
-                        .catch(handleError(this, options));
-                });
-            }
-
-            getToken(token, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'getToken');
-                    var tokenId = getTokenId(token);
-                    var tokenUrl = new URI(this.databaseUrl).segment(`token/${tokenId}`).normalize().href();
-                    return superagent.get(tokenUrl)
-                        .withCredentials()
-                        .then(handleSuccess(this, options))
-                        .then(res => res.body)
-                        .catch(handleError(this, options));
-                });
-            }
-
-            createToken(entry, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'createToken');
-                    var uuid = getUuid(entry);
-                    return superagent.post(`${this.entryUrl}/${uuid}/_token`)
-                        .withCredentials()
-                        .then(handleSuccess(this, options))
-                        .then(res => res.body)
-                        .catch(handleError(this, options));
-                });
-            }
-
-            deleteToken(token, options) {
-                return this.__ready.then(() => {
-                    options = createOptions(options, 'deleteToken');
-                    var tokenId = getTokenId(token);
-                    var tokenUrl = new URI(this.databaseUrl).segment(`token/${tokenId}`).normalize().href();
-                    return superagent.del(tokenUrl)
-                        .withCredentials()
-                        .then(handleSuccess(this, options))
-                        .then(res => res.body)
-                        .catch(handleError(this, options));
-                });
-            }
-
-            addGroup(entry, group, options, remove) {
-                options = options || {};
-                var method = remove ? 'del' : 'put';
-                return this.__ready.then(() => {
-                    const uuid = getUuid(entry);
-                    options = createOptions(options, 'addGroup');
-                    return superagent[method](`${this.entryUrl}/${uuid}/_owner/${String(group)}`)
-                        .withCredentials()
-                        .then(handleSuccess(this, options))
-                        .then(res => {
-                            if (!options.noUpdate) {
-                                this.get(uuid).then(() => res.body);
-                            } else {
-                                return res.body;
+                if (!Array.isArray(attachments)) {
+                    if (!attachments.filename) {
+                        prom = ui.enterValue('Enter a filename').then(filename => {
+                            if (filename) attachments.filename = filename;
+                            if (!attachments.filename) {
+                                return;
                             }
-                        })
-                        .catch(handleError(this, options));
+                            // If we had to ask for a filename, resolve content type
+                            var fallback = attachments.contentType;
+                            attachments.contentType = undefined;
+                            setContentType(attachments, fallback);
+                            attachments = [attachments];
+                            return filename;
+                        });
+                    } else {
+                        attachments = [attachments];
+                    }
+                }
+
+                attachments.forEach(attachment => {
+                    setContentType(attachment);
                 });
+
+                const filename = await prom;
+                if (!filename) return;
+
+                options = createOptions(options, 'addAttachment');
+                return this.get(entry, {fromCache: true, fallback: true})
+                    .then(entry => {
+                        const cdb = this._getCdb(entry);
+                        return cdb.inlineUploads(attachments, {
+                            noRefresh: true
+                        })
+                            .then(() => this.get(entry, {noUpdate: true}))
+                            .then(data => {
+                                entry._rev = data._rev;
+                                entry._attachments = data._attachments;
+                                entry.$creationDate = data.$creationDate;
+                                entry.$modificationDate = data.$modificationDate;
+                                if (entry.triggerChange && !options.noTrigger) {
+                                    entry.triggerChange();
+                                }
+                                return entry;
+                            });
+                    })
+                    .then(handleSuccess(this, options))
+                    .catch(handleError(this, options));
+            }
+
+            async addAttachmentById(id, attachment, options) {
+                options = options || {};
+                await this.__ready;
+                const doc = this._findById(id);
+                if (!doc) return;
+                return this.addAttachment(doc._id, attachment, options);
+            }
+
+            async getTokens(options) {
+                await this.__ready;
+                options = createOptions(options, 'getTokens');
+                const tokenUrl = new URI(this.databaseUrl).segment('token').normalize().href();
+                return superagent.get(tokenUrl)
+                    .withCredentials()
+                    .then(handleSuccess(this, options))
+                    .then(res => res.body)
+                    .catch(handleError(this, options));
+            }
+
+            async getToken(token, options) {
+                await this.__ready;
+                options = createOptions(options, 'getToken');
+                const tokenId = getTokenId(token);
+                const tokenUrl = new URI(this.databaseUrl).segment(`token/${tokenId}`).normalize().href();
+                return superagent.get(tokenUrl)
+                    .withCredentials()
+                    .then(handleSuccess(this, options))
+                    .then(res => res.body)
+                    .catch(handleError(this, options));
+            }
+
+            async createToken(entry, options) {
+                await this.__ready;
+                options = createOptions(options, 'createToken');
+                const uuid = getUuid(entry);
+                return superagent.post(`${this.entryUrl}/${uuid}/_token`)
+                    .withCredentials()
+                    .then(handleSuccess(this, options))
+                    .then(res => res.body)
+                    .catch(handleError(this, options));
+            }
+
+            async deleteToken(token, options) {
+                await this.__ready;
+                options = createOptions(options, 'deleteToken');
+                const tokenId = getTokenId(token);
+                const tokenUrl = new URI(this.databaseUrl).segment(`token/${tokenId}`).normalize().href();
+                return superagent.del(tokenUrl)
+                    .withCredentials()
+                    .then(handleSuccess(this, options))
+                    .then(res => res.body)
+                    .catch(handleError(this, options));
+            }
+
+            async addGroup(entry, group, options, remove) {
+                var method = remove ? 'del' : 'put';
+                await this.__ready;
+                const uuid = getUuid(entry);
+                options = createOptions(options, 'addGroup');
+                return superagent[method](`${this.entryUrl}/${uuid}/_owner/${String(group)}`)
+                    .withCredentials()
+                    .then(handleSuccess(this, options))
+                    .then(res => {
+                        if (!options.noUpdate) {
+                            this.get(uuid).then(() => res.body);
+                        } else {
+                            return res.body;
+                        }
+                    })
+                    .catch(handleError(this, options));
             }
 
 
@@ -669,31 +634,29 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             }
 
 
-            delete(entry, options) {
-                options = options || {};
-                return this.__ready.then(() => {
-                    const uuid = getUuid(entry);
-                    options = createOptions(options, 'delete');
-                    return superagent.del(`${this.entryUrl}/${uuid}`)
-                        .withCredentials()
-                        .then(handleSuccess(this, options))
-                        .then(res => {
-                            if (res.body && res.status == 200) {
-                                for (let key in this.variables) {
-                                    const idx = this._findIndexByUuid(uuid, key);
-                                    if (idx !== -1) {
-                                        this.variables[key].data.splice(idx, 1);
-                                        if (!options.noTrigger) {
-                                            this.variables[key].data.triggerChange();
-                                        }
+            async delete(entry, options) {
+                await this.__ready;
+                const uuid = getUuid(entry);
+                options = createOptions(options, 'delete');
+                return superagent.del(`${this.entryUrl}/${uuid}`)
+                    .withCredentials()
+                    .then(handleSuccess(this, options))
+                    .then(res => {
+                        if (res.body && res.status == 200) {
+                            for (let key in this.variables) {
+                                const idx = this._findIndexByUuid(uuid, key);
+                                if (idx !== -1) {
+                                    this.variables[key].data.splice(idx, 1);
+                                    if (!options.noTrigger) {
+                                        this.variables[key].data.triggerChange();
                                     }
                                 }
-
                             }
-                            return res.body;
-                        })
-                        .catch(handleError(this, options));
-                });
+
+                        }
+                        return res.body;
+                    })
+                    .catch(handleError(this, options));
             }
 
             remove(entry, options) {
