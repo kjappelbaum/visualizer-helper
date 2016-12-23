@@ -45,17 +45,31 @@ export default class RequestManager {
         this.servicesView = null;
     }
 
+    getStatus(request) {
+        return Number(request.$content.status[0].status);
+    }
+
     async cancel(request) {
-        if (Number(request.$content.status[0].status) === 0) {
+        if (this.getStatus(request) === 0) {
             return;
         }
         if (await confirm('cancel request?')) {
-            request.$content.status.unshift({
-                date: Date.now(),
-                status: 0
-            });
-            await this.roc.update(request, muteSuccess);
+            return this.setStatus(request, 0);
         }
+    }
+
+    async setStatus(request, status) {
+        if (typeof status !== 'number') {
+            status = getStatusCode(status);
+        }
+        if (this.getStatus(request) === status) {
+            return;
+        }
+        request.$content.status.unshift({
+            date: Date.now(),
+            status: status
+        });
+        await this.roc.update(request, muteSuccess);
     }
 
     async createRequests(sample, list) {
