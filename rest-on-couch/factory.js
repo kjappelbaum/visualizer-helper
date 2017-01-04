@@ -1,6 +1,7 @@
 'use strict';
 
 import Roc from './Roc';
+import EventEmitter from 'events';
 
 module.exports = function(opts) {
     const factory = new EventEmitter();
