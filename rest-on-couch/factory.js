@@ -18,5 +18,7 @@ module.exports = function(opts, cb) {
             }
         });
         IframeBridge.ready();
+    } else {
+        cb(null);
     }
 };
