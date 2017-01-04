@@ -7,7 +7,7 @@ module.exports = function(opts, cb) {
         cb = opts;
         opts = {};
     }
-    if(IframeBridge) {
+    if(typeof IframeBridge !== 'undefined') {
         IframeBridge.onMessage(function(data) {
             if(data.type === 'tab.data') {
                 if(data.message.couchDB) {
