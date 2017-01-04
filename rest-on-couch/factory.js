@@ -13,7 +13,7 @@ module.exports = function(opts, cb) {
                 if(data.message.couchDB) {
                     const options = Object.assign({}, data.message.couchDB, opts);
                     var roc = new Roc(options);
-                    cb(roc);
+                    cb(roc, data.message.couchDB);
                 }
             }
         });
