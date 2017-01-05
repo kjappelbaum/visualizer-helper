@@ -12,7 +12,8 @@ define([
         const MINUTE = 60 * SECOND;
         const LIMIT = 10 * MINUTE;
         return async function (couchDB) {
-            var printerRoc, formatsRoc, printServerRoc, printers, printFormats, printServers, allIds, onlinePrinters;
+            var printerRoc, formatsRoc, printServerRoc, printers, printFormats, printServers, allIds;
+            var onlineServers, onlinePrinters;
 
             const exports = {
                 getDBPrinters() {
@@ -30,7 +31,8 @@ define([
                         varName: 'labelPrintFormats'
                     });
                     printServers = await printServerRoc.view('printServerByMacAddress', {varName: 'printServers'});
-                    onlinePrinters = printServers.filter(ps => Date.now() - ps.$modificationDate < LIMIT);
+                    onlineServers = printServers.filter(ps => Date.now() - ps.$modificationDate < LIMIT);
+                    onlinePrinters = printers.filter(p => onlineServers.find(ps => ps.$content.macAddress === p.$content.macAddress));
 
                     await Promise.all(printServers.map(ps => {
                         return exports.getConnectedPrinters(ps.$content.url).then(ids => {
