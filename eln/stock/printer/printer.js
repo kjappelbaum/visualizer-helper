@@ -100,18 +100,18 @@ define([
                     return printers
                         .filter(p => onlineMacAdresses.includes(p.$content.macAddress))
                         .filter(p => {
-                        return format.$content.models.filter(m => String(m.name) === String(p.$content.model)).length > 0;
-                    });
+                            return format.$content.models.filter(m => String(m.name) === String(p.$content.model)).length > 0;
+                        });
                 },
 
                 getFormats(printer, type) {
                     if (!printer) {
                         var formats = printFormats.filter(f => {
-                            return onlinePrinters.some(printer => f.$content.models.includes(String(printer.$content.model)));
+                            return onlinePrinters.some(printer => f.$content.models.some(m => String(m.name) === String(printer.$content.model)));
                         })
                     } else {
                         printer = printerRoc.get(printer);
-                        formats = printFormats.filter(f => f.$content.models.includes(String(printer.$content.model)));
+                        formats = printFormats.filter(f => f.$content.models.some(m => String(m.name) === String(printer.$content.model)));
                     }
                     if (type) {
                         formats = formats.filter(f => String(f.$content.type) === type);
