@@ -12,7 +12,7 @@ define([
         const MINUTE = 60 * SECOND;
         const LIMIT = 10 * MINUTE;
         return async function (couchDB) {
-            var printerRoc, formatsRoc, printServerRoc, printers, printFormats, printServers, allIds;
+            var printerRoc, formatsRoc, printServerRoc, printers, printFormats, printServers, allIds, onlinePrinters;
 
             const exports = {
                 getDBPrinters() {
@@ -30,6 +30,7 @@ define([
                         varName: 'labelPrintFormats'
                     });
                     printServers = await printServerRoc.view('printServerByMacAddress', {varName: 'printServers'});
+                    onlinePrinters = printServers.filter(ps => Date.now() - ps.$modificationDate < LIMIT);
 
                     await Promise.all(printServers.map(ps => {
                         return exports.getConnectedPrinters(ps.$content.url).then(ids => {
@@ -88,12 +89,11 @@ define([
                     await formatsRoc.delete(format);
                 },
 
-                // get printers that can print a given format
+                // get online printers that can print a given format
                 async getPrinters(format) {
-                    if (!format) return printers;
+                    if (!format) return onlinePrinters;
                     format = await formatsRoc.get(format);
-                    const onlineMacAdresses = printServers
-                        .filter(ps => Date.now() - ps.$modificationDate < LIMIT)
+                    const onlineMacAdresses = onlinePrinters
                         .map(ps => ps.$content.macAddress);
                     return printers
                         .filter(p => onlineMacAdresses.includes(p.$content.macAddress))
@@ -104,7 +104,9 @@ define([
 
                 getFormats(printer, type) {
                     if (!printer) {
-                        var formats = printFormats;
+                        var formats = printFormats.filter(f => {
+                            return onlinePrinters.some(printer => f.$content.models.includes(String(printer.$content.model)));
+                        })
                     } else {
                         printer = printerRoc.get(printer);
                         formats = printFormats.filter(f => f.$content.models.includes(String(printer.$content.model)));
