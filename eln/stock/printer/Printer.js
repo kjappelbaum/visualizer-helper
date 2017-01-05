@@ -21,11 +21,16 @@ define(['src/util/util', './PrintServer', './printProcessors'], function (Util, 
     function processData(printFormat, data) {
         switch(printFormat.type) {
             case 'sample': {
-                data.uuidShort = data._id.substring(0,12);
-                data.b64Short = Util.hexToBase64(data.uuidShort);
-                data.line1 = data.$content.general.description.substring(0,60);
-                data.line2 = data.$content.general.description.substring(60,120);
-                data.id = data.$id.join(' ');
+                if(data.$content && data.$content) {
+                    data.uuidShort = data._id.substring(0,12);
+                    data.b64Short = Util.hexToBase64(data.uuidShort);
+                    data.id = data.$id.join(' ');
+                    if(data.$content.general) {
+                        data.line1 = data.$content.general.description.substring(0,60);
+                        data.line2 = data.$content.general.description.substring(60,120);
+                        data.molfile = data.$content.general.molfile;
+                    }
+                }
                 break;
             }
             case 'location': {
