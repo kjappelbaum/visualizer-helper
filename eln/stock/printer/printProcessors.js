@@ -30,15 +30,14 @@ define([
             // const $el = $('<div>');
             await typerenderer.render($el, molfile, {forceType: 'mol2d'});
 
-            // const canvas = $el.find('canvas')[0];
             const $svg = $el.find('svg');
-            const svg = $svg[0];
+            let svg = $svg[0];
             if (!svg) throw new Error('Could not generate svg');
             //
             const canvas = document.createElement('canvas');
             const width = svg.width.baseVal.value | 0;
             const height = svg.height.baseVal.value | 0;
-            const svgString = $svg.clone().wrap('<div>').parent().html();
+            const svgString = $svg.clone().wrap('<div>').parent().html().replace(/rgb\(\d+,\d+,\d+\)/g, 'rgb(0,0,0)');
             //
             canvg(canvas, svgString, {
                 scaleWidth: width,
