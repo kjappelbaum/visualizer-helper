@@ -47,9 +47,9 @@ const status = {
 
 // register type renderer
 function toscreen($element, value, root, options) {
-    $element.html(StockHelper.getStatusDescription(+value));
+    $element.html(getStatusDescription(+value));
     if(options.withColor) {
-        $element.css('background-color', StockHelper.getStatusColor(+value));
+        $element.css('background-color', getStatusColor(+value));
     }
 }
 
