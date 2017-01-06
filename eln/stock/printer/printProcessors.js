@@ -25,7 +25,7 @@ define([
 
             //Render molfile if exists
             var text = template.render(data);
-            if(data.molfile && printFormat.molfileOptions) {
+            if(data.molfile && printFormat.molfileOptions && printFormat.molfileOptions.width) {
                 const encoder = new TextEncoder();
                 text = text.replace(/END\s*$/, '');
                 text += `\nGRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat.molfileOptions.y || 0}\n`;
@@ -50,10 +50,10 @@ define([
 
     async function getMolBmp(molfile, options) {
         const defaultMolOptions = {
-            width: 100,
-            height: 100
+            width: 100
         };
         options = Object.assign({}, defaultMolOptions, options);
+        if(!options.height) options.height = options.width;
         const mol = OCL.Molecule.fromMolfile(molfile);
         const svgString = mol.toSVG(options.width, options.height, '', {
             noImplicitAtomLabelColors: true
