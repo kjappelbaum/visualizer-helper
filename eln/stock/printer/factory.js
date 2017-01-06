@@ -8,11 +8,11 @@ module.exports = function(opts, cb) {
         opts = {};
     }
     if(typeof IframeBridge !== 'undefined') {
-        IframeBridge.onMessage(function(data) {
+        IframeBridge.onMessage(async function(data) {
             if(data.type === 'tab.data') {
                 if(data.message.printer && data.message.printer.couchDB) {
                     const options = Object.assign({}, data.message.printer.couchDB, opts);
-                    var p = printer(options);
+                    var p = await printer(options);
                     cb(p, data.message.printer.couchDB);
                 }
             }
