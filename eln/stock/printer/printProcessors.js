@@ -25,11 +25,11 @@ define([
 
             //Render molfile if exists
             var text = template.render(data);
-            if(data.molfile && data.molfileOptions) {
+            if(data.molfile && printFormat.molfileOptions) {
                 const encoder = new TextEncoder();
                 text = text.replace(/END\s*$/, '');
-                text += `\nGRAPHIC BMP ${data.molfileOptions.x || 0} ${data.molfileOptions.y || 0}\n`;
-                const mol = await getMolBmp(data.molfile, data.molfileOptions);
+                text += `\nGRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat.molfileOptions.y || 0}\n`;
+                const mol = await getMolBmp(data.molfile, printFormat.molfileOptions);
                 const end = '!+ 0 100 200 1\nEND\n';
                 return Promise.resolve(concatenate(Uint8Array, encoder.encode(text), mol, encoder.encode(end)));
 
