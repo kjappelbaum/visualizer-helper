@@ -6,8 +6,9 @@ define([
     'canvg',
     'https://www.lactame.com/lib/image-js/0.9.1/image.js',
     'src/util/typerenderer',
-    'jquery'
-], function (API, twig, canvg, IJS, typerenderer, $) {
+    'jquery',
+    'openchemlib/openchemlib-core'
+], function (API, twig, canvg, IJS, typerenderer, $, OCL) {
     let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 // Use a lookup table to find the index.
@@ -21,44 +22,52 @@ define([
             var template = twig.twig({
                 data: printFormat.twig
             });
-            return Promise.resolve(template.render(data));
+
+            //Render molfile if exists
+            var text = template.render(data);
+            if(data.molfile && data.molfileOptions) {
+                const encoder = new TextEncoder();
+                text = text.replace(/END\s*$/, '');
+                text += `\nGRAPHIC BMP ${data.molfileOptions.x || 0} ${data.molfileOptions.y || 0}\n`;
+                const mol = await getMolBmp(data.molfile, data.molfileOptions);
+                const end = '!+ 0 100 200 1\nEND\n';
+                return Promise.resolve(concatenate(Uint8Array, encoder.encode(text), mol, encoder.encode(end)));
+
+            } else {
+                return Promise.resolve(text);
+            }
         },
 
         molecule: async function (printFormat, data) {
-            var molfile = data.molfile;
-            const $el = $('<div>').css({width: 190, height: 190}).appendTo($('body'));
-            // const $el = $('<div>');
-            await typerenderer.render($el, molfile, {forceType: 'mol2d'});
-
-            const $svg = $el.find('svg');
-            let svg = $svg[0];
-            if (!svg) throw new Error('Could not generate svg');
-            //
-            const canvas = document.createElement('canvas');
-            const width = svg.width.baseVal.value | 0;
-            const height = svg.height.baseVal.value | 0;
-            const svgString = $svg.clone().wrap('<div>').parent().html().replace(/rgb\(\d+,\d+,\d+\)/g, 'rgb(0,0,0)');
-            //
-            canvg(canvas, svgString, {
-                scaleWidth: width,
-                scaleHeight: height
-            });
-
-            var pngUrl = canvas.toDataURL('png');
-            $el.remove();
-            API.createData('png', pngUrl);
-
-            var image = await IJS.load(pngUrl);
-            var mask = image.grey({keepAlpha: true}).mask();
-            const bmp = mask.toBase64('bmp');
+            const mol = await getMolBmp(data.molfile);
             const encoder = new TextEncoder();
-            const bmpArr = decode(bmp);
-            const part1 = encoder.encode(`! 0 90 193 1\nVARIABLE DARKNESS 500\nPITCH 200\nWIDTH 240\nGRAPHIC BMP 1 1\n`);
+            const part1 = encoder.encode(`! 0 90 193 1\nVARIABLE DARKNESS 500\nPITCH 200\nWIDTH 240\nGRAPHIC BMP 100 93\n`);
             const part2 = encoder.encode('!+ 0 100 200 1\nEND');
-            const toSend = concatenate(Uint8Array, part1, bmpArr, part2);
+            const toSend = concatenate(Uint8Array, part1, mol, part2);
             return toSend;
         }
     };
+
+    async function getMolBmp(molfile, options) {
+        const defaultMolOptions = {
+            width: 100,
+            height: 100
+        };
+        options = Object.assign({}, defaultMolOptions, options);
+        const mol = OCL.Molecule.fromMolfile(molfile);
+        const svgString = mol.toSVG(options.width, options.height, '', {
+            noImplicitAtomLabelColors: true
+        });
+        const canvas = document.createElement('canvas');
+        canvg(canvas, svgString);
+
+        var pngUrl = canvas.toDataURL('png');
+
+        var image = await IJS.load(pngUrl);
+        var mask = image.grey({keepAlpha: true}).mask();
+        const bmp = mask.toBase64('bmp');
+        return decode(bmp);
+    }
 
     function concatenate(resultConstructor, ...arrays) {
         let totalLength = 0;
