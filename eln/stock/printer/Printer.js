@@ -26,8 +26,13 @@ define(['src/util/util', './PrintServer', './printProcessors'], function (Util, 
                     data.b64Short = Util.hexToBase64(data.uuidShort);
                     data.id = data.$id.join(' ');
                     if(data.$content.general) {
-                        data.line1 = data.$content.general.description.substring(0,60);
-                        data.line2 = data.$content.general.description.substring(60,120);
+                        if(data.$content.general.description) {
+                            data.line1 = data.$content.general.description.substring(0,60);
+                            data.line2 = data.$content.general.description.substring(60,120);
+                        } else {
+                            data.line1 = '';
+                            data.line2 = '';
+                        }
                         data.molfile = data.$content.general.molfile;
                     }
                 }
