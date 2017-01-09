@@ -104,13 +104,13 @@ define([
                         });
                 },
 
-                getFormats(printer, type) {
+                async getFormats(printer, type) {
                     if (!printer) {
                         var formats = printFormats.filter(f => {
                             return onlinePrinters.some(printer => f.$content.models.some(m => String(m.name) === String(printer.$content.model)));
                         })
                     } else {
-                        printer = printerRoc.get(printer);
+                        printer = await printerRoc.get(printer);
                         formats = printFormats.filter(f => f.$content.models.some(m => String(m.name) === String(printer.$content.model)));
                     }
                     if (type) {
@@ -123,8 +123,8 @@ define([
                     return Object.keys(processors);
                 },
 
-                getTypes() {
-                    var formats = exports.getFormats.apply(null, arguments);
+                async getTypes() {
+                    var formats = await exports.getFormats.apply(null, arguments);
                     var s = new Set();
                     for (var format of formats) {
                         s.add(String(format.$content.type));
