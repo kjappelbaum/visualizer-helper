@@ -33,8 +33,11 @@ define(['src/util/util', './PrintServer', './printProcessors'], function (Util, 
                             data.line1 = '';
                             data.line2 = '';
                         }
-                        data.molfile = String(data.$content.general.molfile);
+                        data.molfile = data.$content.general.molfile;
                     }
+                }
+                if(data.molfile) {
+                    data.molfile = String(data.molfile);
                 }
                 break;
             }
