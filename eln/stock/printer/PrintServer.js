@@ -14,8 +14,8 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
         }
 
         async print(id, printData) {
-            if(opts.proxy) {
-                var url = new URI(opts.proxy).addSearch('mac', this.macAddress);
+            if(this.opts.proxy) {
+                var url = new URI(this.opts.proxy).addSearch('mac', this.macAddress);
             } else {
                 url = new URI(this.url);
             }

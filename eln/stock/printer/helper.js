@@ -54,6 +54,7 @@ module.exports = {
         try {
             await printer.print(info.printer, info.format, entry);
         } catch(err) {
+            console.log(err);
             ui.showNotification(`Error printing: ${err.message}`, 'error');
         }
     },

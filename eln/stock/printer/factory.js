@@ -9,8 +9,8 @@ module.exports = function(opts, cb) {
     }
     if(typeof IframeBridge !== 'undefined') {
         IframeBridge.onMessage(async function(data) {
-            let optsCopy = Object.assign({}, opts);
             if(data.type === 'tab.data') {
+                let optsCopy = Object.assign({}, opts);
                 if(data.message.printer && data.message.printer.couchDB) {
                     optsCopy.proxy = data.message.printer.proxy;
                     const options = Object.assign({}, data.message.printer.couchDB, optsCopy);
