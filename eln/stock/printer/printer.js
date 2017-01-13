@@ -11,7 +11,7 @@ define([
         const SECOND = 1000;
         const MINUTE = 60 * SECOND;
         const LIMIT = 10 * MINUTE;
-        return async function (couchDB) {
+        return async function (opts) {
             var printerRoc, formatsRoc, printServerRoc, printers, printFormats, printServers, allIds;
             var onlineServers, onlinePrinters;
 
@@ -22,9 +22,9 @@ define([
 
                 async refresh() {
                     allIds = new Set();
-                    printerRoc = new Roc(couchDB);
-                    formatsRoc = new Roc(couchDB);
-                    printServerRoc = new Roc(couchDB);
+                    printerRoc = new Roc(opts);
+                    formatsRoc = new Roc(opts);
+                    printServerRoc = new Roc(opts);
                     printers = await printerRoc.view('entryByKind', {key: 'printer', varName: 'labelPrinters'});
                     printFormats = await formatsRoc.view('entryByKind', {
                         key: 'printFormat',
@@ -61,7 +61,7 @@ define([
                     printer = await printerRoc.get(printer);
                     printFormat = await formatsRoc.get(printFormat);
                     const printServer = printServers.find(ps => String(ps.$content.macAddress) === String(printer.$content.macAddress));
-                    const p = new Printer(printer.$content, printServer.$content);
+                    const p = new Printer(printer.$content, printServer.$content, opts);
                     await p.print(printFormat.$content, data);
                 },
 

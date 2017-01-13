@@ -3,10 +3,10 @@
 define(['src/util/util', './PrintServer', './printProcessors'], function (Util, PrintServer, processors) {
 
     class Printer {
-        constructor(printer, printServer) {
+        constructor(printer, printServer, opts) {
             this.url = String(printServer.url);
             this.id = String(printer.id);
-            this.printServer = new PrintServer(this.url);
+            this.printServer = new PrintServer(printServer, opts);
 
         }
 

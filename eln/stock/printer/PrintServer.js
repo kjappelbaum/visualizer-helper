@@ -2,8 +2,10 @@
 
 define(['superagent', 'uri/URI'], function (superagent, URI) {
     class PrintServer {
-        constructor(url) {
-            this.url = new URI(url).normalize().href();
+        constructor(server, opts) {
+            this.opts = Object.assign({}, opts);
+            this.macAddress = String(server.macAddress);
+            this.url = new URI(String(server.url)).normalize().href();
         }
 
         getDeviceIds() {
@@ -12,7 +14,14 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
         }
 
         async print(id, printData) {
-            const url = new URI(this.url).segment('send').segmentCoded(id).href();
+            if(opts.proxy) {
+                var url = new URI(opts.proxy).addSearch('mac', this.macAddress);
+            } else {
+                url = new URI(this.url);
+            }
+
+            url = url.segment('send').segmentCoded(id).normalize().href();
+
             return (await superagent
                 .post(url)
                 .set('Content-Type', typeof printData === 'string' ? 'text/plain' : 'application/octet-stream')
