@@ -42,7 +42,7 @@ define([
             const mol = await getMolBmp(data.molfile);
             const encoder = new TextEncoder();
             const part1 = encoder.encode(`! 0 90 193 1\nVARIABLE DARKNESS 500\nPITCH 200\nWIDTH 240\nGRAPHIC BMP 100 93\n`);
-            const part2 = encoder.encode('!+ 0 100 200 1\nEND');
+            const part2 = encoder.encode('!+ 0 100 200 1\nEND\n');
             const toSend = concatenate(Uint8Array, part1, mol, part2);
             return toSend;
         }
