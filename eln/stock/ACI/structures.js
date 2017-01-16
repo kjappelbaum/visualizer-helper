@@ -5,7 +5,7 @@ import RocUtil from 'vh/rest-on-couch/util';
 
 function Structure(roc) {
     return {
-        async getStructures(type) {
+        async refresh(type) {
             const options = {
                 key: 'structure',
                 varName: 'structures'
