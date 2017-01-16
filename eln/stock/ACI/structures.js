@@ -11,8 +11,8 @@ function Structure(roc) {
                 varName: 'structures'
             };
 
-            if(type) {
-                options.filter = function(entry) {
+            if (type) {
+                options.filter = function (entry) {
                     return entry.$id[1] === type;
                 };
             }
@@ -20,8 +20,12 @@ function Structure(roc) {
         },
 
         async create(molfile, type) {
-            molfile = String(molfile);
-            var ocl = OCL.Molecule.fromMolfile(molfile).getIDCodeAndCoordinates();
+            const ocl = getOcl(molfile);
+            return await this._createFromOcl(ocl, type);
+        },
+
+        async _createFromOcl(ocl, type, rocOptions) {
+            rocOptions = rocOptions || {};
             const newEntry = {
                 $id: [ocl.idCode, type],
                 $kind: 'structure',
@@ -31,15 +35,43 @@ function Structure(roc) {
                     coordinates: ocl.coordinates
                 }
             };
-            await roc.create(newEntry, {
+            await roc.create(newEntry, Object.assign({
                 messages: {
                     409: 'Conflict: this structure already exists'
                 }
-            });
-        }
+            }, rocOptions));
+            return newEntry;
+        },
 
+        async createOrGetId(molfile, type) {
+            const ocl = getOcl(molfile);
+            try {
+                const entry = await this._createFromOcl(ocl, type, {disableNotification: true});
+                return entry;
+            } catch (e) {
+                if (e.message === 'Conflict') {
+                    console.log('conflict');
+                    // try to get id
+                    const result = await roc.view('entryById', {
+                        key: [ocl.idCode, type]
+                    });
+                    if (result.length) {
+                        console.log(result);
+                        return result[0];
+                    } else {
+                        throw new Error('Unexpected error creating structure');
+                    }
+                }
+            }
+        }
 
     };
 }
+
+function getOcl(molfile) {
+    molfile = String(molfile);
+    var ocl = OCL.Molecule.fromMolfile(molfile).getIDCodeAndCoordinates();
+    return ocl;
+};
 
 module.exports = Structure;
