@@ -3,9 +3,17 @@
 define(['superagent', 'uri/URI'], function (superagent, URI) {
     class PrintServer {
         constructor(server, opts) {
-            this.opts = Object.assign({}, opts);
-            this.macAddress = String(server.macAddress);
-            this.url = new URI(String(server.url)).normalize().href();
+            opts = opts || {};
+            if(opts.proxy) {
+                console.log('has proxy')
+                this.url = new URI(this.opts.proxy).addSearch('mac', String(server.macAddress)).normalize().href();
+            } else {
+                console.log('no proxy', server);
+                debugger;
+                this.url = new URI(String(server.url)).normalize().href();
+            }
+
+            console.log(this.url);
         }
 
         getDeviceIds() {
@@ -14,13 +22,7 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
         }
 
         async print(id, printData) {
-            if(this.opts.proxy) {
-                var url = new URI(this.opts.proxy).addSearch('mac', this.macAddress);
-            } else {
-                url = new URI(this.url);
-            }
-
-            url = url.segment('send').segmentCoded(id).normalize().href();
+            const url = new URI(this.url).segment('send').segmentCoded(id).normalize().href();
 
             return (await superagent
                 .post(url)

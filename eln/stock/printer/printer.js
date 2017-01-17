@@ -35,7 +35,7 @@ define([
                     onlinePrinters = printers.filter(p => onlineServers.find(ps => ps.$content.macAddress === p.$content.macAddress));
 
                     await Promise.all(printServers.map(ps => {
-                        return exports.getConnectedPrinters(ps.$content.url).then(ids => {
+                        return exports.getConnectedPrinters(ps.$content).then(ids => {
                             ps.ids = ids;
                             ids.forEach(id => allIds.add(id));
                             ps.responds = true;
@@ -52,8 +52,8 @@ define([
                     API.createData('allIds', Array.from(allIds));
                 },
 
-                async getConnectedPrinters(url) {
-                    const server = new PrintServer(String(url));
+                async getConnectedPrinters(s) {
+                    const server = new PrintServer(s);
                     return await server.getDeviceIds();
                 },
 
