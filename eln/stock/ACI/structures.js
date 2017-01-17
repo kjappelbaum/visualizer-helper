@@ -26,12 +26,19 @@ function Structure(roc) {
 
         async _createFromOcl(ocl, type, rocOptions) {
             rocOptions = rocOptions || {};
+            var prefix = 'X';
+            if(type === 'internal') {
+                prefix = 'ACI';
+            } else if(type === 'commercial') {
+                prefix = 'S';
+            }
+
             const newEntry = {
                 $id: [ocl.idCode, type],
                 $kind: 'structure',
                 $owners: ['structureRW', 'structureR'],
                 $content: {
-                    structureId: await RocUtil.getNextId(roc, 'structureId', 'AC'),
+                    structureId: await RocUtil.getNextId(roc, 'structureId', prefix),
                     coordinates: ocl.coordinates
                 }
             };
@@ -43,20 +50,18 @@ function Structure(roc) {
             return newEntry;
         },
 
-        async createOrGetId(molfile, type) {
+        async createAndGetId(molfile, type) {
             const ocl = getOcl(molfile);
             try {
                 const entry = await this._createFromOcl(ocl, type, {disableNotification: true});
                 return entry;
             } catch (e) {
                 if (e.message === 'Conflict') {
-                    console.log('conflict');
                     // try to get id
                     const result = await roc.view('entryById', {
                         key: [ocl.idCode, type]
                     });
                     if (result.length) {
-                        console.log(result);
                         return result[0];
                     } else {
                         throw new Error('Unexpected error creating structure');
