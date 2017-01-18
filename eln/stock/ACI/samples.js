@@ -12,8 +12,8 @@ module.exports = function(roc) {
             if(!result.length) {
                 return 1;
             } else {
-                const batchNumbers = result.map(r => Number(r.$id[1])).filter(batch => !Number.isNaN(batch)).sort();
-                return ++batchNumbers[batchNumbers.length - 1];
+                const batchNumbers = result.map(r => Number(r.$id[1])).filter(batch => !Number.isNaN(batch)).sort(descending);
+                return ++batchNumbers[0];
             }
         },
 
@@ -28,9 +28,15 @@ module.exports = function(roc) {
             if(!result.length) {
                 return 1;
             } else {
-                const batchNumbers = result.map(r => Number(r.$id[2])).filter(batch => !Number.isNaN(batch)).sort();
-                return ++batchNumbers[batchNumbers.length - 1];
+                const batchNumbers = result.map(r => Number(r.$id[2])).filter(batch => !Number.isNaN(batch)).sort(descending);
+                return ++batchNumbers[0];
             }
         }
     }
 };
+
+function descending(a, b) {
+    if(a < b) return 1;
+    else if (b < a) return -1;
+    else return 0;
+}
