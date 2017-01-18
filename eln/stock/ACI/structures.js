@@ -1,7 +1,6 @@
 'use strict';
 
 import OCL from 'openchemlib/openchemlib-core';
-import RocUtil from 'vh/rest-on-couch/util';
 
 function Structure(roc) {
     return {
@@ -38,7 +37,7 @@ function Structure(roc) {
                 $kind: 'structure',
                 $owners: ['structureRW', 'structureR'],
                 $content: {
-                    structureId: await RocUtil.getNextId(roc, 'structureId', prefix),
+                    structureId: await getNextId(roc, 'structureId', prefix),
                     coordinates: ocl.coordinates
                 }
             };
@@ -78,5 +77,21 @@ function getOcl(molfile) {
     var ocl = OCL.Molecule.fromMolfile(molfile).getIDCodeAndCoordinates();
     return ocl;
 };
+
+async function getNextId(roc, viewName, type) {
+    const v = await roc.view(viewName, {
+        reduce: true
+    });
+
+    if (!v.length || !v[0].value || !v[0].value[type]) {
+        return type + '-1';
+    }
+
+    var id = v[0].value[type];
+    var current = Number(id);
+    var nextID = current + 1;
+    var nextIDStr = String(nextID);
+    return type + '-' + nextIDStr;
+}
 
 module.exports = Structure;

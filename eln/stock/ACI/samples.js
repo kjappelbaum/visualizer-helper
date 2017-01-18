@@ -1,8 +1,5 @@
 'use strict';
 
-import OCL from 'openchemlib/openchemlib-core';
-import RocUtil from 'vh/rest-on-couch/util';
-
 module.exports = function(roc) {
     return {
         async getNextCommercialBatch(structureId) {
