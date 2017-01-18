@@ -63,7 +63,6 @@ module.exports = {
         const printer = API.cache('printer');
         const printers = await printer.getPrinters();
         const formats = await printer.getFormats(null, type);
-        debugger;
         await ui.form(`
             <div>
                 <form>

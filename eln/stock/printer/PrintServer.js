@@ -9,7 +9,6 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
                 this.url = new URI(this.opts.proxy).addSearch('mac', String(server.macAddress)).normalize().href();
             } else {
                 console.log('no proxy', server);
-                debugger;
                 this.url = new URI(String(server.url)).normalize().href();
             }
 
