@@ -24,17 +24,22 @@ module.exports = {
         }
     },
 
+    async askPrintEntry(entry, type) {
+        const info = await module.exports.askFormat(type);
+        await module.exports.printEntry(entry, info);
+    },
+
     async printEntry(entry, info) {
         const printer = API.cache('printer');
         if(!printer) {
-            ui.showNotification('Printer not setup');
-            return;
+            throw new Error('Printer not setup');
         }
 
         if(typeof info === 'string') {
+            console.log(info);
             info = info.split(';');
-            if(!info[0]) {
-                info = await module.exports.askFormat('sample');
+            if(info.length < 2) {
+                throw new Error('Print entry: bad arguments');
             } else {
                 info = {
                     printer: info[0],
@@ -42,27 +47,19 @@ module.exports = {
                 }
             }
         } else if(typeof info !== 'object') {
-            ui.showNotification('Unexpected printer info');
-            return;
+            throw new Error('Print entry: bad arguments');
         }
 
         if(!info.printer || !info.format) {
-            ui.showNotification('Incomplete printer info');
-            return;
+            throw new Error('Print entry: bad arguments');
         }
 
-        try {
-            await printer.print(info.printer, info.format, entry);
-        } catch(err) {
-            console.log(err);
-            ui.showNotification(`Error printing: ${err.message}`, 'error');
-        }
+        await printer.print(info.printer, info.format, entry);
     },
     async askFormat (type) {
         var f = {};
-        const printer = API.cache('printer');
-        const printers = await printer.getPrinters();
-        const formats = await printer.getFormats(null, type);
+        const formats = API.getData(type + 'Formats').resurrect();
+        if(!formats) throw new Error('No printer formats available');
         await ui.form(`
             <div>
                 <form>
@@ -71,27 +68,18 @@ module.exports = {
                         <td>Printer</td>
                         <td>
                             <select name="printer">
-                                {% for el in printers %}
-                                    <option value="{{ el._id }}">{{ el['$content'].name }}</option>
+                                {% for format in formats %}
+                                    <option value="{{ format.printer._id }};{{ format.format._id }}">{{ format.printer["$content"].name }} - {{ format.format["$content"].name }}</option>
                                 {% endfor %}
-                            </select>    
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Format</td>
-                        <td>
-                            <select name="format">
-                                {% for el in formats %}
-                                    <option value="{{ el._id }}">{{ el['$content'].name }}</option>
-                                {% endfor %}
-                            </select>
+                             </select>
                         </td>
                     </tr>
                 </table>
                 <input type="submit"/>
                 </form>
             </div>
-    `, f, {twig: {formats, printers}});
+    `, f, {twig: {formats}});
+        return String(f.printer);
         return f;
     }
 };
