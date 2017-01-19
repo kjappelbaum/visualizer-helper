@@ -860,7 +860,8 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     v.data[prop] = dUrl;
                     Object.defineProperty(v, 'dUrl', {
                         value: dUrl,
-                        enumerable: false
+                        enumerable: false,
+                        writable: true
                     });
                 });
             }
