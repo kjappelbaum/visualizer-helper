@@ -5,7 +5,7 @@ define([
         './Printer',
         './printProcessors',
         './PrintServer',
-        'https://www.lactame.com/github/cheminfo-js/visualizer-helper/fbbf28649f34169eee925d920d3a5161676d5bb0/rest-on-couch/Roc.js'
+        '../../../rest-on-couch/Roc'
     ]
     , function (API, Printer, processors, PrintServer, Roc) {
         const SECOND = 1000;
