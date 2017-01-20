@@ -5,10 +5,8 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
         constructor(server, opts) {
             opts = opts || {};
             if(opts.proxy) {
-                console.log('has proxy')
-                this.url = new URI(this.opts.proxy).addSearch('mac', String(server.macAddress)).normalize().href();
+                this.url = new URI(opts.proxy).addSearch('mac', String(server.macAddress)).normalize().href();
             } else {
-                console.log('no proxy', server);
                 this.url = new URI(String(server.url)).normalize().href();
             }
 
