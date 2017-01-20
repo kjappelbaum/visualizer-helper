@@ -10,7 +10,7 @@ define([
     , function (API, Printer, processors, PrintServer, Roc) {
         const SECOND = 1000;
         const MINUTE = 60 * SECOND;
-        const LIMIT = 10 * MINUTE;
+        const LIMIT = 30 * MINUTE;
         return async function (opts) {
             var printerRoc, formatsRoc, printServerRoc, printers, printFormats, printServers, allIds;
             var onlineServers, onlinePrinters;
@@ -34,7 +34,7 @@ define([
                     onlineServers = printServers.filter(ps => Date.now() - ps.$modificationDate < LIMIT);
                     onlinePrinters = printers.filter(p => onlineServers.find(ps => ps.$content.macAddress === p.$content.macAddress));
 
-                    await Promise.all(printServers.map(ps => {
+                    await Promise.all(onlineServers.map(ps => {
                         return exports.getConnectedPrinters(ps.$content).then(ids => {
                             ps.ids = ids;
                             ids.forEach(id => allIds.add(id));
