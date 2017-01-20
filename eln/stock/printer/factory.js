@@ -15,7 +15,7 @@ module.exports = function(opts, cb) {
                     optsCopy.proxy = data.message.printer.proxy;
                     const options = Object.assign({}, data.message.printer.couchDB, optsCopy);
                     var p = await printer(options);
-                    cb(p, data.message.printer.couchDB);
+                    cb(p, data.message.printer);
                 }
             }
         });
