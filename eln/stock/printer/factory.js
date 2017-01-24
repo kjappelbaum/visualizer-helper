@@ -2,7 +2,7 @@
 
 import printer from './printer';
 
-module.exports = function(opts, cb) {
+export default function(opts, cb) {
     if(typeof opts === 'function') {
         cb = opts;
         opts = {};

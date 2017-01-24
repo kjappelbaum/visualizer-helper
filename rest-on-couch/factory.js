@@ -2,7 +2,7 @@
 
 import Roc from './Roc';
 
-module.exports = function(opts, cb) {
+export default function(opts, cb) {
     if(typeof opts === 'function') {
         cb = opts;
         opts = {};

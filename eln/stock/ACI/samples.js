@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(roc) {
+export default function(roc) {
     return {
         async getNextCommercialBatch(structureId) {
             structureId = String(structureId);

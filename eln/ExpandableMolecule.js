@@ -95,4 +95,4 @@ class ExpandableMolecule {
     }
 }
 
-module.exports = ExpandableMolecule;
+export default ExpandableMolecule;

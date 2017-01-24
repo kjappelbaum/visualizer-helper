@@ -328,4 +328,4 @@ class Nmr1dManager {
     }
 }
 
-module.exports = Nmr1dManager;
+export default Nmr1dManager;
