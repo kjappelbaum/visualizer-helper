@@ -6,7 +6,7 @@ import MF from './MF';
 import API from 'src/util/api';
 import UI from 'src/util/ui';
 import Debug from 'src/util/debug';
-import {createVar} from './jpaths';
+import {createVar, getData} from './jpaths';
 import {elnPlugin, Roc} from './libs';
 
 var defaultOptions = {
@@ -69,7 +69,7 @@ class Sample {
 
             this.expandableMolecule = new ExpandableMolecule(this.sample);
             this.nmr1dManager = new Nmr1dManager(this.sample);
-            this.nmr1dManager.initializeNMRAssignment(this.sample.getChildSync(['$content', 'spectra', 'nmr']));
+            this.nmr1dManager.initializeNMRAssignment();
             createVar(sampleVar, 'nmr');
 
 
@@ -90,17 +90,12 @@ class Sample {
                     // execute peak picking
                     var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
                     this.nmr1dManager.executePeakPicking(currentNmr);
-                    this.nmr1dManager.updateIntegrals();
-                    // we are changing NMR ...
-                    // if there is no assignment we should recalculate it
-
-                    // we should check that the integrals are correct
                 }
 
 
                 switch (event.jpath.join('.')) {
                     case '':
-                        this.nmr1dManager.initializeNMRAssignment(this.sample.getChildSync(['$content', 'spectra', 'nmr']));
+                        this.nmr1dManager.initializeNMRAssignment(getData(this.sample, 'nmr'));
                         createVar(sampleVar, 'nmr');
                         break;
                     case '$content.general.molfile':
@@ -109,7 +104,7 @@ class Sample {
                     case '$content.general.mf':
                         try {
                             this.mf.fromMF();
-                            this.nmr1dManager.updateIntegral();
+                            this.nmr1dManager.updateIntegral({mf: true});
                         } catch(e) {}
                         break;
                 }

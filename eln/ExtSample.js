@@ -49,11 +49,7 @@ class Sample {
                     // execute peak picking
                     var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
                     this.nmr1dManager.executePeakPicking(currentNmr);
-                    this.nmr1dManager.updateIntegrals();
-                    // we are changing NMR ...
-                    // if there is no assignment we should recalculate it
-
-                    // we should check that the integrals are correct
+                    // this.nmr1dManager.updateIntegrals();
                 }
 
 

@@ -80,8 +80,10 @@ class Nmr1dManager {
 
     executePeakPicking(nmr) {
         if (!nmr.range || !nmr.range.length) {
+            this.updateIntegral({mf: true});
             this._autoRanges(nmr);
         } else {
+            this.updateIntegral({range: nmr.range});
             this._updateAnnotations(nmr);
         }
     }
@@ -94,15 +96,16 @@ class Nmr1dManager {
         });
     }
 
-    updateIntegrals() {
+    updateIntegrals(integral) {
         var ppOptions = API.getData("nmr1hOptions");
         var currentRanges = API.getData("currentNmrRanges");
         if(!currentRanges) return;
 
+
         // We initialize ranges with the DataObject so that
         // the integral update is inplace
         var ranges = new Ranges(currentRanges);
-        ranges.updateIntegrals({sum: Number(ppOptions.integral)});
+        ranges.updateIntegrals({sum: Number(ppOptions.integral || integral)});
 
         // Trigger change of currentRanges would cause an infinite loop
         // So we just send an action for notifying modules
@@ -183,14 +186,32 @@ class Nmr1dManager {
         }))
     }
 
-    updateIntegral() {
-        var chemcalc = CCE.analyseMF(getData(this.sample, 'mf') + '');
-        if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
-            var nmr1hOptions = API.getData('nmr1hOptions');
-            if (nmr1hOptions) nmr1hOptions.integral = chemcalc.atoms.H;
+    updateIntegral(opts) {
+        opts = opts || {};
+        var integral;
+        if(opts.range) {
+            let sum = 0;
+            for(const range of opts.range) {
+                sum += range.integral;
+            }
+            integral = Math.round(sum);
+        } else {
+            const chemcalc = CCE.analyseMF(getData(this.sample, 'mf') + '');
+            if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
+                integral = chemcalc.atoms.H;
+            }
+        }
+
+        if(!Number.isNaN(integral)) {
+            const nmr1hOptions = API.getData('nmr1hOptions');
+            nmr1hOptions.integral = integral;
             nmr1hOptions.triggerChange();
             this.updateIntegrals();
+        } else {
+            console.log('not updating integrals, invalid total integral');
         }
+
+
     }
 
     updateHighlights(ranges) {
@@ -296,7 +317,11 @@ class Nmr1dManager {
         }));
         promise = promise.then((nmr1hOndeTemplates) => API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short));
         promise = promise.then(() => {
-            this.updateIntegral();
+            var nmr = API.getData('currentNmr');
+            if(nmr) {
+                this.updateIntegral({range: nmr.getChildSync(['range'])});
+            }
+
         });
         return promise;
     }
