@@ -244,8 +244,10 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                         data: data
                     };
                     if (options.track) {
-                        data.onChange(() => {
-                            idb.set(data._id, data.resurrect());
+                        data.onChange((event) => {
+                            if(event.jpath.length) {
+                                idb.set(data._id, data.resurrect());
+                            }
                         });
 
                         idb.get(data._id).then(localEntry => {
