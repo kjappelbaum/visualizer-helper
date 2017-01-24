@@ -109,6 +109,7 @@ class Nmr1dManager {
 
         // Trigger change of currentRanges would cause an infinite loop
         // So we just send an action for notifying modules
+        // TODO: fix that so that entry can be detected as changed and saved to idb when integrals are updated
         API.doAction('rerenderRanges');
     }
 
