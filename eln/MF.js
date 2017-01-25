@@ -92,4 +92,4 @@ class MF {
     }
 }
 
-export default MF;
+module.exports = MF;

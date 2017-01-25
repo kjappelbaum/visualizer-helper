@@ -1,6 +1,6 @@
 'use strict';
 
-export default {
+module.exports = {
     async getNextId(roc, viewName, type) {
             const v = await roc.view(viewName, {
                 reduce: true

@@ -94,4 +94,4 @@ async function getNextId(roc, viewName, type) {
     return type + '-' + nextIDStr;
 }
 
-export default Structure;
+module.exports = Structure;

@@ -134,4 +134,4 @@ class Sample {
     }
 }
 
-export default Sample;
+module.exports = Sample;

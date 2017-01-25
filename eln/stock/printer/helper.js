@@ -3,7 +3,7 @@
 import ui from 'src/util/ui';
 import API from 'src/util/api';
 
-export default {
+module.exports = {
     async setup (printer, types) {
         API.cache('printer', printer);
         let varFormats = types.map(() => []);
