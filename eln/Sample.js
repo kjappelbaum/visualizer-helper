@@ -7,7 +7,8 @@ import API from 'src/util/api';
 import UI from 'src/util/ui';
 import Debug from 'src/util/debug';
 import {createVar, getData} from './jpaths';
-import {elnPlugin, Roc} from './libs';
+import {elnPlugin} from './libs';
+import Roc from '../rest-on-couch/Roc';
 
 var defaultOptions = {
     varName: 'sample',
