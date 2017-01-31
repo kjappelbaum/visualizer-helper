@@ -45,11 +45,8 @@ class Nmr1dManager {
 
 
             case 'switchNMRLayer':
-                var layer = API.getActiveLayerName();
                 var goToLayer = action.value.dimension > 1 ? 'nmr2D' : 'Default layer';
-                if (layer !== goToLayer) {
-                    API.switchToLayer(goToLayer);
-                }
+                API.switchToLayer(goToLayer);
                 if (action.value.dimension > 1) {
                     API.createData('blackNMR2d', action.value.jcamp.data);
                 } else {
@@ -84,15 +81,16 @@ class Nmr1dManager {
             this._autoRanges(nmr);
         } else {
             this.updateIntegral({range: nmr.range});
-            this._updateAnnotations(nmr);
+            // this._updateAnnotations(nmr);
         }
     }
 
     _updateAnnotations(nmr) {
         // var ppOptions = API.getData('nmr1hOptions');
         this._getNMR(nmr).then(spectrum => {
+            console.log('update annotations');
             // spectrum.updateIntegrals(nmr.getChildSync(['range']), {nH: Number(ppOptions.integral)});
-            this._createNMRannotationsAndACS(spectrum, new Ranges(DataObject.resurrect(nmr.range)));
+            this._createNMRannotationsAndACS(spectrum, new Ranges(nmr.range.resurrect()));
         });
     }
 
@@ -111,6 +109,12 @@ class Nmr1dManager {
         // So we just send an action for notifying modules
         // TODO: fix that so that entry can be detected as changed and saved to idb when integrals are updated
         API.doAction('rerenderRanges');
+        const currentNmr = API.getData('currentNmr');
+        if(currentNmr) {
+            setImmediate(() => {
+                this._updateAnnotations(currentNmr);
+            });
+        }
     }
 
     _getNMR(nmr) {
@@ -137,9 +141,9 @@ class Nmr1dManager {
                 intFN = 1;
             }
             var ranges = nmr.getRanges({
-                nH: ppOptions.integral,
+                nH: Number(ppOptions.integral),
                 realTop: true,
-                thresholdFactor: ppOptions.noiseFactor,
+                thresholdFactor: Number(ppOptions.noiseFactor),
                 clean: ppOptions.clean,
                 compile: ppOptions.compile,
                 optimize: ppOptions.optimize,
