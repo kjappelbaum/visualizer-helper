@@ -83,6 +83,7 @@ export default class RequestManager {
         const groups = options.groups || [];
         const kind = options.kind || '';
         const data = options.data || {};
+        const disableNotification = options.disableNotification;
         // allow each lab analytical lab to edit the entry
         for (const group of groups) {
             await this.sampleRoc.addGroup(sample, group, disableNotification);
