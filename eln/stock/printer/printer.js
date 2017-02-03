@@ -2,7 +2,7 @@
 
 define([
         'src/util/api',
-        './Printer',
+        './PrinterInstance',
         './printProcessors',
         './PrintServer',
         '../../../rest-on-couch/Roc'
