@@ -81,6 +81,8 @@ export default class RequestManager {
     }
    async createCustomRequest(sample, options = {}) {
         const groups = options.groups || [];
+        if (typeof groups === 'string') groups=[groups];
+       
         const kind = options.kind || '';
         const data = options.data || {};
         const disableNotification = options.disableNotification;
