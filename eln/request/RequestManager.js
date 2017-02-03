@@ -79,7 +79,33 @@ export default class RequestManager {
         });
         await this.roc.update(request, muteSuccess);
     }
-
+   async createCustomRequest(sample, options = {}) {
+        const groups = options.groups || [];
+        const kind = options.kind || '';
+        const data = options.data || {};
+        // allow each lab analytical lab to edit the entry
+        for (const group of groups) {
+            await this.sampleRoc.addGroup(sample, group, disableNotification);
+        }
+        // we can only add one request
+        const requestObject = {
+            $content: {
+                productUuid: String(sample._id),
+                productId: sample.$id,
+                analysis: {
+                    kind,
+                    data
+                },
+                status: [{
+                    date: Date.now(),
+                    status: 10
+                }]
+            },
+            $owners: groups
+        };
+        await this.roc.create(requestObject, disableNotification);
+    }
+    
     async createRequests(sample, list) {
         const groups = Array.from(new Set(list.map(el => el.kind)));
         // allow each lab to edit the entry
