@@ -135,6 +135,10 @@ class Nmr1dManager {
     _autoRanges(currentNmr) {
         this._getNMR(currentNmr).then(nmr => {
             var ppOptions = API.getData("nmr1hOptions").resurrect();
+            var intFN = 0;
+            if (ppOptions.integralFn == "peaks") {
+                intFN = 1;
+            }
             var ranges = nmr.getRanges({
                 nH: Number(ppOptions.integral),
                 realTop: true,
@@ -142,7 +146,7 @@ class Nmr1dManager {
                 clean: ppOptions.clean,
                 compile: ppOptions.compile,
                 optimize: ppOptions.optimize,
-                integralFn: ppOptions.integralType,
+                integralFn: intFN,
                 idPrefix: nmr.getNucleus() + "",
                 gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0},
                 format: "new"
@@ -252,7 +256,7 @@ class Nmr1dManager {
                 "clean": true,
                 "compile": true,
                 "optimize": false,
-                "integralType": "sum",
+                "integralFn": "sum",
                 "integral": 30,
                 "type": "1H"
             })
