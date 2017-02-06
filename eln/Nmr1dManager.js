@@ -142,7 +142,7 @@ class Nmr1dManager {
                 clean: ppOptions.clean,
                 compile: ppOptions.compile,
                 optimize: ppOptions.optimize,
-                integralType: ppOptions.integralType,
+                integralFn: ppOptions.integralType,
                 idPrefix: nmr.getNucleus() + "",
                 gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0},
                 format: "new"
@@ -287,7 +287,7 @@ class Nmr1dManager {
                         "title": "Optimize the peaks to fit the spectrum",
                         "label": "optimize"
                     },
-                    "integralType": {
+                    "integralFn": {
                         "type": "string",
                         "title": "Type of integration",
                         "label": "Integral type",
