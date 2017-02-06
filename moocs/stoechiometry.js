@@ -61,7 +61,7 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
 
                 result = matrix.solve(e);
             } else {
-                console.log('cannot solve');
+                console.warn('cannot solve');
             }
         } else {
             var LU = ml.Matrix.Decompositions.LU(matrix);
@@ -75,7 +75,7 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
                 matrix.setRow(idx, trivialRow);
                 result = matrix.solve(e);
             } else {
-                console.log('cannot solve this case')
+                console.warn('cannot solve this case')
             }
         }
         if(!result) return;
@@ -97,7 +97,6 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
     };
 
     function findDiag0Pos(matrix) {
-        console.log(matrix)
         for (var i = 0; i < matrix.rows; i++) {
             if (matrix[i][i] === 0 || matrix[i][i] === -0) return i;
         }

@@ -17,10 +17,6 @@ define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (Nt) {
     };
 
     exports.matchDistribution = function (posSeq, negSeq, useNtSeq) {
-
-        console.log('number of species', posSeq.length + negSeq.length);
-
-
         var allSeq = posSeq.concat(negSeq);
         var primerSet = getPrimers(allSeq, 20);
         var result = new Array(primerSet.size);
@@ -41,8 +37,6 @@ define(['https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js'], function (Nt) {
             });
             fn = getMatchDistributionNtSeq;
         }
-
-        console.log('primer set length', primerSet.size);
 
         primerSet.forEach(function (primer) {
             var pos = fn(primer, posSeq);

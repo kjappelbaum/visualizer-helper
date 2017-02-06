@@ -36,7 +36,6 @@ module.exports = {
         }
 
         if(typeof info === 'string') {
-            console.log(info);
             info = info.split(';');
             if(info.length < 2) {
                 throw new Error('Print entry: bad arguments');

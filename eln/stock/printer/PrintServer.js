@@ -9,8 +9,6 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
             } else {
                 this.url = new URI(String(server.url)).normalize().href();
             }
-
-            console.log(this.url);
         }
 
         getDeviceIds() {

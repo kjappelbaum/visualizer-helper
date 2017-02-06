@@ -88,7 +88,6 @@ class Nmr1dManager {
     _updateAnnotations(nmr) {
         // var ppOptions = API.getData('nmr1hOptions');
         this._getNMR(nmr).then(spectrum => {
-            console.log('update annotations');
             // spectrum.updateIntegrals(nmr.getChildSync(['range']), {nH: Number(ppOptions.integral)});
             this._createNMRannotationsAndACS(spectrum, new Ranges(nmr.range.resurrect()));
         });
@@ -209,7 +208,7 @@ class Nmr1dManager {
             nmr1hOptions.triggerChange();
             this.updateIntegrals();
         } else {
-            console.log('not updating integrals, invalid total integral');
+            console.warn('not updating integrals, invalid total integral');
         }
 
 

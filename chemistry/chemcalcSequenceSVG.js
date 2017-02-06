@@ -254,7 +254,6 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
         function addScript(paper) {
             var script=`<![CDATA[
         function mouseOver(evt) {
-            console.log(evt);
             var targetRange=evt.target.id.replace(/^line/,'');
             var from=targetRange.replace(/-.*/,'')*1;
             var to=targetRange.replace(/.*-/,'')*1;
