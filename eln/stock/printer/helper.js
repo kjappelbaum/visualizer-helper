@@ -20,6 +20,10 @@ module.exports = {
 
 
         for(let j=0; j<types.length; j++) {
+            varFormats[j].unshift({
+                printer: 'none',
+                format: ''
+            });
             API.createData(types[j] + 'Formats', varFormats[j]);
         }
     },
@@ -52,6 +56,8 @@ module.exports = {
         if(!info.printer || !info.format) {
             throw new Error('Print entry: bad arguments');
         }
+
+        if(info.printer === 'none') return;
 
         await printer.print(info.printer, info.format, entry);
     },
