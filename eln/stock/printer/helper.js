@@ -20,10 +20,6 @@ module.exports = {
 
 
         for(let j=0; j<types.length; j++) {
-            varFormats[j].unshift({
-                printer: 'none',
-                format: ''
-            });
             API.createData(types[j] + 'Formats', varFormats[j]);
         }
     },
