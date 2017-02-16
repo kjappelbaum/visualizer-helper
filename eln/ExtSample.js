@@ -15,7 +15,8 @@ class Sample {
         const s = {
             $content: {
                 general: sample.$content.general,
-                identifier: sample.$content.identifier
+                identifier: sample.$content.identifier,
+                stock: sample.$content.stock
             }
         };
 
