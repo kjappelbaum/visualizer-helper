@@ -80,8 +80,7 @@ class Nmr1dManager {
             this.updateIntegral({mf: true});
             this._autoRanges(nmr);
         } else {
-            this.updateIntegral({range: nmr.range});
-            // this._updateAnnotations(nmr);
+            this.updateIntegralsFromSpectrum(nmr);
         }
     }
 
@@ -114,6 +113,19 @@ class Nmr1dManager {
                 this._updateAnnotations(currentNmr);
             });
         }
+    }
+
+    async updateIntegralsFromSpectrum(nmr) {
+        const spectrum = await this._getNMR(nmr);
+        const range = nmr.range;
+        var ppOptions = API.getData("nmr1hOptions");
+        spectrum.updateIntegrals(range, {
+            nH: Number(ppOptions.integral)
+        });
+        API.doAction('rerenderRanges');
+        setImmediate(() => {
+            this._updateAnnotations(nmr);
+        });
     }
 
     _getNMR(nmr) {
