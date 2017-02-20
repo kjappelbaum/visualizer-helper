@@ -46,6 +46,7 @@ class Sample {
                 var jpathStr = event.jpath.join('.');
 
 
+                // We have modified the nmr annotations
                 if (jpathStr.replace(/\.\d+\..*/, '') === '$content.spectra.nmr') {
                     // execute peak picking
                     var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));

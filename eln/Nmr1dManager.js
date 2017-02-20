@@ -66,7 +66,7 @@ class Nmr1dManager {
                 break;
             case 'nmrChanged':
                 if (action.value.dimension <= 1) {
-                    this.executePeakPicking(action.value);
+                    this.executePeakPicking(action.value, true);
                 }
                 break;
             default:
@@ -75,11 +75,14 @@ class Nmr1dManager {
         return true;
     }
 
-    executePeakPicking(nmr) {
+    executePeakPicking(nmr, updateIntegral) {
         if (!nmr.range || !nmr.range.length) {
             this.updateIntegral({mf: true});
             this._autoRanges(nmr);
         } else {
+            if(updateIntegral) {
+                this.updateIntegral({range: nmr.range});
+            }
             this.updateIntegralsFromSpectrum(nmr);
         }
     }
