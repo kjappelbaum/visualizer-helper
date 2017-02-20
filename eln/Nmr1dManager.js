@@ -264,13 +264,13 @@ class Nmr1dManager {
         }
         var promise = Promise.resolve();
         promise = promise.then(() => API.createData('nmr1hOptions', {
-                "noiseFactor": 0.8,
-                "clean": true,
-                "compile": true,
-                "optimize": false,
-                "integralFn": "sum",
-                "integral": 30,
-                "type": "1H"
+                noiseFactor: 0.8,
+                clean: true,
+                compile: true,
+                optimize: false,
+                integralFn: 'sum',
+                integral: 100,
+                type: '1H'
             })
         );
 
