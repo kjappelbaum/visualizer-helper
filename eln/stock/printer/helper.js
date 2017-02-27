@@ -8,8 +8,8 @@ module.exports = {
         API.cache('printer', printer);
         let varFormats = types.map(() => []);
         const printers = await printer.getPrinters();
-        for(let i=0; i<printers.length; i++) {
-            for(let j=0; j<types.length; j++) {
+        for (let i = 0; i < printers.length; i++) {
+            for (let j = 0; j < types.length; j++) {
                 const sFormats = (await printer.getFormats(printers[i], types[j])).map(f => ({
                     printer: printers[i],
                     format: f
@@ -19,27 +19,27 @@ module.exports = {
         }
 
 
-        for(let j=0; j<types.length; j++) {
+        for (let j = 0; j < types.length; j++) {
             API.createData(types[j] + 'Formats', varFormats[j]);
         }
     },
 
     async askPrintEntry(entry, type) {
         const info = await module.exports.askFormat(type);
-        if(info) {
+        if (info) {
             return await module.exports.printEntry(entry, info);
         }
     },
 
     async printEntry(entry, info) {
         const printer = API.cache('printer');
-        if(!printer) {
+        if (!printer) {
             throw new Error('Printer not setup');
         }
 
-        if(typeof info === 'string') {
+        if (typeof info === 'string') {
             info = info.split(';');
-            if(info.length < 2) {
+            if (info.length < 2) {
                 throw new Error('Print entry: bad arguments');
             } else {
                 info = {
@@ -47,22 +47,22 @@ module.exports = {
                     format: info[1]
                 }
             }
-        } else if(typeof info !== 'object') {
+        } else if (typeof info !== 'object') {
             throw new Error('Print entry: bad arguments');
         }
 
-        if(!info.printer || !info.format) {
+        if (!info.printer || !info.format) {
             throw new Error('Print entry: bad arguments');
         }
 
-        if(info.printer === 'none') return;
+        if (info.printer === 'none') return;
 
         await printer.print(info.printer, info.format, entry);
     },
     async askFormat (type) {
         var f = {};
         const formats = API.getData(type + 'Formats').resurrect();
-        if(!formats) throw new Error('No printer formats available');
+        if (!formats) throw new Error('No printer formats available');
         await ui.form(`
             <div>
                 <form>
@@ -82,7 +82,7 @@ module.exports = {
                 </form>
             </div>
     `, f, {twig: {formats}});
+        if(!f.printer) return f.printer;
         return String(f.printer);
-        return f;
     }
 };
