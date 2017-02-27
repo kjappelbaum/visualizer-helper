@@ -26,7 +26,9 @@ module.exports = {
 
     async askPrintEntry(entry, type) {
         const info = await module.exports.askFormat(type);
-        await module.exports.printEntry(entry, info);
+        if(info) {
+            return await module.exports.printEntry(entry, info);
+        }
     },
 
     async printEntry(entry, info) {
