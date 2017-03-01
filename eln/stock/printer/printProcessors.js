@@ -56,7 +56,8 @@ define([
         if(!options.height) options.height = options.width;
         const mol = OCL.Molecule.fromMolfile(molfile);
         const svgString = mol.toSVG(options.width, options.height, '', {
-            noImplicitAtomLabelColors: true
+            noImplicitAtomLabelColors: true,
+            suppressChiralText: true
         });
         const canvas = document.createElement('canvas');
         canvg(canvas, svgString);
