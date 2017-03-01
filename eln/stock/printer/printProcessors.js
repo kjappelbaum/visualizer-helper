@@ -28,7 +28,7 @@ define([
             if(data.molfile && printFormat.molfileOptions && printFormat.molfileOptions.width) {
                 const encoder = new TextEncoder();
                 text = text.replace(/END\s*$/, '');
-                text += `GRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat.molfileOptions.y || 0}\n`;
+                text += `VARIABLE DARKNESS ${printFormat.molfileOptions.darkness || 500}\nGRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat.molfileOptions.y || 0}\n`;
                 const mol = await getMolBmp(data.molfile, printFormat.molfileOptions);
                 const end = '\n!+ 0 100 200 1\nEND\n';
                 return Promise.resolve(concatenate(Uint8Array, encoder.encode(text), mol, encoder.encode(end)));
