@@ -80,7 +80,7 @@ export default class RequestManager {
         await this.roc.update(request, muteSuccess);
     }
    async createCustomRequest(sample, options = {}) {
-        const groups = options.groups || [];
+        let groups = options.groups || [];
         if (typeof groups === 'string') groups=[groups];
        
         const kind = options.kind || '';
@@ -106,6 +106,7 @@ export default class RequestManager {
             },
             $owners: groups
         };
+
         return this.roc.create(requestObject, disableNotification);
     }
     
