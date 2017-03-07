@@ -106,7 +106,7 @@ export default class RequestManager {
             },
             $owners: groups
         };
-        await this.roc.create(requestObject, disableNotification);
+        return await this.roc.create(requestObject, disableNotification);
     }
     
     async createRequests(sample, list) {
