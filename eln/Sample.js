@@ -227,9 +227,9 @@ class Sample {
                     this.unbindChange();
                     this.roc.discardLocal(this.sample).then(() => {
                         this.nmr1dManager.initializeNMRAssignment(API.getData('currentNmr'));
-                        this.expandableMolecule = new ExpandableMolecule(this.sample);
-                        this.mf = new MF(this.sample);
-                        this.mf.fromMF();
+                        // this.expandableMolecule = new ExpandableMolecule(this.sample);
+                        // this.mf = new MF(this.sample);
+                        // this.mf.fromMF();
                         this.bindChange();
                     });
                     IframeBridge.postMessage('tab.status', {
