@@ -25,11 +25,15 @@ class ExpandableMolecule {
         API.createData('editableMolfile', this.molfile).then(
             (editableMolfile) => {
                 this.editableMolfile=editableMolfile;
-                this.editableMolfile.onChange(this.onChange);
+                this.bindChange();
                 this.updateMolfiles();
                 this.setJSMEEdition(false);
             }
         );
+    }
+
+    bindChange() {
+        this.editableMolfile.onChange(this.onChange);
     }
 
     unbindChange() {
