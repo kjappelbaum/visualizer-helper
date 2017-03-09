@@ -19,7 +19,7 @@ function Structure(roc) {
         },
 
         async create(molfile, type) {
-            const ocl = getOcl(molfile);
+            const ocl = getOcl(molfile, true);
             return await this._createFromOcl(ocl, type);
         },
 
@@ -50,7 +50,7 @@ function Structure(roc) {
         },
 
         async createAndGetId(molfile, type) {
-            const ocl = getOcl(molfile);
+            const ocl = getOcl(molfile, true);
             try {
                 const entry = await this._createFromOcl(ocl, type, {disableNotification: true});
                 return entry;
@@ -72,11 +72,14 @@ function Structure(roc) {
     };
 }
 
-function getOcl(molfile) {
+function getOcl(molfile, throwIfEmpty) {
     molfile = String(molfile);
-    var ocl = OCL.Molecule.fromMolfile(molfile).getIDCodeAndCoordinates();
-    return ocl;
-};
+    var ocl = OCL.Molecule.fromMolfile(molfile);
+    if(throwIfEmpty && !ocl.getAtoms()) {
+        throw new Error('Empty molfile');
+    }
+    return ocl.getIDCodeAndCoordinates();
+}
 
 async function getNextId(roc, viewName, type) {
     const v = await roc.view(viewName, {
