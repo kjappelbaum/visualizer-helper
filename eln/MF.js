@@ -19,7 +19,8 @@ class MF {
             this.previousEMMolfile = chemcalc.em;
             this.setMF(chemcalc.mf);
         } else {
-            this.setMF('');
+            // why should we suppress the molecular formula if it changed ???
+            // this.setMF('');
         }
         API.createData('mfBGColor', 'white');
     }

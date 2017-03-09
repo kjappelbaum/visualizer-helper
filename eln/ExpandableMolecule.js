@@ -8,25 +8,34 @@ class ExpandableMolecule {
         this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
         this.expandedHydrogens = false;
         this.jsmeEditionMode = false;
+        
+        this.onChange=(event) => {
+            // us this really a modification ? or a loop event ...
+            // need to compare former oclID with new oclID
+            var newMolecule = OCLE.Molecule.fromMolfile(event.target + '');
+            var idCode = newMolecule.getIDCode();
+            if (idCode != this.idCode) {
+                this.idCode = idCode;
+                this.molfile = event.target + '';
+                this.sample.setChildSync(['$content','general','molfile'], this.molfile);
+            }
+        };
+        
+        
         API.createData('editableMolfile', this.molfile).then(
             (editableMolfile) => {
-                editableMolfile.onChange((event) => {
-                    // us this really a modification ? or a loop event ...
-                    // need to compare former oclID with new oclID
-                    var newMolecule = OCLE.Molecule.fromMolfile(event.target + '');
-                    var idCode = newMolecule.getIDCode();
-                    if (idCode != this.idCode) {
-                        this.idCode = idCode;
-                        this.molfile = event.target + '';
-                        this.sample.setChildSync(['$content','general','molfile'], this.molfile);
-                    }
-                });
+                this.editableMolfile=editableMolfile;
+                this.editableMolfile.onChange(this.onChange);
                 this.updateMolfiles();
                 this.setJSMEEdition(false);
             }
         );
     }
 
+    unbindChange() {
+        this.editableMolfile.unbindChange(this.onChange);
+    }
+    
     setJSMEEdition(value, noDepictUpdate) {
         this.jsmeEditionMode = value;
 
