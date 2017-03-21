@@ -7,7 +7,7 @@ define([
     'https://www.lactame.com/lib/image-js/0.9.1/image.js',
     'src/util/typerenderer',
     'jquery',
-    'openchemlib/openchemlib-core'
+    'https://www.lactame.com/lib/openchemlib-extended/2.2.0/openchemlib-extended.js'
 ], function (API, twig, canvg, IJS, typerenderer, $, OCL) {
     let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -57,7 +57,9 @@ define([
         const mol = OCL.Molecule.fromMolfile(molfile);
         const svgString = mol.toSVG(options.width, options.height, '', {
             noImplicitAtomLabelColors: true,
-            suppressChiralText: true
+            suppressChiralText: true,
+            bold: true,
+            strokeWidth: 2
         });
         const canvas = document.createElement('canvas');
         canvg(canvas, svgString);
