@@ -38,7 +38,7 @@ class Sample {
             API.setVariable('description', sampleVar, ['$content', 'general', 'description']);
             API.setVariable('iupac', sampleVar, ['$content', 'general', 'iupac']);
 
-            this.expandableMolecule = new ExpandableMolecule(this.sample);
+            this.expandableMolecule = new ExpandableMolecule(this.sample, options);
             this.mf = new MF(this.sample);
             this.mf.fromMF();
 

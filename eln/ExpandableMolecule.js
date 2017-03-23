@@ -1,8 +1,15 @@
 import API from 'src/util/api';
 import {OCLE} from './libs';
 
+const noop = () => {};
+
+const defaultOptions = {
+    onMolfileChanged: noop
+};
+
 class ExpandableMolecule {
-    constructor(sample) {
+    constructor(sample, options) {
+        this.options = Object.assign({}, defaultOptions, options);
         this.sample = sample;
         this.molfile = String(this.sample.getChildSync(['$content', 'general', 'molfile']) || '');
         this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
@@ -19,6 +26,7 @@ class ExpandableMolecule {
                 this.molfile = event.target + '';
                 this.sample.setChildSync(['$content','general','molfile'], this.molfile);
             }
+            this.options.onMolfileChanged(this);
         };
         
         
