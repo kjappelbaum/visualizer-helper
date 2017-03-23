@@ -183,7 +183,7 @@ class Nmr1dManager {
                 clean: ppOptions.clean,
                 compile: ppOptions.compile,
                 optimize: ppOptions.optimize,
-                integralType: ppOptions.integralType,
+                integralType: ppOptions.integralFn,
                 idPrefix: nmr.getNucleus() + "",
                 gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0.004},
                 format: "new"
