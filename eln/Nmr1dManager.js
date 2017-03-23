@@ -147,7 +147,7 @@ class Nmr1dManager {
         });
     }
 
-    _autoRanges(currentNmr) {
+    /*_autoRanges(currentNmr) {
         this._getNMR(currentNmr).then(nmr => {
             var ppOptions = API.getData("nmr1hOptions").resurrect();
             var intFN = 0;
@@ -164,6 +164,28 @@ class Nmr1dManager {
                 integralFn: intFN,
                 idPrefix: nmr.getNucleus() + "",
                 gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0},
+                format: "new"
+            });
+            currentNmr.setChildSync(['range'], ranges);
+            this._createNMRannotationsAndACS(nmr, ranges);
+            //Is this possible. I need to add the highligth on the ranges
+            //nmr.setChildSync(['range'], peakPicking);
+        });
+    }*/
+    
+    _autoRanges(currentNmr) {
+        this._getNMR(currentNmr).then(nmr => {
+            var ppOptions = API.getData("nmr1hOptions").resurrect();
+            var ranges = nmr.getRanges({
+                nH: Number(ppOptions.integral),
+                realTop: true,
+                thresholdFactor: Number(ppOptions.noiseFactor),
+                clean: ppOptions.clean,
+                compile: ppOptions.compile,
+                optimize: ppOptions.optimize,
+                integralType: ppOptions.integralType,
+                idPrefix: nmr.getNucleus() + "",
+                gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0.004},
                 format: "new"
             });
             currentNmr.setChildSync(['range'], ranges);
