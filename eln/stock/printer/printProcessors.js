@@ -20,11 +20,11 @@ define([
         twig: async function (printFormat, data) {
             if (!printFormat.twig) throw new Error('twig processor expect twig property in format');
             var template = twig.twig({
-                data: printFormat.twig
+                data: DataObject.resurrect(printFormat.twig)
             });
 
             //Render molfile if exists
-            var text = template.render(data);
+            var text = template.render(DataObject.resurrect(data));
             if(data.molfile && printFormat.molfileOptions && printFormat.molfileOptions.width) {
                 const encoder = new TextEncoder();
                 text = text.replace(/END\s*$/, '');
