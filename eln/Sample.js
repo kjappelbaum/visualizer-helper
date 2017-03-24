@@ -68,7 +68,7 @@ class Sample {
 
             this.updateAttachments(sample);
 
-            this.expandableMolecule = new ExpandableMolecule(this.sample);
+            this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
             this.nmr1dManager = new Nmr1dManager(this.sample);
             this.nmr1dManager.initializeNMRAssignment();
             createVar(sampleVar, 'nmr');
@@ -229,7 +229,7 @@ class Sample {
                     this.roc.discardLocal(this.sample).then(() => {
                         this.nmr1dManager.initializeNMRAssignment(API.getData('currentNmr'));
                         this.expandableMolecule.unbindChange();
-                        this.expandableMolecule = new ExpandableMolecule(this.sample);
+                        this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
                         this.mf = new MF(this.sample);
                         this.mf.fromMF();
                         this.bindChange();
