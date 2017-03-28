@@ -6,7 +6,7 @@
  * 
  *  <script>
  *   require(['src/util/api'], function(API) {
- *       AdvancedForm('extendedForm', 'data', API, {debug:true});
+ *       AdvancedForm('extendedForm', 'data', {debug:true});
  *   });
  *   </script>
  *   And the template will be like:
@@ -45,32 +45,32 @@
  *       </tr>
  *   </table>
  */
+ define(['src/util/api'], function (API) {
  
- 
-function AdvancedForm(divID, variableName, API, options={}) {
-    var data = API.getData(variableName);
-    // we will initialise the form
-    var dom=$(document.getElementById(divID));
-    // Add the buttons ADD / REMOVE
-    dom.find('[data-repeat]').prepend(`
-        <td class='addRow'></td>
-        <td class='removeRow'></td>
-    `);
-    
-    // Add the style
-    dom.parent().prepend(
-        `<style>
-            #${divID} .addRow:before {content: "+"; cursor: pointer;}
-            #${divID} .removeRow:before {content: "-"; cursor: pointer;}
-            #${divID} :focus {box-shadow: 0 0 2px 2px rgba(81, 203, 238, 1);}
-            #${divID} td, #extendedForm th {vertical-align: top;}
-        </style>`
-    );
-    
-    // need to replicate rows
-    var counter=0;
-    do {
-        var elements=dom.find('[data-repeat]:not([data-index])');
+    function AdvancedForm(divID, variableName, options={}) {
+        var data = API.getData(variableName);
+        // we will initialise the form
+        var dom=$(document.getElementById(divID));
+        // Add the buttons ADD / REMOVE
+        dom.find('[data-repeat]').prepend(`
+            <td class='addRow'></td>
+            <td class='removeRow'></td>
+        `);
+
+        // Add the style
+        dom.parent().prepend(
+            `<style>
+                #${divID} .addRow:before {content: "+"; cursor: pointer;}
+                #${divID} .removeRow:before {content: "-"; cursor: pointer;}
+                #${divID} :focus {box-shadow: 0 0 2px 2px rgba(81, 203, 238, 1);}
+                #${divID} td, #extendedForm th {vertical-align: top;}
+            </style>`
+        );
+
+        // need to replicate rows
+        var counter=0;
+        do {
+            var elements=dom.find('[data-repeat]:not([data-index])');
         console.log(elements.length);
         elements.each(function(index, row) {
             row=$(row);
@@ -259,4 +259,4 @@ function AdvancedForm(divID, variableName, API, options={}) {
     })
 }
 
-module.exports=AdvancedForm;
+ });
