@@ -255,8 +255,8 @@
                 }
                 rename(table);
                 break;
-        }
-    })
-}
-return AdvancedForm;
+            }
+        })
+    }
+    return AdvancedForm;
  });
