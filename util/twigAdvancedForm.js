@@ -258,5 +258,5 @@
         }
     })
 }
-
+return AdvancedForm;
  });
