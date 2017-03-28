@@ -234,7 +234,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
 
             async document(uuid, options) {
                 options = options || {};
-                const doc = await this.get(uuid);
+                const doc = await this.get(uuid, options);
                 if (!doc) return;
                 if (options.varName) {
                     this.typeUrl(doc.$content, doc);
@@ -274,6 +274,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     if (!options.fallback) return e;
                 }
                 return superagent.get(`${this.entryUrl}/${uuid}`)
+                    .query(options.query)
                     .withCredentials()
                     .then(res => {
                         if (res.body && res.status == 200) {
