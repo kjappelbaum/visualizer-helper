@@ -101,8 +101,12 @@ const defaultOptions = {
     ribbon: () => '',
     isLink: () => true,
     isActive: () => true,
-    backgroundColor: () => 'white',
-    color: () => 'black'
+    backgroundColor: tile => tile.backgroundColor,
+    color: tile => tile.color,
+    header: tile => tile.header,
+    footer: tile => tile.footer,
+    title: tile => tile.title,
+    icon: tile => tile.icon
 };
 
 module.exports = function(div, options) {
@@ -126,8 +130,9 @@ module.exports = function(div, options) {
             $el = $(event.target).parents('.cell').first();
         }
         let idx = $el.attr('data-idx');
-        if(tiles[idx]) {
-            options.onTileClick(event, tiles[idx], $el);
+        const tile = tiles[idx];
+        if(tile && options.isActive(tile)) {
+            options.onTileClick(event, tile, $el);
         }
     });
 
@@ -141,15 +146,20 @@ module.exports = function(div, options) {
         if (!shouldRenderTile(tile)) return '';
         const ribbon = options.ribbon(tile);
         const active = options.isActive(tile);
-        tile.iconType = /^(\w+)-/.exec(tile.icon);
-        if (tile.iconType) tile.iconType = tile.iconType[1];
+        const header = options.header(tile);
+        const footer = options.footer(tile);
+        const title = options.title(tile);
+        const icon = options.icon(tile);
+
+        let iconType = /^(\w+)-/.exec(tile.icon);
+        if (iconType) iconType = iconType[1];
         const $el = $(`
                 <div class="cell">
                     <div class='content'>
-                        <div class='header'>${tile.header || ''}</div>
-                        ${tile.icon ? `<div class="${tile.iconType} ${tile.icon}"><div class="bottomRight">${tile.title || ''}</div></div>` : `<div class="center">${tile.title || ''}</div>`}
+                        <div class='header'>${header || ''}</div>
+                        ${icon ? `<div class="${iconType} ${icon}"><div class="bottomRight">${title || ''}</div></div>` : `<div class="center">${title || ''}</div>`}
                     </div>
-                    <div class="reference">${tile.footer || ''}</div>
+                    <div class="reference">${footer || ''}</div>
                     ${active ? '' : '<div class="hide"></div>'}
                     ${ribbon ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>` : ''}
                 </div>
