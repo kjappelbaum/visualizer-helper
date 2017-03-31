@@ -91,7 +91,7 @@ const styles = `
     background-color: rgba(0,0,255,0.9);
 }
 </style>
-`
+`;
 
 const defaultOptions = {
     tiles: [],
@@ -151,7 +151,7 @@ module.exports = function(div, options) {
         const title = options.title(tile);
         const icon = options.icon(tile);
 
-        let iconType = /^(\w+)-/.exec(tile.icon);
+        let iconType = /(fa|ci-icon)-/.exec(tile.icon);
         if (iconType) iconType = iconType[1];
         const $el = $(`
                 <div class="cell">
