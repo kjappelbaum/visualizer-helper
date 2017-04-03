@@ -22,6 +22,7 @@ class Sample {
 
         this.sample = JSON.parse(JSON.stringify(s));
         this.options = Object.assign({}, defaultOptions, options);
+        Object.assign(this.sample, this.options.sample);
 
         API.createData(this.options.varName, this.sample).then(sample => {
             this.sample = sample;
