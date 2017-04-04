@@ -121,7 +121,7 @@
         }
 
 
-        // get the japth from one element based on the attributes 'data-repeat' and 'data-index'
+        // get the jpath from one element based on the attributes 'data-repeat' and 'data-index'
         // the jpath is returned as an array
         function getJpath(element) {
             var jpath=[];
@@ -130,6 +130,7 @@
                     jpath.unshift($(element).attr('data-index'));
                 }
                 var repeatName=$(element).attr('data-repeat');
+                console.log('repeatName', repeatName)
                 if (repeatName) jpath.unshift(repeatName);
                 element=$(element).parent().closest('[data-repeat]');
             }
