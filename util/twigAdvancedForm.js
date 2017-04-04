@@ -239,7 +239,7 @@
                     if(table.children('tr:has(td)').length>1) {
                         tr.remove();
                     } else {
-                        tr.find(':text').val('');
+                        tr.find('select, input, textarea').val('');
                         tr.find('tr:not(:first-child)').remove();
                         var fields=tr.find('[name]');
                         fields.each( (index,element) => {
