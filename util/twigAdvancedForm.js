@@ -129,7 +129,8 @@
                 if ($(element).attr('data-index')) {
                     jpath.unshift($(element).attr('data-index'));
                 }
-                jpath.unshift($(element).attr('data-repeat'));
+                var repeatName=$(element).attr('data-repeat');
+                if (repeatName) jpath.unshift(repeatName);
                 element=$(element).parent().closest('[data-repeat]');
             }
             return jpath;
