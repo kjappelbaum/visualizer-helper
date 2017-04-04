@@ -62,6 +62,10 @@
         var variableName=ips[0].name;
 
         var data = API.getData(variableName);
+        if (! data) {
+            console.log('The variable',variableName,'does not exist yet');
+            return;
+        }
         // we will initialise the form
         var dom=$(document.getElementById(divID));
         // Add the buttons ADD / REMOVE
