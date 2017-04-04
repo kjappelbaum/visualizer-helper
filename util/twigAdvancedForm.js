@@ -48,20 +48,12 @@
 
 
 
-console.log(div);
-require('modules/modulefactory').getModules();
-var module = modules.find(m => m.getId() == moduleId);
-module.vars_in();
-
-
-
-
  define(['src/util/api','modules/modulefactory'], function (API, Module) {
  
     function AdvancedForm(divID, options={}) {
 
         // we will find automatically the variableName
-        var div=$('#'+divID).closest('[data-module-id]').attr('data-module-id')[0];
+        var moduleId=$('#'+divID).closest('[data-module-id]').attr('data-module-id')[0];
         var module = Module.getModules().find(m => m.getId() == moduleId);
         console.log(module.vars_in());
         var variableName='XXX';
