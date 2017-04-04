@@ -117,7 +117,7 @@
         } while (elements.length>0)
     
         // we force the incorporation of the data in the form
-        data.triggerChange();
+        if (data) data.triggerChange();
 
         // rename the attributes 'name' or 'name-empty' of one specific row based on the jpath
         function renameRow(row, jpath, rowIndex, empty) {
