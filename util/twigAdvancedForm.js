@@ -64,7 +64,6 @@
         var data = API.getData(variableName);
         if (! data) {
             console.log('The variable',variableName,'does not exist yet');
-            return;
         }
         // we will initialise the form
         var dom=$(document.getElementById(divID));
@@ -91,7 +90,7 @@
             elements.each(function(index, row) {
                 row=$(row);
                 var jpath=getJpath(row);
-                var variable=data.getChildSync(jpath);
+                var variable=(data) ? data.getChildSync(jpath) : '';
                 var table=row.closest('table');
                 var length=0;
                 var empty=false;
