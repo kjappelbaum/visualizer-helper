@@ -109,7 +109,8 @@
             row.children('td:not(:has(table))').find('[data-field]').each(function(index, element) {
                 element=$(element);
                 var name=jpath.join('.');
-                name+='.'+rowIndex;
+                if (name) name+='.';
+                name+=rowIndex;
                 var attr=element.attr('data-field');
                 if (attr) name+='.'+attr;
                 if (empty) {
@@ -130,7 +131,6 @@
                     jpath.unshift($(element).attr('data-index'));
                 }
                 var repeatName=$(element).attr('data-repeat');
-                console.log('repeatName', repeatName)
                 if (repeatName) jpath.unshift(repeatName);
                 element=$(element).parent().closest('[data-repeat]');
             }
