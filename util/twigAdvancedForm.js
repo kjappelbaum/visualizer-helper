@@ -214,7 +214,7 @@
                         return;
                     }
                     var clone = tr.clone();
-                    clone.find(':text').val('');
+                    clone.find('select, input, textarea').val('');
                     clone.find('tr:not(:first-child)').remove();
                     var fields=clone.find('[name]');
                     // rename attribute 'name' to 'name-empty'
