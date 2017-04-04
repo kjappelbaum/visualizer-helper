@@ -55,7 +55,7 @@
         // we will find automatically the variableName
         var moduleId=$('#'+divID).closest('[data-module-id]').attr('data-module-id')[0];
         var module = Module.getModules().find(m => m.getId() == moduleId);
-        var ins=module.vars_in().filter( v => v.rel==='form');
+        var ips=module.vars_in().filter( v => v.rel==='form');
         if (ips.length===0) {
             new Error('The twig module does not have variable in of type "form"');
         }
