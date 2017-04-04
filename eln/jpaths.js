@@ -16,6 +16,7 @@ jpaths.mw = ['$content', 'general', 'mw'];
 jpaths.em = ['$content', 'general', 'em'];
 jpaths.description = ['$content', 'general', 'description'];
 jpaths.name = ['$content', 'general', 'name'];
+jpaths.physical = ['$content', 'physical'];
 jpaths.bp = ['$content', 'physical', 'bp'];
 jpaths.nd = ['$content', 'physical', 'nd'];
 jpaths.mp = ['$content', 'physical', 'mp'];
