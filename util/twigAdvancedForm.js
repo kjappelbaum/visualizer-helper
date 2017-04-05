@@ -60,7 +60,7 @@
             new Error('The twig module does not have variable in of type "form"');
         }
         var variableName=ips[0].name;
-
+        var lastTarget=''; // allows to prevent cyclic change. We want ot be sure the last change is from the module
 
 
         var variable = API.getVar(variableName);
@@ -69,7 +69,12 @@
                 getId() {return moduleId+'form'}
             },
             function() {
-                console.log(arguments, 'listen')
+                if (lastTarget) {
+                        console.log('Variable change',evt.jpsth);
+                        console.log('Last target',lastTarget);
+                    }
+                    lastTarget='';
+                });
             }
         );
 
@@ -85,8 +90,7 @@
             <td class='removeRow'></td>
         `);
 
-        var lastTarget='';
-        listenToVariableChange();
+
 
         // Add the style
         dom.parent().prepend(
@@ -153,17 +157,6 @@
         }
 
 
-        function listenToVariableChange() {
-            var mainData = Versioning.getData();
-            mainData.onChange(function (evt) {
-                console.log('-----',lastTarget, variableName, evt.jpath);
-                if (evt.jpath.length == 1 && evt.jpath[0] === variableName) {
-                    console.log('Variable change',evt.jpsth);
-                    console.log('Last target',lastTarget);
-                }
-                lastTarget='';
-            });
-        }
 
         // get the jpath from one element based on the attributes 'data-repeat' and 'data-index'
         // the jpath is returned as an array
