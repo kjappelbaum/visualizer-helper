@@ -48,7 +48,7 @@
 
 
 
- define(['src/util/api','modules/modulefactory'], function (API, Module) {
+ define(['src/util/api','modules/modulefactory','src/util/versioning'], function (API, Module, Versioning) {
  
     function AdvancedForm(divID, options={}) {
 
@@ -72,6 +72,9 @@
             <td class='addRow'></td>
             <td class='removeRow'></td>
         `);
+
+        var lastTarget='';
+        listenToVariableChange();
 
         // Add the style
         dom.parent().prepend(
@@ -137,6 +140,17 @@
             })
         }
 
+
+        function listenToVariableChange() {
+            var mainData = Versioning.getData();
+            mainData.onChange(function (evt) {
+                if (evt.jpath.length == 1 && evt.jpath[0] === variableName) {
+                    console.log('Variable change',evt.jpsth);
+                    console.log('Last target',lastTarget);
+                }
+            });
+            lastTarget='';
+        }
 
         // get the jpath from one element based on the attributes 'data-repeat' and 'data-index'
         // the jpath is returned as an array
@@ -216,6 +230,7 @@
                     $(element).removeAttr('name-empty');
                 });
             }
+            lastTarget=$(element).attr('name');
         });
     
         document.getElementById(divID).addEventListener('click', function(event) {
