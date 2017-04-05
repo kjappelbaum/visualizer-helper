@@ -61,6 +61,18 @@
         }
         var variableName=ips[0].name;
 
+
+
+        var variable = API.getVar(variableName);
+        variable.listen(
+            {
+                getId() {return moduleId+'form'}
+            },
+            function() {
+                console.log(arguments, 'listen')
+            }
+        );
+
         var data = API.getData(variableName);
         if (! data) {
             console.log('The variable',variableName,'does not exist yet');
