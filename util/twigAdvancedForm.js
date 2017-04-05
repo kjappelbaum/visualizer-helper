@@ -72,11 +72,11 @@
                 if (lastTarget) {
                         console.log('Variable change',evt.jpsth);
                         console.log('Last target',lastTarget);
-                    }
-                    lastTarget='';
-                });
+                }
+                lastTarget='';
             }
         );
+
 
         var data = API.getData(variableName);
         if (! data) {
