@@ -144,13 +144,13 @@
         function listenToVariableChange() {
             var mainData = Versioning.getData();
             mainData.onChange(function (evt) {
-                console.log(lastTarget, variableName, event);
+                console.log('-----',lastTarget, variableName, evt);
                 if (evt.jpath.length == 1 && evt.jpath[0] === variableName) {
                     console.log('Variable change',evt.jpsth);
                     console.log('Last target',lastTarget);
                 }
+                lastTarget='';
             });
-            lastTarget='';
         }
 
         // get the jpath from one element based on the attributes 'data-repeat' and 'data-index'
