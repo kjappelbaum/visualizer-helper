@@ -231,7 +231,7 @@
                     $(element).removeAttr('name-empty');
                 });
             }
-            lastTarget=$(element).attr('name');
+            lastTarget=$(event.target).attr('name');
         });
     
         document.getElementById(divID).addEventListener('click', function(event) {
