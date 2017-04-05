@@ -144,6 +144,7 @@
         function listenToVariableChange() {
             var mainData = Versioning.getData();
             mainData.onChange(function (evt) {
+                console.log(lastTarget, variableName, event);
                 if (evt.jpath.length == 1 && evt.jpath[0] === variableName) {
                     console.log('Variable change',evt.jpsth);
                     console.log('Last target',lastTarget);
