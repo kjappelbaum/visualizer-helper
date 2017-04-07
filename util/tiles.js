@@ -96,7 +96,6 @@ const styles = `
 const defaultOptions = {
     tiles: [],
     onTileClick: noop,
-    onTileShiftClick: noop,
     shouldRender: () => true,
     ribbon: () => '',
     isLink: () => true,
@@ -151,7 +150,7 @@ module.exports = function(div, options) {
         const title = options.title(tile);
         const icon = options.icon(tile);
 
-        let iconType = /(fa|ci-icon)-/.exec(tile.icon);
+        let iconType = /(fa|ci-icon)-/.exec(icon);
         if (iconType) iconType = iconType[1];
         const $el = $(`
                 <div class="cell">
