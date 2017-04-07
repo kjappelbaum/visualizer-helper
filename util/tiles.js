@@ -1,7 +1,8 @@
 'use strict';
 import $ from 'jquery';
 
-function noop() {}
+function noop() {
+}
 
 const styles = `
 <style>
@@ -96,10 +97,10 @@ const styles = `
 const defaultOptions = {
     tiles: [],
     onTileClick: noop,
-    shouldRender: () => true,
     ribbon: () => '',
     isLink: () => true,
     isActive: () => true,
+    shouldRender: () => true,
     backgroundColor: tile => tile.backgroundColor,
     color: tile => tile.color,
     header: tile => tile.header,
@@ -108,7 +109,7 @@ const defaultOptions = {
     icon: tile => tile.icon
 };
 
-module.exports = function(div, options) {
+module.exports = function (div, options) {
     let lineCount = 0;
     options = Object.assign({}, defaultOptions, options);
     const {tiles} = options;
@@ -123,14 +124,14 @@ module.exports = function(div, options) {
 
     $main.on('click', function (event) {
         let $el;
-        if($(event.target).hasClass('cell')) {
+        if ($(event.target).hasClass('cell')) {
             $el = $(event.target);
         } else {
             $el = $(event.target).parents('.cell').first();
         }
         let idx = $el.attr('data-idx');
         const tile = tiles[idx];
-        if(tile && options.isActive(tile)) {
+        if (tile && options.isActive(tile)) {
             options.onTileClick(event, tile, $el);
         }
     });
@@ -138,11 +139,11 @@ module.exports = function(div, options) {
 
     function getTile(tile, idx) {
         tile.line = lineCount;
-        if(Object.keys(tile).length === 1) {
+        if (Object.keys(tile).length === 1) {
             lineCount++;
             return '<div style="width: 100%"></div>';
         }
-        if (!shouldRenderTile(tile)) return '';
+        if (!options.shouldRender(tile)) return '';
         const ribbon = options.ribbon(tile);
         const active = options.isActive(tile);
         const header = options.header(tile);
@@ -174,9 +175,5 @@ module.exports = function(div, options) {
             'data-idx': idx
         });
         return $el;
-    }
-
-    function shouldRenderTile(tile) {
-        return options.shouldRender(tile);
     }
 };
