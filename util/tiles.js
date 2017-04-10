@@ -46,10 +46,19 @@ const styles = `
     margin: auto;
 }
 
+
+
 .on-tabs-tiles .cell .main {
     font-size: 4.5em;
-    margin: 15px;
+}
+
+.on-tabs-tiles .cell .icon {
+    margin: 17px;
+}
+
+.on-tabs-tiles .cell .title {
     font-weight: bold;
+        margin: 15px;
 }
 
 .on-tabs-tiles .cell .header {
@@ -165,7 +174,7 @@ module.exports = function (div, options) {
         const $el = $(`
                 <div class="cell ${active ? 'active' : 'inactive'}">
                     <div class='header'>${header || ''}</div>
-                    ${icon ? `<div class="${iconType} ${icon} main"></div>` : `<div class="main">${title || ''}</div>`}
+                    ${icon ? `<div class="${iconType} ${icon} icon main"></div>` : `<div class="title main">${title || ''}</div>`}
                     <div class="footer">${footer || ''}</div>
                     
                     ${ribbon ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>` : ''}
