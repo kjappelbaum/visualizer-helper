@@ -148,7 +148,7 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
 
         // d
         for (i = 0; i < 4; i++) {
-            label = '' + (5 - i) + 'd';
+            label = '' + (6 - i) + 'd';
             y = topBottomMargin + dOffset[0] + i * (drawHeight - dOffset[0] - (drawHeight - dOffset[2])) / 2;
             for (j = 0; j < 5; j++) {
                 x = leftRightMargin + dOffset[3] + j * (rectWidth + rectMargin);
@@ -159,8 +159,8 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
         }
 
         // f
-        for (i = 0; i < 2; i++) {
-            label = '' + (5 - i) + 'f';
+        for (i = 0; i < 3; i++) {
+            label = '' + (6 - i) + 'f';
             y = topBottomMargin + fOffset[0] + i * (drawHeight - fOffset[0] - (drawHeight - fOffset[2]));
             for (j = 0; j < 7; j++) {
                 x = leftRightMargin + fOffset[3] + j * (rectWidth + rectMargin);
