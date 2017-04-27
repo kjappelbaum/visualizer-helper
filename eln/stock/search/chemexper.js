@@ -31,16 +31,25 @@ module.exports = {
 };
 
 function fromChemexper(chemexper) {
-    var mol = chemexper.row.mol;
+    const mol = chemexper.row.mol;
     return {
         $content: {
             general: {
                 molfile: mol && mol[0] && mol[0].value.value,
                 description: chemexper.name,
-                names: chemexper.row.iupac
+                name: chemexper.row.iupac
+            },
+            identifier: {
+                cas: chemexper.row.rn.map(rn => ({value: numberToCas(rn.value.value)}))
             }
         },
         id: util.getNextUniqueId(true),
         source: 'chemexper'
     };
+}
+
+
+function numberToCas(nb) {
+    nb = String(nb);
+    return nb.slice(0,-3) + '-' + nb.slice(-3,-1) + '-' +  nb.slice(-1)
 }
