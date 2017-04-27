@@ -1,6 +1,6 @@
 'use strict';
 
-import chemspider from 'https://www.lactame.com/lib/chemspider-json-api/0.0.3/chemspider-json-api';
+import chemspider from 'https://www.lactame.com/lib/chemspider-json-api/0.0.3/chemspider-json-api.js';
 import util from 'src/util/util';
 
 module.exports = {
