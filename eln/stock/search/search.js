@@ -18,6 +18,18 @@ module.exports = {
         const sources = [];
         if(options.chemspider) sources.push({promise: chemspider.search(term)});
         if(options.chemexper) sources.push({promise: chemexper.search(term)});
+        if(options.roc) {
+            const roc = options.roc;
+            const rocPromise =  roc.view('entryByKindAndId', {
+                startkey: ['sample', [term]],
+                endkey: ['sample', [term, {}]]
+            }).then(data => {
+                data.forEach(d => d.id = d._id);
+                data.forEach(d => d.source = 'sample');
+                return data;
+            });
+            sources.push({promise: rocPromise});
+        }
         return ui.choose(sources, {
             asynchronous: true,
             noConfirmation: true,
