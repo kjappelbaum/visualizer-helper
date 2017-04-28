@@ -22,7 +22,7 @@ module.exports = {
             const roc = options.roc;
             const rocPromise =  roc.view('entryByKindAndId', {
                 startkey: ['sample', [term]],
-                endkey: ['sample', [term, {}]]
+                endkey: ['sample', [term + '\ufff0', {}]]
             }).then(data => {
                 data.forEach(d => d.id = d._id);
                 data.forEach(d => d.source = 'sample');
