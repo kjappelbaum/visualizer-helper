@@ -32,12 +32,14 @@ module.exports = {
 
 function fromChemexper(chemexper) {
     const mol = chemexper.row.mol;
+    const mf = chemexper.row.mf && chemexper.row.mf[0] && chemexper.row.mf[0].value.value;
     return {
         $content: {
             general: {
                 molfile: mol && mol[0] && mol[0].value.value,
                 description: chemexper.name,
-                name: chemexper.row.iupac
+                name: chemexper.row.iupac,
+                mf
             },
             identifier: {
                 cas: chemexper.row.rn.map(rn => ({value: numberToCas(rn.value.value)}))
