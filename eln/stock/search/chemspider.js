@@ -12,7 +12,7 @@ module.exports = {
                 }
             },
             resultOptions: {
-                serfilter: 'Compound[Mol|Name|Synonyms]'
+                serfilter: 'Compound[Mol|Name|Synonyms|CSID]'
             }
         }).then(data => data.map(fromChemspider));
     }
@@ -34,6 +34,7 @@ function fromChemspider(chemspider) {
     const name = entry.$content.general.name =  [];
     const identifier = entry.$content.identifier = {};
     const cas = identifier.cas = [];
+    const CSID = identifier.chemSpiderID = [];
     const synonyms = chemspider.Synonyms;
     for (let i = 0; i < synonyms.length; i++) {
         const synonym = synonyms[i];
@@ -48,6 +49,9 @@ function fromChemspider(chemspider) {
                 value: synonym.Name
             });
         }
+    }
+    if(chemspider.CSID) {
+        CSID.push({value: chemspider.CSID});
     }
     return entry;
 }
