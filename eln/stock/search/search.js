@@ -31,6 +31,7 @@ module.exports = {
             sources.push({promise: rocPromise});
         }
         return ui.choose(sources, {
+            autoSelect: options.autoSelect,
             asynchronous: true,
             noConfirmation: true,
             returnRow: true,

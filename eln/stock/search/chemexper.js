@@ -41,6 +41,9 @@ function fromChemexper(chemexper) {
             },
             identifier: {
                 cas: chemexper.row.rn.map(rn => ({value: numberToCas(rn.value.value)}))
+            },
+            stock: {
+                catalogNumber: chemexper.row.code
             }
         },
         id: util.getNextUniqueId(true),
