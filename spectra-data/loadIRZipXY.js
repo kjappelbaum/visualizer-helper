@@ -1,5 +1,7 @@
 'use strict';
 
+import API from 'src/util/api';
+
 module.exports = async function loadZips(zipURLs, options = {}) {
     const JSZip = await API.require('jszip');
     const superagent = await API.require('superagent');
