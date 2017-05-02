@@ -16,8 +16,8 @@ module.exports = async function loadZips(zipURLs, options = {}) {
         let filesToProcess = Object.keys(zip.files).filter( filename => filename.match(/jdx$/));
         for (const filename of filesToProcess) {
             let jcamp = await zip.files[filename].async('string');
-            let sd = SD.NMR.fromJcamp(jcamp, {});
-            sd.sd.filename = filename.replace(/.jdx$/,'');
+            let spectrum = SD.NMR.fromJcamp(jcamp, {});
+            spectrum.sd.filename = filename.replace(/.jdx$/,'');
             if (options.filter) options.filter(spectrum.sd);
             spectraDataSet.push(spectrum);
         }
