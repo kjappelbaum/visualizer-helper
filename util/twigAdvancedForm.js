@@ -62,20 +62,21 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
             var variableName=ips[0].name;
             var data;
 
-
+            if (options.debug) console.log('variableName:',variableName);
 
             var variable = API.getVar(variableName);
-            variable.listen({getId(){return moduleId+variableName}},function() {
-                console.log(arguments, 'listen');
-
-                console.log(data);
-                if (! data) {
-                    console.log('The variable',variableName,'does not exist yet');
-                    data=API.getData(variableName);
-                    console.log(data);
-                }
-
+            variable.listen({getId(){return moduleId+variableName}},function(newData) {
+                if (options.debug) console.log(arguments, 'listen change of the input variable');
+                newData.currentPromise.then( readyData => {
+                    if (! data) {
+                        if (options.debug) console.log('The variable',variableName,'does not exist yet. We will load it.');
+                        data=API.getData(variableName);
+                        updateTwig();
+                    }
+                })
             });
+
+
 
             // we will initialise the form
             var dom=$(document.getElementById(divID));
@@ -84,6 +85,13 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
                 <td class='addRow'></td>
                 <td class='removeRow'></td>
             `);
+
+
+            if (! data && API.getData(variableName)) {
+                data=API.getData(variableName);
+                updateTwig();
+            }
+
 
             // Add the style
             dom.parent().prepend(
@@ -95,10 +103,11 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
             </style>`
             );
 
-            updateTwig();
+
 
             // need to replicate rows based on the external variable
             function updateTwig() {
+               // debugger;
                 do {
                     var elements=dom.find('[data-repeat]:not([data-index])');
                     elements.each(function(index, row) {
@@ -131,7 +140,10 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
                 } while (elements.length>0)
 
                 // we force the incorporation of the data in the form
-                if (data) data.triggerChange();
+                if (data) {
+                    if (options.debug) console.log('FORCE update data');
+                    data.triggerChange();
+                }
             }
 
 
