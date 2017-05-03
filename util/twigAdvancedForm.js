@@ -77,11 +77,6 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
 
             });
 
-            updateTwig();
-
-
-
-
             // we will initialise the form
             var dom=$(document.getElementById(divID));
             // Add the buttons ADD / REMOVE
@@ -100,7 +95,7 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
             </style>`
             );
 
-
+            updateTwig();
 
             // need to replicate rows based on the external variable
             function updateTwig() {
