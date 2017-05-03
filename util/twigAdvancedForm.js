@@ -74,10 +74,10 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
                     data=API.getData(variableName);
                     console.log(data);
                 }
-                updateTwig();
+
             });
 
-
+            updateTwig();
 
 
 
