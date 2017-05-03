@@ -60,7 +60,7 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
                 new Error('The twig module does not have variable in of type "form"');
             }
             var variableName=ips[0].name;
-
+            if (debug) console.log(variableName)
             var data;
 
 
@@ -75,7 +75,7 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
                     data=API.getData(variableName);
                     console.log(data);
                 }
-                // updateTwig();
+                updateTwig();
             });
 
 

@@ -18,7 +18,7 @@ module.exports = async function loadZips(zipURLs, options = {}) {
             let jcamp = await zip.files[filename].async('string');
             let spectrum = SD.NMR.fromJcamp(jcamp, {});
             spectrum.sd.filename = filename.replace(/.jdx$/,'');
-            if (options.filter) options.filter(spectrum.sd);
+            if (options.filter) options.filter(spectrum);
             spectraDataSet.push(spectrum);
         }
     }
