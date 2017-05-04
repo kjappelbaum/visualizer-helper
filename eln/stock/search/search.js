@@ -49,23 +49,14 @@ module.exports = {
             },
             columns: [
                 {
-                    id: 'molfile',
-                    name: 'molfile',
-                    jpath: ['$content', 'general', 'molfile'],
-                    rendererOptions: {
-                        forceType: 'mol2d'
-                    },
-                    maxWidth: 250
-                },
-                {
                     id: 'names',
                     name: 'names',
                     jpath: [],
                     rendererOptions: {
                         forceType: 'object',
                         twig: `
-                        <div style="height: 100%; line-height: initial; vertical-align: middle">
-                        <table style="width: 100%; text-align: center;">
+                        <div style="height: 100%; line-height: initial;">
+                        <table style="width: 100%;">
                         {% for n in names %}
                             <tr><td>{{ n }}</td></tr>
                         {% endfor %}
@@ -83,6 +74,15 @@ module.exports = {
                         twig: listTemplate('cas', '.value')
                     },
                     maxWidth: 100
+                },
+                {
+                    id: 'molfile',
+                    name: 'molfile',
+                    jpath: ['$content', 'general', 'molfile'],
+                    rendererOptions: {
+                        forceType: 'mol2d'
+                    },
+                    maxWidth: 250
                 },
                 {
                     id: 'source',
