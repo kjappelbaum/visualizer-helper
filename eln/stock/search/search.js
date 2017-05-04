@@ -2,6 +2,7 @@
 
 import chemspider from './chemspider';
 import chemexper from './chemexper';
+import _ from 'lodash';
 
 import ui from 'src/util/ui';
 
@@ -24,8 +25,15 @@ module.exports = {
                 startkey: ['sample', [term]],
                 endkey: ['sample', [term + '\ufff0', {}]]
             }).then(data => {
-                data.forEach(d => d.id = d._id);
-                data.forEach(d => d.source = 'sample');
+                data.forEach(d => {
+                    d.id = d._id;
+                    d.source = 'sample';
+                    d.names = _.uniq([
+                        d.$id.join(' '),
+                        d.$content.general.description,
+                        ...d.$content.general.name.filter(n => n.language === undefined || n.language.match(/^(en)|(EN)$/)).map(n => n.value)
+                    ]);
+                });
                 return data;
             });
             sources.push({promise: rocPromise});
@@ -35,12 +43,11 @@ module.exports = {
             asynchronous: true,
             noConfirmation: true,
             returnRow: true,
+            dialog: {
+                width: 1000,
+                height: 800
+            },
             columns: [
-                {
-                    id: 'description',
-                    name: 'description',
-                    jpath: ['$content', 'general', 'description']
-                },
                 {
                     id: 'molfile',
                     name: 'molfile',
@@ -53,14 +60,14 @@ module.exports = {
                 {
                     id: 'names',
                     name: 'names',
-                    jpath: ['$content', 'general'],
+                    jpath: [],
                     rendererOptions: {
                         forceType: 'object',
                         twig: `
                         <div style="height: 100%; line-height: initial; vertical-align: middle">
                         <table style="width: 100%; text-align: center;">
-                        {% for n in name %}
-                            <tr><td>{{ n.value }}</td></tr>
+                        {% for n in names %}
+                            <tr><td>{{ n }}</td></tr>
                         {% endfor %}
                         </table>
                         </div>

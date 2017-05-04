@@ -3,6 +3,7 @@
 import superagent from 'superagent';
 import util from 'src/util/util';
 import ui from 'src/util/ui';
+import _ from 'lodash';
 
 module.exports = {
     search(term) {
@@ -49,6 +50,7 @@ function fromChemexper(chemexper) {
             }
         },
         id: util.getNextUniqueId(true),
+        names: _.uniq([chemexper.name, ...chemexper.row.iupac.map(i => i.value)]),
         source: 'chemexper'
     };
 }
