@@ -26,12 +26,13 @@ module.exports = {
                 endkey: ['sample', [term + '\ufff0', {}]]
             }).then(data => {
                 data.forEach(d => {
+                    const name = d.$content.general.name || [];
                     d.id = d._id;
                     d.source = 'sample';
                     d.names = _.uniq([
                         d.$id.join(' '),
                         d.$content.general.description,
-                        ...d.$content.general.name.filter(n => n.language === undefined || n.language.match(/^(en)|(EN)$/)).map(n => n.value)
+                        ...name.filter(n => n.language === undefined || n.language.match(/^(en)|(EN)$/)).map(n => n.value)
                     ]);
                 });
                 return data;
