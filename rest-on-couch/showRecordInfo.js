@@ -2,7 +2,7 @@
 
 define(['src/util/ui'], function(UI) {
 
-    function recordInfo(record) {
+    function showRecordInfo(record) {
         let html='';
         html+=`<style>
             #ownerInfo {font-size:2em};
@@ -52,11 +52,12 @@ define(['src/util/ui'], function(UI) {
 
         UI.dialog(html, {
             width:800,
-            height:400
+            height:400,
+            title:'Security record information'
         });
     }
 
-    return recordInfo;
+    return showRecordInfo;
 
 });
 
