@@ -54,8 +54,8 @@ module.exports = {
                     jpath: ['$content', 'general', 'molfile'],
                     rendererOptions: {
                         forceType: 'mol2d'
-                    }
-
+                    },
+                    maxWidth: 250
                 },
                 {
                     id: 'names',
@@ -81,12 +81,14 @@ module.exports = {
                     rendererOptions: {
                         forceType: 'object',
                         twig: listTemplate('cas', '.value')
-                    }
+                    },
+                    maxWidth: 100
                 },
                 {
                     id: 'source',
                     name: 'source',
-                    field: 'source'
+                    field: 'source',
+                    maxWidth: 70
                 }
             ],
             idField: 'id',
