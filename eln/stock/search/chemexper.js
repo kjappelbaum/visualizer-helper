@@ -47,6 +47,9 @@ function fromChemexper(chemexper) {
             },
             stock: {
                 catalogNumber: chemexper.row.code
+            },
+            physical: {
+                density: chemexper.row.density
             }
         },
         id: util.getNextUniqueId(true),
