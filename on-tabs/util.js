@@ -65,12 +65,19 @@ module.exports = {
     openTab(data) {
         IframeBridge.postMessage('tab.open', data)
     },
-    // register callback to handle message, without info about the sender
+    // register callback to handle message of type 'message', without info about the sender
     onMessage(cb) {
         IframeBridge.onMessage(function(data) {
             if(data.type === 'tab.message') {
                 cb(data.message);
             }
+        });
+    },
+    // Send a message of type 'message'
+    sendMessage(tabId, data) {
+        IframeBridge.postMessage('tab.message', {
+            id: tabId,
+            message: data
         });
     }
 };
