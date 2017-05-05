@@ -10,7 +10,11 @@ define(['src/util/ui'], function(UI) {
             #ownerInfo th {text-align: left};
         </style>`;
         html+='<div id="ownerInfo">';
-        html+='<h1>'+record.$id.join(' - ')+'</h1>';
+        if (Array.isArray(record.$id)) {
+            html+='<h1>'+record.$id.join(' - ')+'</h1>';
+        } else {
+            html+='<h1>'+record.$id+'</h1>';
+        }
         html+=`
         <table>
             <tr>
