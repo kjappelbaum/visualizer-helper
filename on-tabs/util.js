@@ -23,12 +23,14 @@ function onRocInit(data) {
     }
 }
 
-function onDataFocus(dataId, tabId) {
+function onDataFocus(dataId, tabId, type) {
     return function(data) {
         console.log('data focus', data);
         if(data.type === 'tab.focus') {
             console.log('focus, send data');
-            const data = API.cache(dataId);
+            let data;
+            if(type === 'data') data = API.getData(dataId);
+            else if(type === 'cache') data = API.cache(dataId);
             IframeBridge.postMessage('tab.message', {
                 id: tabId,
                 message: data
@@ -42,8 +44,11 @@ module.exports = {
     rocInit() {
         IframeBridge.onMessage(onRocInit);
     },
+    sendCacheOnFocus(dataId, tabId) {
+        IframeBridge.onMessage(onDataFocus(dataId, tabId, 'cache'));
+    },
     sendDataOnFocus(dataId, tabId) {
-        IframeBridge.onMessage(onDataFocus(dataId, tabId));
+        IframeBridge.onMessage(onDataFocus(dataId, tabId, 'data'))
     },
     sendVariableOnChange(data, tabId) {
         data.onChange(event => {
