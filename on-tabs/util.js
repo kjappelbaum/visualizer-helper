@@ -25,9 +25,7 @@ function onRocInit(data) {
 
 function onDataFocus(dataId, tabId, type) {
     return function(data) {
-        console.log('data focus', data);
         if(data.type === 'tab.focus') {
-            console.log('focus, send data');
             let data;
             if(type === 'data') data = API.getData(dataId);
             else if(type === 'cache') data = API.cache(dataId);
@@ -52,7 +50,6 @@ module.exports = {
     },
     sendVariableOnChange(data, tabId) {
         data.onChange(event => {
-            console.log('data change');
             IframeBridge.postMessage('tab.message', {
                 id: tabId,
                 message: {
@@ -66,14 +63,12 @@ module.exports = {
         IframeBridge.ready();
     },
     openTab(data) {
-        console.log('open tab');
         IframeBridge.postMessage('tab.open', data)
     },
     // register callback to handle message, without info about the sender
     onMessage(cb) {
         IframeBridge.onMessage(function(data) {
             if(data.type === 'tab.message') {
-                console.log('ok');
                 cb(data.message);
             }
         });
