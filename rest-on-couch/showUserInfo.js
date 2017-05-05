@@ -57,7 +57,7 @@ define(['src/util/ui'], function(UI) {
         });
     }
 
-    return showuserInfo;
+    return showUserInfo;
 
 });
 
