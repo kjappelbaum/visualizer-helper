@@ -51,7 +51,7 @@ function fromChemexper(chemexper) {
         },
         id: util.getNextUniqueId(true),
         names: _.uniq([chemexper.name, ...chemexper.row.iupac.map(i => i.value)]),
-        source: 'chemexper'
+        source: 'reference'
     };
 }
 
