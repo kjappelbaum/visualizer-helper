@@ -11,11 +11,8 @@ const styles = `
     flex-wrap: wrap;
 }
 .on-tabs-tiles .cell {
-    width: 125px;
     position: relative;
     border: 2px solid white;
-    display: flex;
-    flex-direction: column;
 }
 
 .on-tabs-tiles .cell.inactive {
@@ -41,31 +38,32 @@ const styles = `
     left:0;
     z-index:100;
 }
-.on-tabs-tiles .fa, .ci-icon {
-    font-size: 5em;
-    margin: auto;
-}
 
+/*
+.on-tabs-tiles .fa, .ci-icon {
+    font-size: 8em;
+    
+}
+*/
 
 
 .on-tabs-tiles .cell .main {
-    font-size: 4.5em;
-}
-
-.on-tabs-tiles .cell .icon {
-    margin: 17px;
+    font-size: 6em;
+    margin: auto;
 }
 
 .on-tabs-tiles .cell .title {
     font-weight: bold;
-        margin: 15px;
+    margin: auto;
 }
 
 .on-tabs-tiles .cell .header {
+    position: absolute;
     font-size: 1.4em;
     font-weight: bold;
+    text-align: center;
+    width: 100%;
     z-index: 100;
-    padding: 2px;
     margin-top: 4px;
 }
 .on-tabs-tiles .bottomRight {
@@ -76,11 +74,15 @@ const styles = `
     font-size: 1.4em;
 }
 .on-tabs-tiles .footer {
+    position: absolute;
+    bottom: 1.5em;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    white-space: pre;
     font-size: 10px;
     overflow: hidden;
-    padding: 2px;
     margin-bottom: 4px;
-    flex: 1;
 }
 
 .on-tabs-tiles .ribbon-wrapper {
@@ -173,11 +175,12 @@ module.exports = function (div, options) {
         if (iconType) iconType = iconType[1];
         const $el = $(`
                 <div class="cell ${active ? 'active' : 'inactive'}">
-                    <div class='header'>${header || ''}</div>
-                    ${icon ? `<div class="${iconType} ${icon} icon main"></div>` : `<div class="title main">${title || ''}</div>`}
-                    <div class="footer">${footer || ''}</div>
-                    
-                    ${ribbon ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>` : ''}
+                    <div class='content'>
+                        <div class='header'>${header || ''}</div>
+                        ${icon ? `<div class="${iconType} ${icon} icon main"></div>` : `<div class="title main">${title || ''}</div>`}
+                        <div class="footer">${footer || ''}</div>
+                        ${ribbon ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>` : ''}
+                    </div>
                 </div>
         `);
 
