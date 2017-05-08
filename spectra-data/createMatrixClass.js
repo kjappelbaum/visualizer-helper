@@ -15,7 +15,7 @@ module.exports = async function createMatrixClass(classURL, spectraDataSet, opti
     let meta = Papa.parse(classFile.text, {delimiter:options.delimiter,header: options.header}).data;
     let metaIndex = {};
     meta.forEach( a => metaIndex[a.filename] = a);
-    var withoutClass = []
+    var withOutClass = [];
     var dataClass = new Array(spectraDataSet.length);
     let i = dataClass.length;
     while(i--) {
@@ -29,6 +29,6 @@ module.exports = async function createMatrixClass(classURL, spectraDataSet, opti
             vector[index.class] = 1;
         }
     }
-    return {dataClass: dataClass, withOutClass: withoutClass};
+    return {dataClass: dataClass, withOutClass: withOutClass};
 }
 

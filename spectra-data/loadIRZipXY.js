@@ -25,7 +25,7 @@ module.exports = async function loadZips(zipURLs, options = {}) {
             });
             if (options.filter) options.filter(spectrum.sd);
             spectrum.sd.info = {};
-            spectrum.sd.filename = filename;
+            spectrum.sd.filename = filename.replace(/[0-9 a-z A-Z]+\//,'');
             spectraDataSet.push(spectrum);
         }
     }
