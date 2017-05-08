@@ -2,6 +2,7 @@
 
 import chemspider from 'https://www.lactame.com/lib/chemspider-json-api/0.0.3/chemspider-json-api.js';
 import util from 'src/util/util';
+import _ from 'lodash';
 
 module.exports = {
     search(term) {
@@ -27,6 +28,7 @@ function fromChemspider(chemspider) {
                 description: chemspider.Name
             }
         },
+        names: [chemspider.name],
         id: util.getNextUniqueId(true),
         source: 'chemspider'
     };
@@ -50,6 +52,8 @@ function fromChemspider(chemspider) {
             });
         }
     }
+    entry.names = _.uniq(entry.names.concat(name.map(n => n.value)));
+
     if(chemspider.CSID) {
         CSID.push({value: chemspider.CSID});
     }
