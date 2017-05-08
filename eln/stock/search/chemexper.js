@@ -21,7 +21,7 @@ module.exports = {
                         val.code = val.catalogID;
                         list.push({
                             id: i,
-                            name: val.iupac[0].value,
+                            name: (val && val.iupac && val.iupac[0]) ? val.iupac[0].value : '',
                             row: val
                         });
                     }
@@ -29,10 +29,10 @@ module.exports = {
                 return list;
             }).then(data => data.map(fromChemexper)).then(
                 data => data.sort( (a,b) => {
-                    let rn1 = (a.$content.identifier.cas.length>0) ?
+                    let rn1 = (a && a.$content && a.$content.identifier && a.$content.identifier.cas.length>0) ?
                         Number(a.$content.identifier.cas[0].value.replace(/-/g,'')) :
                         Number.MAX_SAFE_INTEGER;
-                    let rn2 = (b.$content.identifier.cas.length>0) ?
+                    let rn2 = (b && b.$content && b.$content.identifier && b.$content.identifier.cas.length>0) ?
                         Number(b.$content.identifier.cas[0].value.replace(/-/g,'')) :
                         Number.MAX_SAFE_INTEGER;
                     return rn1-rn2;
