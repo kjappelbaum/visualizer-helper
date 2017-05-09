@@ -51,7 +51,6 @@
 define(['src/util/api','modules/modulefactory'], function (API, Module) {
 
         function AdvancedForm(divID, options={}) {
-
             // we will find automatically the variableName
             var moduleId=$('#'+divID).closest('[data-module-id]').attr('data-module-id');
             var module = Module.getModules().find(m => m.getId() == moduleId);
@@ -142,7 +141,7 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
                 // we force the incorporation of the data in the form
                 if (data) {
                     if (options.debug) console.log('FORCE update data');
-                    data.triggerChange();
+                    module.view.fillForm(true);
                 }
             }
 

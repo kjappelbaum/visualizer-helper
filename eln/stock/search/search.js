@@ -26,7 +26,8 @@ module.exports = {
                 endkey: ['sample', [term + '\ufff0', {}]]
             }).then(data => {
                 data.forEach(d => {
-                    const name = d.$content.general.name || [];
+
+                    const name = (d.$content.general.name || [];
                     d.id = d._id;
                     d.source = 'sample';
                     d.names = _.uniq([
