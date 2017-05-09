@@ -10,6 +10,14 @@ class MF {
         // if no mf we calculate from molfile
         if (!this.getMF()) {
             this.fromMolfile();
+        } else {
+            const mf = this.getMF();
+            if(mf) {
+                var chemcalc = CCE.analyseMF(this.getMF());
+                if (chemcalc) {
+                    this.previousEMMF = chemcalc.em;
+                }
+            }
         }
     }
 
