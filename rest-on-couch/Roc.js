@@ -298,11 +298,21 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     .catch(handleError(this, options));
             }
 
+            // Get the groups the user is owner of
             async getGroups(options) {
                 await this.__ready;
                 options = createOptions(options, 'getGroups');
                 const groupUrl = new URI(this.databaseUrl).segment('groups').normalize().href();
                 return superagent.get(groupUrl).then(res => res.body).catch(handleError(this, options));
+            }
+
+            // Get the groups the user is member of
+            // Returns a promise that resolves with an array of strings
+            async getGroupMembership(options) {
+                options = createOptions(options);
+                await this.__ready;
+                const url = new URI(this.databaseUrl).segment('user/_me/groups');
+                return superagent.get(url).then(res => res.body).catch(handleError(this, options));
             }
 
             async create(entry, options) {
