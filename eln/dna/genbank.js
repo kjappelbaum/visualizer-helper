@@ -1,4 +1,3 @@
-'use strict';
 
 import bioParsers from 'bioParsers';
 import Twig from 'lib/twigjs/twig';
@@ -49,7 +48,7 @@ const template = options => {
                 {% endfor %}
                 <tracklabel text='{{ p.parsedSequence.name }}' style='font-size:25px;font-weight:bold'></tracklabel>
             </plasmidtrack>
-        </plasmid>`
+        </plasmid>`;
 };
 
 export function parse(gb) {
@@ -70,7 +69,7 @@ export function getFeatureTypes(parsedGb) {
     parsedGb.forEach(d => {
         d.parsedSequence.features.forEach(f => {
             s.add(f.type);
-        })
+        });
     });
     return Array.from(s);
 }
@@ -109,6 +108,6 @@ async function plasmidRenderer($element, val, root, options) {
     $element.html(svg);
 }
 
-function setTypeRenderer(name) {
+export function setTypeRenderer(name) {
     typerenderer.addType(name, plasmidRenderer);
 }
