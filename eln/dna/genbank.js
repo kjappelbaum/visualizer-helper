@@ -109,6 +109,6 @@ async function plasmidRenderer($element, val, root, options) {
     $element.html(svg);
 }
 
-function setTypeRenderer(options) {
-    typerenderer.addType(plasmidRenderer);
+function setTypeRenderer(name) {
+    typerenderer.addType(name, plasmidRenderer);
 }
