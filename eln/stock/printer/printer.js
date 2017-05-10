@@ -53,7 +53,7 @@ define([
 
             async getConnectedPrinters(s) {
                 const server = new PrintServer(s, opts);
-                return await server.getDeviceIds();
+                return server.getDeviceIds();
             },
 
             async print(printer, printFormat, data) {

@@ -2,12 +2,15 @@
 import ExpandableMolecule from './ExpandableMolecule';
 import Nmr1dManager from './Nmr1dManager';
 import MF from './MF';
+import Datas from 'src/main/datas';
 import API from 'src/util/api';
 import UI from 'src/util/ui';
 import Debug from 'src/util/debug';
 import {createVar, getData} from './jpaths';
 import {elnPlugin} from './libs';
 import Roc from '../rest-on-couch/Roc';
+
+const DataObject = Datas.DataObject;
 
 var defaultOptions = {
     varName: 'sample',
@@ -77,7 +80,7 @@ class Sample {
 
             this.onChange = (event) => {
                 if (typeof IframeBridge !== 'undefined') {
-                    IframeBridge.postMessage('tab.status', {
+                    self.IframeBridge.postMessage('tab.status', {
                         saved: false
                     });
                 }
@@ -91,8 +94,6 @@ class Sample {
                     this.nmr1dManager.executePeakPicking(currentNmr);
                 }
 
-
-                console.log('Event received', event.jpath.join('.'));
                 switch (event.jpath.join('.')) {
                     case '':
                         this.nmr1dManager.initializeNMRAssignment(getData(this.sample, 'nmr'));
@@ -105,8 +106,12 @@ class Sample {
                         try {
                             this.mf.fromMF();
                             this.nmr1dManager.updateIntegral({mf: true});
-                        } catch (e) {}
+                        } catch (e) {
+                            // ignore
+                        }
                         break;
+                    default:
+                        throw new Error(`Unexpected jpath: ${event.jpath.join('.')}`);
                 }
             };
 
@@ -177,7 +182,7 @@ class Sample {
             case 'save':
                 this.roc.update(this.sample).then(function () {
                     if (typeof IframeBridge !== 'undefined') {
-                        IframeBridge.postMessage('tab.status', {
+                        self.IframeBridge.postMessage('tab.status', {
                             saved: true
                         });
                     }
@@ -205,20 +210,20 @@ class Sample {
             case 'attachIR':
             case 'attachMass':
                 var type = action.name.replace('attach', '').toLowerCase();
-                var droppedDatas = data;
+                var droppedDatas = action.value;
                 droppedDatas = droppedDatas.file || droppedDatas.str;
                 var prom = Promise.resolve();
                 for (let i = 0; i < droppedDatas.length; i++) {
                     prom = prom.then(() => {
-                        var data = DataObject.resurrect(droppedDatas[i]);
-                        return this.roc.attach(type, sample, data);
+                        const data = DataObject.resurrect(droppedDatas[i]);
+                        return this.roc.attach(type, this.sample, data);
                     });
                 }
 
                 prom.then(() => {
-                    this.updateAttachments(sample);
+                    this.updateAttachments(this.sample);
                 }).catch(() => {
-                    this.updateAttachments(sample);
+                    this.updateAttachments(this.sample);
                 });
                 break;
             case 'refresh':
@@ -233,7 +238,7 @@ class Sample {
                         this.mf.fromMF();
                         this.bindChange();
                     });
-                    IframeBridge.postMessage('tab.status', {
+                    self.IframeBridge.postMessage('tab.status', {
                         saved: true
                     });
                 });

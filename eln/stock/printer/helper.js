@@ -1,4 +1,3 @@
-
 import ui from 'src/util/ui';
 import API from 'src/util/api';
 
@@ -26,8 +25,9 @@ module.exports = {
     async askPrintEntry(entry, type) {
         const info = await module.exports.askFormat(type);
         if (info) {
-            return await module.exports.printEntry(entry, info);
+            return module.exports.printEntry(entry, info);
         }
+        return null;
     },
 
     async printEntry(entry, info) {

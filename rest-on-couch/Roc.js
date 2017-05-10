@@ -1,7 +1,13 @@
 'use strict';
 
-define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'superagent', 'uri/URI', 'lodash', 'src/util/couchdbAttachments', 'src/util/mimeTypes', 'src/util/IDBKeyValue'],
-    function (API, ui, Util, Debug, superagent, URI, _, CDB, mimeTypes, IDB) {
+define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'superagent', 'uri/URI', 'lodash', 'src/util/couchdbAttachments', 'src/util/mimeTypes', 'src/util/IDBKeyValue'],
+    function (Datas, API, ui, Util, Debug, superagent, URI, _, CDB, mimeTypes, IDB) {
+        const DataObject = Datas.DataObject;
+
+        const objectHasOwnProperty = Object.prototype.hasOwnProperty;
+        const hasOwnProperty = function (obj, prop) {
+            return objectHasOwnProperty.call(obj, prop);
+        };
 
         const defaultOptions = {
             messages: {
@@ -98,7 +104,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
         class Roc {
             constructor(opts) {
                 for (var key in opts) {
-                    if (opts.hasOwnProperty(key)) {
+                    if (hasOwnProperty(opts, key)) {
                         this[key] = opts[key];
                     }
                 }
@@ -146,7 +152,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                 return superagent.get(requestUrl)
                     .withCredentials()
                     .then(res => {
-                        if (res && res.body && res.status == 200) {
+                        if (res && res.body && res.status === 200) {
                             if (options.filter) {
                                 res.body = res.body.filter(options.filter);
                             }
@@ -188,7 +194,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                 return superagent.get(requestUrl)
                     .withCredentials()
                     .then(res => {
-                        if (res && res.body && res.status == 200) {
+                        if (res && res.body && res.status === 200) {
                             if (options.filter) {
                                 res.body = res.body.filter(options.filter);
                             }
@@ -207,7 +213,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                                     };
                                 }
                             }
-                            for (var i = 0; i < res.body.length; i++) {
+                            for (let i = 0; i < res.body.length; i++) {
                                 res.body[i].document = {
                                     type: 'object',
                                     url: `${this.entryUrl}/${res.body[i].id}`
@@ -235,7 +241,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
             async document(uuid, options) {
                 options = options || {};
                 const doc = await this.get(uuid, options);
-                if (!doc) return;
+                if (!doc) return null;
                 if (options.varName) {
                     this.typeUrl(doc.$content, doc);
                     const data = await API.createData(options.varName, doc);
@@ -277,13 +283,14 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     .query(options.query)
                     .withCredentials()
                     .then(res => {
-                        if (res.body && res.status == 200) {
+                        if (res.body && res.status === 200) {
                             this._defaults(res.body.$content);
                             if (!options.noUpdate) {
                                 this._updateByUuid(uuid, res.body, options);
                             }
                             return res.body;
                         }
+                        return null;
                     }).catch(handleError(this, options));
             }
 
@@ -327,12 +334,13 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     .send(entry)
                     .then(handleSuccess(this, options))
                     .then(res => {
-                        if (res.body && (res.status == 200 || res.status == 201)) {
+                        if (res.body && (res.status === 200 || res.status === 201)) {
                             return this.get(res.body.id);
                         }
+                        return null;
                     })
                     .then(entry => {
-                        if (!entry) return;
+                        if (!entry) return null;
                         this.typeUrl(entry.$content, entry);
                         let keys = Object.keys(this.variables);
                         for (let i = 0; i < keys.length; i++) {
@@ -363,7 +371,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     .send(reqEntry)
                     .then(handleSuccess(this, options))
                     .then(res => {
-                        if (res.body && res.status == 200) {
+                        if (res.body && res.status === 200) {
                             entry._rev = res.body.rev;
                             entry.$creationDate = res.body.$creationDate;
                             entry.$modificationDate = res.body.$modificationDate;
@@ -377,7 +385,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
 
             async deleteAttachment(entry, attachments, options) {
                 await this.__ready;
-                if (!entry || !entry._attachments) return;
+                if (!entry || !entry._attachments) return null;
                 options = createOptions(options, 'deleteAttachment');
                 if (Array.isArray(attachments) && attachments.length === 0) return entry;
                 if (!Array.isArray(attachments)) attachments = [attachments];
@@ -386,10 +394,10 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                 return this.get(entry, {fromCache: true, fallback: true})
                     .then(entry => {
                         this._deleteFilename(entry.$content, attachments);
-                        for (var i = 0; i < attachments.length; i++) {
+                        for (let i = 0; i < attachments.length; i++) {
                             delete entry._attachments[attachments[i]];
                         }
-                        var cdb = this._getCdb(entry);
+                        const cdb = this._getCdb(entry);
                         return cdb.remove(attachments, {
                             noRefresh: true
                         }).then(() => {
@@ -426,7 +434,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                 var idx = arr.indexOf(row);
                 if (idx === -1) {
                     Debug.warn('element to unattach not found');
-                    return;
+                    return null;
                 }
 
                 var toDelete = this._findFilename(row);
@@ -455,7 +463,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     .then(filename => {
                         if (filename) attachment.filename = filename;
                         if (!attachment.filename) {
-                            return;
+                            return null;
                         }
 
                         attachment.filename = this.processor.getFilename(type, attachment.filename);
@@ -525,7 +533,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                         prom = ui.enterValue('Enter a filename').then(filename => {
                             if (filename) attachments.filename = filename;
                             if (!attachments.filename) {
-                                return;
+                                return null;
                             }
                             // If we had to ask for a filename, resolve content type
                             var fallback = attachments.contentType;
@@ -544,7 +552,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                 });
 
                 const filename = await prom;
-                if (!filename) return;
+                if (!filename) return null;
 
                 options = createOptions(options, 'addAttachment');
                 return this.get(entry, {fromCache: true, fallback: true})
@@ -573,7 +581,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                 options = options || {};
                 await this.__ready;
                 const doc = this._findById(id);
-                if (!doc) return;
+                if (!doc) return null;
                 return this.addAttachment(doc._id, attachment, options);
             }
 
@@ -633,7 +641,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     .then(handleSuccess(this, options))
                     .then(res => {
                         if (!options.noUpdate) {
-                            this.get(uuid).then(() => res.body);
+                            return this.get(uuid).then(() => res.body);
                         } else {
                             return res.body;
                         }
@@ -655,7 +663,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     .withCredentials()
                     .then(handleSuccess(this, options))
                     .then(res => {
-                        if (res.body && res.status == 200) {
+                        if (res.body && res.status === 200) {
                             for (let key in this.variables) {
                                 const idx = this._findIndexByUuid(uuid, key);
                                 if (idx !== -1) {
@@ -715,6 +723,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                         return this.variables[key].data;
                     }
                 }
+                return null;
             }
 
             _findById(id, key) {

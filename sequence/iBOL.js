@@ -1,9 +1,6 @@
-'use strict';
-
 import Nt from 'https://www.lactame.com/lib/NtSeq/HEAD/NtSeq.js';
 
-var MAX_MISMATCH = 3;
-
+const MAX_MISMATCH = 3;
 export function getFiltered(data, selection, keys) {
     return data.filter(function (d) {
         loop1: for (var i = 0; i < selection.length; i++) {

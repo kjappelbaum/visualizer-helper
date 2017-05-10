@@ -35,8 +35,8 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
             xPos += textWidth;
             if (xPos > (width - leftRightBorders)) {
                 xOld = leftRightBorders;
-                xPos = leftRightBorders + textWidth,
-                    line++;
+                xPos = leftRightBorders + textWidth;
+                line++;
             }
             residues.push({
                 nTer: i,
@@ -160,7 +160,7 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
                 }
                 counter++;
             }
-            for (var i = from; i < to; i++) {
+            for (let i = from; i < to; i++) {
                 residues[i].usedSlots[counter] = true;
             }
             return counter;
@@ -178,15 +178,15 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
                     residue = residues[result.from];
                 }
                 if (residue) {
-                    var line = paper.line(residue.xTo + spaceBetweenResidues / 2, residue.y, residue.xTo + spaceBetweenResidues / 2, residue.y - 8);
+                    const line = paper.line(residue.xTo + spaceBetweenResidues / 2, residue.y, residue.xTo + spaceBetweenResidues / 2, residue.y - 8);
                     line.attr({stroke: result.color, 'stroke-width': strokeWidth});
                     if (nTerminal) {
-                        var line = paper.line(residue.xTo + spaceBetweenResidues / 2, residue.y, residue.xTo + spaceBetweenResidues / 2 - 5, residue.y + 5);
+                        const line = paper.line(residue.xTo + spaceBetweenResidues / 2, residue.y, residue.xTo + spaceBetweenResidues / 2 - 5, residue.y + 5);
                         line.attr({stroke: result.color, 'stroke-width': strokeWidth});
                         drawLabel(result, residue.xTo + spaceBetweenResidues / 2 - 15, residue.y + 12 + residue.bottomPosition * labelSize);
                         residue.bottomPosition++;
                     } else {
-                        var line = paper.line(residue.xTo + spaceBetweenResidues / 2, residue.y - 8, residue.xTo + spaceBetweenResidues / 2 + 5, residue.y - 13);
+                        const line = paper.line(residue.xTo + spaceBetweenResidues / 2, residue.y - 8, residue.xTo + spaceBetweenResidues / 2 + 5, residue.y - 13);
                         line.attr({stroke: result.color, 'stroke-width': strokeWidth});
                         drawLabel(result, residue.xTo + spaceBetweenResidues / 2, residue.y - 15 - residue.topPosition * labelSize);
                         residue.topPosition++;
@@ -202,9 +202,9 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
             var text = paper.text(x, y, label);
             text.attr({'fill': result.textColor, 'font-family': labelFontFamily, 'font-weight': 'bold', 'font-size': labelSize});
             var textWidth = text.node.clientWidth + 3;
-            var text = paper.text(x + textWidth, y - labelSize / 2, charge);
+            text = paper.text(x + textWidth, y - labelSize / 2, charge);
             text.attr({'fill': result.textColor, 'font-family': labelFontFamily, 'font-size': labelSize / 2});
-            var text = paper.text(x + textWidth, y, similarity);
+            text = paper.text(x + textWidth, y, similarity);
             text.attr({'fill': result.textColor, 'font-family': labelFontFamily, 'font-size': labelSize / 2});
 
         }
@@ -214,8 +214,8 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
                 if (result.internal) {
                     var fromResidue = residues[result.from + 1];
                     var toResidue = residues[result.to];
-                    var charge = result.charge > 0 ? '+' + result.charge : result.charge;
-                    var label = result.type + ' (' + charge + ', ' + Math.round(result.similarity) + '%)';
+                    // var charge = result.charge > 0 ? '+' + result.charge : result.charge;
+                    // var label = result.type + ' (' + charge + ', ' + Math.round(result.similarity) + '%)';
                     // we need to check on how many lines we are
                     var fromX, toX, y;
                     for (var line = fromResidue.line; line <= toResidue.line; line++) {
@@ -240,8 +240,7 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
 
                         drawLabel(result, (fromX + toX) / 2 - 10, y - 2);
 
-
-                        var label = result.type + ' (' + Math.round(result.similarity) + '%)';
+                        // label = result.type + ' (' + Math.round(result.similarity) + '%)';
                     }
                 }
             }

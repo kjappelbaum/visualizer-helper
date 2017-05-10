@@ -60,9 +60,9 @@ function fromChemspider(chemspider) {
 }
 
 function isReliableCas(synonym) {
-    return synonym.Reliability >= 4 && synonym.LangID === 'en' && synonym.SynonymType == 2;
+    return synonym.Reliability >= 4 && synonym.LangID === 'en' && synonym.SynonymType === 2;
 }
 
 function isReliableSynonym(synonym) {
-    return synonym.Reliability >= 4 && synonym.SynonymType == 5 && synonym.LangID === 'en';
+    return synonym.Reliability >= 4 && synonym.SynonymType === 5 && synonym.LangID === 'en';
 }

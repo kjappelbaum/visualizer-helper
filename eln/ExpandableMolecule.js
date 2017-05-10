@@ -21,7 +21,7 @@ class ExpandableMolecule {
             // need to compare former oclID with new oclID
             var newMolecule = OCLE.Molecule.fromMolfile(event.target + '');
             var idCode = newMolecule.getIDCode();
-            if (idCode != this.idCode) {
+            if (idCode !== this.idCode) {
                 this.idCode = idCode;
                 this.molfile = event.target + '';
                 this.sample.setChildSync(['$content', 'general', 'molfile'], this.molfile);
@@ -97,7 +97,7 @@ class ExpandableMolecule {
     }
 
     handleAction(action) {
-        if (!action) return;
+        if (!action) return false;
         switch (action.name) {
             case 'toggleJSMEEdition':
                 this.setJSMEEdition(!this.jsmeEditionMode);

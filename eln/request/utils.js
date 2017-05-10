@@ -1,3 +1,6 @@
+import Datas from 'src/main/datas';
+
+const DataBoolean = Datas.DataBoolean;
 
 export function convertParametersToSchema(parameters) {
     var props = {};

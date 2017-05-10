@@ -58,11 +58,12 @@ export default class RequestManager {
 
     async cancel(request) {
         if (this.getStatusCode(request) === 0) {
-            return;
+            return null;
         }
         if (await confirm('cancel request?')) {
             return this.setStatus(request, 0);
         }
+        return null;
     }
 
     async setStatus(request, status) {

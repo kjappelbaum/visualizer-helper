@@ -15,11 +15,13 @@ if (search.smiles) {
     smiles = search.smiles;
 }
 
+const OCLE = undefined; // todo fix this?
+
 if (molfile) {
-    var molecule = OCLE.Molecule.fromMolfile(molfile);
+    const molecule = OCLE.Molecule.fromMolfile(molfile);
     API.createData('molfile', molecule.toMolfile());
 } else if (smiles) {
-    var molecule = OCLE.Molecule.fromSmiles(smiles);
+    const molecule = OCLE.Molecule.fromSmiles(smiles);
     API.createData('molfile', molecule.toMolfile());
 } else {
     molfile = window.localStorage.getItem('molfile');

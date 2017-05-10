@@ -218,6 +218,8 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
             case 'f':
                 l = 3;
                 break;
+            default:
+                throw new Error(`Unexpected l: ${l}`);
         }
 
         var num = l * 2 + 1;
@@ -236,6 +238,8 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
                 return 5;
             case 'f':
                 return 7;
+            default:
+                throw new Error(`Wrong layer: ${l}`);
         }
     }
 

@@ -27,14 +27,14 @@ export async function createSequencesDatabase(roc) {
         let val = s.value;
         val.forEach(v => {
             v.seq.forEach(seq => {
-                 if(!sequences[seq.md5]) {
-                     sequences[seq.md5] = [seq];
-                 } else {
-                     sequences[seq.md5].push(seq);
-                 }
-                 seq.ref = v.ref;
-                 seq.document = s.document;
-                 seq.uuid = s.id;
+                if (!sequences[seq.md5]) {
+                    sequences[seq.md5] = [seq];
+                } else {
+                    sequences[seq.md5].push(seq);
+                }
+                seq.ref = v.ref;
+                seq.document = s.document;
+                seq.uuid = s.id;
             });
         });
     });
@@ -61,7 +61,7 @@ export async function createFeaturesDatabase(roc) {
         let val = q.value; // one per attachment reference
         val.forEach(v => {
             v.features.forEach((f) => { // one per sequence in the attachments
-                if(!features[f.md5]) {
+                if (!features[f.md5]) {
                     features[f.md5] = [f];
                 } else {
                     features[f.md5].push(f);
@@ -75,13 +75,10 @@ export async function createFeaturesDatabase(roc) {
 
     const md5s = Object.keys(features);
 
-    console.log(features);
-
     const seq = md5s.map(md5 => ({
         id: md5,
         seq: features[md5][0].seq
     }));
-
 
 
     const res = await superagent.post(`${url}/makeblastdb`)

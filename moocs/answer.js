@@ -10,7 +10,7 @@ define(['mathjs'], function (mathjs) {
         // Absolute error
         // if no units, same units as answer
         options.relativeError = Number(options.relativeError);
-        if (options.absoluteError != undefined) {
+        if (options.absoluteError !== undefined) {
             options.absoluteError = String(options.absoluteError);
             try {
                 var errorUnit = mathjs.unit(options.absoluteError);
@@ -74,8 +74,8 @@ define(['mathjs'], function (mathjs) {
 });
 
 function isCorrect(sol, ans, options) {
-    var absoluteError = options.absoluteError != undefined && !isNaN(options.absoluteError) ? options.absoluteError : null;
-    var relativeError = options.relativeError != undefined && !isNaN(options.relativeError) ? options.relativeError : null;
+    var absoluteError = options.absoluteError !== undefined && !isNaN(options.absoluteError) ? options.absoluteError : null;
+    var relativeError = options.relativeError !== undefined && !isNaN(options.relativeError) ? options.relativeError : null;
     var order = getOrder(sol, ans);
     if (relativeError !== null) {
         if (Math.abs(sol - ans) > relativeError * sol) {

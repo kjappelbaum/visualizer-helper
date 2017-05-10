@@ -61,7 +61,7 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
 
                 result = matrix.solve(e);
             } else {
-                console.warn('cannot solve');
+                console.warn('cannot solve'); // eslint-disable-line no-console
             }
         } else {
             var LU = ml.Matrix.Decompositions.LU(matrix);
@@ -75,10 +75,10 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
                 matrix.setRow(idx, trivialRow);
                 result = matrix.solve(e);
             } else {
-                console.warn('cannot solve this case');
+                console.warn('cannot solve this case'); // eslint-disable-line no-console
             }
         }
-        if (!result) return;
+        if (!result) return null;
         result = result.map(r => r[0]);
         return result;
     };
@@ -100,6 +100,7 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
         for (var i = 0; i < matrix.rows; i++) {
             if (matrix[i][i] === 0 || matrix[i][i] === -0) return i;
         }
+        return null;
     }
 
     return exports;

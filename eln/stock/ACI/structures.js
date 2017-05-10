@@ -14,12 +14,12 @@ function Structure(roc) {
                     return entry.$id[1] === type;
                 };
             }
-            return await roc.view('entryByKind', options);
+            return roc.view('entryByKind', options);
         },
 
         async create(molfile, type) {
             const ocl = getOcl(molfile, true);
-            return await this._createFromOcl(ocl, type);
+            return this._createFromOcl(ocl, type);
         },
 
         async _createFromOcl(ocl, type, rocOptions) {
@@ -66,6 +66,7 @@ function Structure(roc) {
                     }
                 }
             }
+            return null;
         }
 
     };

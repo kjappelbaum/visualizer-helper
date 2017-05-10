@@ -1,5 +1,6 @@
 
 define([
+    'src/main/datas',
     'src/util/api',
     'browserified/twig/twig',
     'canvg',
@@ -7,7 +8,8 @@ define([
     'src/util/typerenderer',
     'jquery',
     'https://www.lactame.com/lib/openchemlib-extended/2.2.0/openchemlib-extended.js'
-], function (API, twig, canvg, IJS, typerenderer, $, OCL) {
+], function (Datas, API, twig, canvg, IJS, typerenderer, $, OCL) {
+    const DataObject = Datas.DataObject;
     let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 // Use a lookup table to find the index.

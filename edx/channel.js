@@ -6,17 +6,17 @@ define(['https://cdnjs.cloudflare.com/ajax/libs/jschannel/1.0.0-git-commit1-8c4f
         if (initialized) return;
         initialized = true;
 
-        var options = options || {};
+        options = options || {};
         var state = {
-                a: 1
-            },
-            channel;
+            a: 1
+        };
+        var channel;
 
         // Establish a channel only if this application is embedded in an iframe.
         // This will let the parent window communicate with this application using
         // RPC and bypass SOP restrictions.
         if (window.parent !== window) {
-            channel = Channel.build({
+            channel = self.Channel.build({
                 window: window.parent,
                 origin: '*',
                 scope: 'JSInput'

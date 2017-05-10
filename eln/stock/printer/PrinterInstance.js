@@ -13,7 +13,7 @@ define(['src/util/util', './PrintServer', './printProcessors'], function (Util, 
             if (!processors[printFormat.processor]) throw new Error('processor does not exist');
             processData(printFormat, data);
             const printData = await processors[String(printFormat.processor)].call(null, printFormat, data);
-            return await this.printServer.print(this.id, printData);
+            return this.printServer.print(this.id, printData);
         }
     }
 

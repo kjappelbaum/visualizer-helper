@@ -58,7 +58,7 @@ class Nmr1dManager {
                     if (typeof UI !== 'undefined') {
                         UI.showNotification('Peak picking can only be applied on 1D spectra', 'warning');
                     }
-                    return;
+                    return false;
                 }
                 this._autoRanges(currentNmr);
                 break;
@@ -220,7 +220,7 @@ class Nmr1dManager {
             nmr1hOptions.triggerChange();
             this.updateIntegrals();
         } else {
-            console.warn('not updating integrals, invalid total integral');
+            console.warn('not updating integrals, invalid total integral'); // eslint-disable-line no-console
         }
     }
 

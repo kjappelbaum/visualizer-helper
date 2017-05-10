@@ -45,6 +45,7 @@ class MF {
                 }
             }
         }
+        return null;
     }
 
     getMF() {
@@ -84,12 +85,13 @@ class MF {
 
     _mfColor() {
         var existingMF = this.getMF();
+        var molfile = this.getMolfile();
         if (molfile) {
             var molecule = OCLE.Molecule.fromMolfile(molfile);
             var mf = molecule.getMolecularFormula().formula;
             var existingMW = existingMF ? CCE.analyseMF(existingMF).mw : 0;
             var newMW = mf ? CCE.analyseMF(mf).mw : 0;
-            if (newMW != existingMW) {
+            if (newMW !== existingMW) {
                 API.createData('mfBGColor', 'pink');
             } else {
                 API.createData('mfBGColor', 'white');

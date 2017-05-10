@@ -1,8 +1,10 @@
-
+import Datas from 'src/main/datas';
 import ExpandableMolecule from './ExpandableMolecule';
 import MF from './MF';
 import API from 'src/util/api';
 import Debug from 'src/util/debug';
+
+const DataObject = Datas.DataObject;
 
 const defaultOptions = {
     varName: 'sample',
@@ -62,7 +64,9 @@ class Sample {
                     case '$content.general.mf':
                         try {
                             this.mf.fromMF();
-                        } catch (e) {}
+                        } catch (e) {
+                            // ignore
+                        }
                         break;
                     default:
                         break;

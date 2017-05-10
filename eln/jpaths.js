@@ -1,5 +1,7 @@
-
+import Datas from 'src/main/datas';
 import API from 'src/util/api';
+
+const DataObject = Datas.DataObject;
 
 const jpaths = {};
 
@@ -38,7 +40,8 @@ export function getData(sample, varName) {
 
 export function setData(sample, varName) {
     check(varName);
-    sample = get(sample);
+    // todo fix this
+    //sample = get(sample);
     sample.setChildSync(jpaths[varName]);
 }
 
