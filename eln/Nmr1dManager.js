@@ -145,6 +145,10 @@ class Nmr1dManager {
     _autoRanges(currentNmr) {
         this._getNMR(currentNmr).then(nmr => {
             var ppOptions = API.getData('nmr1hOptions').resurrect();
+            var removeImpurityOptions = {};
+            if (ppOptions.rmImpurities.useIt) {
+                removeImpurityOptions = {solvent: currentNmr.solvent, nH: Number(ppOptions.integral), error: ppOptions.rmImpurities.error};
+            }
             var ranges = nmr.getRanges({
                 nH: Number(ppOptions.integral),
                 realTop: true,
@@ -155,6 +159,7 @@ class Nmr1dManager {
                 integralType: ppOptions.integralFn,
                 idPrefix: nmr.getNucleus() + '',
                 gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0.004},
+                removeImpurity: removeImpurityOptions,
                 format: 'new'
             });
             currentNmr.setChildSync(['range'], ranges);
@@ -264,7 +269,11 @@ class Nmr1dManager {
             optimize: false,
             integralFn: 'sum',
             integral: 100,
-            type: '1H'
+            type: '1H',
+            rmImpurities: {
+                useIt: false,
+                error: 0.025
+            }
         })
         );
 
@@ -311,6 +320,20 @@ class Nmr1dManager {
                         'title': 'Nucleus',
                         'label': 'Nucleus',
                         'editable': false
+                    },
+                    "rmImpurities": {
+                        'type': 'object',
+                        'label': 'Remove solvent impurities',
+                        'properties': {
+                            'useIt': {
+                                'type': 'boolean',
+                                'label': 'Remove Impurities',
+                            },
+                            'error': {
+                                'type': 'number',
+                                'label': 'Error',
+                            }
+                        }
                     }
                 }
             },
@@ -321,6 +344,20 @@ class Nmr1dManager {
                         'type': 'number',
                         'title': 'value to fit the spectrum integral',
                         'label': 'Integral'
+                    },
+                    "rmImpurities": {
+                        'type': 'object',
+                        'label': 'Remove solvent impurities',
+                        'properties': {
+                            'useIt': {
+                                'type': 'boolean',
+                                'label': 'Remove Impurities',
+                            },
+                            'error': {
+                                'type': 'number',
+                                'label': 'Error',
+                            }
+                        }
                     }
                 }
             }
