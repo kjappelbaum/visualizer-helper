@@ -46,7 +46,6 @@ const styles = `
 }
 */
 
-
 .on-tabs-tiles .cell .main {
     font-size: 6em;
     margin: auto;
@@ -66,22 +65,15 @@ const styles = `
     z-index: 100;
     margin-top: 4px;
 }
-.on-tabs-tiles .bottomRight {
-    position:absolute;
-    bottom: 5px;
-    right: 8px;
-    font-weight: bold;
-    font-size: 1.4em;
-}
 .on-tabs-tiles .footer {
     position: absolute;
-    bottom: 1.5em;
+    bottom: 0em;
     left: 0;
     text-align: center;
     width: 100%;
-    white-space: pre;
+    /* white-space: pre; */
     font-size: 10px;
-    overflow: hidden;
+    /*overflow: hidden;*/
     margin-bottom: 4px;
 }
 
