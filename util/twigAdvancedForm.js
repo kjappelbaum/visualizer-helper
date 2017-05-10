@@ -139,7 +139,7 @@ define(['src/util/api','modules/modulefactory'], function (API, Module) {
                 } while (elements.length>0)
 
                 // we force the incorporation of the data in the form
-                if (data) {
+                if (data && module.view.formObject) {
                     if (options.debug) console.log('FORCE update data');
                     module.view.fillForm(true);
                 }
