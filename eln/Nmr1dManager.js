@@ -237,9 +237,12 @@ class Nmr1dManager {
             }
             integral = Math.round(sum);
         } else {
-            const chemcalc = CCE.analyseMF(getData(this.sample, 'mf') + '');
-            if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
-                integral = chemcalc.atoms.H;
+            const mf = getData(this.sample, 'mf') + '';
+            if (mf) {
+                const chemcalc = CCE.analyseMF(mf);
+                if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
+                    integral = chemcalc.atoms.H;
+                }
             }
         }
 
