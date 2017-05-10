@@ -25,4 +25,3 @@ function onMessage(data) {
         API.doAction('rocInit');
     }
 }
-

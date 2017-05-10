@@ -5,7 +5,9 @@
   "description": "",
   "scripts": {
     "babel-test": "babel eln --out-dir elntest --presets es2017 --plugins transform-es2015-modules-amd-if-required",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "eslint": "eslint . --cache",
+    "eslint-fix": "npm run eslint -- --fix",
+    "test": "npm run eslint"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,9 @@
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-plugin-transform-es2015-modules-amd-if-required": "^1.0.4",
-    "babel-preset-es2017": "^6.16.0"
+    "babel-preset-es2017": "^6.16.0",
+    "eslint": "^3.19.0",
+    "eslint-config-cheminfo": "^1.7.0",
+    "eslint-plugin-no-only-tests": "^1.1.0"
   }
 }

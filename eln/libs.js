@@ -1,4 +1,3 @@
-'use strict';
 
 export {default as OCLE} from 'https://www.lactame.com/lib/openchemlib-extended/1.13.0/openchemlib-extended.js';
 export {default as SD} from 'https://www.lactame.com/lib/spectra-data/3.0.1/spectra-data.min.js';

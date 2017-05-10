@@ -1,4 +1,3 @@
-'use strict';
 
 define([
     'src/util/api',
@@ -25,7 +24,7 @@ define([
 
             //Render molfile if exists
             var text = template.render(DataObject.resurrect(data));
-            if(data.molfile && printFormat.molfileOptions && printFormat.molfileOptions.width) {
+            if (data.molfile && printFormat.molfileOptions && printFormat.molfileOptions.width) {
                 const encoder = new TextEncoder();
                 text = text.replace(/END\s*$/, '');
                 text += `VARIABLE DARKNESS ${printFormat.molfileOptions.darkness || 500}\nGRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat.molfileOptions.y || 0}\n`;
@@ -41,7 +40,7 @@ define([
         molecule: async function (printFormat, data) {
             const mol = await getMolBmp(data.molfile);
             const encoder = new TextEncoder();
-            const part1 = encoder.encode(`! 0 90 193 1\nVARIABLE DARKNESS 500\nPITCH 200\nWIDTH 240\nGRAPHIC BMP 100 93\n`);
+            const part1 = encoder.encode('! 0 90 193 1\nVARIABLE DARKNESS 500\nPITCH 200\nWIDTH 240\nGRAPHIC BMP 100 93\n');
             const part2 = encoder.encode('!+ 0 100 200 1\nEND\n');
             const toSend = concatenate(Uint8Array, part1, mol, part2);
             return toSend;
@@ -53,7 +52,7 @@ define([
             width: 100
         };
         options = Object.assign({}, defaultMolOptions, options);
-        if(!options.height) options.height = options.width;
+        if (!options.height) options.height = options.width;
         const mol = OCL.Molecule.fromMolfile(molfile);
         const svgString = mol.toSVG(options.width, options.height, '', {
             noImplicitAtomLabelColors: true,

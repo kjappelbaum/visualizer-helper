@@ -71,10 +71,10 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
 
             } else {
                 var margin = spinOuterMargin + spinInnerMargin;
-                p = `M${margin},2 ${margin},${rectHeight - (2 * arrowHeadSize + 1)}`
+                p = `M${margin},2 ${margin},${rectHeight - (2 * arrowHeadSize + 1)}`;
             }
 
-            if(group) {
+            if (group) {
                 paper.path(p).attr({
                     style: 'marker-end: url(#svgarrow);',
                     strokeWidth: arrowStrokeWidth,
@@ -137,25 +137,25 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
         // p
         for (i = 0; i < 6; i++) {
             label = '' + (7 - i) + 'p';
-            y = topBottomMargin + pOffset[0] + (i-1) * (drawHeight - pOffset[0] - (drawHeight - pOffset[2])) / 4;
+            y = topBottomMargin + pOffset[0] + (i - 1) * (drawHeight - pOffset[0] - (drawHeight - pOffset[2])) / 4;
             for (j = 0; j < 3; j++) {
                 x = leftRightMargin + pOffset[3] + j * (rectWidth + rectMargin);
                 drawRect(x, y, label + (j + 1));
             }
             x = leftRightMargin + pOffset[3] + 1.5 * (rectWidth + rectMargin);
-            drawText(x, y + labelOffset, label)
+            drawText(x, y + labelOffset, label);
         }
 
         // d
         for (i = 0; i < 4; i++) {
             label = '' + (6 - i) + 'd';
-            y = topBottomMargin + dOffset[0] + (i-1) * (drawHeight - dOffset[0] - (drawHeight - dOffset[2])) / 2;
+            y = topBottomMargin + dOffset[0] + (i - 1) * (drawHeight - dOffset[0] - (drawHeight - dOffset[2])) / 2;
             for (j = 0; j < 5; j++) {
                 x = leftRightMargin + dOffset[3] + j * (rectWidth + rectMargin);
                 drawRect(x, y, label + (j + 1));
             }
             x = leftRightMargin + dOffset[3] + 2.5 * (rectWidth + rectMargin);
-            drawText(x, y + labelOffset, label)
+            drawText(x, y + labelOffset, label);
         }
 
         // f
@@ -167,7 +167,7 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
                 drawRect(x, y, label + (j + 1));
             }
             x = leftRightMargin + fOffset[3] + 3.5 * (rectWidth + rectMargin);
-            drawText(x, y + labelOffset, label)
+            drawText(x, y + labelOffset, label);
         }
 
         drawElectrons(electronicConfiguration);
@@ -191,7 +191,7 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
             return {
                 layer: m[1],
                 electrons: +m[2]
-            }
+            };
         });
         return elConfig;
     }

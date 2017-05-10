@@ -1,4 +1,3 @@
-'use strict';
 
 import ExpandableMolecule from './ExpandableMolecule';
 import Nmr1dManager from './Nmr1dManager';
@@ -34,7 +33,7 @@ class Sample {
 
         this.uuid = uuid;
         if (!this.uuid) {
-            UI.showNotification("Cannot create an editable sample without an uuid", 'error');
+            UI.showNotification('Cannot create an editable sample without an uuid', 'error');
             return;
         }
         this._loadInstanceInVisualizer();
@@ -86,14 +85,14 @@ class Sample {
                 var jpathStr = event.jpath.join('.');
 
 
-                if (jpathStr.replace(/\.\d+\..*/,'')==='$content.spectra.nmr') {
+                if (jpathStr.replace(/\.\d+\..*/, '') === '$content.spectra.nmr') {
                     // execute peak picking
                     var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
                     this.nmr1dManager.executePeakPicking(currentNmr);
                 }
 
 
-                console.log('Event received',event.jpath.join('.'))
+                console.log('Event received', event.jpath.join('.'));
                 switch (event.jpath.join('.')) {
                     case '':
                         this.nmr1dManager.initializeNMRAssignment(getData(this.sample, 'nmr'));
@@ -106,7 +105,7 @@ class Sample {
                         try {
                             this.mf.fromMF();
                             this.nmr1dManager.updateIntegral({mf: true});
-                        } catch(e) {}
+                        } catch (e) {}
                         break;
                 }
             };
@@ -125,15 +124,14 @@ class Sample {
     }
 
 
-
     updateAttachments() {
         return this.roc.getAttachmentList(this.uuid).then(function (list) {
             API.createData('sampleAttachments', list);
-        })
+        });
     }
 
     handleDrop(name) {
-        if(!name) {
+        if (!name) {
             throw new Error('handleDrop expects a variable name');
         }
         name = String(name);
@@ -144,7 +142,7 @@ class Sample {
             'droppedMS': 'mass'
         };
 
-        if(!types[name]) {
+        if (!types[name]) {
             throw new Error('Unexpected variable name');
         }
 
@@ -153,7 +151,7 @@ class Sample {
         var droppedDatas = API.getData(name);
         droppedDatas = droppedDatas.file || droppedDatas.str;
         var prom = Promise.resolve();
-        for(let i=0; i<droppedDatas.length; i++) {
+        for (let i = 0; i < droppedDatas.length; i++) {
             prom = prom.then(() => {
                 var data = DataObject.resurrect(droppedDatas[i]);
                 return this.roc.attach(types[name], this.sample, data);
@@ -162,7 +160,7 @@ class Sample {
 
         prom.then(() => {
             this.updateAttachments();
-        }).catch(err =>  {
+        }).catch(err => {
             Debug.error('Error in handle drop', err);
             // Even if it failed it could be that some of them succeeded
             this.updateAttachments();
@@ -178,7 +176,7 @@ class Sample {
         switch (action.name) {
             case 'save':
                 this.roc.update(this.sample).then(function () {
-                    if (typeof IframeBridge != 'undefined') {
+                    if (typeof IframeBridge !== 'undefined') {
                         IframeBridge.postMessage('tab.status', {
                             saved: true
                         });
@@ -186,11 +184,11 @@ class Sample {
                 });
                 break;
             case 'createOptions':
-                var advancedOptions1H = API.cache("nmr1hAdvancedOptions");
+                var advancedOptions1H = API.cache('nmr1hAdvancedOptions');
                 if (advancedOptions1H) {
-                    API.createData("nmr1hOndeTemplate", API.getData("nmr1hOndeTemplates").full);
+                    API.createData('nmr1hOndeTemplate', API.getData('nmr1hOndeTemplates').full);
                 } else {
-                    API.createData("nmr1hOndeTemplate", API.getData("nmr1hOndeTemplates").short);
+                    API.createData('nmr1hOndeTemplate', API.getData('nmr1hOndeTemplates').short);
                 }
                 break;
             case 'deleteAttachment':
@@ -206,7 +204,7 @@ class Sample {
             case 'attachNMR':
             case 'attachIR':
             case 'attachMass':
-                var type = action.name.replace("attach", "").toLowerCase();
+                var type = action.name.replace('attach', '').toLowerCase();
                 var droppedDatas = data;
                 droppedDatas = droppedDatas.file || droppedDatas.str;
                 var prom = Promise.resolve();
@@ -225,7 +223,7 @@ class Sample {
                 break;
             case 'refresh':
                 UI.confirm('Are you sure you want to refresh? This will discard your local modifications.').then(ok => {
-                    if(!ok) return;
+                    if (!ok) return;
                     this.unbindChange();
                     this.roc.discardLocal(this.sample).then(() => {
                         this.nmr1dManager.initializeNMRAssignment(API.getData('currentNmr'));
@@ -242,7 +240,7 @@ class Sample {
 
                 break;
             default:
-                break
+                break;
         }
     }
 }

@@ -1,0 +1,4 @@
+extends: 'eslint-config-cheminfo'
+env:
+  amd: true
+  browser: true

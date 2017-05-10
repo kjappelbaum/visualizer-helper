@@ -1,4 +1,3 @@
-'use strict';
 
 import fileSaver from 'file-saver';
 import API from 'src/util/api';
@@ -21,16 +20,16 @@ class Nmr1dManager {
                 this.updateIntegrals();
                 break;
             case 'downloadSVG':
-                var blob = new Blob([action.value + ""], {type: "application/jcamp-dx;charset=utf-8"});
+                var blob = new Blob([action.value + ''], {type: 'application/jcamp-dx;charset=utf-8'});
                 fileSaver(blob, 'spectra.svg');
                 break;
             case 'toggleNMR1hAdvancedOptions':
-                var advancedOptions1H = !API.cache("nmr1hAdvancedOptions");
-                API.cache("nmr1hAdvancedOptions", advancedOptions1H);
+                var advancedOptions1H = !API.cache('nmr1hAdvancedOptions');
+                API.cache('nmr1hAdvancedOptions', advancedOptions1H);
                 if (advancedOptions1H) {
-                    API.createData("nmr1hOndeTemplate", API.getData("nmr1hOndeTemplates").full);
+                    API.createData('nmr1hOndeTemplate', API.getData('nmr1hOndeTemplates').full);
                 } else {
-                    API.createData("nmr1hOndeTemplate", API.getData("nmr1hOndeTemplates").short);
+                    API.createData('nmr1hOndeTemplate', API.getData('nmr1hOndeTemplates').short);
                 }
 
                 break;
@@ -54,10 +53,9 @@ class Nmr1dManager {
                 }
                 break;
             case 'executePeakPicking':
-                // Execute pickPeacking button was clicked
                 var currentNmr = API.getData('currentNmr');
                 if (currentNmr.dimension > 1) {
-                    if (typeof UI != "undefined") {
+                    if (typeof UI !== 'undefined') {
                         UI.showNotification('Peak picking can only be applied on 1D spectra', 'warning');
                     }
                     return;
@@ -80,7 +78,7 @@ class Nmr1dManager {
             this.updateIntegral({mf: true});
             this._autoRanges(nmr);
         } else {
-            if(updateIntegral) {
+            if (updateIntegral) {
                 this.updateIntegral({range: nmr.range});
             }
             this.updateIntegralsFromSpectrum(nmr);
@@ -88,18 +86,15 @@ class Nmr1dManager {
     }
 
     _updateAnnotations(nmr) {
-        // var ppOptions = API.getData('nmr1hOptions');
         this._getNMR(nmr).then(spectrum => {
-            // spectrum.updateIntegrals(nmr.getChildSync(['range']), {nH: Number(ppOptions.integral)});
             this._createNMRannotationsAndACS(spectrum, new Ranges(nmr.range.resurrect()));
         });
     }
 
     updateIntegrals(integral) {
-        var ppOptions = API.getData("nmr1hOptions");
-        var currentRanges = API.getData("currentNmrRanges");
-        if(!currentRanges) return;
-
+        var ppOptions = API.getData('nmr1hOptions');
+        var currentRanges = API.getData('currentNmrRanges');
+        if (!currentRanges) return;
 
         // We initialize ranges with the DataObject so that
         // the integral update is inplace
@@ -111,7 +106,7 @@ class Nmr1dManager {
         // TODO: fix that so that entry can be detected as changed and saved to idb when integrals are updated
         API.doAction('rerenderRanges');
         const currentNmr = API.getData('currentNmr');
-        if(currentNmr) {
+        if (currentNmr) {
             setImmediate(() => {
                 this._updateAnnotations(currentNmr);
             });
@@ -121,7 +116,7 @@ class Nmr1dManager {
     async updateIntegralsFromSpectrum(nmr) {
         const spectrum = await this._getNMR(nmr);
         const range = nmr.range;
-        var ppOptions = API.getData("nmr1hOptions");
+        var ppOptions = API.getData('nmr1hOptions');
         spectrum.updateIntegrals(range, {
             nH: Number(ppOptions.integral)
         });
@@ -147,35 +142,9 @@ class Nmr1dManager {
         });
     }
 
-    /*_autoRanges(currentNmr) {
-        this._getNMR(currentNmr).then(nmr => {
-            var ppOptions = API.getData("nmr1hOptions").resurrect();
-            var intFN = 0;
-            if (ppOptions.integralFn == "peaks") {
-                intFN = 1;
-            }
-            var ranges = nmr.getRanges({
-                nH: Number(ppOptions.integral),
-                realTop: true,
-                thresholdFactor: Number(ppOptions.noiseFactor),
-                clean: ppOptions.clean,
-                compile: ppOptions.compile,
-                optimize: ppOptions.optimize,
-                integralFn: intFN,
-                idPrefix: nmr.getNucleus() + "",
-                gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0},
-                format: "new"
-            });
-            currentNmr.setChildSync(['range'], ranges);
-            this._createNMRannotationsAndACS(nmr, ranges);
-            //Is this possible. I need to add the highligth on the ranges
-            //nmr.setChildSync(['range'], peakPicking);
-        });
-    }*/
-    
     _autoRanges(currentNmr) {
         this._getNMR(currentNmr).then(nmr => {
-            var ppOptions = API.getData("nmr1hOptions").resurrect();
+            var ppOptions = API.getData('nmr1hOptions').resurrect();
             var ranges = nmr.getRanges({
                 nH: Number(ppOptions.integral),
                 realTop: true,
@@ -184,9 +153,9 @@ class Nmr1dManager {
                 compile: ppOptions.compile,
                 optimize: ppOptions.optimize,
                 integralType: ppOptions.integralFn,
-                idPrefix: nmr.getNucleus() + "",
+                idPrefix: nmr.getNucleus() + '',
                 gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0.004},
-                format: "new"
+                format: 'new'
             });
             currentNmr.setChildSync(['range'], ranges);
             this._createNMRannotationsAndACS(nmr, ranges);
@@ -194,7 +163,6 @@ class Nmr1dManager {
             //nmr.setChildSync(['range'], peakPicking);
         });
     }
-
 
     _createNMRannotationsAndACS(nmr, ranges) {
         ranges.updateMultiplicity();
@@ -215,24 +183,24 @@ class Nmr1dManager {
         // }
         //SD.formatter.update(peakPicking);
 
-        API.createData("annotationsNMR1d", ranges.getAnnotations({
+        API.createData('annotationsNMR1d', ranges.getAnnotations({
             line: 1,
-            fillColor: "green",
+            fillColor: 'green',
             strokeWidth: 0
         }));
         API.createData('acsNMR1d', ranges.getACS({
             rangeForMultiplet: true,
             nucleus: nmr.getNucleus(0),
             observe: Math.round(nmr.observeFrequencyX() / 10) * 10
-        }))
+        }));
     }
 
     updateIntegral(opts) {
         opts = opts || {};
         var integral;
-        if(opts.range) {
+        if (opts.range) {
             let sum = 0;
-            for(const range of opts.range) {
+            for (const range of opts.range) {
                 sum += range.integral;
             }
             integral = Math.round(sum);
@@ -246,7 +214,7 @@ class Nmr1dManager {
             }
         }
 
-        if(typeof integral === 'number' && !Number.isNaN(integral)) {
+        if (typeof integral === 'number' && !Number.isNaN(integral)) {
             const nmr1hOptions = API.getData('nmr1hOptions');
             nmr1hOptions.integral = integral;
             nmr1hOptions.triggerChange();
@@ -257,7 +225,7 @@ class Nmr1dManager {
     }
 
     updateHighlights(ranges) {
-        ranges = ranges || API.getData("currentNmrRanges");
+        ranges = ranges || API.getData('currentNmrRanges');
         if (!ranges) return;
         for (var i = 0; i < ranges.length; i++) {
             var range = ranges[i];
@@ -290,69 +258,69 @@ class Nmr1dManager {
         }
         var promise = Promise.resolve();
         promise = promise.then(() => API.createData('nmr1hOptions', {
-                noiseFactor: 0.8,
-                clean: true,
-                compile: true,
-                optimize: false,
-                integralFn: 'sum',
-                integral: 100,
-                type: '1H'
-            })
+            noiseFactor: 0.8,
+            clean: true,
+            compile: true,
+            optimize: false,
+            integralFn: 'sum',
+            integral: 100,
+            type: '1H'
+        })
         );
 
         promise = promise.then(() => API.createData('nmr1hOndeTemplates', {
-            "full": {
-                "type": "object",
-                "properties": {
-                    "integral": {
-                        "type": "number",
-                        "title": "value to fit the spectrum integral",
-                        "label": "Integral"
+            'full': {
+                'type': 'object',
+                'properties': {
+                    'integral': {
+                        'type': 'number',
+                        'title': 'value to fit the spectrum integral',
+                        'label': 'Integral'
                     },
-                    "noiseFactor": {
-                        "type": "number",
-                        "title": "Mutiplier of the auto-detected noise level",
-                        "label": "noiseFactor"
+                    'noiseFactor': {
+                        'type': 'number',
+                        'title': 'Mutiplier of the auto-detected noise level',
+                        'label': 'noiseFactor'
                     },
-                    "clean": {
-                        "type": "boolean",
-                        "title": "Delete signals with integration less than 0.5",
-                        "label": "clean"
+                    'clean': {
+                        'type': 'boolean',
+                        'title': 'Delete signals with integration less than 0.5',
+                        'label': 'clean'
                     },
-                    "compile": {
-                        "type": "boolean",
-                        "title": "Compile the multiplets",
-                        "label": "compile"
+                    'compile': {
+                        'type': 'boolean',
+                        'title': 'Compile the multiplets',
+                        'label': 'compile'
                     },
-                    "optimize": {
-                        "type": "boolean",
-                        "title": "Optimize the peaks to fit the spectrum",
-                        "label": "optimize"
+                    'optimize': {
+                        'type': 'boolean',
+                        'title': 'Optimize the peaks to fit the spectrum',
+                        'label': 'optimize'
                     },
-                    "integralFn": {
-                        "type": "string",
-                        "title": "Type of integration",
-                        "label": "Integral type",
-                        "enum": [
-                            "sum",
-                            "peaks"
+                    'integralFn': {
+                        'type': 'string',
+                        'title': 'Type of integration',
+                        'label': 'Integral type',
+                        'enum': [
+                            'sum',
+                            'peaks'
                         ]
                     },
-                    "type": {
-                        "type": "string",
-                        "title": "Nucleus",
-                        "label": "Nucleus",
-                        "editable": false
+                    'type': {
+                        'type': 'string',
+                        'title': 'Nucleus',
+                        'label': 'Nucleus',
+                        'editable': false
                     }
                 }
             },
-            "short": {
-                "type": "object",
-                "properties": {
-                    "integral": {
-                        "type": "number",
-                        "title": "value to fit the spectrum integral",
-                        "label": "Integral"
+            'short': {
+                'type': 'object',
+                'properties': {
+                    'integral': {
+                        'type': 'number',
+                        'title': 'value to fit the spectrum integral',
+                        'label': 'Integral'
                     }
                 }
             }
@@ -360,7 +328,7 @@ class Nmr1dManager {
         promise = promise.then((nmr1hOndeTemplates) => API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short));
         promise = promise.then(() => {
             var nmr = API.getData('currentNmr');
-            if(nmr) {
+            if (nmr) {
                 this.updateIntegral({range: nmr.getChildSync(['range'])});
             }
 

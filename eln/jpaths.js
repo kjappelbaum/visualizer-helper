@@ -1,4 +1,3 @@
-'use strict';
 
 import API from 'src/util/api';
 
@@ -44,13 +43,13 @@ export function setData(sample, varName) {
 }
 
 function check(varName) {
-    if(!jpaths[varName]) {
+    if (!jpaths[varName]) {
         throw new Error(`jpath for ${varName} not defined`);
     }
 }
 
 function _getData(variable) {
-    if(DataObject.getType(variable) === 'string') {
+    if (DataObject.getType(variable) === 'string') {
         return API.getData(variable);
     }
     return variable;

@@ -75,10 +75,10 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
                 matrix.setRow(idx, trivialRow);
                 result = matrix.solve(e);
             } else {
-                console.warn('cannot solve this case')
+                console.warn('cannot solve this case');
             }
         }
-        if(!result) return;
+        if (!result) return;
         result = result.map(r => r[0]);
         return result;
     };
@@ -104,5 +104,4 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
 
     return exports;
 });
-
 

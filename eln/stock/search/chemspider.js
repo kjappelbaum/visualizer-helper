@@ -1,4 +1,3 @@
-'use strict';
 
 import chemspider from 'https://www.lactame.com/lib/chemspider-json-api/0.0.3/chemspider-json-api.js';
 import util from 'src/util/util';
@@ -33,7 +32,7 @@ function fromChemspider(chemspider) {
         source: 'chemspider'
     };
 
-    const name = entry.$content.general.name =  [];
+    const name = entry.$content.general.name = [];
     const identifier = entry.$content.identifier = {};
     const cas = identifier.cas = [];
     const CSID = identifier.chemSpiderID = [];
@@ -46,7 +45,7 @@ function fromChemspider(chemspider) {
                 language: synonym.LangID
             });
         }
-        if(isReliableCas(synonym)) {
+        if (isReliableCas(synonym)) {
             cas.push({
                 value: synonym.Name
             });
@@ -54,7 +53,7 @@ function fromChemspider(chemspider) {
     }
     entry.names = _.uniq(entry.names.concat(name.map(n => n.value)));
 
-    if(chemspider.CSID) {
+    if (chemspider.CSID) {
         CSID.push({value: chemspider.CSID});
     }
     return entry;

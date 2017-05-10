@@ -1,4 +1,3 @@
-'use strict';
 
 import {confirm} from 'src/util/ui';
 
@@ -79,10 +78,10 @@ export default class RequestManager {
         });
         await this.roc.update(request, muteSuccess);
     }
-   async createCustomRequest(sample, options = {}) {
+    async createCustomRequest(sample, options = {}) {
         let groups = options.groups || [];
-        if (typeof groups === 'string') groups=[groups];
-       
+        if (typeof groups === 'string') groups = [groups];
+
         const kind = options.kind || '';
         const data = options.data || {};
         const disableNotification = options.disableNotification;
@@ -109,7 +108,7 @@ export default class RequestManager {
 
         return this.roc.create(requestObject, disableNotification);
     }
-    
+
     async createRequests(sample, list) {
         const groups = Array.from(new Set(list.map(el => el.kind)));
         // allow each lab to edit the entry

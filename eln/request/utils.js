@@ -1,4 +1,3 @@
-'use strict';
 
 export function convertParametersToSchema(parameters) {
     var props = {};
@@ -53,7 +52,7 @@ export function getSchemaFromExperiment(experiment) {
 }
 
 function getConverter(type) {
-    switch(type) {
+    switch (type) {
         case 'number':
             return Number;
         case 'boolean':
@@ -89,7 +88,7 @@ function formatSet(theset) {
     return {
         label: theset.$content.name,
         info: theset
-    }
+    };
 }
 
 function formatService(service) {

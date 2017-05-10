@@ -245,7 +245,7 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                     };
                     if (options.track) {
                         data.onChange((event) => {
-                            if(event.jpath.length) {
+                            if (event.jpath.length) {
                                 idb.set(data._id, data.resurrect());
                             }
                         });
@@ -784,8 +784,9 @@ define(['src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'super
                         let key = keys[i];
                         doc[key] = data[key];
                     }
-                    if (doc.triggerChange && !options.noTrigger)
+                    if (doc.triggerChange && !options.noTrigger) {
                         doc.triggerChange();
+                    }
                 }
             }
 

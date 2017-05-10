@@ -15,8 +15,8 @@ class ExpandableMolecule {
         this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
         this.expandedHydrogens = false;
         this.jsmeEditionMode = false;
-        
-        this.onChange=(event) => {
+
+        this.onChange = (event) => {
             // us this really a modification ? or a loop event ...
             // need to compare former oclID with new oclID
             var newMolecule = OCLE.Molecule.fromMolfile(event.target + '');
@@ -24,15 +24,15 @@ class ExpandableMolecule {
             if (idCode != this.idCode) {
                 this.idCode = idCode;
                 this.molfile = event.target + '';
-                this.sample.setChildSync(['$content','general','molfile'], this.molfile);
+                this.sample.setChildSync(['$content', 'general', 'molfile'], this.molfile);
             }
             this.options.onMolfileChanged(this);
         };
-        
-        
+
+
         API.createData('editableMolfile', this.molfile).then(
             (editableMolfile) => {
-                this.editableMolfile=editableMolfile;
+                this.editableMolfile = editableMolfile;
                 this.bindChange();
                 this.updateMolfiles();
                 this.setJSMEEdition(false);
@@ -47,7 +47,7 @@ class ExpandableMolecule {
     unbindChange() {
         this.editableMolfile.unbindChange(this.onChange);
     }
-    
+
     setJSMEEdition(value, noDepictUpdate) {
         this.jsmeEditionMode = value;
 
@@ -57,18 +57,18 @@ class ExpandableMolecule {
 
         if (this.jsmeEditionMode) {
             options.prefs.push('nodepict');
-            API.getData("editableMolfile").triggerChange();
+            API.getData('editableMolfile').triggerChange();
             this.expandedHydrogens = false;
         } else {
             options.prefs.push('depict');
             if (!noDepictUpdate) { // TODO when we should not updateMolfile
                 this.expandedHydrogens = false;
                 this.updateMolfiles();
-                API.createData("viewMolfile", this.viewMolfile);
+                API.createData('viewMolfile', this.viewMolfile);
             }
 
         }
-        API.doAction('setJSMEOptions', options)
+        API.doAction('setJSMEOptions', options);
     }
 
     setExpandedHydrogens(force) {
@@ -79,10 +79,10 @@ class ExpandableMolecule {
         }
         if (this.expandedHydrogens) {
             this.setJSMEEdition(false, true);
-            API.createData("viewMolfileExpandedH", this.viewMolfileExpandedH);
+            API.createData('viewMolfileExpandedH', this.viewMolfileExpandedH);
 
         } else {
-            API.createData("viewMolfile", this.viewMolfile);
+            API.createData('viewMolfile', this.viewMolfile);
         }
     }
 

@@ -1,21 +1,21 @@
 'use strict';
 
-define(['src/util/ui'], function(UI) {
+define(['src/util/ui'], function (UI) {
 
     function showRecordInfo(record) {
-        let html='';
-        html+=`<style>
+        let html = '';
+        html += `<style>
             #ownerInfo {font-size:2em};
             #ownerInfo h1 {font-size: 30px};
             #ownerInfo th {text-align: left};
         </style>`;
-        html+='<div id="ownerInfo">';
+        html += '<div id="ownerInfo">';
         if (Array.isArray(record.$id)) {
-            html+='<h1>'+record.$id.join(' - ')+'</h1>';
+            html += '<h1>' + record.$id.join(' - ') + '</h1>';
         } else {
-            html+='<h1>'+record.$id+'</h1>';
+            html += '<h1>' + record.$id + '</h1>';
         }
-        html+=`
+        html += `
         <table>
             <tr>
                 <th>UUID</th>
@@ -51,25 +51,17 @@ define(['src/util/ui'], function(UI) {
             </tr>
         
         </table>`;
-        html+='</div>';
+        html += '</div>';
 
 
         UI.dialog(html, {
-            width:800,
-            height:400,
-            title:'Security record information'
+            width: 800,
+            height: 400,
+            title: 'Security record information'
         });
     }
 
     return showRecordInfo;
 
 });
-
-
-
-
-
-
-
-
 

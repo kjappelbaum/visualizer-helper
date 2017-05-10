@@ -1,10 +1,9 @@
-'use strict';
 
 import ui from 'src/util/ui';
 import API from 'src/util/api';
 
 module.exports = {
-    async setup (printer, types) {
+    async setup(printer, types) {
         API.cache('printer', printer);
         let varFormats = types.map(() => []);
         const printers = await printer.getPrinters();
@@ -45,7 +44,7 @@ module.exports = {
                 info = {
                     printer: info[0],
                     format: info[1]
-                }
+                };
             }
         } else if (typeof info !== 'object') {
             throw new Error('Print entry: bad arguments');
@@ -59,7 +58,7 @@ module.exports = {
 
         await printer.print(info.printer, info.format, entry);
     },
-    async askFormat (type) {
+    async askFormat(type) {
         var f = {};
         const formats = API.getData(type + 'Formats').resurrect();
         if (!formats) throw new Error('No printer formats available');
@@ -82,7 +81,7 @@ module.exports = {
                 </form>
             </div>
     `, f, {twig: {formats}});
-        if(!f.printer) return f.printer;
+        if (!f.printer) return f.printer;
         return String(f.printer);
     }
 };

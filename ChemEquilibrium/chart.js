@@ -4,7 +4,7 @@ define(['src/util/color'], function (Color) {
     return {
         getChart(x, y, options) {
             options = options || {};
-            if(x.length !== y.length || y.length === 0) {
+            if (x.length !== y.length || y.length === 0) {
                 throw new Error('Invalid data length');
             }
             var chart = {
@@ -26,7 +26,7 @@ define(['src/util/color'], function (Color) {
                 data.y = y.map(function (y) {
                     return y[species[i]];
                 });
-                if(options.xLog) {
+                if (options.xLog) {
                     data.x = x.map(v => -Math.log10(v));
                 } else {
                     data.x = x;
@@ -37,9 +37,9 @@ define(['src/util/color'], function (Color) {
                 data.defaultStyle = {
                     lineColor: colors[i],
                     lineWidth: 1
-                }
+                };
             }
             return chart;
         }
-    }
+    };
 });

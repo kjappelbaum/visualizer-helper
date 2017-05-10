@@ -1,5 +1,4 @@
-"use strict";
-
+'use strict';
 
 define([
     'https://www.lactame.com/lib/openchemlib-extended/1.12.1/openchemlib-extended.js',
@@ -10,5 +9,5 @@ define([
         OCLE,
         Roc,
         Sample
-    }
+    };
 });

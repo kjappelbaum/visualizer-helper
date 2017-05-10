@@ -1,23 +1,25 @@
+'use strict';
+
 define(function () {
 
     function toTypedUrl(documents, couchUrl, database) {
-        if(!Array.isArray(documents)) throw new Error('Array expected');
+        if (!Array.isArray(documents)) throw new Error('Array expected');
 
-        for(var i=0; i<documents.length; i++) {
+        for (var i = 0; i < documents.length; i++) {
             var content = documents[i].$content;
             processObject(content, documents[i]);
         }
 
         function processObject(obj, documents) {
-            if(obj instanceof Object) {
-                if(typeof obj.filename === 'string' && typeof obj.type === 'string') {
+            if (obj instanceof Object) {
+                if (typeof obj.filename === 'string' && typeof obj.type === 'string') {
                     obj.url = couchUrl + '/db/' + database + '/' + documents._id + '/' + obj.filename;
                 }
-                for(var key in obj) {
+                for (var key in obj) {
                     processObject(obj[key], documents);
                 }
-            } else if(Array.isArray(obj)) {
-                for(var i=0; i<obj.length; i++) {
+            } else if (Array.isArray(obj)) {
+                for (var i = 0; i < obj.length; i++) {
                     processObject(obj[i], documents);
                 }
             }
@@ -28,4 +30,3 @@ define(function () {
 
     return toTypedUrl;
 });
-

@@ -1,5 +1,3 @@
-'use strict';
-
 import superagent from 'superagent';
 const url = 'https://www.cheminfo.org/blast-webservice';
 export async function makeblastdb(sequences) {

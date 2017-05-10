@@ -1,4 +1,3 @@
-'use strict';
 
 import {addType} from 'src/util/typerenderer';
 
@@ -48,7 +47,7 @@ const status = {
 // register type renderer
 function toscreen($element, value, root, options) {
     $element.html(getStatusDescription(+value));
-    if(options.withColor) {
+    if (options.withColor) {
         $element.css('background-color', getStatusColor(+value));
     }
 }

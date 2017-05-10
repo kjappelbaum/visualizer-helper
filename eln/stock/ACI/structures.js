@@ -1,4 +1,3 @@
-'use strict';
 
 import OCL from 'openchemlib/openchemlib-core';
 
@@ -26,9 +25,9 @@ function Structure(roc) {
         async _createFromOcl(ocl, type, rocOptions) {
             rocOptions = rocOptions || {};
             var prefix = 'X';
-            if(type === 'internal') {
+            if (type === 'internal') {
                 prefix = 'ACI';
-            } else if(type === 'commercial') {
+            } else if (type === 'commercial') {
                 prefix = 'S';
             }
 
@@ -75,7 +74,7 @@ function Structure(roc) {
 function getOcl(molfile, throwIfEmpty) {
     molfile = String(molfile);
     var ocl = OCL.Molecule.fromMolfile(molfile);
-    if(throwIfEmpty && !ocl.getAtoms()) {
+    if (throwIfEmpty && !ocl.getAtoms()) {
         throw new Error('Empty molfile');
     }
     return ocl.getIDCodeAndCoordinates();

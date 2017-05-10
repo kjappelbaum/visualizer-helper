@@ -3,7 +3,7 @@
 define(['https://cdnjs.cloudflare.com/ajax/libs/jschannel/1.0.0-git-commit1-8c4f7eb/jschannel.js'], function () {
     var initialized = false;
     function init(options) {
-        if(initialized) return;
+        if (initialized) return;
         initialized = true;
 
         var options = options || {};
@@ -18,13 +18,13 @@ define(['https://cdnjs.cloudflare.com/ajax/libs/jschannel/1.0.0-git-commit1-8c4f
         if (window.parent !== window) {
             channel = Channel.build({
                 window: window.parent,
-                origin: "*",
-                scope: "JSInput"
+                origin: '*',
+                scope: 'JSInput'
             });
 
-            channel.bind("getGrade", options.getGrade || getGrade);
-            channel.bind("getState", options.getState || getState);
-            channel.bind("setState", options.setState || setState);
+            channel.bind('getGrade', options.getGrade || getGrade);
+            channel.bind('getState', options.getState || getState);
+            channel.bind('setState', options.setState || setState);
         }
 
         function getGrade() {

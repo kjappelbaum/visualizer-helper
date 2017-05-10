@@ -1,10 +1,7 @@
 'use strict';
-import $ from 'jquery';
 
-function noop() {
-}
-
-const styles = `
+define(['jquery'], function ($) {
+    const styles = `
 <style>
 .on-tabs-tiles {
     display: inline-flex;
@@ -106,66 +103,70 @@ const styles = `
 </style>
 `;
 
-const defaultOptions = {
-    tiles: [],
-    onTileClick: noop,
-    ribbon: () => '',
-    isLink: () => true,
-    isActive: () => true,
-    shouldRender: () => true,
-    backgroundColor: tile => tile.backgroundColor,
-    color: tile => tile.color,
-    header: tile => tile.header,
-    footer: tile => tile.footer,
-    title: tile => tile.title,
-    icon: tile => tile.icon
-};
+    const defaultOptions = {
+        tiles: [],
+        onTileClick: () => {
+            // noop
+        },
+        ribbon: () => '',
+        isLink: () => true,
+        isActive: () => true,
+        shouldRender: () => true,
+        backgroundColor: tile => tile.backgroundColor,
+        color: tile => tile.color,
+        header: tile => tile.header,
+        footer: tile => tile.footer,
+        title: tile => tile.title,
+        icon: tile => tile.icon
+    };
 
-module.exports = function (div, options) {
-    let lineCount = 0;
-    options = Object.assign({}, defaultOptions, options);
-    const {tiles} = options;
-    const $div = $('#' + div);
-    $div.empty();
-    $div.append(styles);
-    const $main = $(`<div>`);
-    $div.append($main);
-    if (!tiles)  return $div.append('No tiles');
-    $main.addClass('on-tabs-tiles');
-    $main.append(tiles.map(getTile));
-
-    $main.on('click', function (event) {
-        let $el;
-        if ($(event.target).hasClass('cell')) {
-            $el = $(event.target);
-        } else {
-            $el = $(event.target).parents('.cell').first();
+    return function (div, options) {
+        let lineCount = 0;
+        options = Object.assign({}, defaultOptions, options);
+        const {tiles} = options;
+        const $div = $('#' + div);
+        $div.empty();
+        $div.append(styles);
+        const $main = $('<div>');
+        $div.append($main);
+        if (!tiles) {
+            $div.append('No tiles');
+            return;
         }
-        let idx = $el.attr('data-idx');
-        const tile = tiles[idx];
-        if (tile && options.isActive(tile)) {
-            options.onTileClick(event, tile, $el);
-        }
-    });
+        $main.addClass('on-tabs-tiles');
+        $main.append(tiles.map(getTile));
 
+        $main.on('click', function (event) {
+            let $el;
+            if ($(event.target).hasClass('cell')) {
+                $el = $(event.target);
+            } else {
+                $el = $(event.target).parents('.cell').first();
+            }
+            let idx = $el.attr('data-idx');
+            const tile = tiles[idx];
+            if (tile && options.isActive(tile)) {
+                options.onTileClick(event, tile, $el);
+            }
+        });
 
-    function getTile(tile, idx) {
-        tile.line = lineCount;
-        if (Object.keys(tile).length === 1) {
-            lineCount++;
-            return '<div style="width: 100%"></div>';
-        }
-        if (!options.shouldRender(tile)) return '';
-        const ribbon = options.ribbon(tile);
-        const active = options.isActive(tile);
-        const header = options.header(tile);
-        const footer = options.footer(tile);
-        const title = options.title(tile);
-        const icon = options.icon(tile);
+        function getTile(tile, idx) {
+            tile.line = lineCount;
+            if (Object.keys(tile).length === 1) {
+                lineCount++;
+                return '<div style="width: 100%"></div>';
+            }
+            if (!options.shouldRender(tile)) return '';
+            const ribbon = options.ribbon(tile);
+            const active = options.isActive(tile);
+            const header = options.header(tile);
+            const footer = options.footer(tile);
+            const title = options.title(tile);
+            const icon = options.icon(tile);
 
-        let iconType = /(fa|ci-icon)-/.exec(icon);
-        if (iconType) iconType = iconType[1];
-        const $el = $(`
+            let iconType = /(fa|ci-icon)-/.exec(icon);
+            if (iconType) iconType = iconType[1];
+            const $el = $(`
                 <div class="cell ${active ? 'active' : 'inactive'}">
                     <div class='content'>
                         <div class='header'>${header || ''}</div>
@@ -176,15 +177,16 @@ module.exports = function (div, options) {
                 </div>
         `);
 
-        $el.css({
-            color: options.color(tile),
-            backgroundColor: options.backgroundColor(tile),
-            cursor: active && options.isLink(tile) ? 'pointer' : 'inherit',
-        });
+            $el.css({
+                color: options.color(tile),
+                backgroundColor: options.backgroundColor(tile),
+                cursor: active && options.isLink(tile) ? 'pointer' : 'inherit',
+            });
 
-        $el.attr({
-            'data-idx': idx
-        });
-        return $el;
-    }
-};
+            $el.attr({
+                'data-idx': idx
+            });
+            return $el;
+        }
+    };
+});

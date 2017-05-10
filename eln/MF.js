@@ -1,4 +1,3 @@
-'use strict';
 
 import API from 'src/util/api';
 import UI from 'src/util/ui';
@@ -12,7 +11,7 @@ class MF {
             this.fromMolfile();
         } else {
             const mf = this.getMF();
-            if(mf) {
+            if (mf) {
                 var chemcalc = CCE.analyseMF(this.getMF());
                 if (chemcalc) {
                     this.previousEMMF = chemcalc.em;
@@ -41,7 +40,7 @@ class MF {
             try {
                 return CCE.analyseMF(mf);
             } catch (e) {
-                if(mf !== '') {
+                if (mf !== '') {
                     UI.showNotification('Could not calculate molecular formula: ' + e);
                 }
             }
@@ -57,19 +56,19 @@ class MF {
     }
 
     setMF(mf) {
-        this.sample.setChildSync(['$content','general','mf'], mf);
+        this.sample.setChildSync(['$content', 'general', 'mf'], mf);
     }
 
     setMW(mw) {
-        this.sample.setChildSync(['$content','general','mw'], mw);
+        this.sample.setChildSync(['$content', 'general', 'mw'], mw);
     }
 
     setEM(em) {
-        this.sample.setChildSync(['$content','general','em'], em);
+        this.sample.setChildSync(['$content', 'general', 'em'], em);
     }
 
     fromMF() {
-        if (! this.getMF()) {
+        if (!this.getMF()) {
             this.previousEMMF = 0;
             this.setMW(0);
             this.setEM(0);

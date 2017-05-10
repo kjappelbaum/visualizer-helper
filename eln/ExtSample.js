@@ -1,4 +1,3 @@
-'use strict';
 
 import ExpandableMolecule from './ExpandableMolecule';
 import MF from './MF';
@@ -88,7 +87,7 @@ class Sample {
     updateAttachments() {
         return this.roc.getAttachmentList(this.uuid).then(function (list) {
             API.createData('sampleAttachments', list);
-        })
+        });
     }
 
     handleDrop(name) {
@@ -132,7 +131,7 @@ class Sample {
         if (!action) return;
 
         if (this.expandableMolecule) {
-            this.expandableMolecule.handleAction(action)
+            this.expandableMolecule.handleAction(action);
         }
     }
 }

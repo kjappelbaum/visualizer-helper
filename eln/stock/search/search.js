@@ -1,4 +1,3 @@
-'use strict';
 
 import chemspider from './chemspider';
 import chemexper from './chemexper';
@@ -17,11 +16,11 @@ module.exports = {
     choose(term, options) {
         options = Object.assign({}, defaultOptions, options);
         const sources = [];
-        if(options.chemspider) sources.push({promise: chemspider.search(term)});
-        if(options.chemexper) sources.push({promise: chemexper.search(term)});
-        if(options.roc) {
+        if (options.chemspider) sources.push({promise: chemspider.search(term)});
+        if (options.chemexper) sources.push({promise: chemexper.search(term)});
+        if (options.roc) {
             const roc = options.roc;
-            const rocPromise =  roc.view('entryByKindAndId', {
+            const rocPromise = roc.view('entryByKindAndId', {
                 startkey: ['sample', [term]],
                 endkey: ['sample', [term + '\ufff0', {}]]
             }).then(data => {
@@ -97,8 +96,8 @@ module.exports = {
             slick: {
                 rowHeight: 150
             }
-        }).catch(function(e) {
-            console.error(e);
+        }).catch(function (e) {
+            console.error(e); // eslint-disable-line no-console
             ui.showNotification('search failed', 'error');
         });
 

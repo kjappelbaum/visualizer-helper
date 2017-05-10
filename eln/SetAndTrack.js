@@ -1,40 +1,38 @@
-define([
-    'src/util/api',
-    'src/util/versioning',
-    'uri/URI',
-], function (API, Versioning, URI) {
-    var externalInfo = JSON.parse(window.localStorage.getItem('external_cache') || "{}");
-    var smiles = externalInfo.smiles;
-    var molfile = externalInfo.molfile;
-    API.createData('nmr',[]);
-    API.createData('mass',[]);
-    API.createData('ir',[]);
+import API from 'src/util/api';
+import Versioning from 'src/util/versioning';
+import URI from 'uri/URI';
 
-    var uri = new URI(document.location.href);
-    var search = uri.search(true);
-    if (search.smiles) {
-        smiles=search.smiles;
-    }
+var externalInfo = JSON.parse(window.localStorage.getItem('external_cache') || '{}');
+var smiles = externalInfo.smiles;
+var molfile = externalInfo.molfile;
+API.createData('nmr', []);
+API.createData('mass', []);
+API.createData('ir', []);
 
+var uri = new URI(document.location.href);
+var search = uri.search(true);
+if (search.smiles) {
+    smiles = search.smiles;
+}
+
+if (molfile) {
+    var molecule = OCLE.Molecule.fromMolfile(molfile);
+    API.createData('molfile', molecule.toMolfile());
+} else if (smiles) {
+    var molecule = OCLE.Molecule.fromSmiles(smiles);
+    API.createData('molfile', molecule.toMolfile());
+} else {
+    molfile = window.localStorage.getItem('molfile');
     if (molfile) {
-        var molecule=OCLE.Molecule.fromMolfile(molfile);
-        API.createData('molfile', molecule.toMolfile());
-    } else if(smiles) {
-        var molecule=OCLE.Molecule.fromSmiles(smiles);
-        API.createData('molfile', molecule.toMolfile());
+        API.createData('molfile', molfile);
     } else {
-        molfile=window.localStorage.getItem('molfile');
-        if (molfile) {
-            API.createData('molfile', molfile);
-        } else {
-            API.createData('molfile', '');
-        }
+        API.createData('molfile', '');
     }
+}
 
-    var data = Versioning.getData();
-    data.onChange(function (evt) {
-        if(evt.jpath.length==1 && evt.jpath[0]=='molfile') {
-            localStorage.setItem('molfile', evt.target.get());
-        }
-    });
+var data = Versioning.getData();
+data.onChange(function (evt) {
+    if (evt.jpath.length === 1 && evt.jpath[0] === 'molfile') {
+        localStorage.setItem('molfile', evt.target.get());
+    }
 });

@@ -1,4 +1,3 @@
-'use strict';
 
 import superagent from 'superagent';
 import util from 'src/util/util';
@@ -10,7 +9,7 @@ module.exports = {
         return superagent.get(`https://www.chemexper.com/search/reference/json2/quick/${encodeURIComponent(term)}`)
             .then(function (result) {
                 result = result.body && result.body.entry;
-                if(!result) {
+                if (!result) {
                     ui.showNotification('No results', 'warn');
                     return Promise.resolve([]);
                 }
@@ -28,14 +27,14 @@ module.exports = {
                 }
                 return list;
             }).then(data => data.map(fromChemexper)).then(
-                data => data.sort( (a,b) => {
-                    let rn1 = (a.$content.identifier.cas.length>0) ?
-                        Number(a.$content.identifier.cas[0].value.replace(/-/g,'')) :
+                data => data.sort((a, b) => {
+                    let rn1 = (a.$content.identifier.cas.length > 0) ?
+                        Number(a.$content.identifier.cas[0].value.replace(/-/g, '')) :
                         Number.MAX_SAFE_INTEGER;
-                    let rn2 = (b.$content.identifier.cas.length>0) ?
-                        Number(b.$content.identifier.cas[0].value.replace(/-/g,'')) :
+                    let rn2 = (b.$content.identifier.cas.length > 0) ?
+                        Number(b.$content.identifier.cas[0].value.replace(/-/g, '')) :
                         Number.MAX_SAFE_INTEGER;
-                    return rn1-rn2;
+                    return rn1 - rn2;
                 })
             );
     }
@@ -71,5 +70,5 @@ function fromChemexper(chemexper) {
 
 function numberToCas(nb) {
     nb = String(nb);
-    return nb.slice(0,-3) + '-' + nb.slice(-3,-1) + '-' +  nb.slice(-1)
+    return nb.slice(0, -3) + '-' + nb.slice(-3, -1) + '-' + nb.slice(-1);
 }

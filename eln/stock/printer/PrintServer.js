@@ -1,10 +1,9 @@
-'use strict';
 
 define(['superagent', 'uri/URI'], function (superagent, URI) {
     class PrintServer {
         constructor(server, opts) {
             opts = opts || {};
-            if(opts.proxy) {
+            if (opts.proxy) {
                 this.url = new URI(opts.proxy).addSearch('mac', String(server.macAddress)).normalize().href();
             } else {
                 this.url = new URI(String(server.url)).normalize().href();
@@ -19,10 +18,10 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
         async print(id, printData) {
             const url = new URI(this.url).segment('send').segmentCoded(id).normalize().href();
 
-            return (await superagent
+            return superagent
                 .post(url)
                 .set('Content-Type', typeof printData === 'string' ? 'text/plain' : 'application/octet-stream')
-                .send(printData));
+                .send(printData);
         }
     }
 
