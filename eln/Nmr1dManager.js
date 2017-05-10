@@ -246,7 +246,7 @@ class Nmr1dManager {
             }
         }
 
-        if(!Number.isNaN(integral)) {
+        if(typeof integral === 'number' && !Number.isNaN(integral)) {
             const nmr1hOptions = API.getData('nmr1hOptions');
             nmr1hOptions.integral = integral;
             nmr1hOptions.triggerChange();
@@ -254,8 +254,6 @@ class Nmr1dManager {
         } else {
             console.warn('not updating integrals, invalid total integral');
         }
-
-
     }
 
     updateHighlights(ranges) {
