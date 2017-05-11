@@ -146,8 +146,8 @@ class Nmr1dManager {
         this._getNMR(currentNmr).then(nmr => {
             var ppOptions = API.getData('nmr1hOptions').resurrect();
             var removeImpurityOptions = {};
-            if (ppOptions.rmImpurities.useIt) {
-                removeImpurityOptions = {solvent: currentNmr.solvent, nH: Number(ppOptions.integral), error: ppOptions.rmImpurities.error};
+            if (ppOptions.removeImpurities.useIt) {
+                removeImpurityOptions = {solvent: currentNmr.solvent, nH: Number(ppOptions.integral), error: ppOptions.removeImpurities.error};
             }
             var ranges = nmr.getRanges({
                 nH: Number(ppOptions.integral),
@@ -159,8 +159,7 @@ class Nmr1dManager {
                 integralType: ppOptions.integralFn,
                 idPrefix: nmr.getNucleus() + '',
                 gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0.004},
-                removeImpurity: removeImpurityOptions,
-                format: 'new'
+                removeImpurity: removeImpurityOptions
             });
             currentNmr.setChildSync(['range'], ranges);
             this._createNMRannotationsAndACS(nmr, ranges);
@@ -270,7 +269,7 @@ class Nmr1dManager {
             integralFn: 'sum',
             integral: 100,
             type: '1H',
-            rmImpurities: {
+            removeImpurities: {
                 useIt: false,
                 error: 0.025
             }
@@ -321,7 +320,7 @@ class Nmr1dManager {
                         label: 'Nucleus',
                         editable: false
                     },
-                    rmImpurities: {
+                    removeImpurities: {
                         type: 'object',
                         label: 'Remove solvent impurities',
                         properties: {
@@ -331,7 +330,8 @@ class Nmr1dManager {
                             },
                             error: {
                                 type: 'number',
-                                label: 'Error',
+                                label: 'Tolerance',
+                                title: 'Allowed error in ppm'
                             }
                         }
                     }
