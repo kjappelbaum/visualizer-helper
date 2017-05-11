@@ -278,84 +278,85 @@ class Nmr1dManager {
         );
 
         promise = promise.then(() => API.createData('nmr1hOndeTemplates', {
-            'full': {
-                'type': 'object',
-                'properties': {
-                    'integral': {
-                        'type': 'number',
-                        'title': 'value to fit the spectrum integral',
-                        'label': 'Integral'
+            full: {
+                type: 'object',
+                properties: {
+                    integral: {
+                        type: 'number',
+                        title: 'value to fit the spectrum integral',
+                        label: 'Integral'
                     },
-                    'noiseFactor': {
-                        'type': 'number',
-                        'title': 'Mutiplier of the auto-detected noise level',
-                        'label': 'noiseFactor'
+                    noiseFactor: {
+                        type: 'number',
+                        title: 'Mutiplier of the auto-detected noise level',
+                        label: 'noiseFactor'
                     },
-                    'clean': {
-                        'type': 'boolean',
-                        'title': 'Delete signals with integration less than 0.5',
-                        'label': 'clean'
+                    clean: {
+                        type: 'boolean',
+                        title: 'Delete signals with integration less than 0.5',
+                        label: 'clean'
                     },
-                    'compile': {
-                        'type': 'boolean',
-                        'title': 'Compile the multiplets',
-                        'label': 'compile'
+                    compile: {
+                        type: 'boolean',
+                        title: 'Compile the multiplets',
+                        label: 'compile'
                     },
-                    'optimize': {
-                        'type': 'boolean',
-                        'title': 'Optimize the peaks to fit the spectrum',
-                        'label': 'optimize'
+                    optimize: {
+                        type: 'boolean',
+                        title: 'Optimize the peaks to fit the spectrum',
+                        label: 'optimize'
                     },
-                    'integralFn': {
-                        'type': 'string',
-                        'title': 'Type of integration',
-                        'label': 'Integral type',
-                        'enum': [
+                    integralFn: {
+                        type: 'string',
+                        title: 'Type of integration',
+                        label: 'Integral type',
+                        enum: [
                             'sum',
                             'peaks'
                         ]
                     },
-                    'type': {
-                        'type': 'string',
-                        'title': 'Nucleus',
-                        'label': 'Nucleus',
-                        'editable': false
+                    type: {
+                        type: 'string',
+                        title: 'Nucleus',
+                        label: 'Nucleus',
+                        editable: false
                     },
-                    "rmImpurities": {
-                        'type': 'object',
-                        'label': 'Remove solvent impurities',
-                        'properties': {
-                            'useIt': {
-                                'type': 'boolean',
-                                'label': 'Remove Impurities',
+                    rmImpurities: {
+                        type: 'object',
+                        label: 'Remove solvent impurities',
+                        properties: {
+                            useIt: {
+                                type: 'boolean',
+                                label: 'Remove Impurities',
                             },
-                            'error': {
-                                'type': 'number',
-                                'label': 'Error',
+                            error: {
+                                type: 'number',
+                                label: 'Error',
                             }
                         }
                     }
                 }
             },
-            'short': {
-                'type': 'object',
-                'properties': {
-                    'integral': {
-                        'type': 'number',
-                        'title': 'value to fit the spectrum integral',
-                        'label': 'Integral'
+            short: {
+                type: 'object',
+                properties: {
+                    integral: {
+                        type: 'number',
+                        title: 'Total integral value',
+                        label: 'Integral'
                     },
-                    "rmImpurities": {
-                        'type': 'object',
-                        'label': 'Remove solvent impurities',
-                        'properties': {
-                            'useIt': {
-                                'type': 'boolean',
-                                'label': 'Remove Impurities',
+                    removeImpurities: {
+                        type: 'object',
+                        label: 'Remove solvent impurities',
+                        properties: {
+                            useIt: {
+                                type: 'boolean',
+                                label: 'Remove Impurities',
                             },
-                            'error': {
-                                'type': 'number',
-                                'label': 'Error',
+                            error: {
+                                type: 'number',
+                                label: 'Tolerance',
+                                title: 'Allowed error in ppm'
                             }
                         }
                     }

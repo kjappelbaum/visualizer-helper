@@ -111,6 +111,7 @@ class Sample {
                         }
                         break;
                     default:
+                        /* eslint-disable-next-line no-console */
                         console.log(`Sample.js - Unexpected jpath: ${event.jpath.join('.')}`);
                 }
             };
