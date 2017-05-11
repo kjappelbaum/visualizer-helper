@@ -79,7 +79,7 @@ class Sample {
             this.mf.fromMF();
 
             this.onChange = (event) => {
-                if (typeof IframeBridge !== 'undefined') {
+                if (this.options.track && typeof IframeBridge !== 'undefined') {
                     self.IframeBridge.postMessage('tab.status', {
                         saved: false
                     });
