@@ -110,8 +110,8 @@ class Sample {
                             // ignore
                         }
                         break;
-                    // default:
-                    //     throw new Error(`Unexpected jpath: ${event.jpath.join('.')}`);
+                    default:
+                        console.log(`Sample.js - Unexpected jpath: ${event.jpath.join('.')}`);
                 }
             };
 
