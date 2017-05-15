@@ -241,6 +241,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             async document(uuid, options) {
                 options = options || {};
                 const doc = await this.get(uuid, options);
+                await this.updateAttachmentList(doc);
                 if (!doc) return null;
                 if (options.varName) {
                     this.typeUrl(doc.$content, doc);
@@ -385,8 +386,11 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
             async deleteAttachment(entry, attachments, options) {
                 await this.__ready;
-                if (!entry || !entry._attachments) return null;
                 options = createOptions(options, 'deleteAttachment');
+                if (!entry || !entry._attachments) {
+                    handleError(this, options)(new Error('invalid argument'));
+                    return null;
+                }
                 if (Array.isArray(attachments) && attachments.length === 0) return entry;
                 if (!Array.isArray(attachments)) attachments = [attachments];
 
@@ -406,6 +410,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                                 entry._attachments = data._attachments;
                                 entry.$creationDate = data.$creationDate;
                                 entry.$modificationDate = data.$modificationDate;
+                                this.updateAttachmentList(entry);
                                 if (entry.triggerChange && !options.noTrigger) {
                                     entry.triggerChange();
                                 }
@@ -519,10 +524,16 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 return cdb.list();
             }
 
+            async updateAttachmentList(entry) {
+                await this.__ready;
+                const cdb = this._getCdb(entry);
+                entry.attachmentList = await cdb.list();
+            }
+
             async addAttachment(entry, attachments, options) {
                 options = options || {};
+                let filename = true;
                 await this.__ready;
-                var prom = Promise.resolve(true);
                 attachments = DataObject.resurrect(attachments);
                 if (attachments.length === 1) {
                     attachments = attachments[0];
@@ -530,18 +541,16 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
                 if (!Array.isArray(attachments)) {
                     if (!attachments.filename) {
-                        prom = ui.enterValue('Enter a filename').then(filename => {
-                            if (filename) attachments.filename = filename;
-                            if (!attachments.filename) {
-                                return null;
-                            }
-                            // If we had to ask for a filename, resolve content type
-                            var fallback = attachments.contentType;
-                            attachments.contentType = undefined;
-                            setContentType(attachments, fallback);
-                            attachments = [attachments];
-                            return filename;
-                        });
+                        filename = await ui.enterValue('Enter a filename');
+                        if (filename) attachments.filename = filename;
+                        if (!attachments.filename) {
+                            return null;
+                        }
+                        // If we had to ask for a filename, resolve content type
+                        var fallback = attachments.contentType;
+                        attachments.contentType = undefined;
+                        setContentType(attachments, fallback);
+                        attachments = [attachments];
                     } else {
                         attachments = [attachments];
                     }
@@ -551,30 +560,29 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     setContentType(attachment);
                 });
 
-                const filename = await prom;
                 if (!filename) return null;
 
                 options = createOptions(options, 'addAttachment');
-                return this.get(entry, {fromCache: true, fallback: true})
-                    .then(entry => {
-                        const cdb = this._getCdb(entry);
-                        return cdb.inlineUploads(attachments, {
-                            noRefresh: true
-                        })
-                            .then(() => this.get(entry, {noUpdate: true}))
-                            .then(data => {
-                                entry._rev = data._rev;
-                                entry._attachments = data._attachments;
-                                entry.$creationDate = data.$creationDate;
-                                entry.$modificationDate = data.$modificationDate;
-                                if (entry.triggerChange && !options.noTrigger) {
-                                    entry.triggerChange();
-                                }
-                                return entry;
-                            });
-                    })
-                    .then(handleSuccess(this, options))
-                    .catch(handleError(this, options));
+                entry = await this.get(entry, {fromCache: true, fallback: true});
+
+                try {
+                    const cdb = this._getCdb(entry);
+                    await cdb.inlineUploads(attachments, {
+                        noRefresh: true
+                    });
+                    const data = this.get(entry, {noUpdate: true});
+                    entry._rev = data._rev;
+                    entry._attachments = data._attachments;
+                    entry.$creationDate = data.$creationDate;
+                    entry.$modificationDate = data.$modificationDate;
+                    await this.updateAttachmentList(entry);
+                    if (entry.triggerChange && !options.noTrigger) {
+                        entry.triggerChange();
+                    }
+                } catch(e) {
+                    return handleError(this, options)(e);
+                }
+                return entry;
             }
 
             async addAttachmentById(id, attachment, options) {
@@ -686,21 +694,17 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
             // Private
             _getCdb(entry) {
-                var isEntry, uuid;
+                var uuid;
                 var type = DataObject.getType(entry);
-                if (type === 'string') {
-                    uuid = String(entry);
-                } else if (type === 'object') {
+                if (type === 'object') {
                     uuid = String(entry._id);
-                    isEntry = true;
                 } else {
-                    throw new Error('Bad arguments');
+                    console.log('bad argument');
+                    throw new Error('Bad arguments, entry can only be an object');
                 }
                 const docUrl = `${this.entryUrl}/${String(uuid)}`;
                 var cdb = new CDB(docUrl);
-                if (isEntry) {
-                    cdb.setDoc(entry);
-                }
+                cdb.setDoc(entry);
                 return cdb;
             }
 
