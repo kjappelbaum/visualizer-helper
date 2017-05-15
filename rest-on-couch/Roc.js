@@ -579,7 +579,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     if (entry.triggerChange && !options.noTrigger) {
                         entry.triggerChange();
                     }
-                } catch(e) {
+                } catch (e) {
                     return handleError(this, options)(e);
                 }
                 return entry;
@@ -699,7 +699,6 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 if (type === 'object') {
                     uuid = String(entry._id);
                 } else {
-                    console.log('bad argument');
                     throw new Error('Bad arguments, entry can only be an object');
                 }
                 const docUrl = `${this.entryUrl}/${String(uuid)}`;
