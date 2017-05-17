@@ -98,7 +98,7 @@ async function compile(val) {
         $injector.invoke(function ($rootScope, $compile) {
             const svg = $compile(String(val))($rootScope);
             // TODO: why is this setTimeout needed
-            setImmediate(() => resolve(svg), 0);
+            setTimeout(() => resolve(svg), 0);
         });
     });
 }
