@@ -49,10 +49,11 @@ define(['src/util/api'], function (API) {
             } else {
                 // we need to reload the exercises based on the cookie
                 var selectedExercises = allExercises.filter(a => state.selectedExercises.includes(a.id));
-                selectedExercises.forEach(a => {
-                    if (state.myResults[a.id]) a.myResult = state.myResults[a.id]
-                });
             }
+            selectedExercises.forEach(a => {
+                if (state.myResults[a.id]) a.myResult = state.myResults[a.id]
+            });
+
 
             state.selectedExercises = selectedExercises.map(a => a.id);
 
