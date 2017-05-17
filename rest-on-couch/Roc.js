@@ -387,7 +387,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             async deleteAttachment(entry, attachments, options) {
                 await this.__ready;
                 options = createOptions(options, 'deleteAttachment');
-                if (!entry || !entry._attachments) {
+                if (DataObject.getType(entry) !== 'object') {
                     handleError(this, options)(new Error('invalid argument'));
                     return null;
                 }
