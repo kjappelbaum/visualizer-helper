@@ -21,7 +21,9 @@ function onRocInit(data) {
         var roc = new Roc(couchDB);
         API.cache('roc', roc);
         API.doAction('rocInit');
+        return true;
     }
+    return false;
 }
 
 function onDataFocus(dataId, tabId, type) {
@@ -41,7 +43,13 @@ function onDataFocus(dataId, tabId, type) {
 
 module.exports = {
     rocInit() {
-        IB.onMessage(onRocInit);
+        return new Promise(resolve => {
+            IB.onMessage(data => {
+                if(onRocInit(data)) {
+                    resolve();
+                }
+            });
+        });
     },
     sendCacheOnFocus(dataId, tabId) {
         IB.onMessage(onDataFocus(dataId, tabId, 'cache'));
