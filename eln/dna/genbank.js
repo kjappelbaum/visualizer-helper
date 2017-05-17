@@ -65,6 +65,9 @@ export function filterCircular(gb) {
 }
 
 export function getFeatureTypes(parsedGb) {
+    if(!Array.isArray(parsedGb)) {
+        parsedGb = [parsedGb];
+    }
     const s = new Set();
     parsedGb.forEach(d => {
         d.parsedSequence.features.forEach(f => {
