@@ -13,7 +13,7 @@ function onRocInit(data) {
         var couchDB = data.message.couchDB;
         if (!couchDB) {
             console.error('couchDB configuration was not passed'); // eslint-disable-line no-console
-            return;
+            return false;
         }
         var uuid = data.message.uuid;
         API.cache('couchDB', couchDB);
@@ -45,7 +45,7 @@ module.exports = {
     rocInit() {
         return new Promise(resolve => {
             IB.onMessage(data => {
-                if(onRocInit(data)) {
+                if (onRocInit(data)) {
                     resolve();
                 }
             });

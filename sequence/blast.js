@@ -7,11 +7,11 @@ export async function makeblastdb(sequences) {
 }
 
 /**
- *
- * @param options
- * @param options.database [string] - id of the database to query against
- * @param options.query [string] - query (sequence of nucleotides)
- * @returns {Promise.<Array>} - An array of hits ordered from the most significative to the least significative
+ * Perform a blastn search
+ * @param {object} options - blastn options
+ * @param {string} options.database - id of the database to query against
+ * @param {string} options.query - query (sequence of nucleotides)
+ * @return {Promise.<Array>} - An array of hits ordered from the most significative to the least significative
  */
 export async function blastn(options) {
     const res = await superagent.post(`${url}/blastn`)
