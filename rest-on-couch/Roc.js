@@ -257,14 +257,14 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                             }
                         });
 
-                        idb.get(data._id).then(localEntry => {
-                            if (!localEntry) return;
+                        const localEntry = idb.get(data._id);
+                        if (localEntry) {
                             if (localEntry._rev === doc._rev) {
                                 this._updateByUuid(data._id, localEntry, options);
                             } else {
                                 idb.delete(data._id);
                             }
-                        });
+                        }
                     }
                     return data;
                 }
@@ -493,11 +493,10 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     if (entry.triggerChange && !addAttachmentOptions.noTrigger) {
                         entry.triggerChange();
                     }
-                } catch(e) {
+                } catch (e) {
                     return handleError(this, attachOptions)(e);
                 }
-
-                handleSuccess(this, options)(entry);
+                handleSuccess(this, attachOptions)(entry);
                 return entry;
             }
 
@@ -580,6 +579,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 } catch (e) {
                     return handleError(this, options)(e);
                 }
+                handleSuccess(this, options)(entry);
                 return entry;
             }
 
