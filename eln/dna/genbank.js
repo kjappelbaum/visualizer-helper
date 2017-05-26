@@ -78,6 +78,7 @@ export function getFeatureTypes(parsedGb) {
 }
 
 export async function getSvgString(parsedGb, options) {
+    options = DataObject.resurrect(options);
     const svg = await getSvg(parsedGb, options);
     return $('<div>').append(svg).html();
 }
