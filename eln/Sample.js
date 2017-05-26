@@ -68,8 +68,7 @@ class Sample {
             createVar(sampleVar, 'mass');
             createVar(sampleVar, 'sampleCode');
             createVar(sampleVar, 'sampleCode');
-
-            this.updateAttachments(sample);
+            createVar(sampleVar, 'attachments');
 
             this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
             this.nmr1dManager = new Nmr1dManager(this.sample);
@@ -130,12 +129,6 @@ class Sample {
     }
 
 
-    updateAttachments() {
-        return this.roc.getAttachmentList(this.uuid).then(function (list) {
-            API.createData('sampleAttachments', list);
-        });
-    }
-
     handleDrop(name) {
         if (!name) {
             throw new Error('handleDrop expects a variable name');
@@ -163,14 +156,6 @@ class Sample {
                 return this.roc.attach(types[name], this.sample, data);
             });
         }
-
-        prom.then(() => {
-            this.updateAttachments();
-        }).catch(err => {
-            Debug.error('Error in handle drop', err);
-            // Even if it failed it could be that some of them succeeded
-            this.updateAttachments();
-        });
     }
 
     handleAction(action) {
@@ -199,13 +184,10 @@ class Sample {
                 break;
             case 'deleteAttachment':
                 var attachment = action.value.name;
-                this.roc.deleteAttachment(this.sample, attachment).then(this.updateAttachments.bind(this));
+                this.roc.deleteAttachment(this.sample, attachment);
                 break;
             case 'deleteNmr':
-                this.roc.unattach(this.sample, action.value).then(this.updateAttachments.bind(this));
-                break;
-            case 'updateAttachments':
-                this.updateAttachments();
+                this.roc.unattach(this.sample, action.value);
                 break;
             case 'attachNMR':
             case 'attachIR':
@@ -220,12 +202,6 @@ class Sample {
                         return this.roc.attach(type, this.sample, data);
                     });
                 }
-
-                prom.then(() => {
-                    this.updateAttachments(this.sample);
-                }).catch(() => {
-                    this.updateAttachments(this.sample);
-                });
                 break;
             case 'refresh':
                 UI.confirm('Are you sure you want to refresh? This will discard your local modifications.').then(ok => {

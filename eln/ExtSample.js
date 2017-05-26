@@ -88,12 +88,6 @@ class Sample {
     }
 
 
-    updateAttachments() {
-        return this.roc.getAttachmentList(this.uuid).then(function (list) {
-            API.createData('sampleAttachments', list);
-        });
-    }
-
     handleDrop(name) {
         if (!name) {
             throw new Error('handleDrop expects a variable name');
@@ -121,14 +115,6 @@ class Sample {
                 return this.roc.attach(types[name], this.sample, data);
             });
         }
-
-        prom.then(() => {
-            this.updateAttachments();
-        }).catch(err => {
-            Debug.error('Error in handle drop', err);
-            // Even if it failed it could be that some of them succeeded
-            this.updateAttachments();
-        });
     }
 
     handleAction(action) {

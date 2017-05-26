@@ -25,6 +25,7 @@ jpaths.density = ['$content', 'physical', 'density'];
 jpaths.ir = ['$content', 'spectra', 'ir'];
 jpaths.mass = ['$content', 'spectra', 'mass'];
 jpaths.nmr = ['$content', 'spectra', 'nmr'];
+jpaths.attachments = ['attachmentList'];
 
 
 export function createVar(variable, varName) {
