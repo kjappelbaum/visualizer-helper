@@ -54,7 +54,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
     function AdvancedForm(divID, options = {}) {
             // we will find automatically the variableName
         var moduleId = $('#' + divID).closest('[data-module-id]').attr('data-module-id');
-        var module = Module.getModules().find((m) => m.getId() === moduleId);
+        var module = Module.getModules().find((m) => m.getId() + '' === moduleId + '');
         var ips = module.vars_in().filter(v => v.rel === 'form');
         if (ips.length === 0) {
             new Error('The twig module does not have variable in of type "form"');
