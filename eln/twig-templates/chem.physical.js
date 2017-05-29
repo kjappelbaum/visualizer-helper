@@ -1,71 +1,144 @@
 module.exports = `
-<div id='extendedForm'>
-    <h1>My beer</h1>
+<style>
+    #physicalForm input[type=number] {
+        width: 50px;
+    }
+    #physicalForm > table > tbody > tr > th {
+        font-size:18px;
+    }
+</style>
+<div id='physicalForm'>
+    <h1>Physical</h1>
     
-    Title: <input type='text' name='title'>
-    
-    <table>
-        <tr>    
-            <th></th><th></th>
-            <th>Kind</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Nationalities</th>
-        </tr>
-        <tr data-repeat='authors'>
-            <td>
-                <select data-field='kind'>
-                    <option value=''></option>
-                    <option value='author'>Author</option>
-                    <option value='editor'>Editor</option>
-                </select>
-            </td>
-            <td>
-                <input type='text' size=10 data-field='firstname'>
-            </td>
-            <td>
-                <input type='text' size=10 data-field='lastname'>
-            </td>
-            <td><input  data-field='image' type='file'></td>
-            <td>
-                <table>
-                     <tr data-repeat='nationalities'>
-                        <td>
-                            <input placeholder=\"Nationality\" type='text' size=10 data-field=''>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-    
-    <h2>Keywords</h2>
-    <table>
-        <tr data-repeat='keywords'>
-            <td>
-                <input type='text' size=10 data-field=''>
-            </td>
-        </tr>
-    </table>
-    
-    <h2>Parameters</h2>
-    <table>
-        <tr data-repeat='parameters'>
-            <td>
-                <input placeholder=\"Description\" type='text' size=10 data-field='description'>
-            </td>
-            <td>
-                <input placeholder=\"Value\" type='text' size=10 data-field='value'>
-            </td>
-        </tr>
-    </table>
+<table>
+    <tr>
+        <th>bp (°C)</th>
+        <td>
+            <table>
+                <tr>
+                    <th></th><th></th>
+                    <th>Low</th>
+                    <th>High</th>
+                    <th>P (torr)</th>
+                    <th>DOI</th>
+                </tr>
+                <tr data-repeat='bp'>
+                    <td>
+                        <input type='number' max=100000 data-field='low'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='high'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='pressure'>
+                    </td>
+                    <td>
+                        <input type='text' size=20 data-field='doi'>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th>mp (°C)</th>
+        <td>
+            <table>
+                <tr>
+                    <th></th><th></th>
+                    <th>Low</th>
+                    <th>High</th>
+                    <th>DOI</th>
+                </tr>
+                <tr data-repeat='mp'>
+                    <td>
+                        <input type='number' max=100000 data-field='low'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='high'>
+                    </td>
+                    <td>
+                        <input type='text' size=20 data-field='doi'>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th>density</th>
+        <td>
+            <table>
+                <tr>
+                    <th></th><th></th>
+                    <th>Low</th>
+                    <th>High</th>
+                    <th>Temp (°C)</th>
+                    <th>DOI</th>
+                </tr>
+                <tr data-repeat='density'>
+                    <td>
+                        <input type='number' max=100000 data-field='low'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='high'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='temperature'>
+                    </td>
+                    <td>
+                        <input type='text' size=20 data-field='doi'>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th>nd</th>
+        <td>
+            <table>
+                <tr>
+                    <th></th><th></th>
+                    <th>Low</th>
+                    <th>High</th>
+                    <th>Temp (°C)</th>
+                    <th>DOI</th>
+                </tr>
+                <tr data-repeat='nd'>
+                    <td>
+                        <input type='number' max=100000 data-field='low'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='high'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='temperature'>
+                    </td>
+                    <td>
+                        <input type='text' size=20 data-field='doi'>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
 </div>
 
 
 
+
 <script>
+    console.log('Parsing the template');
     require(['vh/util/twigAdvancedForm'], function(AF) {
-        AF('extendedForm', 'data', {debug:false});
+        AF('physicalForm', {debug:true});
     });
-</script>"
+</script>
 `;
