@@ -122,6 +122,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 this.sessionUrl = new URI(opts.url).segment('auth/session').normalize().href();
                 this.databaseUrl = new URI(opts.url).segment(`db/${this.database}`).normalize().href();
                 this.entryUrl = new URI(this.databaseUrl).segment('entry').normalize().href();
+                this.trackIgnore = new Map();
                 this.__ready = Promise.resolve();
             }
 
@@ -238,6 +239,40 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     .catch(handleError(this, options));
             }
 
+            bindChange(varName) {
+                const variable = this.variables[varName];
+                if (!variable) return;
+                this.unbindChange(varName);
+                variable.onChange = (event) => {
+                    const uuid = String(variable.data._id);
+                    idb.set(uuid, variable.data.resurrect());
+                };
+                variable.data.onChange(variable.onChange);
+            }
+
+            unbindChange(varName) {
+                const variable = this.variables[varName];
+                if (!variable) return;
+                if (!variable.onChange) return;
+                variable.data.unbindChange(variable.onChange);
+            }
+
+            bindChangeByUuid(uuid) {
+                for (let key in this.variables) {
+                    if(this.variables[key].type === 'document') {
+                        this.bindChange(key);
+                    }
+                }
+            }
+
+            unbindChangeByUuid(uuid) {
+                for (let key in this.variables) {
+                    if(this.variables[key].type === 'document') {
+                        this.unbindChange(key);
+                    }
+                }
+            }
+
             async document(uuid, options) {
                 options = options || {};
                 const doc = await this.get(uuid, options);
@@ -251,16 +286,14 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                         data: data
                     };
                     if (options.track) {
-                        data.onChange((event) => {
-                            if (event.jpath.length) {
-                                idb.set(data._id, data.resurrect());
-                            }
-                        });
+                        this.bindChange(options.varName);
 
-                        const localEntry = idb.get(data._id);
+                        const localEntry = await idb.get(data._id);
                         if (localEntry) {
                             if (localEntry._rev === doc._rev) {
-                                this._updateByUuid(data._id, localEntry, options);
+                                // setImmediate because we want to be able to track this change
+                                // on the returned data
+                                setImmediate(() => this._updateByUuid(data._id, localEntry, options));
                             } else {
                                 idb.delete(data._id);
                             }
@@ -503,8 +536,13 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             async discardLocal(entry) {
                 const uuid = getUuid(entry);
                 await idb.delete(uuid);
+                // Make sure the data change is not tracked
+                this.unbindChangeByUuid(uuid);
                 // Get from server again
-                return this.get(entry);
+                entry = await this.get(entry);
+                // Track data again
+                this.bindChangeByUuid(uuid);
+                return entry;
             }
 
             async getAttachment(entry, name, options) {
