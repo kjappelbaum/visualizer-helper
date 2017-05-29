@@ -243,7 +243,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 const variable = this.variables[varName];
                 if (!variable) return;
                 this.unbindChange(varName);
-                variable.onChange = (event) => {
+                variable.onChange = () => {
                     const uuid = String(variable.data._id);
                     idb.set(uuid, variable.data.resurrect());
                 };
@@ -259,7 +259,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
             bindChangeByUuid(uuid) {
                 for (let key in this.variables) {
-                    if(this.variables[key].type === 'document') {
+                    if (this.variables[key].type === 'document' && String(this.variables[key].data._id) === String(uuid)) {
                         this.bindChange(key);
                     }
                 }
@@ -267,7 +267,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
             unbindChangeByUuid(uuid) {
                 for (let key in this.variables) {
-                    if(this.variables[key].type === 'document') {
+                    if (this.variables[key].type === 'document' && String(this.variables[key].data._id) === String(uuid)) {
                         this.unbindChange(key);
                     }
                 }
@@ -516,7 +516,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
                     entry = await this.get(entry, {fromCache: true, fallback: true});
                     const addAttachmentOptions = createOptions(options, 'addAttachment');
-                    entry = await  this.addAttachment(entry, attachment, addAttachmentOptions);
+                    entry = await this.addAttachment(entry, attachment, addAttachmentOptions);
                     if (!this.processor) {
                         throw new Error('no processor');
                     }

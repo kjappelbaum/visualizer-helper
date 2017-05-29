@@ -2,7 +2,6 @@ import Datas from 'src/main/datas';
 import ExpandableMolecule from './ExpandableMolecule';
 import MF from './MF';
 import API from 'src/util/api';
-import Debug from 'src/util/debug';
 
 const DataObject = Datas.DataObject;
 

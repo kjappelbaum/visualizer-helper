@@ -5,7 +5,6 @@ import MF from './MF';
 import Datas from 'src/main/datas';
 import API from 'src/util/api';
 import UI from 'src/util/ui';
-import Debug from 'src/util/debug';
 import {createVar, getData} from './jpaths';
 import {elnPlugin} from './libs';
 import Roc from '../rest-on-couch/Roc';

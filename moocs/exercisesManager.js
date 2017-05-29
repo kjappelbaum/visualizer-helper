@@ -4,54 +4,56 @@ define(['src/util/api'], function (API) {
 
     async function exercisesManager(action, allExercises, options) {
         switch (action) {
-            case 'init':
+            case 'init': {
                 await loadExercises(allExercises, options);
                 break;
-            case 'clear':
-                var state = loadState(options.cookieName);
+            }
+            case 'clear': {
+                const state = loadState(options.cookieName);
                 state.myResults = {};
                 saveState(options.cookieName, state);
                 await loadExercises(allExercises, options);
                 break;
-            case 'regenerate':
-                var state = loadState(options.cookieName);
+            }
+            case 'regenerate': {
+                const state = loadState(options.cookieName);
                 state.selectedExercises = [];
                 saveState(options.cookieName, state);
                 await loadExercises(allExercises, options);
                 break;
+            }
+            default: {
+                throw new Error('Exercise manager: unexpected action');
+            }
         }
 
 
         function loadState(cookieName) {
-            console.log('Loading state', cookieName, window.localStorage.getItem(cookieName))
             return JSON.parse(window.localStorage.getItem(cookieName)
                 || '{"selectedExercises":[],"myResults":{}}');
         }
 
         function saveState(cookieName, state) {
-            console.log('Saving state', cookieName, JSON.stringify(state))
             window.localStorage.setItem(cookieName, JSON.stringify(state));
         }
 
-        /**
-         * This objects allows to manage exercises
-         */
+
+        // This objects allows to manage exercises
         function loadExercises(allExercises, options = {}) {
             // need to check is we have some cookie that contains the existing exercises
             var state = loadState(options.cookieName);
-
             var myResults = state.myResults;
+            var selectedExercises;
             if (state.selectedExercises.length !== options.numberExercises) {
                 // need to recreate a serie
-                console.log('create new serie');
                 allExercises.sort(() => Math.random() - 0.5);
-                var selectedExercises = allExercises.slice(0, options.numberExercises);
+                selectedExercises = allExercises.slice(0, options.numberExercises);
             } else {
                 // we need to reload the exercises based on the cookie
-                var selectedExercises = allExercises.filter(a => state.selectedExercises.includes(a.id));
+                selectedExercises = allExercises.filter(a => state.selectedExercises.includes(a.id));
             }
             selectedExercises.forEach(a => {
-                if (state.myResults[a.id]) a.myResult = state.myResults[a.id]
+                if (state.myResults[a.id]) a.myResult = state.myResults[a.id];
             });
 
 
@@ -63,21 +65,18 @@ define(['src/util/api'], function (API) {
 
 
                 exercises.onChange(function (evt) {
-                    console.log('CHANGE')
-                    switch (evt.target.__name) {
-                        case 'myResult':
-                            var target = evt.target.__parent;
-                            if (target) {
-                                myResults[target.id] = target.myResult;
-                            }
-                            saveState(options.cookieName, state);
-                            break;
+                    if (evt.target.__name === 'myResult') {
+                        var target = evt.target.__parent;
+                        if (target) {
+                            myResults[target.id] = target.myResult;
+                        }
+                        saveState(options.cookieName, state);
                     }
                 });
                 return exercises;
-            })
+            });
         }
     }
 
     return exercisesManager;
-})
+});

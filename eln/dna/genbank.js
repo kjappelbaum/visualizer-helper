@@ -65,7 +65,7 @@ export function filterCircular(gb) {
 }
 
 export function getFeatureTypes(parsedGb) {
-    if(!Array.isArray(parsedGb)) {
+    if (!Array.isArray(parsedGb)) {
         parsedGb = [parsedGb];
     }
     const s = new Set();
@@ -78,6 +78,7 @@ export function getFeatureTypes(parsedGb) {
 }
 
 export async function getSvgString(parsedGb, options) {
+    // eslint-disable-next-line no-undef
     options = DataObject.resurrect(options);
     const svg = await getSvg(parsedGb, options);
     return $('<div>').append(svg).html();
