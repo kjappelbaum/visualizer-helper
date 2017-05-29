@@ -7,7 +7,9 @@ exportTSV(myArray, {keys:['surface','volume]}
 
 define(['src/util/ui'], function (UI) {
     function exportTSV(items, options={}) {
-        const {keys} = options;
+        const {
+            keys = Object.keys(items[0])
+        } = options;
 
         var results=[];
 
