@@ -5,7 +5,7 @@ define(['src/util/api'], function (API) {
         const filterOptions = options.filterOptions;
         const JSZip = await API.require('jszip');
         const superagent = await API.require('superagent');
-        const SD = await API.require('https://www.lactame.com/lib/spectra-data/3.0.7/spectra-data.min.js');
+        const SD = await API.require('SD');
         const jszip = new JSZip();
         const spectraDataSet = [];
         for (let zipURL of zipURLs) {
