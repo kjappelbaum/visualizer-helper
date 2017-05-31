@@ -122,6 +122,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 this.sessionUrl = new URI(opts.url).segment('auth/session').normalize().href();
                 this.databaseUrl = new URI(opts.url).segment(`db/${this.database}`).normalize().href();
                 this.entryUrl = new URI(this.databaseUrl).segment('entry').normalize().href();
+                this.trackIgnore = new Map();
                 this.__ready = Promise.resolve();
             }
 
@@ -238,9 +239,44 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     .catch(handleError(this, options));
             }
 
+            bindChange(varName) {
+                const variable = this.variables[varName];
+                if (!variable) return;
+                this.unbindChange(varName);
+                variable.onChange = () => {
+                    const uuid = String(variable.data._id);
+                    idb.set(uuid, variable.data.resurrect());
+                };
+                variable.data.onChange(variable.onChange);
+            }
+
+            unbindChange(varName) {
+                const variable = this.variables[varName];
+                if (!variable) return;
+                if (!variable.onChange) return;
+                variable.data.unbindChange(variable.onChange);
+            }
+
+            bindChangeByUuid(uuid) {
+                for (let key in this.variables) {
+                    if (this.variables[key].type === 'document' && String(this.variables[key].data._id) === String(uuid)) {
+                        this.bindChange(key);
+                    }
+                }
+            }
+
+            unbindChangeByUuid(uuid) {
+                for (let key in this.variables) {
+                    if (this.variables[key].type === 'document' && String(this.variables[key].data._id) === String(uuid)) {
+                        this.unbindChange(key);
+                    }
+                }
+            }
+
             async document(uuid, options) {
                 options = options || {};
                 const doc = await this.get(uuid, options);
+                await this.updateAttachmentList(doc);
                 if (!doc) return null;
                 if (options.varName) {
                     this.typeUrl(doc.$content, doc);
@@ -250,20 +286,18 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                         data: data
                     };
                     if (options.track) {
-                        data.onChange((event) => {
-                            if (event.jpath.length) {
-                                idb.set(data._id, data.resurrect());
-                            }
-                        });
+                        this.bindChange(options.varName);
 
-                        idb.get(data._id).then(localEntry => {
-                            if (!localEntry) return;
+                        const localEntry = await idb.get(data._id);
+                        if (localEntry) {
                             if (localEntry._rev === doc._rev) {
-                                this._updateByUuid(data._id, localEntry, options);
+                                // setImmediate because we want to be able to track this change
+                                // on the returned data
+                                setImmediate(() => this._updateByUuid(data._id, localEntry, options));
                             } else {
                                 idb.delete(data._id);
                             }
-                        });
+                        }
                     }
                     return data;
                 }
@@ -385,36 +419,39 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
             async deleteAttachment(entry, attachments, options) {
                 await this.__ready;
-                if (!entry || !entry._attachments) return null;
                 options = createOptions(options, 'deleteAttachment');
+                if (DataObject.getType(entry) !== 'object') {
+                    handleError(this, options)(new Error('invalid argument'));
+                    return null;
+                }
                 if (Array.isArray(attachments) && attachments.length === 0) return entry;
                 if (!Array.isArray(attachments)) attachments = [attachments];
 
                 attachments = attachments.map(String);
-                return this.get(entry, {fromCache: true, fallback: true})
-                    .then(entry => {
-                        this._deleteFilename(entry.$content, attachments);
-                        for (let i = 0; i < attachments.length; i++) {
-                            delete entry._attachments[attachments[i]];
-                        }
-                        const cdb = this._getCdb(entry);
-                        return cdb.remove(attachments, {
-                            noRefresh: true
-                        }).then(() => {
-                            return this.get(entry, {noUpdate: true}).then(data => {
-                                entry._rev = data._rev;
-                                entry._attachments = data._attachments;
-                                entry.$creationDate = data.$creationDate;
-                                entry.$modificationDate = data.$modificationDate;
-                                if (entry.triggerChange && !options.noTrigger) {
-                                    entry.triggerChange();
-                                }
-                                return entry;
-                            });
-                        });
-                    })
-                    .then(handleSuccess(this, options))
-                    .catch(handleError(this, options));
+                entry = await this.get(entry, {fromCache: true, fallback: true});
+
+                try {
+                    this._deleteFilename(entry.$content, attachments);
+                    for (let i = 0; i < attachments.length; i++) {
+                        delete entry._attachments[attachments[i]];
+                    }
+                    const cdb = this._getCdb(entry);
+                    await cdb.remove(attachments, {noRefresh: true});
+                    const data = await this.get(entry, {noUpdate: true});
+
+                    entry._rev = data._rev;
+                    entry._attachments = data._attachments;
+                    entry.$creationDate = data.$creationDate;
+                    entry.$modificationDate = data.$modificationDate;
+                    await this.updateAttachmentList(entry);
+                    if (entry.triggerChange && !options.noTrigger) {
+                        entry.triggerChange();
+                    }
+                } catch (e) {
+                    return handleError(this, options)(e);
+                }
+                handleSuccess(this, options)(entry);
+                return entry;
             }
 
             removeAttachment(entry, attachments, options) {
@@ -424,9 +461,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             async unattach(entry, row, options) {
                 await this.__ready;
                 options = createOptions(options, 'deleteAttachment');
-                // Confirm?
                 if (!this.processor) throw new Error('no processor');
-
                 if (!row.__parent) {
                     throw new Error('row must be linked to parent for unattach to work');
                 }
@@ -440,6 +475,10 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 var toDelete = this._findFilename(row);
                 toDelete = toDelete.map(d => String(d.filename));
                 arr.splice(idx, 1);
+
+                // We compute the difference between the delete and still present attachment
+                // entries, just in case there are 2 for the same attachment. In that case the
+                // attachment should not be deleted
                 var toKeep = this._findFilename(entry.$content, toDelete);
                 toKeep = toKeep.map(k => String(k.filename));
                 toDelete = _.difference(toDelete, toKeep);
@@ -454,55 +493,56 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             async attach(type, entry, attachment, options) {
                 await this.__ready;
                 var attachOptions = createOptions(options, 'attach');
-                var prom = Promise.resolve();
-                if (!attachment.filename) {
-                    prom = ui.enterValue('Enter a filename');
+
+                try {
+                    let filename;
+                    if (!attachment.filename) {
+                        filename = await ui.enterValue('Enter a filename');
+                    }
+                    if (filename) attachment.filename = filename;
+                    if (!attachment.filename) {
+                        return null;
+                    }
+
+                    attachment.filename = this.processor.getFilename(type, attachment.filename);
+
+                    // If we had to ask for a filename, resolve content type
+                    var fallback;
+                    if (filename) {
+                        fallback = attachment.contentType;
+                        attachment.contentType = undefined;
+                    }
+                    setContentType(attachment, fallback);
+
+                    entry = await this.get(entry, {fromCache: true, fallback: true});
+                    const addAttachmentOptions = createOptions(options, 'addAttachment');
+                    entry = await this.addAttachment(entry, attachment, addAttachmentOptions);
+                    if (!this.processor) {
+                        throw new Error('no processor');
+                    }
+
+                    await this.processor.process(type, entry.$content, attachment);
+                    this.typeUrl(entry.$content, entry);
+                    if (entry.triggerChange && !addAttachmentOptions.noTrigger) {
+                        entry.triggerChange();
+                    }
+                } catch (e) {
+                    return handleError(this, attachOptions)(e);
                 }
-
-                return prom
-                    .then(filename => {
-                        if (filename) attachment.filename = filename;
-                        if (!attachment.filename) {
-                            return null;
-                        }
-
-                        attachment.filename = this.processor.getFilename(type, attachment.filename);
-
-                        // If we had to ask for a filename, resolve content type
-                        var fallback;
-                        if (filename) {
-                            fallback = attachment.contentType;
-                            attachment.contentType = undefined;
-                        }
-                        setContentType(attachment, fallback);
-
-                        return this.get(entry, {fromCache: true, fallback: true}).then(entry => {
-                            var addAttachmentOptions = createOptions(options, 'addAttachment');
-                            return this.addAttachment(entry, attachment, addAttachmentOptions)
-                                .then(entry => {
-                                    if (!this.processor) {
-                                        throw new Error('no processor');
-                                    }
-
-                                    return Promise.resolve(this.processor.process(type, entry.$content, attachment)).then(() => {
-                                        this.typeUrl(entry.$content, entry);
-                                        if (entry.triggerChange && !addAttachmentOptions.noTrigger) {
-                                            entry.triggerChange();
-                                        }
-                                        return entry;
-                                    });
-                                });
-                        });
-                    })
-                    .then(handleSuccess(this, attachOptions))
-                    .catch(handleError(this, attachOptions));
+                handleSuccess(this, attachOptions)(entry);
+                return entry;
             }
 
             async discardLocal(entry) {
                 const uuid = getUuid(entry);
                 await idb.delete(uuid);
+                // Make sure the data change is not tracked
+                this.unbindChangeByUuid(uuid);
                 // Get from server again
-                return this.get(entry);
+                entry = await this.get(entry);
+                // Track data again
+                this.bindChangeByUuid(uuid);
+                return entry;
             }
 
             async getAttachment(entry, name, options) {
@@ -519,10 +559,16 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 return cdb.list();
             }
 
+            async updateAttachmentList(entry) {
+                await this.__ready;
+                const cdb = this._getCdb(entry);
+                entry.attachmentList = await cdb.list();
+            }
+
             async addAttachment(entry, attachments, options) {
                 options = options || {};
+                let filename = true;
                 await this.__ready;
-                var prom = Promise.resolve(true);
                 attachments = DataObject.resurrect(attachments);
                 if (attachments.length === 1) {
                     attachments = attachments[0];
@@ -530,18 +576,16 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
                 if (!Array.isArray(attachments)) {
                     if (!attachments.filename) {
-                        prom = ui.enterValue('Enter a filename').then(filename => {
-                            if (filename) attachments.filename = filename;
-                            if (!attachments.filename) {
-                                return null;
-                            }
-                            // If we had to ask for a filename, resolve content type
-                            var fallback = attachments.contentType;
-                            attachments.contentType = undefined;
-                            setContentType(attachments, fallback);
-                            attachments = [attachments];
-                            return filename;
-                        });
+                        filename = await ui.enterValue('Enter a filename');
+                        if (filename) attachments.filename = filename;
+                        if (!attachments.filename) {
+                            return null;
+                        }
+                        // If we had to ask for a filename, resolve content type
+                        var fallback = attachments.contentType;
+                        attachments.contentType = undefined;
+                        setContentType(attachments, fallback);
+                        attachments = [attachments];
                     } else {
                         attachments = [attachments];
                     }
@@ -551,30 +595,30 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     setContentType(attachment);
                 });
 
-                const filename = await prom;
                 if (!filename) return null;
 
                 options = createOptions(options, 'addAttachment');
-                return this.get(entry, {fromCache: true, fallback: true})
-                    .then(entry => {
-                        const cdb = this._getCdb(entry);
-                        return cdb.inlineUploads(attachments, {
-                            noRefresh: true
-                        })
-                            .then(() => this.get(entry, {noUpdate: true}))
-                            .then(data => {
-                                entry._rev = data._rev;
-                                entry._attachments = data._attachments;
-                                entry.$creationDate = data.$creationDate;
-                                entry.$modificationDate = data.$modificationDate;
-                                if (entry.triggerChange && !options.noTrigger) {
-                                    entry.triggerChange();
-                                }
-                                return entry;
-                            });
-                    })
-                    .then(handleSuccess(this, options))
-                    .catch(handleError(this, options));
+                entry = await this.get(entry, {fromCache: true, fallback: true});
+
+                try {
+                    const cdb = this._getCdb(entry);
+                    await cdb.inlineUploads(attachments, {
+                        noRefresh: true
+                    });
+                    const data = await this.get(entry, {noUpdate: true});
+                    entry._rev = data._rev;
+                    entry._attachments = data._attachments;
+                    entry.$creationDate = data.$creationDate;
+                    entry.$modificationDate = data.$modificationDate;
+                    await this.updateAttachmentList(entry);
+                    if (entry.triggerChange && !options.noTrigger) {
+                        entry.triggerChange();
+                    }
+                } catch (e) {
+                    return handleError(this, options)(e);
+                }
+                handleSuccess(this, options)(entry);
+                return entry;
             }
 
             async addAttachmentById(id, attachment, options) {
@@ -686,21 +730,16 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
             // Private
             _getCdb(entry) {
-                var isEntry, uuid;
+                var uuid;
                 var type = DataObject.getType(entry);
-                if (type === 'string') {
-                    uuid = String(entry);
-                } else if (type === 'object') {
+                if (type === 'object') {
                     uuid = String(entry._id);
-                    isEntry = true;
                 } else {
-                    throw new Error('Bad arguments');
+                    throw new Error('Bad arguments, entry can only be an object');
                 }
                 const docUrl = `${this.entryUrl}/${String(uuid)}`;
                 var cdb = new CDB(docUrl);
-                if (isEntry) {
-                    cdb.setDoc(entry);
-                }
+                cdb.setDoc(entry);
                 return cdb;
             }
 

@@ -1,7 +1,7 @@
 import API from 'src/util/api';
 import {OCLE} from './libs';
 
-const noop = () => {};
+const noop = () => {/* noop */};
 
 const defaultOptions = {
     onMolfileChanged: noop
