@@ -1,4 +1,3 @@
-
 import ExpandableMolecule from './ExpandableMolecule';
 import Nmr1dManager from './Nmr1dManager';
 import MF from './MF';
@@ -41,80 +40,78 @@ class Sample {
         this._loadInstanceInVisualizer();
     }
 
-    _loadInstanceInVisualizer() {
-        this.roc.document(this.uuid, this.options).then(sample => {
-            this.sample = sample;
-            var sampleVar = API.getVar(this.options.varName);
+    async _loadInstanceInVisualizer() {
+        this.sample = await this.roc.document(this.uuid, this.options);
+        var sampleVar = API.getVar(this.options.varName);
 
-            createVar(sampleVar, 'sampleCode');
-            createVar(sampleVar, 'batchCode');
-            createVar(sampleVar, 'creationDate');
-            createVar(sampleVar, 'modificationDate');
-            createVar(sampleVar, 'content');
-            createVar(sampleVar, 'general');
-            createVar(sampleVar, 'molfile');
-            createVar(sampleVar, 'mf');
-            createVar(sampleVar, 'mw');
-            createVar(sampleVar, 'em');
-            createVar(sampleVar, 'description');
-            createVar(sampleVar, 'name');
-            createVar(sampleVar, 'physical');
-            createVar(sampleVar, 'bp');
-            createVar(sampleVar, 'nd');
-            createVar(sampleVar, 'mp');
-            createVar(sampleVar, 'density');
-            createVar(sampleVar, 'ir');
-            createVar(sampleVar, 'mass');
-            createVar(sampleVar, 'sampleCode');
-            createVar(sampleVar, 'sampleCode');
-            createVar(sampleVar, 'attachments');
+        createVar(sampleVar, 'sampleCode');
+        createVar(sampleVar, 'batchCode');
+        createVar(sampleVar, 'creationDate');
+        createVar(sampleVar, 'modificationDate');
+        createVar(sampleVar, 'content');
+        createVar(sampleVar, 'general');
+        createVar(sampleVar, 'molfile');
+        createVar(sampleVar, 'mf');
+        createVar(sampleVar, 'mw');
+        createVar(sampleVar, 'em');
+        createVar(sampleVar, 'description');
+        createVar(sampleVar, 'name');
+        createVar(sampleVar, 'physical');
+        createVar(sampleVar, 'bp');
+        createVar(sampleVar, 'nd');
+        createVar(sampleVar, 'mp');
+        createVar(sampleVar, 'density');
+        createVar(sampleVar, 'ir');
+        createVar(sampleVar, 'mass');
+        createVar(sampleVar, 'sampleCode');
+        createVar(sampleVar, 'sampleCode');
+        createVar(sampleVar, 'attachments');
 
-            this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
-            this.nmr1dManager = new Nmr1dManager(this.sample);
-            this.nmr1dManager.initializeNMRAssignment();
-            createVar(sampleVar, 'nmr');
-            this.mf = new MF(this.sample);
-            this.mf.fromMF();
+        this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
+        this.nmr1dManager = new Nmr1dManager(this.sample);
+        this.nmr1dManager.initializeNMRAssignment();
+        createVar(sampleVar, 'nmr');
+        this.mf = new MF(this.sample);
+        this.mf.fromMF();
 
-            this.onChange = (event) => {
-                if (this.options.track && typeof IframeBridge !== 'undefined') {
-                    self.IframeBridge.postMessage('tab.status', {
-                        saved: false
-                    });
-                }
+        this.onChange = (event) => {
+            if (this.options.track && typeof IframeBridge !== 'undefined') {
+                self.IframeBridge.postMessage('tab.status', {
+                    saved: false
+                });
+            }
 
-                var jpathStr = event.jpath.join('.');
+            var jpathStr = event.jpath.join('.');
 
 
-                if (jpathStr.replace(/\.\d+\..*/, '') === '$content.spectra.nmr') {
-                    // execute peak picking
-                    var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
-                    this.nmr1dManager.executePeakPicking(currentNmr);
-                }
+            if (jpathStr.replace(/\.\d+\..*/, '') === '$content.spectra.nmr') {
+                // execute peak picking
+                var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
+                this.nmr1dManager.executePeakPicking(currentNmr);
+            }
 
-                switch (event.jpath.join('.')) {
-                    case '':
-                        this.nmr1dManager.initializeNMRAssignment(getData(this.sample, 'nmr'));
-                        createVar(sampleVar, 'nmr');
-                        break;
-                    case '$content.general.molfile':
-                        this.mf.fromMolfile();
-                        break;
-                    case '$content.general.mf':
-                        try {
-                            this.mf.fromMF();
-                            this.nmr1dManager.updateIntegral({mf: true});
-                        } catch (e) {
-                            // ignore
-                        }
-                        break;
-                    default:
-                        break; // ignore
-                }
-            };
+            switch (event.jpath.join('.')) {
+                case '':
+                    this.nmr1dManager.initializeNMRAssignment(getData(this.sample, 'nmr'));
+                    createVar(sampleVar, 'nmr');
+                    break;
+                case '$content.general.molfile':
+                    this.mf.fromMolfile();
+                    break;
+                case '$content.general.mf':
+                    try {
+                        this.mf.fromMF();
+                        this.nmr1dManager.updateIntegral({mf: true});
+                    } catch (e) {
+                        // ignore
+                    }
+                    break;
+                default:
+                    break; // ignore
+            }
+        };
 
-            this.bindChange();
-        });
+        this.bindChange();
     }
 
     bindChange() {
@@ -127,12 +124,13 @@ class Sample {
     }
 
 
-    handleDrop(name, type) {
+    async handleDrop(name, askType) {
+        var type;
         if (!name) {
             throw new Error('handleDrop expects a variable name');
         }
         name = String(name);
-        if(!type) {
+        if (!askType) {
             // maps name of variable to type of data
             var types = {
                 'droppedNmr': 'nmr',
@@ -143,25 +141,36 @@ class Sample {
                 throw new Error('Unexpected variable name');
             }
             type = types[name];
+        } else {
+            type = await UI.choose({
+                nmr: 'NMR (jcamp, PDF)',
+                mass: 'Mass (jcamp, PDF)',
+                ir: 'Infra-red (jcamp, PDF)',
+                gcms: 'GCMS (jcamp, PDF)'
+            }, {
+                noConfirmation: true,
+                columns: [
+                    {
+                        id: 'description',
+                        name: 'description',
+                        field: 'description'
+                    }
+                ]
+            });
+            if (!type) return;
         }
-
-
-
 
         // Dropped data can be an array
         // Expecting format as from drag and drop module
         var droppedDatas = API.getData(name);
         droppedDatas = droppedDatas.file || droppedDatas.str;
-        var prom = Promise.resolve();
         for (let i = 0; i < droppedDatas.length; i++) {
-            prom = prom.then(() => {
-                var data = DataObject.resurrect(droppedDatas[i]);
-                return this.roc.attach(type, this.sample, data);
-            });
+            var data = DataObject.resurrect(droppedDatas[i]);
+            await this.roc.attach(type, this.sample, data);
         }
     }
 
-    handleAction(action) {
+    async handleAction(action) {
         if (!action) return;
 
         if (this.expandableMolecule && this.expandableMolecule.handleAction(action)) return;
@@ -169,13 +178,12 @@ class Sample {
 
         switch (action.name) {
             case 'save':
-                this.roc.update(this.sample).then(function () {
-                    if (typeof IframeBridge !== 'undefined') {
-                        self.IframeBridge.postMessage('tab.status', {
-                            saved: true
-                        });
-                    }
-                });
+                await this.roc.update(this.sample);
+                if (typeof IframeBridge !== 'undefined') {
+                    self.IframeBridge.postMessage('tab.status', {
+                        saved: true
+                    });
+                }
                 break;
             case 'createOptions':
                 var advancedOptions1H = API.cache('nmr1hAdvancedOptions');
@@ -187,43 +195,40 @@ class Sample {
                 break;
             case 'deleteAttachment':
                 var attachment = action.value.name;
-                this.roc.deleteAttachment(this.sample, attachment);
+                await this.roc.deleteAttachment(this.sample, attachment);
                 break;
-            case 'deleteNmr':
-                this.roc.unattach(this.sample, action.value);
+            case 'deleteNmr': // Deprecated. Use unattach. Leave this for backward compatibility
+            case 'unattach':
+                await this.roc.unattach(this.sample, action.value);
                 break;
             case 'attachNMR':
             case 'attachIR':
-            case 'attachMass':
+            case 'attachMass': {
                 var type = action.name.replace('attach', '').toLowerCase();
                 var droppedDatas = action.value;
                 droppedDatas = droppedDatas.file || droppedDatas.str;
-                var prom = Promise.resolve();
                 for (let i = 0; i < droppedDatas.length; i++) {
-                    prom = prom.then(() => {
-                        const data = DataObject.resurrect(droppedDatas[i]);
-                        return this.roc.attach(type, this.sample, data);
-                    });
+                    const data = DataObject.resurrect(droppedDatas[i]);
+                    await this.roc.attach(type, this.sample, data);
                 }
                 break;
-            case 'refresh':
-                UI.confirm('Are you sure you want to refresh? This will discard your local modifications.').then(ok => {
-                    if (!ok) return;
-                    this.unbindChange();
-                    this.roc.discardLocal(this.sample).then(() => {
-                        this.nmr1dManager.initializeNMRAssignment(API.getData('currentNmr'));
-                        this.expandableMolecule.unbindChange();
-                        this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
-                        this.mf = new MF(this.sample);
-                        this.mf.fromMF();
-                        this.bindChange();
-                    });
-                    self.IframeBridge.postMessage('tab.status', {
-                        saved: true
-                    });
+            }
+            case 'refresh': {
+                const ok = await UI.confirm('Are you sure you want to refresh? This will discard your local modifications.');
+                if (!ok) return;
+                this.unbindChange();
+                await this.roc.discardLocal(this.sample);
+                this.nmr1dManager.initializeNMRAssignment(API.getData('currentNmr'));
+                this.expandableMolecule.unbindChange();
+                this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
+                this.mf = new MF(this.sample);
+                this.mf.fromMF();
+                this.bindChange();
+                self.IframeBridge.postMessage('tab.status', {
+                    saved: true
                 });
-
                 break;
+            }
             default:
                 break;
         }
