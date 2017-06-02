@@ -146,7 +146,8 @@ class Sample {
                 nmr: 'NMR (jcamp, PDF)',
                 mass: 'Mass (jcamp, PDF)',
                 ir: 'Infra-red (jcamp, PDF)',
-                gcms: 'GCMS (jcamp, PDF)'
+                gcms: 'GCMS (jcamp, PDF)',
+                other: 'Other'
             }, {
                 noConfirmation: true,
                 columns: [
@@ -164,10 +165,16 @@ class Sample {
         // Expecting format as from drag and drop module
         var droppedDatas = API.getData(name);
         droppedDatas = droppedDatas.file || droppedDatas.str;
-        for (let i = 0; i < droppedDatas.length; i++) {
-            var data = DataObject.resurrect(droppedDatas[i]);
-            await this.roc.attach(type, this.sample, data);
+
+        if (type === 'other') {
+            await this.roc.addAttachment(this.sample, droppedDatas);
+        } else {
+            for (let i = 0; i < droppedDatas.length; i++) {
+                var data = DataObject.resurrect(droppedDatas[i]);
+                await this.roc.attach(type, this.sample, data);
+            }
         }
+
     }
 
     async handleAction(action) {
