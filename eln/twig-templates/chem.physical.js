@@ -1,4 +1,9 @@
+// you may use the following page to test:
+// http://www.cheminfo.org/?viewURL=https%3A%2F%2Fcouch.cheminfo.org%2Fcheminfo-public%2Fb9728349aa850f575f594496a2a38233%2Fview.json&loadversion=true&fillsearch=Twig+dynamic+form+experiments
+
+
 module.exports = `
+
 <style>
     #physicalForm input[type=number] {
         width: 50px;
@@ -130,9 +135,114 @@ module.exports = `
     </tr>
 </table>
 
+<table>
+    <tr>
+        <th>[α]</th>
+        <td>
+            <table>
+                <tr>
+                    <th></th><th></th>
+                    <th>Low</th>
+                    <th>High</th>
+                    <th>Temp (°C)</th>
+                    <th>𝝺 (nm)</th>
+                    <th>[] (g/mL)</th>
+                    <th>Solvent</th>
+                    <th>DOI</th>
+                </tr>
+                <tr data-repeat='alpha'>
+                    <td>
+                        <input type='number' data-field='low'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='high'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='temperature'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='wavelength'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='concentration'>
+                    </td>
+                    <td>
+                        <input type='text' size=10 data-field='solvent'>
+                    </td>
+                    <td>
+                        <input type='text' size=20 data-field='doi'>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th>Rf</th>
+        <td>
+            <table>
+                <tr>
+                    <th></th><th></th>
+                    <th>Solvent</th>
+                    <th>Plate</th>
+                    <th>Low</th>
+                    <th>High</th>
+                </tr>
+                <tr data-repeat='rf'>
+                    <td>
+                        <table>
+                             <tr>
+                                <th></th><th></th>
+                                <th>Name</th>
+                                <th>Parts</th>
+                            </tr>
+                            <tr data-repeat='solvent'>
+                                <td nowrap>
+                                    <select data-field='name'>
+                                        <option value=""></option>
+                                        <option value="MeOH">MeOH</option>
+                                        <option value="EtOH">EtOH</option>
+                                        <option value="propanol">propanol</option>
+                                        <option value="CH2Cl2">CH2Cl2</option>
+                                        <option value="hexanes">hexanes</option>
+                                        <option value="hexane">hexane</option>
+                                        <option value="pentane">pentane</option>
+                                        <option value="cyclohexane">cyclohexane</option>
+                                        <option value="AcOEt">AcOEt</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type='number' data-field='part'>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <select data-field='name'>
+                            <option value=""></option>
+                            <option value="alumina">alumina</option>
+                            <option value="silica">silica</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type='number' data-field='low'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='high'>
+                    </td>
+                    <td>
+                        <input type='text' size=20 data-field='doi'>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+
 </div>
-
-
 
 
 <script>
@@ -141,4 +251,6 @@ module.exports = `
         AF('physicalForm', {debug:true});
     });
 </script>
+
+
 `;
