@@ -296,6 +296,8 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
                     }
                     rename(table);
                     break;
+                case '':
+                    break;
                 default:
                     throw new Error(`Unexpected class name: ${from.className}`);
             }

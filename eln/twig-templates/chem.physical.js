@@ -220,7 +220,7 @@ module.exports = `
                         </table>
                     </td>
                     <td>
-                        <select data-field='name'>
+                        <select data-field='plate'>
                             <option value=""></option>
                             <option value="alumina">alumina</option>
                             <option value="silica">silica</option>
