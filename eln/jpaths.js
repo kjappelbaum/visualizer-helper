@@ -25,6 +25,9 @@ jpaths.density = ['$content', 'physical', 'density'];
 jpaths.ir = ['$content', 'spectra', 'ir'];
 jpaths.mass = ['$content', 'spectra', 'mass'];
 jpaths.nmr = ['$content', 'spectra', 'nmr'];
+jpaths.chromatogram = ['$content', 'spectra', 'chromatogram'];
+jpaths.xray = ['$content', 'spectra', 'xray'];
+jpaths.image = ['$content', 'image'];
 jpaths.attachments = ['attachmentList'];
 
 
