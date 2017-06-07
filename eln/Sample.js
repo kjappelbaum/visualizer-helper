@@ -143,10 +143,12 @@ class Sample {
             type = types[name];
         } else {
             type = await UI.choose({
-                nmr: 'NMR (jcamp, PDF)',
-                mass: 'Mass (jcamp, PDF)',
-                ir: 'Infra-red (jcamp, PDF)',
-                gcms: 'GCMS (jcamp, PDF)',
+                nmr: 'NMR (jcamp, pdf)',
+                mass: 'Mass (jcamp, pdf, netcdf, xml)',
+                ir: 'Infra-red (jcamp, pdf)',
+                chromatogram: 'GCMS (jcamp, pdf, netcdf, xml)',
+                xray: 'Xray (cif, pdb)',
+                image: 'Images (jpg, png or tiff)',
                 other: 'Other'
             }, {
                 noConfirmation: true,
