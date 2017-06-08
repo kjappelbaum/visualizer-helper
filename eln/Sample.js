@@ -63,6 +63,8 @@ class Sample {
         createVar(sampleVar, 'density');
         createVar(sampleVar, 'ir');
         createVar(sampleVar, 'mass');
+        createVar(sampleVar, 'xray');
+        createVar(sampleVar, 'chromatogram');
         createVar(sampleVar, 'sampleCode');
         createVar(sampleVar, 'sampleCode');
         createVar(sampleVar, 'attachments');
