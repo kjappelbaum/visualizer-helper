@@ -65,7 +65,7 @@ class Sample {
         createVar(sampleVar, 'mass');
         createVar(sampleVar, 'xray');
         createVar(sampleVar, 'chromatogram');
-        createVar(sampleVar, 'sampleCode');
+        createVar(sampleVar, 'image');
         createVar(sampleVar, 'sampleCode');
         createVar(sampleVar, 'attachments');
 
