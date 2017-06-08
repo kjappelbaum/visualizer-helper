@@ -43,18 +43,18 @@ class Sample {
     async _loadInstanceInVisualizer() {
         this.sample = await this.roc.document(this.uuid, this.options);
 
-        if (! this.sample.$content.general) {
-            this.sample.$content.general={};
+        if (!this.sample.$content.general) {
+            this.sample.$content.general = {};
         }
         // TODO improve to add the missing properties from eln-plugin / types / sample / general.js
-        Object.assign(this.sample.$content.general, {title:''});
+        Object.assign(this.sample.$content.general, {title: ''});
 
         var sampleVar = API.getVar(this.options.varName);
 
         createVar(sampleVar, 'sampleCode');
         createVar(sampleVar, 'batchCode');
         createVar(sampleVar, 'creationDate');
-        createVar(sqampleVar, 'modificationDate');
+        createVar(sampleVar, 'modificationDate');
         createVar(sampleVar, 'content');
         createVar(sampleVar, 'general');
         createVar(sampleVar, 'molfile');
