@@ -146,7 +146,7 @@ module.exports = `
                     <th>High</th>
                     <th>Temp (°C)</th>
                     <th>𝝺 (nm)</th>
-                    <th>[] (g/mL)</th>
+                    <th>[] (g/100mL)</th>
                     <th>Solvent</th>
                     <th>DOI</th>
                 </tr>
