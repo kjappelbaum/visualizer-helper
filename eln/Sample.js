@@ -77,7 +77,6 @@ class Sample {
         createVar(sampleVar, 'sampleCode');
         createVar(sampleVar, 'attachments');
 
-        this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
         this.nmr1dManager = new Nmr1dManager(this.sample);
         this.nmr1dManager.initializeNMRAssignment();
         createVar(sampleVar, 'nmr');
@@ -122,6 +121,8 @@ class Sample {
         };
 
         this.bindChange();
+
+        setImmediate(() => this.expandableMolecule = new ExpandableMolecule(this.sample, this.options));
     }
 
     bindChange() {
