@@ -9,6 +9,15 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             return objectHasOwnProperty.call(obj, prop);
         };
 
+        function setTabSavedStatus(saved) {
+            if(self.IframeBridge) {
+                console.log(`set tab status to ${saved}`)
+                self.IframeBridge.postMessage('tab.status', {
+                    saved
+                });
+            }
+        }
+
         const defaultOptions = {
             messages: {
                 200: 'OK',
@@ -244,8 +253,14 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 if (!variable) return;
                 this.unbindChange(varName);
                 variable.onChange = () => {
-                    const uuid = String(variable.data._id);
-                    idb.set(uuid, variable.data.resurrect());
+                    console.log(`variable ${varName} has changed`);
+                    const serverJsonString = JSON.stringify(variable.data.$content);
+                    if(serverJsonString !== variable.serverJsonString) {
+                        console.log('save to local storage');
+                        const uuid = String(variable.data._id);
+                        idb.set(uuid, variable.data.resurrect());
+                        setTabSavedStatus(false);
+                    }
                 };
                 variable.data.onChange(variable.onChange);
             }
@@ -283,18 +298,17 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     const data = await API.createData(options.varName, doc);
                     this.variables[options.varName] = {
                         type: 'document',
-                        data: data
+                        data: data,
+                        serverJsonString: JSON.stringify(data.$content)
                     };
                     if (options.track) {
                         this.bindChange(options.varName);
-
                         const localEntry = await idb.get(data._id);
                         if (localEntry) {
                             if (localEntry._rev === doc._rev) {
-                                // setImmediate because we want to be able to track this change
-                                // on the returned data
-                                setImmediate(() => this._updateByUuid(data._id, localEntry, options));
+                                this._updateByUuid(data._id, localEntry, options);
                             } else {
+                                // Local storage has an anterior revision
                                 idb.delete(data._id);
                             }
                         }
@@ -409,7 +423,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                             entry._rev = res.body.rev;
                             entry.$creationDate = res.body.$creationDate;
                             entry.$modificationDate = res.body.$modificationDate;
-                            this._updateByUuid(entry._id, entry, options);
+                            this._updateByUuid(entry._id, entry, Object.assign(options, {updateServerString: true}));
                             idb.delete(entry._id);
                         }
                         return entry;
@@ -535,11 +549,14 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
             async discardLocal(entry) {
                 const uuid = getUuid(entry);
-                await idb.delete(uuid);
                 // Make sure the data change is not tracked
                 this.unbindChangeByUuid(uuid);
                 // Get from server again
                 entry = await this.get(entry);
+                this._updateByUuid(entry._id, entry, {
+                    updateServerString: true
+                });
+                await idb.delete(uuid);
                 // Track data again
                 this.bindChangeByUuid(uuid);
                 return entry;
@@ -813,6 +830,10 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                             //var newData = DataObject.resurrect(data);
                             this.typeUrl(data.$content, data);
                             let doc = this.variables[key].data;
+                            if(options.updateServerString) {
+                                this.variables[key].serverJsonString = JSON.stringify(doc.$content);
+                                setTabSavedStatus(true);
+                            }
                             this._updateDocument(doc, data, options);
                         }
                     } else if (this.variables[key].type === 'query' && this.queryAutoRefresh) {

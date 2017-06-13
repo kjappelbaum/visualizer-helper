@@ -46,8 +46,6 @@ class Sample {
         if (!this.sample.$content.general) {
             this.sample.$content.general = {};
         }
-        // TODO improve to add the missing properties from eln-plugin / types / sample / general.js
-        Object.assign(this.sample.$content.general, {title: ''});
 
         var sampleVar = API.getVar(this.options.varName);
 
@@ -77,6 +75,7 @@ class Sample {
         createVar(sampleVar, 'sampleCode');
         createVar(sampleVar, 'attachments');
 
+        this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
         this.nmr1dManager = new Nmr1dManager(this.sample);
         this.nmr1dManager.initializeNMRAssignment();
         createVar(sampleVar, 'nmr');
@@ -84,12 +83,6 @@ class Sample {
         this.mf.fromMF();
 
         this.onChange = (event) => {
-            if (this.options.track && typeof IframeBridge !== 'undefined') {
-                self.IframeBridge.postMessage('tab.status', {
-                    saved: false
-                });
-            }
-
             var jpathStr = event.jpath.join('.');
 
 
@@ -121,8 +114,6 @@ class Sample {
         };
 
         this.bindChange();
-
-        setImmediate(() => this.expandableMolecule = new ExpandableMolecule(this.sample, this.options));
     }
 
     bindChange() {
@@ -199,11 +190,6 @@ class Sample {
         switch (action.name) {
             case 'save':
                 await this.roc.update(this.sample);
-                if (typeof IframeBridge !== 'undefined') {
-                    self.IframeBridge.postMessage('tab.status', {
-                        saved: true
-                    });
-                }
                 break;
             case 'createOptions':
                 var advancedOptions1H = API.cache('nmr1hAdvancedOptions');
@@ -244,9 +230,6 @@ class Sample {
                 this.mf = new MF(this.sample);
                 this.mf.fromMF();
                 this.bindChange();
-                self.IframeBridge.postMessage('tab.status', {
-                    saved: true
-                });
                 break;
             }
             default:
