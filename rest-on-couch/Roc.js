@@ -11,7 +11,6 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
         function setTabSavedStatus(saved) {
             if(self.IframeBridge) {
-                console.log(`set tab status to ${saved}`)
                 self.IframeBridge.postMessage('tab.status', {
                     saved
                 });
@@ -253,13 +252,15 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 if (!variable) return;
                 this.unbindChange(varName);
                 variable.onChange = () => {
-                    console.log(`variable ${varName} has changed`);
                     const serverJsonString = JSON.stringify(variable.data.$content);
+                    const uuid = String(variable.data._id);
                     if(serverJsonString !== variable.serverJsonString) {
-                        console.log('save to local storage');
-                        const uuid = String(variable.data._id);
                         idb.set(uuid, variable.data.resurrect());
                         setTabSavedStatus(false);
+                    } else {
+                        // Going back to previous state sets the tab as saved
+                        setTabSavedStatus(true);
+                        idb.delete(uuid);
                     }
                 };
                 variable.data.onChange(variable.onChange);
