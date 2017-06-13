@@ -10,7 +10,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
         };
 
         function setTabSavedStatus(saved) {
-            if(self.IframeBridge) {
+            if (self.IframeBridge) {
                 self.IframeBridge.postMessage('tab.status', {
                     saved
                 });
@@ -254,7 +254,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 variable.onChange = () => {
                     const serverJsonString = JSON.stringify(variable.data.$content);
                     const uuid = String(variable.data._id);
-                    if(serverJsonString !== variable.serverJsonString) {
+                    if (serverJsonString !== variable.serverJsonString) {
                         idb.set(uuid, variable.data.resurrect());
                         setTabSavedStatus(false);
                     } else {
@@ -459,9 +459,9 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     entry.$creationDate = data.$creationDate;
                     entry.$modificationDate = data.$modificationDate;
                     await this.updateAttachmentList(entry);
-                    if(hasDeleted) {
+                    if (hasDeleted) {
                         await this.update(entry, options);
-                    } else if(entry.triggerChange && !options.noTrigger) {
+                    } else if (entry.triggerChange && !options.noTrigger) {
                         entry.triggerChange();
                     }
                 } catch (e) {
@@ -832,7 +832,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                             //var newData = DataObject.resurrect(data);
                             this.typeUrl(data.$content, data);
                             let doc = this.variables[key].data;
-                            if(options.updateServerString) {
+                            if (options.updateServerString) {
                                 this.variables[key].serverJsonString = JSON.stringify(doc.$content);
                                 setTabSavedStatus(true);
                             }
