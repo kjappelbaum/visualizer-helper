@@ -445,7 +445,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 entry = await this.get(entry, {fromCache: true, fallback: true});
 
                 try {
-                    this._deleteFilename(entry.$content, attachments);
+                    const hasDeleted = this._deleteFilename(entry.$content, attachments);
                     for (let i = 0; i < attachments.length; i++) {
                         delete entry._attachments[attachments[i]];
                     }
@@ -458,7 +458,9 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     entry.$creationDate = data.$creationDate;
                     entry.$modificationDate = data.$modificationDate;
                     await this.updateAttachmentList(entry);
-                    if (entry.triggerChange && !options.noTrigger) {
+                    if(hasDeleted) {
+                        await this.update(entry, options);
+                    } else if(entry.triggerChange && !options.noTrigger) {
                         entry.triggerChange();
                     }
                 } catch (e) {
@@ -501,6 +503,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 if (!options.noTrigger) {
                     arr.triggerChange();
                 }
+                await this.update(entry);
                 return entry;
             }
 
@@ -537,9 +540,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
                     await this.processor.process(type, entry.$content, attachment);
                     this.typeUrl(entry.$content, entry);
-                    if (entry.triggerChange && !addAttachmentOptions.noTrigger) {
-                        entry.triggerChange();
-                    }
+                    await this.update(entry);
                 } catch (e) {
                     return handleError(this, attachOptions)(e);
                 }
@@ -901,10 +902,13 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             }
 
             _deleteFilename(v, filename) {
+                let hasDeleted = false;
                 var filenames = this._findFilename(v, filename);
                 for (var i = 0; i < filenames.length; i++) {
+                    hasDeleted = true;
                     delete filenames[i].filename;
                 }
+                return hasDeleted;
             }
 
             untypeUrl(v) {
