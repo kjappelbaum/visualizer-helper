@@ -12,7 +12,7 @@ const DataObject = Datas.DataObject;
 
 var defaultOptions = {
     varName: 'sample',
-    track: true
+    track: false
 };
 
 class Sample {
