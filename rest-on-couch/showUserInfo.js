@@ -5,8 +5,8 @@ define(['src/util/ui'], function (UI) {
     function showUserInfo(user) {
         let html = '';
         html += `<style>
-            #userInfo {font-size:2em};
-            #userInfo h1 {font-size: 30px};
+            #userInfo {font-size:1.5em};
+            #userInfo h1 {font-size: 20px};
             #userInfo th {text-align: left};
         </style>`;
         html += '<div id="userInfo">';
