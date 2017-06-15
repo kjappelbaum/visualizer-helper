@@ -926,7 +926,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     if (!entry._attachments) return;
                     var att = entry._attachments[filename];
                     if (!att) return;
-                    var contentType = att.content_type;
+                    var contentType = String(att.content_type);
                     var vtype = Util.contentTypeToType(contentType);
                     var prop;
                     if (typeValue.indexOf(vtype) !== -1) {
