@@ -496,7 +496,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 // entries, just in case there are 2 for the same attachment. In that case the
                 // attachment should not be deleted
                 var toKeep = this._findFilename(entry.$content, toDelete);
-                toKeep = toKeep.map(k => String(k.filename));
+                toKeep = toKeep.map(k => String(k.filename)).filter(k => k === row.filename);
                 toDelete = _.difference(toDelete, toKeep);
                 await this.deleteAttachment(entry, toDelete, options);
                 arr.splice(idx, 1);
