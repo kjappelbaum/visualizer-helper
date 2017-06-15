@@ -359,7 +359,9 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 await this.__ready;
                 options = createOptions(options, 'getGroups');
                 const groupUrl = new URI(this.databaseUrl).segment('groups').normalize().href();
-                return superagent.get(groupUrl).then(res => res.body).catch(handleError(this, options));
+                return superagent.get(groupUrl)
+                    .withCredentials()
+                    .then(res => res.body).catch(handleError(this, options));
             }
 
             // Get the groups the user is member of
@@ -368,7 +370,9 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 options = createOptions(options);
                 await this.__ready;
                 const url = new URI(this.databaseUrl).segment('user/_me/groups');
-                return superagent.get(url).then(res => res.body).catch(handleError(this, options));
+                return superagent.get(url)
+                    .withCredentials()
+                    .then(res => res.body).catch(handleError(this, options));
             }
 
             async create(entry, options) {
