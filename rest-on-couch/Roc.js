@@ -491,7 +491,6 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
                 var toDelete = this._findFilename(row);
                 toDelete = toDelete.map(d => String(d.filename));
-                arr.splice(idx, 1);
 
                 // We compute the difference between the delete and still present attachment
                 // entries, just in case there are 2 for the same attachment. In that case the
