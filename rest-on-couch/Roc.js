@@ -467,11 +467,11 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                         await this.update(entry, options);
                     } else if (entry.triggerChange && !options.noTrigger) {
                         entry.triggerChange();
+                        handleSuccess(this, options)(entry);
                     }
                 } catch (e) {
                     return handleError(this, options)(e);
                 }
-                handleSuccess(this, options)(entry);
                 return entry;
             }
 
