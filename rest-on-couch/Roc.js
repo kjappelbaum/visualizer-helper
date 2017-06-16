@@ -511,29 +511,60 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 return entry;
             }
 
+            async _processAttachment(type, attachment) {
+                let filename;
+                if (!attachment.filename) {
+                    filename = await ui.enterValue('Enter a filename');
+                }
+                if (filename) attachment.filename = filename;
+                if (!attachment.filename) {
+                    return false;
+                }
+
+                attachment.filename = this.processor.getFilename(type, attachment.filename);
+
+                // If we had to ask for a filename, resolve content type
+                var fallback;
+                if (filename) {
+                    fallback = attachment.contentType;
+                    attachment.contentType = undefined;
+                }
+                setContentType(attachment, fallback);
+                return true;
+            }
+
+            async attachBulk(type, entry, attachments, options) {
+                if(!attachments.length) return;
+                if(attachments.length === 1) return this.attach(type, entry, attachments[0], options);
+                await this.__ready;
+                const attachOptions = createOptions(options, 'attach');
+                try {
+                    for(let i=0; i<attachments.length; i++) {
+                        let attachment = attachments[i];
+                        if(!this._processAttachment(type, attachment)) return null;
+                    }
+                    entry = await this.get(entry, {fromCache: true, fallback: true});
+                    const addAttachmentOptions = createOptions(options, 'addAttachment');
+                    entry = await this.addAttachment(entry, attachments, addAttachmentOptions);
+
+                    for(let i=0; i<attachments.length; i++) {
+                        await this.processor.process(type, entry.$content, attachments[i]);
+                    }
+                    this.typeUrl(entry.$content, entry);
+                    await this.update(entry);
+                } catch(e) {
+                    return handleError(this, attachOptions)(e);
+                }
+                handleSuccess(this, attachOptions)(entry);
+            }
+
             async attach(type, entry, attachment, options) {
                 await this.__ready;
                 var attachOptions = createOptions(options, 'attach');
 
                 try {
-                    let filename;
-                    if (!attachment.filename) {
-                        filename = await ui.enterValue('Enter a filename');
-                    }
-                    if (filename) attachment.filename = filename;
-                    if (!attachment.filename) {
-                        return null;
-                    }
-
-                    attachment.filename = this.processor.getFilename(type, attachment.filename);
-
-                    // If we had to ask for a filename, resolve content type
-                    var fallback;
-                    if (filename) {
-                        fallback = attachment.contentType;
-                        attachment.contentType = undefined;
-                    }
-                    setContentType(attachment, fallback);
+                    const ok = this._processAttachment(type, attachment);
+                    if(!ok) return null;
 
                     entry = await this.get(entry, {fromCache: true, fallback: true});
                     const addAttachmentOptions = createOptions(options, 'addAttachment');
