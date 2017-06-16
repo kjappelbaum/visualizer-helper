@@ -534,28 +534,29 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             }
 
             async attachBulk(type, entry, attachments, options) {
-                if(!attachments.length) return;
-                if(attachments.length === 1) return this.attach(type, entry, attachments[0], options);
+                if (!attachments.length) return null;
+                if (attachments.length === 1) return this.attach(type, entry, attachments[0], options);
                 await this.__ready;
                 const attachOptions = createOptions(options, 'attach');
                 try {
-                    for(let i=0; i<attachments.length; i++) {
+                    for (let i = 0; i < attachments.length; i++) {
                         let attachment = attachments[i];
-                        if(!this._processAttachment(type, attachment)) return null;
+                        if (!this._processAttachment(type, attachment)) return null;
                     }
                     entry = await this.get(entry, {fromCache: true, fallback: true});
                     const addAttachmentOptions = createOptions(options, 'addAttachment');
                     entry = await this.addAttachment(entry, attachments, addAttachmentOptions);
 
-                    for(let i=0; i<attachments.length; i++) {
+                    for (let i = 0; i < attachments.length; i++) {
                         await this.processor.process(type, entry.$content, attachments[i]);
                     }
                     this.typeUrl(entry.$content, entry);
                     await this.update(entry);
-                } catch(e) {
+                } catch (e) {
                     return handleError(this, attachOptions)(e);
                 }
                 handleSuccess(this, attachOptions)(entry);
+                return entry;
             }
 
             async attach(type, entry, attachment, options) {
@@ -564,7 +565,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
                 try {
                     const ok = this._processAttachment(type, attachment);
-                    if(!ok) return null;
+                    if (!ok) return null;
 
                     entry = await this.get(entry, {fromCache: true, fallback: true});
                     const addAttachmentOptions = createOptions(options, 'addAttachment');
