@@ -137,7 +137,8 @@ class Sample {
             var types = {
                 'droppedNmr': 'nmr',
                 'droppedIR': 'ir',
-                'droppedMS': 'mass'
+                'droppedMS': 'mass',
+                'droppedXray': 'xray'
             };
             if (!types[name]) {
                 throw new Error('Unexpected variable name');
