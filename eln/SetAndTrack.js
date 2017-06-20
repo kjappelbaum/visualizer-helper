@@ -1,6 +1,7 @@
 import API from 'src/util/api';
 import Versioning from 'src/util/versioning';
 import URI from 'uri/URI';
+import {OCLE} from './libs';
 
 var externalInfo = JSON.parse(window.localStorage.getItem('external_cache') || '{}');
 var smiles = externalInfo.smiles;
@@ -14,8 +15,6 @@ var search = uri.search(true);
 if (search.smiles) {
     smiles = search.smiles;
 }
-
-const OCLE = undefined; // todo fix this?
 
 if (molfile) {
     const molecule = OCLE.Molecule.fromMolfile(molfile);
