@@ -1,7 +1,6 @@
 import API from 'src/util/api';
 import Versioning from 'src/util/versioning';
 import URI from 'uri/URI';
-import {OCLE} from './libs';
 
 var externalInfo = JSON.parse(window.localStorage.getItem('external_cache') || '{}');
 var smiles = externalInfo.smiles;
@@ -17,12 +16,21 @@ if (search.smiles) {
 }
 
 if (molfile) {
-    const molecule = OCLE.Molecule.fromMolfile(molfile);
-    API.createData('molfile', molecule.toMolfile());
+    if (OCLE) {
+        const molecule = OCLE.Molecule.fromMolfile(molfile);
+        API.createData('molfile', molecule.toMolfile());
+    } else {
+        console.log('OCLE should be available in window in order to normalise molfile');
+        API.createData('molfile', molfile);
+    }
 } else if (smiles) {
-    const molecule = OCLE.Molecule.fromSmiles(smiles);
-    API.createData('molfile', molecule.toMolfile());
-} else {
+    if (OCLE) {
+        const molecule = OCLE.Molecule.fromSmiles(smiles);
+        API.createData('molfile', molecule.toMolfile());
+    } else {
+        onsole.log('OCLE should be available in window in order to parse SMILES');
+    }
+} else {molfile
     molfile = window.localStorage.getItem('molfile');
     if (molfile) {
         API.createData('molfile', molfile);
