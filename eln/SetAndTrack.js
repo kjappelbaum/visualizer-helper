@@ -16,7 +16,7 @@ if (search.smiles) {
 }
 var OCLE = (typeof OCLE === 'undefined') ? undefined : OCLE;
 if (molfile) {
-    if (OCLE)const {
+    if (OCLE) {
         const molecule = OCLE.Molecule.fromMolfile(molfile);
         API.createData('molfile', molecule.toMolfile());
     } else {
