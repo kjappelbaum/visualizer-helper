@@ -28,7 +28,7 @@ if (molfile) {
         const molecule = OCLE.Molecule.fromSmiles(smiles);
         API.createData('molfile', molecule.toMolfile());
     } else {
-        onsole.log('OCLE should be available in window in order to parse SMILES');
+        console.log('OCLE should be available in window in order to parse SMILES');
     }
 } else {molfile
     molfile = window.localStorage.getItem('molfile');
