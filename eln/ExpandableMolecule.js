@@ -90,10 +90,11 @@ class ExpandableMolecule {
         // prevent the loop by checking actelionID
         var molecule = OCLE.Molecule.fromMolfile(this.molfile);
         this.viewMolfile = molecule.toVisualizerMolfile({
-            heavyAtomHydrogen: true
+            heavyAtomHydrogen: true,
+            diastereotopic: true
         });
         molecule.addImplicitHydrogens();
-        this.viewMolfileExpandedH = molecule.toVisualizerMolfile();
+        this.viewMolfileExpandedH = molecule.toVisualizerMolfile({diastereotopic:true});
     }
 
     handleAction(action) {
