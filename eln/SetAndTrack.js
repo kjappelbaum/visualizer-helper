@@ -13,24 +13,24 @@ var uri = new URI(document.location.href);
 var search = uri.search(true);
 if (search.smiles) {
     smiles = search.smiles;
+    molfile = '';
 }
-var OCLE = (typeof OCLE === 'undefined') ? undefined : OCLE;
 if (molfile) {
-    if (OCLE) {
+    if (typeof OCLE === 'undefined') {
+        console.log('OCLE should be available in order to normalise molfile');
+        API.createData('molfile', molfile);
+    } else {
         const molecule = OCLE.Molecule.fromMolfile(molfile);
         API.createData('molfile', molecule.toMolfile());
-    } else {
-        console.log('OCLE should be available in window in order to normalise molfile');
-        API.createData('molfile', molfile);
     }
 } else if (smiles) {
-    if (OCLE) {
+    if (typeof OCLE === 'undefined') {
+        console.log('OCLE should be available in window in order to parse SMILES');
+    } else {
         const molecule = OCLE.Molecule.fromSmiles(smiles);
         API.createData('molfile', molecule.toMolfile());
-    } else {
-        console.log('OCLE should be available in window in order to parse SMILES');
     }
-} else {molfile
+} else {
     molfile = window.localStorage.getItem('molfile');
     if (molfile) {
         API.createData('molfile', molfile);
