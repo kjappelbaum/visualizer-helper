@@ -170,23 +170,6 @@ class Nmr1dManager {
 
     _createNMRannotationsAndACS(nmr, ranges) {
         ranges.updateMultiplicity();
-
-        // TODO : this code hsould not be here !
-        //Recompile multiplicity
-        // for (var i = 0; i < ranges.length; i++) {
-        //     var peak = ranges[i];
-        //     for (var j = 0; j < peak.signal.length; j++) {
-        //         var signal = peak.signal[j];
-        //         if (signal.j && !signal.multiplicity) {
-        //             signal.multiplicity = "";
-        //             for (var k = 0; k < signal.j.length; k++) {
-        //                 signal.multiplicity += signal.j[k].multiplicity;
-        //             }
-        //         }
-        //     }
-        // }
-        //SD.formatter.update(peakPicking);
-
         API.createData('annotationsNMR1d', ranges.getAnnotations({
             line: 1,
             fillColor: 'green',
