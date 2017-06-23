@@ -24,7 +24,7 @@ class ExpandableMolecule {
             var oclID=newMolecule.getIDCodeAndCoordinates();
 
             if ( oclID.idCode !== this.idCode) {
-                this.idCode = idCode;
+                this.idCode = oclID.idCode;
                 this.molfile = event.target + '';
                 this.sample.setChildSync(['$content', 'general', 'molfile'], this.molfile);
                 this.sample.setChildSync(['$content', 'general', 'ocl'], {
