@@ -20,11 +20,17 @@ class ExpandableMolecule {
             // us this really a modification ? or a loop event ...
             // need to compare former oclID with new oclID
             var newMolecule = OCLE.Molecule.fromMolfile(event.target + '');
-            var idCode = newMolecule.getIDCode();
-            if (idCode !== this.idCode) {
+
+            var oclID=newMolecule.getIDCodeAndCoordinates();
+
+            if ( oclID.idCode !== this.idCode) {
                 this.idCode = idCode;
                 this.molfile = event.target + '';
                 this.sample.setChildSync(['$content', 'general', 'molfile'], this.molfile);
+                this.sample.setChildSync(['$content', 'general', 'ocl'], {
+                    value: oclID.idCode,
+                    coordinates: oclID.coordinates
+                });
             }
             this.options.onMolfileChanged(this);
         };
