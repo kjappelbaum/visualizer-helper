@@ -246,10 +246,10 @@ class Nmr1dManager {
         var promise = Promise.resolve();
         promise = promise.then(() => API.createData('nmr1hOptions', {
             noiseFactor: 0.8,
-            clean: true,
+            clean: 0.5,
             compile: true,
             optimize: false,
-            integralFn: 'sum',
+            integralType: 'sum',
             integral: 100,
             type: '1H',
             removeImpurities: {
@@ -274,8 +274,8 @@ class Nmr1dManager {
                         label: 'noiseFactor'
                     },
                     clean: {
-                        type: 'boolean',
-                        title: 'Delete signals with integration less than 0.5',
+                        type: 'number',
+                        title: 'Delete signals with integration less than input value',
                         label: 'clean'
                     },
                     compile: {
