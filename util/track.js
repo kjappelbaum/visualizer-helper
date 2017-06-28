@@ -23,9 +23,9 @@ define(['jquery', 'src/util/api', 'src/util/versioning'], function ($, API, Vers
 
         return API.createData(varName, data).then(function (result) {
             var mainData = Versioning.getData();
-            mainData.onChange(function (evt) {
-                if (evt.jpath.length === 1 && evt.jpath[0] === varName) {
-                    localStorage.setItem(cookieName, JSON.stringify(evt.target));
+            mainData.onChange((evt) => {
+                if (evt.jpath[0] === varName) {
+                    localStorage.setItem(cookieName, JSON.stringify(result));
                 }
             });
             return result;
