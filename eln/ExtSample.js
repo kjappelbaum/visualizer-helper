@@ -94,9 +94,9 @@ class Sample {
         name = String(name);
         // maps name of variable to type of data
         var types = {
-            'droppedNmr': 'nmr',
-            'droppedIR': 'ir',
-            'droppedMS': 'mass'
+            droppedNmr: 'nmr',
+            droppedIR: 'ir',
+            droppedMS: 'mass'
         };
 
         if (!types[name]) {

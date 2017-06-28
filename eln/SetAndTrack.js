@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import API from 'src/util/api';
 import Versioning from 'src/util/versioning';
 import URI from 'uri/URI';

@@ -200,12 +200,12 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
             var similarity = Math.round(result.similarity);
             var charge = result.charge > 0 ? '+' + result.charge : result.charge;
             var text = paper.text(x, y, label);
-            text.attr({'fill': result.textColor, 'font-family': labelFontFamily, 'font-weight': 'bold', 'font-size': labelSize});
+            text.attr({fill: result.textColor, 'font-family': labelFontFamily, 'font-weight': 'bold', 'font-size': labelSize});
             var textWidth = text.node.clientWidth + 3;
             text = paper.text(x + textWidth, y - labelSize / 2, charge);
-            text.attr({'fill': result.textColor, 'font-family': labelFontFamily, 'font-size': labelSize / 2});
+            text.attr({fill: result.textColor, 'font-family': labelFontFamily, 'font-size': labelSize / 2});
             text = paper.text(x + textWidth, y, similarity);
-            text.attr({'fill': result.textColor, 'font-family': labelFontFamily, 'font-size': labelSize / 2});
+            text.attr({fill: result.textColor, 'font-family': labelFontFamily, 'font-size': labelSize / 2});
 
         }
 

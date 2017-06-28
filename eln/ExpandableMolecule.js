@@ -21,9 +21,9 @@ class ExpandableMolecule {
             // need to compare former oclID with new oclID
             var newMolecule = OCLE.Molecule.fromMolfile(event.target + '');
 
-            var oclID=newMolecule.getIDCodeAndCoordinates();
+            var oclID = newMolecule.getIDCodeAndCoordinates();
 
-            if ( oclID.idCode !== this.idCode) {
+            if (oclID.idCode !== this.idCode) {
                 this.idCode = oclID.idCode;
                 this.molfile = event.target + '';
                 this.sample.setChildSync(['$content', 'general', 'molfile'], this.molfile);
@@ -100,7 +100,7 @@ class ExpandableMolecule {
             diastereotopic: true
         });
         molecule.addImplicitHydrogens();
-        this.viewMolfileExpandedH = molecule.toVisualizerMolfile({diastereotopic:true});
+        this.viewMolfileExpandedH = molecule.toVisualizerMolfile({diastereotopic: true});
     }
 
     handleAction(action) {

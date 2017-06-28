@@ -88,9 +88,11 @@ define([
     }
 
     function decode(base64) {
-        let bufferLength = base64.length * 0.75,
-            len = base64.length, i, p = 0,
-            encoded1, encoded2, encoded3, encoded4;
+        let bufferLength = base64.length * 0.75;
+        let len = base64.length;
+        let i;
+        let p = 0;
+        let encoded1, encoded2, encoded3, encoded4;
 
         if (base64[base64.length - 1] === '=') {
             bufferLength--;

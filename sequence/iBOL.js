@@ -80,7 +80,8 @@ function processSequence(s, seq, primerLength) {
 }
 
 function findBestMatch(primer, seq) {
-    var mismatches = MAX_MISMATCH + 1, positions;
+    var mismatches = MAX_MISMATCH + 1;
+    var positions;
     for (var i = 0; i < seq.length - primer.length + 1; i++) {
         var subseq = seq.substr(i, primer.length);
         var m = countMismatches(subseq, primer);

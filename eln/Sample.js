@@ -135,10 +135,10 @@ class Sample {
         if (!askType) {
             // maps name of variable to type of data
             var types = {
-                'droppedNmr': 'nmr',
-                'droppedIR': 'ir',
-                'droppedMS': 'mass',
-                'droppedXray': 'xray'
+                droppedNmr: 'nmr',
+                droppedIR: 'ir',
+                droppedMS: 'mass',
+                droppedXray: 'xray'
             };
             if (!types[name]) {
                 throw new Error('Unexpected variable name');
