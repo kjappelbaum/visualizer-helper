@@ -155,12 +155,18 @@ class Nmr1dManager {
                 thresholdFactor: Number(ppOptions.noiseFactor),
                 clean: ppOptions.clean,
                 compile: ppOptions.compile,
+                from: ppOptions.from,
+                to: ppOptions.to,
                 optimize: ppOptions.optimize,
                 integralType: ppOptions.integralFn,
                 idPrefix: nmr.getNucleus() + '',
                 gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0.004},
                 removeImpurity: removeImpurityOptions
             });
+            if (ppOptions.from !== undefined) {
+                let rangesOld = currentNmr.getChildSync(['range']);
+                ranges = rangesOld.concat(ranges);
+            }
             currentNmr.setChildSync(['range'], ranges);
             this._createNMRannotationsAndACS(nmr, ranges);
             //Is this possible. I need to add the highligth on the ranges
