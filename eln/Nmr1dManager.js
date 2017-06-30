@@ -167,7 +167,10 @@ class Nmr1dManager {
                 let rangesOld = currentNmr.getChildSync(['range']);
                 ranges = new Ranges(rangesOld.concat(ranges));
                 ranges.sort((a, b) => a.from - b.from);
-                ranges.forEach((range, index) => range.signalID = '1H-'+ index);
+                ranges.forEach((range, index) => {
+                    range.signalID = '1H_' + index;
+                    range._highlight = ['1H_' + index];
+                });
             }
             currentNmr.setChildSync(['range'], ranges);
             this._createNMRannotationsAndACS(nmr, ranges);
@@ -175,7 +178,7 @@ class Nmr1dManager {
     }
 
     _createNMRannotationsAndACS(nmr, ranges) {
-        ranges.updateMultiplicity();
+        // ranges.updateMultiplicity();
         API.createData('annotationsNMR1d', ranges.getAnnotations({
             line: 1,
             fillColor: 'green',
