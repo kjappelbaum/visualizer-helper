@@ -165,12 +165,12 @@ class Nmr1dManager {
             });
             if (ppOptions.from !== undefined) {
                 let rangesOld = currentNmr.getChildSync(['range']);
-                ranges = rangesOld.concat(ranges);
+                ranges = new Ranges(rangesOld.concat(ranges));
+                ranges.sort((a, b) => a.from - b.from);
+                ranges.forEach((range, index) => range.signalID = '1H-'+ index);
             }
             currentNmr.setChildSync(['range'], ranges);
             this._createNMRannotationsAndACS(nmr, ranges);
-            //Is this possible. I need to add the highligth on the ranges
-            //nmr.setChildSync(['range'], peakPicking);
         });
     }
 
@@ -184,7 +184,7 @@ class Nmr1dManager {
         API.createData('acsNMR1d', ranges.getACS({
             rangeForMultiplet: true,
             nucleus: nmr.getNucleus(0),
-            observe: Math.round(nmr.observeFrequencyX() / 10) * 10
+            observe: nmr.observeFrequencyX()
         }));
     }
 
