@@ -29,6 +29,9 @@ define([
                     key: 'printFormat',
                     varName: 'labelPrintFormats'
                 });
+
+                printers.sort( (a,b) => b.$modificationDate - a.$modificationDate);
+
                 printServers = await printServerRoc.view('printServerByMacAddress', {varName: 'printServers'});
                 onlineServers = printServers.filter(ps => Date.now() - ps.$modificationDate < LIMIT);
                 onlinePrinters = printers.filter(p => onlineServers.find(ps => ps.$content.macAddress === p.$content.macAddress));
