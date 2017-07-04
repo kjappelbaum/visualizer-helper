@@ -24,13 +24,15 @@ define([
                 printerRoc = new Roc(opts);
                 formatsRoc = new Roc(opts);
                 printServerRoc = new Roc(opts);
-                printers = await printerRoc.view('entryByKind', {key: 'printer', varName: 'labelPrinters'});
+                printers = await printerRoc.view('entryByKind', {
+                    key: 'printer',
+                    varName: 'labelPrinters',
+                    sort: (a,b) => b.$modificationDate - a.$modificationDate
+                });
                 printFormats = await formatsRoc.view('entryByKind', {
                     key: 'printFormat',
                     varName: 'labelPrintFormats'
                 });
-
-                printers.sort( (a,b) => b.$modificationDate - a.$modificationDate);
 
                 printServers = await printServerRoc.view('printServerByMacAddress', {varName: 'printServers'});
                 onlineServers = printServers.filter(ps => Date.now() - ps.$modificationDate < LIMIT);
