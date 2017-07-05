@@ -9,7 +9,7 @@ define([
     , function (API, Printer, processors, PrintServer, Roc) {
     const SECOND = 1000;
     const MINUTE = 60 * SECOND;
-    const LIMIT = 30 * MINUTE;
+    const LIMIT = 11 * MINUTE;
     return async function (opts) {
         var printerRoc, formatsRoc, printServerRoc, printers, printFormats, printServers, allIds;
         var onlineServers, onlinePrinters;
