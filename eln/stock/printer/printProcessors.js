@@ -1,14 +1,14 @@
-
 define([
     'src/main/datas',
     'src/util/api',
+    'src/util/ui',
     'browserified/twig/twig',
     'canvg',
     'https://www.lactame.com/lib/image-js/0.9.1/image.js',
     'src/util/typerenderer',
     'jquery',
     'https://www.lactame.com/lib/openchemlib-extended/2.2.0/openchemlib-extended.js'
-], function (Datas, API, twig, canvg, IJS, typerenderer, $, OCL) {
+], function (Datas, API, UI, twig, canvg, IJS, typerenderer, $, OCL) {
     const DataObject = Datas.DataObject;
     let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -19,6 +19,10 @@ define([
     }
     return {
         twig: async function (printFormat, data) {
+            if (printFormat.customFields && printFormat.customFields.length) {
+                const res = await fillFields(printFormat.customFields, data);
+                if(res === null) return;
+            }
             if (!printFormat.twig) throw new Error('twig processor expect twig property in format');
             var template = twig.twig({
                 data: DataObject.resurrect(printFormat.twig)
@@ -115,5 +119,29 @@ define([
         }
 
         return bytes;
+    }
+
+    function fillFields(fields, data) {
+        return UI.form(`
+            <div>
+                <form>
+                <table>
+                    ${fields.map(renderField)}
+                </table>
+                <input type="submit"/>
+                </form>
+            </div>
+    `, data);
+    }
+
+    function renderField(field) {
+        return `
+            <tr>
+                <td>${field.label}</td>
+                <td>
+                    <input type="text" name="${field.name}" />   
+                </td>
+            </tr>
+        `;
     }
 });
