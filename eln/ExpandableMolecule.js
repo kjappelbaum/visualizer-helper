@@ -15,6 +15,7 @@ class ExpandableMolecule {
         this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
         this.expandedHydrogens = false;
         this.jsmeEditionMode = false;
+        this.calculateDiastereotopicID = false;
 
         this.onChange = (event) => {
             // us this really a modification ? or a loop event ...
@@ -97,10 +98,12 @@ class ExpandableMolecule {
         var molecule = OCLE.Molecule.fromMolfile(this.molfile);
         this.viewMolfile = molecule.toVisualizerMolfile({
             heavyAtomHydrogen: true,
-            diastereotopic: true
+            diastereotopic: this.calculateDiastereotopicID
         });
         molecule.addImplicitHydrogens();
-        this.viewMolfileExpandedH = molecule.toVisualizerMolfile({diastereotopic: true});
+        this.viewMolfileExpandedH = molecule.toVisualizerMolfile({
+            diastereotopic: this.calculateDiastereotopicID
+        });
     }
 
     handleAction(action) {
