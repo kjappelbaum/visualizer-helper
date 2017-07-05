@@ -164,16 +164,15 @@ class Nmr1dManager {
                 removeImpurity: removeImpurityOptions
             });
             if (ppOptions.from !== undefined) {
+                ranges.forEach((range) => {
+                    range.signalID = '1H_manualPP_' + range.from + '-' +range.to;
+                    range._highlight = ['1H_manualPP_' + range.from + '-' +range.to];
+                });
                 let rangesOld = currentNmr.getChildSync(['range']);
                 ranges = new Ranges(rangesOld.concat(ranges));
-                ranges.sort((a, b) => a.from - b.from);
-                ranges.forEach((range, index) => {
-                    range.signalID = '1H_' + index;
-                    range._highlight = ['1H_' + index];
-                });
             }
-            currentNmr.setChildSync(['range'], ranges);
             this._createNMRannotationsAndACS(nmr, ranges);
+            currentNmr.setChildSync(['range'], ranges);
         });
     }
 
