@@ -1,4 +1,3 @@
-
 define(['src/util/util', './PrintServer', './printProcessors'], function (Util, PrintServer, processors) {
 
     class Printer {
@@ -13,6 +12,7 @@ define(['src/util/util', './PrintServer', './printProcessors'], function (Util, 
             if (!processors[printFormat.processor]) throw new Error('processor does not exist');
             processData(printFormat, data);
             const printData = await processors[String(printFormat.processor)].call(null, printFormat, data);
+            if (printData === null) return null;
             return this.printServer.print(this.id, printData);
         }
     }

@@ -21,7 +21,7 @@ define([
         twig: async function (printFormat, data) {
             if (printFormat.customFields && printFormat.customFields.length) {
                 const res = await fillFields(printFormat.customFields, data);
-                if(res === null) return;
+                if (res === null) return null;
             }
             if (!printFormat.twig) throw new Error('twig processor expect twig property in format');
             var template = twig.twig({
