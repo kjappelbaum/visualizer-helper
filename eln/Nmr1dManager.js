@@ -165,8 +165,8 @@ class Nmr1dManager {
             });
             if (ppOptions.from !== undefined) {
                 ranges.forEach((range) => {
-                    range.signalID = '1H_manualPP_' + range.from + '-' +range.to;
-                    range._highlight = ['1H_manualPP_' + range.from + '-' +range.to];
+                    range.signalID = '1H_manualPP_' + range.from + '-' + range.to;
+                    range._highlight = ['1H_manualPP_' + range.from + '-' + range.to];
                 });
                 let rangesOld = currentNmr.getChildSync(['range']);
                 ranges = new Ranges(rangesOld.concat(ranges));

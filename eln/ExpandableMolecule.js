@@ -18,7 +18,7 @@ class ExpandableMolecule {
         this.expandedHydrogens = false;
         this.jsmeEditionMode = false;
         this.calculateDiastereotopicID = options.calculateDiastereotopicID;
-        this.maxDiastereotopicCalculationTime = options.maxDiastereotopicCalculationTime
+        this.maxDiastereotopicCalculationTime = options.maxDiastereotopicCalculationTime;
 
         this.onChange = (event) => {
             // us this really a modification ? or a loop event ...
@@ -98,16 +98,17 @@ class ExpandableMolecule {
 
     updateMolfiles() {
         var molecule = OCLE.Molecule.fromMolfile(this.molfile);
-        let calculateDiastereotopicID=this.calculateDiastereotopicID;
+        let calculateDiastereotopicID = this.calculateDiastereotopicID;
         if (calculateDiastereotopicID) {
             // is it reasonnable to calculate the DiastereotopicID. We check the time it will take
             let start = Date.now();
             molecule.toIDCode();
             let exptected = (Date.now() - start) * molecule.getAllAtoms();
             if (exptected > this.maxDiastereotopicCalculationTime) {
+                // eslint-disable-next-line no-console
                 console.log('The diastereotopic calculation is expected to last more than 3s. No way to assign molecule.',
                     this.maxDiastereotopicCalculationTime);
-                calculateDiastereotopicID=false;
+                calculateDiastereotopicID = false;
             }
         }
 
