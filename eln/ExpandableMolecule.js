@@ -4,7 +4,9 @@ import {OCLE} from './libs';
 const noop = () => {/* noop */};
 
 const defaultOptions = {
-    onMolfileChanged: noop
+    onMolfileChanged: noop,
+    calculateDiastereotopicID: false,
+    maxDiastereotopicCalculationTime: 3000
 };
 
 class ExpandableMolecule {
@@ -15,7 +17,8 @@ class ExpandableMolecule {
         this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
         this.expandedHydrogens = false;
         this.jsmeEditionMode = false;
-        this.calculateDiastereotopicID = false;
+        this.calculateDiastereotopicID = options.calculateDiastereotopicID;
+        this.maxDiastereotopicCalculationTime = options.maxDiastereotopicCalculationTime
 
         this.onChange = (event) => {
             // us this really a modification ? or a loop event ...
@@ -101,8 +104,9 @@ class ExpandableMolecule {
             let start = Date.now();
             molecule.toIDCode();
             let exptected = (Date.now() - start) * molecule.getAllAtoms();
-            if (exptected > 3000) {
-                console.log('The diastereotopic calculation is expected to last more than 3s. No way to assign molecule.')
+            if (exptected > this.maxDiastereotopicCalculationTime) {
+                console.log('The diastereotopic calculation is expected to last more than 3s. No way to assign molecule.',
+                    this.maxDiastereotopicCalculationTime);
                 calculateDiastereotopicID=false;
             }
         }
