@@ -14,6 +14,7 @@ class ExpandableMolecule {
         this.options = Object.assign({}, defaultOptions, options);
         this.sample = sample;
         this.molfile = String(this.sample.getChildSync(['$content', 'general', 'molfile']) || '');
+        var start=Date.now();
         this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
         this.expandedHydrogens = false;
         this.jsmeEditionMode = false;
@@ -25,8 +26,8 @@ class ExpandableMolecule {
             // need to compare former oclID with new oclID
             var newMolecule = OCLE.Molecule.fromMolfile(event.target + '');
 
+            var start=Date.now();
             var oclID = newMolecule.getIDCodeAndCoordinates();
-
             if (oclID.idCode !== this.idCode) {
                 this.idCode = oclID.idCode;
                 this.molfile = event.target + '';
@@ -91,9 +92,11 @@ class ExpandableMolecule {
         let calculateDiastereotopicID = this.calculateDiastereotopicID;
         if (calculateDiastereotopicID) {
             // is it reasonnable to calculate the DiastereotopicID. We check the time it will take
-            let start = Date.now();
-            molecule.getIDCode();
-            let expected = (Date.now() - start) * molecule.getAllAtoms();
+
+            var start = Date.now();
+            molecule.getCompactCopy().getIDCode();
+            let expected = (Date.now() - start) * 4 * molecule.getAllAtoms();
+            console.log(Date.now() - start);
             if (expected > this.maxDiastereotopicCalculationTime) {
                 // eslint-disable-next-line no-console
                 console.log('The diastereotopic calculation is expected to last more than 3s. No way to assign molecule.',
@@ -101,7 +104,6 @@ class ExpandableMolecule {
                 calculateDiastereotopicID = false;
             }
         }
-        console.log('expanded', this.expandedHydrogens)
         if (this.expandedHydrogens) {
             molecule.addImplicitHydrogens();
             let viewMolfileExpandedH = molecule.toVisualizerMolfile({
