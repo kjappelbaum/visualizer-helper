@@ -17,8 +17,8 @@ class ExpandableMolecule {
         this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
         this.expandedHydrogens = false;
         this.jsmeEditionMode = false;
-        this.calculateDiastereotopicID = options.calculateDiastereotopicID;
-        this.maxDiastereotopicCalculationTime = options.maxDiastereotopicCalculationTime;
+        this.calculateDiastereotopicID = this.options.calculateDiastereotopicID;
+        this.maxDiastereotopicCalculationTime = this.options.maxDiastereotopicCalculationTime;
 
         this.onChange = (event) => {
             // us this really a modification ? or a loop event ...
@@ -44,8 +44,7 @@ class ExpandableMolecule {
             (editableMolfile) => {
                 this.editableMolfile = editableMolfile;
                 this.bindChange();
-                this.updateMolfiles();
-                this.setJSMEEdition(false);
+                this.createViewVariable();
             }
         );
     }
@@ -58,75 +57,71 @@ class ExpandableMolecule {
         this.editableMolfile.unbindChange(this.onChange);
     }
 
-    setJSMEEdition(value, noDepictUpdate) {
-        this.jsmeEditionMode = value;
-
-        var options = {
+    toggleJSMEEdition() {
+        this.jsmeEditionMode = ! this.jsmeEditionMode;
+        this.expandedHydrogens = false;
+        let options = {
             prefs: []
         };
 
         if (this.jsmeEditionMode) {
             options.prefs.push('nodepict');
-            API.getData('editableMolfile').triggerChange();
-            this.expandedHydrogens = false;
+            API.createData('editableMolfile', this.molfile);
         } else {
             options.prefs.push('depict');
-            if (!noDepictUpdate) { // TODO when we should not updateMolfile
-                this.expandedHydrogens = false;
-                this.updateMolfiles();
-                API.createData('viewMolfile', this.viewMolfile);
-            }
 
         }
         API.doAction('setJSMEOptions', options);
     }
 
-    setExpandedHydrogens(force) {
-        if (force === undefined) {
+    setExpandedHydrogens() {
+        if (this.jsmeEditionMode) {
+            this.toggleJSMEEdition();
+        } else {
             this.expandedHydrogens = !this.expandedHydrogens;
-        } else {
-            this.expandedHydrogens = force;
         }
-        if (this.expandedHydrogens) {
-            this.setJSMEEdition(false, true);
-            API.createData('viewMolfileExpandedH', this.viewMolfileExpandedH);
-
-        } else {
-            API.createData('viewMolfile', this.viewMolfile);
-        }
+        this.createViewVariable();
     }
 
-    updateMolfiles() {
+    /*
+    We create the view variable with or without expanded hydrogens
+     */
+    createViewVariable() {
         var molecule = OCLE.Molecule.fromMolfile(this.molfile);
         let calculateDiastereotopicID = this.calculateDiastereotopicID;
         if (calculateDiastereotopicID) {
             // is it reasonnable to calculate the DiastereotopicID. We check the time it will take
             let start = Date.now();
             molecule.getIDCode();
-            let exptected = (Date.now() - start) * molecule.getAllAtoms();
-            if (exptected > this.maxDiastereotopicCalculationTime) {
+            let expected = (Date.now() - start) * molecule.getAllAtoms();
+            if (expected > this.maxDiastereotopicCalculationTime) {
                 // eslint-disable-next-line no-console
                 console.log('The diastereotopic calculation is expected to last more than 3s. No way to assign molecule.',
                     this.maxDiastereotopicCalculationTime);
                 calculateDiastereotopicID = false;
             }
         }
-
-        this.viewMolfile = molecule.toVisualizerMolfile({
-            heavyAtomHydrogen: true,
-            diastereotopic: calculateDiastereotopicID
-        });
-        molecule.addImplicitHydrogens();
-        this.viewMolfileExpandedH = molecule.toVisualizerMolfile({
-            diastereotopic: calculateDiastereotopicID
-        });
+        console.log('expanded', this.expandedHydrogens)
+        if (this.expandedHydrogens) {
+            molecule.addImplicitHydrogens();
+            let viewMolfileExpandedH = molecule.toVisualizerMolfile({
+                diastereotopic: calculateDiastereotopicID
+            });
+            API.createData('viewMolfileExpandedH', viewMolfileExpandedH);
+        } else {
+            let viewMolfile = molecule.toVisualizerMolfile({
+                heavyAtomHydrogen: true,
+                diastereotopic: calculateDiastereotopicID
+            });
+            API.createData('viewMolfile', viewMolfile);
+        }
     }
 
     handleAction(action) {
         if (!action) return false;
         switch (action.name) {
             case 'toggleJSMEEdition':
-                this.setJSMEEdition(!this.jsmeEditionMode);
+                this.toggleJSMEEdition(!this.jsmeEditionMode);
                 break;
             case 'clearMolfile':
                 var molfile = API.getData('editableMolfile');
