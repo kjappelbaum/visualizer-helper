@@ -102,7 +102,7 @@ class ExpandableMolecule {
         if (calculateDiastereotopicID) {
             // is it reasonnable to calculate the DiastereotopicID. We check the time it will take
             let start = Date.now();
-            molecule.toIDCode();
+            molecule.getIDCode();
             let exptected = (Date.now() - start) * molecule.getAllAtoms();
             if (exptected > this.maxDiastereotopicCalculationTime) {
                 // eslint-disable-next-line no-console
