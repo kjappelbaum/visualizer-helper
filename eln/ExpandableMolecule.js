@@ -94,15 +94,26 @@ class ExpandableMolecule {
     }
 
     updateMolfiles() {
-        // prevent the loop by checking actelionID
         var molecule = OCLE.Molecule.fromMolfile(this.molfile);
+        let calculateDiastereotopicID=this.calculateDiastereotopicID;
+        if (calculateDiastereotopicID) {
+            // is it reasonnable to calculate the DiastereotopicID. We check the time it will take
+            let start = Date.now();
+            molecule.toIDCode();
+            let exptected = (Date.now() - start) * molecule.getAllAtoms();
+            if (exptected > 3000) {
+                console.log('The diastereotopic calculation is expected to last more than 3s. No way to assign molecule.')
+                calculateDiastereotopicID=false;
+            }
+        }
+
         this.viewMolfile = molecule.toVisualizerMolfile({
             heavyAtomHydrogen: true,
-            diastereotopic: this.calculateDiastereotopicID
+            diastereotopic: calculateDiastereotopicID
         });
         molecule.addImplicitHydrogens();
         this.viewMolfileExpandedH = molecule.toVisualizerMolfile({
-            diastereotopic: this.calculateDiastereotopicID
+            diastereotopic: calculateDiastereotopicID
         });
     }
 
