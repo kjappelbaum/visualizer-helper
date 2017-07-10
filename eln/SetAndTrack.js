@@ -17,17 +17,39 @@ if (search.smiles) {
     smiles = search.smiles;
     molfile = '';
 }
+
+var promise;
+
+var data = Versioning.getData();
+data.onChange(function (evt) {
+    if (evt.jpath.length === 1 && evt.jpath[0] === 'molfile') {
+        localStorage.setItem('molfile', evt.target.get());
+    }
+});
+
 if (molfile) {
     if (typeof OCLE === 'undefined') {
-        console.log('OCLE should be available in order to normalise molfile');
-        API.createData('molfile', molfile);
+        promise = new Promise();
+        require(["vh/eln/libs"], function(libs) {
+            promise.resolve();
+            const molecule = libs.OCLE.Molecule.fromMolfile(molfile);
+            API.createData('molfile', molecule.toMolfile());
+        })
+        return promise;
     } else {
         const molecule = OCLE.Molecule.fromMolfile(molfile);
         API.createData('molfile', molecule.toMolfile());
     }
 } else if (smiles) {
     if (typeof OCLE === 'undefined') {
-        console.log('OCLE should be available in window in order to parse SMILES');
+        promise = new Promise();
+        require(["vh/eln/libs"], function(libs) {
+            promise.resolve();
+            const molecule = libs.OCLE.Molecule.fromSmiles(smiles);
+            API.createData('molfile', molecule.toMolfile());
+        })
+        return promise;
+
     } else {
         const molecule = OCLE.Molecule.fromSmiles(smiles);
         API.createData('molfile', molecule.toMolfile());
@@ -41,9 +63,6 @@ if (molfile) {
     }
 }
 
-var data = Versioning.getData();
-data.onChange(function (evt) {
-    if (evt.jpath.length === 1 && evt.jpath[0] === 'molfile') {
-        localStorage.setItem('molfile', evt.target.get());
-    }
-});
+if (! promise) promise = Promise.resolve();
+
+
