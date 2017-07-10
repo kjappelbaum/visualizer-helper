@@ -1,5 +1,5 @@
 
-import chemspider from 'https://www.lactame.com/lib/chemspider-json-api/0.0.3/chemspider-json-api.js';
+import chemspider from 'https://www.lactame.com/lib/chemspider-json-api/1.0.0/chemspider-json-api.min.js';
 import util from 'src/util/util';
 import _ from 'lodash';
 
