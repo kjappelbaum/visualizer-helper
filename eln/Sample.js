@@ -12,13 +12,14 @@ const DataObject = Datas.DataObject;
 
 var defaultOptions = {
     varName: 'sample',
-    track: false
+    track: false,
+    bindChange: true
 };
 
 class Sample {
     constructor(couchDB, uuid, options) {
         this.options = Object.assign({}, defaultOptions, options);
-
+q
 
         var roc = API.cache('roc');
         if (!roc) {
@@ -117,8 +118,10 @@ class Sample {
     }
 
     bindChange() {
-        this.sample.unbindChange(this.onChange);
-        this.sample.onChange(this.onChange);
+        if (this.options.bindChange) {
+            this.sample.unbindChange(this.onChange);
+            this.sample.onChange(this.onChange);
+        }
     }
 
     unbindChange() {
