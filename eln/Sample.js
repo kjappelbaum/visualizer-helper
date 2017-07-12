@@ -125,7 +125,7 @@ q
     }
 
     unbindChange() {
-        this.sample.unbindChange(this.onChange);
+        if (this.onChange) this.sample.unbindChange(this.onChange);
     }
 
 
