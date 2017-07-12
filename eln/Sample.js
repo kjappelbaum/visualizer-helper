@@ -19,7 +19,6 @@ var defaultOptions = {
 class Sample {
     constructor(couchDB, uuid, options) {
         this.options = Object.assign({}, defaultOptions, options);
-q
 
         var roc = API.cache('roc');
         if (!roc) {
@@ -125,7 +124,7 @@ q
     }
 
     unbindChange() {
-        if (this.onChange) this.sample.unbindChange(this.onChange);
+        if (this.options.bindChange) this.sample.unbindChange(this.onChange);
     }
 
 
