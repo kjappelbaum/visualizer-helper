@@ -14,7 +14,7 @@ module.exports = {
         var current = Number(id);
         var nextID = current + 1;
         return numberToId(nextID, type);
-    }
+    },
     
     numberToId(num, type) {
         var check = getCheckDigit(num);
