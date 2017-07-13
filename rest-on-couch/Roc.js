@@ -303,15 +303,19 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                         serverJsonString: JSON.stringify(data.$content)
                     };
                     if (options.track) {
-                        this.bindChange(options.varName);
-                        const localEntry = await idb.get(data._id);
-                        if (localEntry) {
-                            if (localEntry._rev === doc._rev) {
-                                this._updateByUuid(data._id, localEntry, options);
-                            } else {
-                                // Local storage has an anterior revision
-                                idb.delete(data._id);
+                        try {
+                            const localEntry = await idb.get(data._id);
+                            if (localEntry) {
+                                if (localEntry._rev === doc._rev) {
+                                    this._updateByUuid(data._id, localEntry, options);
+                                } else {
+                                    // Local storage has an anterior revision
+                                    idb.delete(data._id);
+                                }
                             }
+                            this.bindChange(options.varName);
+                        } catch (e) {
+                            Debug.error('could not retrieve local entry', e, e.stack);
                         }
                     }
                     return data;
@@ -593,7 +597,9 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 this._updateByUuid(entry._id, entry, {
                     updateServerString: true
                 });
-                await idb.delete(uuid);
+                try {
+                    await idb.delete(uuid);
+                } catch (e) {}
                 // Track data again
                 this.bindChangeByUuid(uuid);
                 return entry;
