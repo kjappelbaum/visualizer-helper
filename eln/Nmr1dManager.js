@@ -3,7 +3,8 @@ import fileSaver from 'file-saver';
 import API from 'src/util/api';
 import UI from 'src/util/ui';
 import {getData} from './jpaths';
-import {SD, CCE} from './libs';
+import SD from './libs/SD';
+import CCE from './libs/CCE';
 
 const Ranges = SD.Ranges;
 const NMR = SD.NMR;

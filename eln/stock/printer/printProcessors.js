@@ -6,10 +6,9 @@ define([
     'canvg',
     'src/util/typerenderer',
     'jquery',
-    '../../libs'
-], function (Datas, API, UI, twig, canvg, typerenderer, $, libs) {
-    const IJS = libs.Image;
-    const OCL = libs.OCLE;
+    '../../libs/Image',
+    '../../libs/OCLE'
+], function (Datas, API, UI, twig, canvg, typerenderer, $, IJS, OCL) {
     const DataObject = Datas.DataObject;
     let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 

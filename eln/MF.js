@@ -1,7 +1,8 @@
 
 import API from 'src/util/api';
 import UI from 'src/util/ui';
-import {OCLE, CCE} from './libs';
+import OCLE from './libs/OCLE';
+import CCE from './libs/CCE';
 
 class MF {
     constructor(sample) {

@@ -5,7 +5,7 @@ import Datas from 'src/main/datas';
 import API from 'src/util/api';
 import UI from 'src/util/ui';
 import {createVar, getData} from './jpaths';
-import {elnPlugin} from './libs';
+import elnPlugin from './libs/elnPlugin';
 import Roc from '../rest-on-couch/Roc';
 
 const DataObject = Datas.DataObject;

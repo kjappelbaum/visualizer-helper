@@ -1,5 +1,5 @@
 import API from 'src/util/api';
-import {OCLE} from './libs';
+import OCLE from './libs/OCLE';
 
 const noop = () => {/* noop */};
 

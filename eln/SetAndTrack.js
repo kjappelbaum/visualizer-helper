@@ -29,8 +29,8 @@ function track() {
 
     if (molfile) {
         if (typeof OCLE === 'undefined') {
-            return API.require("vh/eln/libs").then( function(libs) {
-                const molecule = libs.OCLE.Molecule.fromMolfile(molfile);
+            return API.require('vh/eln/libs/OCLE').then( function(OCLE) {
+                const molecule = OCLE.Molecule.fromMolfile(molfile);
                 API.createData('molfile', molecule.toMolfile());
             });
         } else {
@@ -39,8 +39,8 @@ function track() {
         }
     } else if (smiles) {
         if (typeof OCLE === 'undefined') {
-            return API.require("vh/eln/libs").then( function(libs) {
-                const molecule = libs.OCLE.Molecule.fromSmiles(smiles);
+            return API.require('vh/eln/libs/OCLE').then( function(OCLE) {
+                const molecule = OCLE.Molecule.fromSmiles(smiles);
                 console.log(molecule.toMolfile())
                 API.createData('molfile', molecule.toMolfile());
             });
