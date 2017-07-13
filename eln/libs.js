@@ -3,3 +3,4 @@ export {default as OCLE} from 'https://www.lactame.com/lib/openchemlib-extended/
 export {default as SD} from 'https://www.lactame.com/lib/spectra-data/3.1.7/spectra-data.min.js';
 export {default as CCE} from 'https://www.lactame.com/lib/chemcalc-extended/1.27.5/chemcalc-extended.js';
 export {default as elnPlugin} from 'https://www.lactame.com/lib/eln-plugin/0.2.2/eln-plugin.min.js';
+export {default as Image} from 'https://www.lactame.com/lib/image-js/0.11.8/image.min.js';

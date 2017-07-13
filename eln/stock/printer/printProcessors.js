@@ -4,11 +4,12 @@ define([
     'src/util/ui',
     'browserified/twig/twig',
     'canvg',
-    'https://www.lactame.com/lib/image-js/0.9.1/image.js',
     'src/util/typerenderer',
     'jquery',
-    'https://www.lactame.com/lib/openchemlib-extended/2.2.0/openchemlib-extended.js'
-], function (Datas, API, UI, twig, canvg, IJS, typerenderer, $, OCL) {
+    '../../libs'
+], function (Datas, API, UI, twig, canvg, typerenderer, $, libs) {
+    const IJS = libs.Image;
+    const OCL = libs.OCLE;
     const DataObject = Datas.DataObject;
     let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
