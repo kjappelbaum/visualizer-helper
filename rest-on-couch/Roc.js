@@ -303,6 +303,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                         serverJsonString: JSON.stringify(data.$content)
                     };
                     if (options.track) {
+                        this.bindChange(options.varName);
                         try {
                             const localEntry = await idb.get(data._id);
                             if (localEntry) {
@@ -313,7 +314,6 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                                     idb.delete(data._id);
                                 }
                             }
-                            this.bindChange(options.varName);
                         } catch (e) {
                             Debug.error('could not retrieve local entry', e, e.stack);
                         }
