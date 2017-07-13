@@ -13,9 +13,13 @@ module.exports = {
         var id = v[0].value[type];
         var current = Number(id);
         var nextID = current + 1;
-        var check = getCheckDigit(nextID);
-        var nextIDStr = String(nextID);
-        return type + '-' + '0'.repeat(6 - nextIDStr.length) + nextIDStr + '-' + check;
+        return numberToId(nextID, type);
+    }
+    
+    numberToId(num, type) {
+        var check = getCheckDigit(num);
+        var numStr = String(num);
+        return type + '-' + '0'.repeat(6 - numStr.length) + numStr + '-' + check;
     }
 };
 
