@@ -7,7 +7,7 @@ require(['TrackOptions'], function(TrackOptions) {
 */
 
 define([], function () {
-    function watchAnswers(cookieName, exercises) {
+    function watchAnswers(cookieName, exercises, options={}) {
         var myAnswers = JSON.parse(window.localStorage.getItem(cookieName) || '{}');
 
         for (var i = 0; i < exercises.length; i++) {
@@ -27,7 +27,9 @@ define([], function () {
                     }
                     break;
                 case 'exercises':
-                    myAnswers = {};
+                    if (! options.keepAnswers) {
+                        myAnswers = {};
+                    }
                     break;
                 default:
                     throw new Error(`Unexpected target: ${evt.target.__name}`);
