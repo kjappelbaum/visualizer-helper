@@ -31,7 +31,7 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
             var part = mfParts[i];
             var text = tempPaper.text(xPos, 20, part);
             text.attr({'font-family': labelFontFamily, 'font-weight': 'bold', 'font-size': 12});
-            var textWidth = text.node.clientWidth;
+            var textWidth = text.node.getBoundingClientRect().width;
             xPos += textWidth;
             if (xPos > (width - leftRightBorders)) {
                 xOld = leftRightBorders;
@@ -77,7 +77,6 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
                 result.from = 0;
             } else {
                 result.from = residues.length - secondPart.substr(1) * 1 - 1;
-
             }
             result.length = result.to - result.from + 1;
 
@@ -201,7 +200,7 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
             var charge = result.charge > 0 ? '+' + result.charge : result.charge;
             var text = paper.text(x, y, label);
             text.attr({fill: result.textColor, 'font-family': labelFontFamily, 'font-weight': 'bold', 'font-size': labelSize});
-            var textWidth = text.node.clientWidth + 3;
+            var textWidth = text.node.getBoundingClientRect().width + 3;
             text = paper.text(x + textWidth, y - labelSize / 2, charge);
             text.attr({fill: result.textColor, 'font-family': labelFontFamily, 'font-size': labelSize / 2});
             text = paper.text(x + textWidth, y, similarity);
@@ -249,7 +248,7 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
 
 
         function addScript(paper) {
-            var script = `<![CDATA[
+            var script = ` // <![CDATA[
         function mouseOver(evt) {
             var targetRange=evt.target.id.replace(/^line/,'');
             var from=targetRange.replace(/-.*/,'')*1;
@@ -272,7 +271,7 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
                 }
             }
         }
-      ]]>
+     // ]]>
     `;
             var scriptElement = paper.el('script', {
                 type: 'application/ecmascript'
@@ -282,7 +281,6 @@ define(['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8
 
 
     }
-
 
     return getSVG;
 });
