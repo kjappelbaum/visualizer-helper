@@ -88,6 +88,10 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 200: 'Token created',
                 401: 'Unauthorized to create token'
             },
+            createUserToken: {
+                200: 'Token created',
+                401: 'Unauthorized to create token'
+            },
             deleteToken: {
                 200: 'Token deleted',
                 401: 'Unauthorized to delete token'
@@ -719,6 +723,16 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 options = createOptions(options, 'createToken');
                 const uuid = getUuid(entry);
                 return superagent.post(`${this.entryUrl}/${uuid}/_token`)
+                    .withCredentials()
+                    .then(handleSuccess(this, options))
+                    .then(res => res.body)
+                    .catch(handleError(this, options));
+            }
+            
+            async createUserToken(options) {
+                await this.__ready;
+                options = createOptions(options, 'createUserToken');
+                return  superagent.post(`users/_me/token`)
                     .withCredentials()
                     .then(handleSuccess(this, options))
                     .then(res => res.body)
