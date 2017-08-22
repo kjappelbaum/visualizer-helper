@@ -9,8 +9,10 @@ import elnPlugin from '../libs/elnPlugin';
  */
 export function appendedDragAndDrop(experimentalFiles, targetName) {
     var target = API.getData(targetName);
+    var newTarget = false;
     if (!target) {
-        throw new Error(`target ${targetName} is not defined`);
+        target = [];
+        newTarget = true;
     }
 
     if (!Array.isArray(experimentalFiles)) {
@@ -42,7 +44,11 @@ export function appendedDragAndDrop(experimentalFiles, targetName) {
         }
     }
 
-    target.triggerChange();
+    if (newTarget) {
+        API.createData(targetName, target);
+    } else {
+        target.triggerChange();
+    }
     return target;
 }
 

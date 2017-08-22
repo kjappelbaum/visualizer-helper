@@ -22,13 +22,7 @@ class Sample {
             }
         } : {
             $content: {
-                general: {},
-                spectra: {
-                    mass:[],
-                    nmr:[],
-                    ir:[],
-                    chromatogram:[]
-                }
+                general: {}
             }
         };
 
