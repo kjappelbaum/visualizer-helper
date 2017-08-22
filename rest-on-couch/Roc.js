@@ -728,11 +728,11 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     .then(res => res.body)
                     .catch(handleError(this, options));
             }
-            
+
             async createUserToken(options) {
                 await this.__ready;
                 options = createOptions(options, 'createUserToken');
-                return  superagent.post(`${this.databaseUrl}/user/_me/token`)
+                return superagent.post(`${this.databaseUrl}/user/_me/token`)
                     .withCredentials()
                     .then(handleSuccess(this, options))
                     .then(res => res.body)
