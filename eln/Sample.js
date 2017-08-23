@@ -61,6 +61,7 @@ class Sample {
         createVar(sampleVar, 'em');
         createVar(sampleVar, 'title');
         createVar(sampleVar, 'description');
+        createVar(sampleVar, 'keyword');
         createVar(sampleVar, 'name');
         createVar(sampleVar, 'physical');
         createVar(sampleVar, 'bp');
