@@ -10,6 +10,9 @@ class MF {
         // if no mf we calculate from molfile
         if (!this.getMF()) {
             this.fromMolfile();
+            if (!this.getMF()) {
+                this.setMF('');
+            }
         } else {
             const mf = this.getMF();
             if (mf) {
