@@ -44,8 +44,15 @@ define(['jquery'], function ($) {
 */
 
 .on-tabs-tiles .cell .main {
-    font-size: 6em;
     margin: auto;
+}
+
+.on-tabs-tiles .cell .huge {
+    font-size: 6em;
+}
+
+.on-tabs-tiles .cell .large {
+    font-size: 4em;
 }
 
 .on-tabs-tiles .cell .title {
@@ -163,6 +170,7 @@ define(['jquery'], function ($) {
             const footer = options.footer(tile);
             const title = options.title(tile);
             const icon = options.icon(tile);
+            const size = getSize(title);
 
             let iconType = /(fa|ci-icon)-/.exec(icon);
             if (iconType) iconType = iconType[1];
@@ -170,7 +178,7 @@ define(['jquery'], function ($) {
                 <div class="cell ${active ? 'active' : 'inactive'}">
                     <div class='content'>
                         <div class='header'>${header || ''}</div>
-                        ${icon ? `<div class="${iconType} ${icon} icon main"></div>` : `<div class="title main">${title || ''}</div>`}
+                        ${icon ? `<div class="${iconType} ${icon} icon main"></div>` : `<div class="title main ${size}">${title || ''}</div>`}
                         <div class="footer">${footer || ''}</div>
                         ${ribbon ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>` : ''}
                     </div>
@@ -187,6 +195,14 @@ define(['jquery'], function ($) {
                 'data-idx': idx
             });
             return $el;
+        }
+
+        function getSize(text) {
+            if(text.length <= 3) {
+                return 'huge';
+            } else {
+                return 'large';
+            }
         }
     };
 });
