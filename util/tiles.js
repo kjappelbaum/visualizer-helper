@@ -198,7 +198,7 @@ define(['jquery'], function ($) {
         }
 
         function getSize(text) {
-            if(text.length <= 3) {
+            if (text.length <= 3) {
                 return 'huge';
             } else {
                 return 'large';
