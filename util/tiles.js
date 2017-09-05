@@ -55,6 +55,10 @@ define(['jquery'], function ($) {
     font-size: 4em;
 }
 
+.on-tabs-tiles .cell .medium {
+    font-size: 2em;
+}
+
 .on-tabs-tiles .cell .title {
     font-weight: bold;
     margin: auto;
@@ -201,8 +205,10 @@ define(['jquery'], function ($) {
             if(!text) return 'huge';
             if (text.length <= 3) {
                 return 'huge';
-            } else {
+            } else if(text.length <= 6){
                 return 'large';
+            } else {
+                return 'medium';
             }
         }
     };
