@@ -182,7 +182,7 @@ define(['jquery'], function ($) {
                 <div class="cell ${active ? 'active' : 'inactive'}">
                     <div class='content'>
                         <div class='header'>${header || ''}</div>
-                        ${icon ? `<div class="${iconType} ${icon} icon main"></div>` : `<div class="title main ${size}">${title || ''}</div>`}
+                        ${icon ? `<div class="${iconType} ${icon} icon main huge"></div>` : `<div class="title main ${size}">${title || ''}</div>`}
                         <div class="footer">${footer || ''}</div>
                         ${ribbon ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>` : ''}
                     </div>
