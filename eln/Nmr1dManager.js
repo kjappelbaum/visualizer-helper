@@ -48,9 +48,18 @@ class Nmr1dManager {
                 var goToLayer = action.value.dimension > 1 ? 'nmr2D' : 'Default layer';
                 API.switchToLayer(goToLayer);
                 if (action.value.dimension > 1) {
-                    API.createData('blackNMR2d', action.value.jcamp.data);
+                    if (action.value.jcamp) {
+                        API.createData('blackNMR2d', action.value.jcamp.data);
+                    } else {
+                        API.createData('blackNMR2d', null);
+                    }
+
                 } else {
-                    API.createData('blackNMR1d', action.value.jcamp.data);
+                    if (action.value.jcamp) {
+                        API.createData('blackNMR1d', action.value.jcamp.data);
+                    } else {
+                        API.createData('blackNMR1d', null);
+                    }
                 }
                 break;
             case 'executePeakPicking':
@@ -86,9 +95,9 @@ class Nmr1dManager {
         }
     }
 
-    _updateAnnotations(nmr) {
-        this._getNMR(nmr).then(spectrum => {
-            this._createNMRannotationsAndACS(spectrum, new Ranges(nmr.range.resurrect()));
+    _updateAnnotations(nmrLine) {
+        this._getNMR(nmrLine).then(nmrSpectrum => {
+            this._createNMRannotationsAndACS(nmrSpectrum, nmrLine, new Ranges(nmrLine.range.resurrect()));
         });
     }
 
@@ -116,12 +125,15 @@ class Nmr1dManager {
 
     async updateIntegralsFromSpectrum(nmr) {
         const spectrum = await this._getNMR(nmr);
-        const range = nmr.range;
-        var ppOptions = API.getData('nmr1hOptions');
-        spectrum.updateIntegrals(range, {
-            nH: Number(ppOptions.integral)
-        });
-        API.doAction('rerenderRanges');
+        if (spectrum && spectrum.sd) {
+            const range = nmr.range;
+            var ppOptions = API.getData('nmr1hOptions');
+            spectrum.updateIntegrals(range, {
+                nH: Number(ppOptions.integral)
+            });
+            API.doAction('rerenderRanges');
+        }
+
         setImmediate(() => {
             this._updateAnnotations(nmr);
         });
@@ -133,24 +145,28 @@ class Nmr1dManager {
             if (filename && this.spectra[filename]) {
                 var spectrum = this.spectra[filename];
             } else {
-                jcamp = String(jcamp.get());
-                spectrum = NMR.fromJcamp(jcamp);
-                if (filename) {
-                    this.spectra[filename] = spectrum;
+                if (jcamp) {
+                    jcamp = String(jcamp.get());
+                    spectrum = NMR.fromJcamp(jcamp);
+                    if (filename) {
+                        this.spectra[filename] = spectrum;
+                    }
+                } else {
+                    spectrum = new NMR();
                 }
             }
             return spectrum;
         });
     }
 
-    _autoRanges(currentNmr) {
-        this._getNMR(currentNmr).then(nmr => {
+    _autoRanges(nmrLine) {
+        this._getNMR(nmrLine).then(nmrSpectrum => {
             var ppOptions = API.getData('nmr1hOptions').resurrect();
             var removeImpurityOptions = {};
             if (ppOptions.removeImpurities.useIt) {
-                removeImpurityOptions = {solvent: currentNmr.solvent, nH: Number(ppOptions.integral), error: ppOptions.removeImpurities.error};
+                removeImpurityOptions = {solvent: nmrLine.solvent, nH: Number(ppOptions.integral), error: ppOptions.removeImpurities.error};
             }
-            var ranges = nmr.getRanges({
+            var ranges = nmrSpectrum.getRanges({
                 nH: Number(ppOptions.integral),
                 realTop: true,
                 thresholdFactor: Number(ppOptions.noiseFactor),
@@ -160,7 +176,7 @@ class Nmr1dManager {
                 to: ppOptions.to,
                 optimize: ppOptions.optimize,
                 integralType: ppOptions.integralFn,
-                idPrefix: nmr.getNucleus() + '',
+                idPrefix: nmrSpectrum.getNucleus() + '',
                 gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0.004},
                 removeImpurity: removeImpurityOptions
             });
@@ -169,25 +185,33 @@ class Nmr1dManager {
                     range.signalID = '1H_manualPP_' + range.from + '-' + range.to;
                     range._highlight = ['1H_manualPP_' + range.from + '-' + range.to];
                 });
-                let rangesOld = currentNmr.getChildSync(['range']);
+                let rangesOld = nmrLine.getChildSync(['range']);
                 ranges = new Ranges(rangesOld.concat(ranges));
             }
-            this._createNMRannotationsAndACS(nmr, ranges);
-            currentNmr.setChildSync(['range'], ranges);
+            this._createNMRannotationsAndACS(nmrSpectrum, nmrLine, ranges);
+            nmrLine.setChildSync(['range'], ranges);
         });
     }
 
-    _createNMRannotationsAndACS(nmr, ranges) {
+    _createNMRannotationsAndACS(nmrSpectrum, nmrLine, ranges) {
+        var nucleus=nmrLine.nucleus[0];
+        var observe=nmrLine.frequency;
+        if (nmrSpectrum && nmrSpectrum.sd) {
+            nucleus=nmrSpectrum.getNucleus(0);
+            observe=nmrSpectrum.observeFrequencyX()
+        }
+        if (nmrSpectrum)
         // ranges.updateMultiplicity();
         API.createData('annotationsNMR1d', ranges.getAnnotations({
             line: 1,
             fillColor: 'green',
             strokeWidth: 0
         }));
+
         API.createData('acsNMR1d', ranges.getACS({
             rangeForMultiplet: true,
-            nucleus: nmr.getNucleus(0),
-            observe: nmr.observeFrequencyX()
+            nucleus,
+            observe
         }));
     }
 
