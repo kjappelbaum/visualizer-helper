@@ -194,19 +194,20 @@ class Nmr1dManager {
     }
 
     _createNMRannotationsAndACS(nmrSpectrum, nmrLine, ranges) {
-        var nucleus=nmrLine.nucleus[0];
-        var observe=nmrLine.frequency;
+        var nucleus = nmrLine.nucleus[0];
+        var observe = nmrLine.frequency;
         if (nmrSpectrum && nmrSpectrum.sd) {
-            nucleus=nmrSpectrum.getNucleus(0);
-            observe=nmrSpectrum.observeFrequencyX()
+            nucleus = nmrSpectrum.getNucleus(0);
+            observe = nmrSpectrum.observeFrequencyX();
         }
-        if (nmrSpectrum)
+        if (nmrSpectrum) {
         // ranges.updateMultiplicity();
-        API.createData('annotationsNMR1d', ranges.getAnnotations({
-            line: 1,
-            fillColor: 'green',
-            strokeWidth: 0
-        }));
+            API.createData('annotationsNMR1d', ranges.getAnnotations({
+                line: 1,
+                fillColor: 'green',
+                strokeWidth: 0
+            }));
+        }
 
         API.createData('acsNMR1d', ranges.getACS({
             rangeForMultiplet: true,
