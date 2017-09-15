@@ -85,12 +85,22 @@ class Sample {
 
         this.onChange = (event) => {
             var jpathStr = event.jpath.join('.');
-console.log('CHANGING',jpathStr);
 
             if (jpathStr.replace(/\.\d+\..*/, '') === '$content.spectra.nmr') {
                 // execute peak picking
                 var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
                 this.nmr1dManager.executePeakPicking(currentNmr);
+            }
+
+            if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
+                console.log('Changing NMR ranges');
+
+                // if (this.nmr1dManager.updateHighlights()) {
+                //     // we had to do some update in highlight, trigger change ... ????
+                // };
+                // var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
+                // this.nmr1dManager._updateAnnotations(currentNmr);
+
             }
 
             switch (event.jpath.join('.')) {
