@@ -78,14 +78,14 @@ class Sample {
 
         this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
         this.nmr1dManager = new Nmr1dManager(this.sample);
-        this.nmr1dManager.initializeNMRAssignment();
+        this.nmr1dManager.initializeNMRAssignment(getData(this.sample, 'nmr'));
         createVar(sampleVar, 'nmr');
         this.mf = new MF(this.sample);
         this.mf.fromMF();
 
         this.onChange = (event) => {
             var jpathStr = event.jpath.join('.');
-
+console.log('CHANGING',jpathStr);
 
             if (jpathStr.replace(/\.\d+\..*/, '') === '$content.spectra.nmr') {
                 // execute peak picking
