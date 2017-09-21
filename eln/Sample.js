@@ -7,6 +7,7 @@ import UI from 'src/util/ui';
 import {createVar, getData} from './jpaths';
 import elnPlugin from './libs/elnPlugin';
 import Roc from '../rest-on-couch/Roc';
+import CCE from './libs/CCE';
 
 const DataObject = Datas.DataObject;
 
@@ -56,6 +57,7 @@ class Sample {
         createVar(sampleVar, 'content');
         createVar(sampleVar, 'general');
         createVar(sampleVar, 'molfile');
+        createVar(sampleVar, 'sequence');
         createVar(sampleVar, 'mf');
         createVar(sampleVar, 'mw');
         createVar(sampleVar, 'em');
@@ -92,6 +94,10 @@ class Sample {
                 this.nmr1dManager.executePeakPicking(currentNmr);
             }
 
+
+
+
+
             if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
                 console.log('Changing NMR ranges');
 
@@ -102,6 +108,8 @@ class Sample {
                 // this.nmr1dManager._updateAnnotations(currentNmr);
 
             }
+
+            console.log(jpathStr);
 
             switch (event.jpath.join('.')) {
                 case '':
@@ -116,9 +124,22 @@ class Sample {
                         this.mf.fromMF();
                         this.nmr1dManager.updateIntegral({mf: true});
                     } catch (e) {
-                        // ignore
+                        console.log(e);
                     }
                     break;
+                case '$content.general.sequence':
+                    try {
+                        var sequenceOriginal = (this.sample.getChildSync(['$content', 'general', 'sequence']) || '') + '';
+                        var sequence=CCE.convertAASequence(sequenceOriginal);
+                        this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    break;
+
+
+
+
                 default:
                     break; // ignore
             }

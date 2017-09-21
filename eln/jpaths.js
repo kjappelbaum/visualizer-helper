@@ -12,6 +12,7 @@ jpaths.modificationDate = ['$modificationDate'];
 jpaths.content = ['$content'];
 jpaths.general = ['$content', 'general'];
 jpaths.molfile = ['$content', 'general', 'molfile'];
+jpaths.sequence = ['$content', 'general', 'sequence'];
 jpaths.mf = ['$content', 'general', 'mf'];
 jpaths.mw = ['$content', 'general', 'mw'];
 jpaths.em = ['$content', 'general', 'em'];

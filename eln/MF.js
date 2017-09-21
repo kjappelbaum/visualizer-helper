@@ -40,7 +40,7 @@ class MF {
         var molfile = this.getMolfile();
         if (molfile) {
             var molecule = OCLE.Molecule.fromMolfile(molfile);
-            var mf = molecule.getMolecularFormula().formula;
+            var mf = molecule.getMF().parts.join('.');
             try {
                 return CCE.analyseMF(mf);
             } catch (e) {
