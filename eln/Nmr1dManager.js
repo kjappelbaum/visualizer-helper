@@ -1,4 +1,3 @@
-
 import fileSaver from 'file-saver';
 import API from 'src/util/api';
 import UI from 'src/util/ui';
@@ -70,6 +69,9 @@ class Nmr1dManager {
                     }
                     return false;
                 }
+                if (currentNmr.nucleus && currentNmr.nucleus[0]!=='H' ) {
+                    return false;
+                }
                 this._autoRanges(currentNmr);
                 break;
             case 'nmrChanged':
@@ -95,12 +97,6 @@ class Nmr1dManager {
         }
     }
 
-    _updateAnnotations(nmrLine) {
-        this._getNMR(nmrLine).then(nmrSpectrum => {
-            this._createNMRannotationsAndACS(nmrSpectrum, nmrLine, new Ranges(nmrLine.range.resurrect()));
-        });
-    }
-
     updateIntegrals(integral) {
         var ppOptions = API.getData('nmr1hOptions');
         var currentRanges = API.getData('currentNmrRanges');
@@ -111,16 +107,7 @@ class Nmr1dManager {
         var ranges = new Ranges(currentRanges);
         ranges.updateIntegrals({sum: Number(ppOptions.integral || integral)});
 
-        // Trigger change of currentRanges would cause an infinite loop
-        // So we just send an action for notifying modules
-        // TODO: fix that so that entry can be detected as changed and saved to idb when integrals are updated
-        API.doAction('rerenderRanges');
-        const currentNmr = API.getData('currentNmr');
-        if (currentNmr) {
-            setImmediate(() => {
-                this._updateAnnotations(currentNmr);
-            });
-        }
+        console.log('We need to trigger change the ranges');
     }
 
     async updateIntegralsFromSpectrum(nmr) {
@@ -131,17 +118,15 @@ class Nmr1dManager {
             spectrum.updateIntegrals(range, {
                 nH: Number(ppOptions.integral)
             });
-            API.doAction('rerenderRanges');
-        }
 
-        setImmediate(() => {
-            this._updateAnnotations(nmr);
-        });
+            console.log('We need to trigger change the ranges');
+            // API.doAction('rerenderRanges');
+        }
     }
 
-    _getNMR(nmr) {
-        var filename = String(nmr.getChildSync(['jcamp', 'filename']));
-        return nmr.getChild(['jcamp', 'data']).then((jcamp) => {
+    _getNMR(currentNMRLine) {
+        var filename = String(currentNMRLine.getChildSync(['jcamp', 'filename']));
+        return currentNMRLine.getChild(['jcamp', 'data']).then((jcamp) => {
             if (filename && this.spectra[filename]) {
                 var spectrum = this.spectra[filename];
             } else {
@@ -176,40 +161,32 @@ class Nmr1dManager {
                 to: ppOptions.to,
                 optimize: ppOptions.optimize,
                 integralType: ppOptions.integralFn,
-                idPrefix: nmrSpectrum.getNucleus() + '',
                 gsdOptions: {minMaxRatio: 0.001, smoothY: false, broadWidth: 0.004},
                 removeImpurity: removeImpurityOptions
             });
-            if (ppOptions.from !== undefined) {
-                ranges.forEach((range) => {
-                    range.signalID = '1H_manualPP_' + range.from + '-' + range.to;
-                    range._highlight = ['1H_manualPP_' + range.from + '-' + range.to];
-                });
-                let rangesOld = nmrLine.getChildSync(['range']);
-                ranges = new Ranges(rangesOld.concat(ranges));
-            }
-            this._createNMRannotationsAndACS(nmrSpectrum, nmrLine, ranges);
             nmrLine.setChildSync(['range'], ranges);
         });
     }
 
-    _createNMRannotationsAndACS(nmrSpectrum, nmrLine, ranges) {
+    async _createNMRannotationsAndACS(ranges) {
+        var nmrLine=API.getData('currentNmr');
+        var nmrSpectrum = await this._getNMR(nmrLine);
         var nucleus = nmrLine.nucleus[0];
         var observe = nmrLine.frequency;
         if (nmrSpectrum && nmrSpectrum.sd) {
             nucleus = nmrSpectrum.getNucleus(0);
             observe = nmrSpectrum.observeFrequencyX();
         }
+
         if (nmrSpectrum) {
-        // ranges.updateMultiplicity();
-            API.createData('annotationsNMR1d', ranges.getAnnotations({
+            API.createData('annotationsNMR1d', SD.GUI.annotations1D(ranges, {
                 line: 1,
-                fillColor: 'green',
+                fillColor: 'lightgreen',
                 strokeWidth: 0
             }));
         }
 
-        API.createData('acsNMR1d', ranges.getACS({
+        API.createData('acsNMR1d', SD.getACS(ranges, {
             rangeForMultiplet: true,
             nucleus,
             observe
@@ -245,40 +222,32 @@ class Nmr1dManager {
         }
     }
 
-    updateHighlights(ranges) {
+    rangesHasChanged(ranges) {
         ranges = ranges || API.getData('currentNmrRanges');
+        console.log('Updating ranges', ranges);
+
         if (!ranges) return;
-        for (var i = 0; i < ranges.length; i++) {
-            var range = ranges[i];
-            // range._highlight = [];
-            Object.defineProperty(range, '_highlight', {
-                enumerable: false,
-                writable: true
-            });
-            range._highlight = [range.signalID];
-            if (!range.signal) continue;
-            for (var j = 0; j < range.signal.length; j++) {
-                var signal = range.signal[j];
-                if (!signal.diaID) continue;
-                for (var k = 0; k < signal.diaID.length; k++) {
-                    var diaID = signal.diaID[k];
-                    range._highlight.push(diaID);
-                }
-            }
+
+        var rangesWasChanged = SD.GUI.ensureRangesHighlight(ranges);
+        if (rangesWasChanged) {
+            console.log('rangesWasChanged, trigger change');
+            ranges.triggerChange();
         }
+        this._createNMRannotationsAndACS(ranges);
+        return rangesWasChanged;
     }
 
-    initializeNMRAssignment(nmr) {
+    async initializeNMRAssignment(nmr) {
         if (nmr && nmr.length) {
             for (var i = 0; i < nmr.length; i++) {
                 if (!nmr[i].range) {
                     nmr[i].range = [];
                 }
-                this.updateHighlights(nmr[i].range);
+             //   this.rangesHasChanged(nmr.getChildSync([i, 'range']));
             }
         }
-        var promise = Promise.resolve();
-        promise = promise.then(() => API.createData('nmr1hOptions', {
+
+        await API.createData('nmr1hOptions', {
             noiseFactor: 0.8,
             clean: 0.5,
             compile: true,
@@ -290,10 +259,9 @@ class Nmr1dManager {
                 useIt: false,
                 error: 0.025
             }
-        })
-        );
+        });
 
-        promise = promise.then(() => API.createData('nmr1hOndeTemplates', {
+        var nmr1hOndeTemplates = await API.createData('nmr1hOndeTemplates', {
             full: {
                 type: 'object',
                 properties: {
@@ -379,16 +347,13 @@ class Nmr1dManager {
                     }
                 }
             }
-        }));
-        promise = promise.then((nmr1hOndeTemplates) => API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short));
-        promise = promise.then(() => {
-            var nmr = API.getData('currentNmr');
-            if (nmr) {
-                this.updateIntegral({range: nmr.getChildSync(['range'])});
-            }
-
         });
-        return promise;
+        await API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short);
+
+        var currentNmr = API.getData('currentNmr');
+        if (currentNmr) {
+            this.updateIntegral({range: currentNmr.getChildSync(['range'])});
+        }
     }
 }
 
