@@ -110,8 +110,6 @@ class Nmr1dManager {
         // the integral update is inplace
         var ranges = new Ranges(currentRanges);
         ranges.updateIntegrals({sum: Number(ppOptions.integral || integral)});
-
-        console.log('We need to trigger change the ranges');
     }
 
     async updateIntegralsFromSpectrum(nmr) {
@@ -122,9 +120,6 @@ class Nmr1dManager {
             spectrum.updateIntegrals(range, {
                 nH: Number(ppOptions.integral)
             });
-
-            console.log('We need to trigger change the ranges');
-            // API.doAction('rerenderRanges');
         }
     }
 
@@ -228,13 +223,11 @@ class Nmr1dManager {
 
     rangesHasChanged(ranges) {
         ranges = ranges || API.getData('currentNmrRanges');
-        console.log('Updating ranges', ranges);
 
         if (!ranges) return;
 
         var rangesWasChanged = SD.GUI.ensureRangesHighlight(ranges);
         if (rangesWasChanged) {
-            console.log('rangesWasChanged, trigger change');
             ranges.triggerChange();
         }
         this._createNMRannotationsAndACS(ranges);

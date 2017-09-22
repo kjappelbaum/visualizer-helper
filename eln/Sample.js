@@ -96,11 +96,8 @@ class Sample {
 
 
             if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
-                console.log('Changing NMR ranges')
                 this.nmr1dManager.rangesHasChanged();
             }
-
-            console.log(jpathStr);
 
             switch (event.jpath.join('.')) {
                 case '':
