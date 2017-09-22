@@ -69,9 +69,6 @@ class Nmr1dManager {
                     }
                     return false;
                 }
-                if (currentNmr.nucleus && currentNmr.nucleus[0]!=='H' ) {
-                    return false;
-                }
                 this._autoRanges(currentNmr);
                 break;
             case 'nmrChanged':
@@ -86,6 +83,13 @@ class Nmr1dManager {
     }
 
     executePeakPicking(nmr, updateIntegral) {
+        if (nmr.dimension > 1) {
+            return false;
+        }
+        if (nmr.nucleus && nmr.nucleus[0].replace(/[0-9]/,'')!=='H' ) {
+            return false;
+        }
+
         if (!nmr.range || !nmr.range.length) {
             this.updateIntegral({mf: true});
             this._autoRanges(nmr);
