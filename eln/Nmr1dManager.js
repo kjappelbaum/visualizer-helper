@@ -211,14 +211,13 @@ class Nmr1dManager {
             }
         }
 
-        if (typeof integral === 'number' && !Number.isNaN(integral)) {
-            const nmr1hOptions = API.getData('nmr1hOptions');
-            nmr1hOptions.integral = integral;
-            nmr1hOptions.triggerChange();
-            this.updateIntegrals();
-        } else {
-            console.warn('not updating integrals, invalid total integral'); // eslint-disable-line no-console
+        if (typeof integral !== 'number' || Number.isNaN(integral) || ! integral) {
+            integral = 100;
         }
+        const nmr1hOptions = API.getData('nmr1hOptions');
+        nmr1hOptions.integral = integral;
+        nmr1hOptions.triggerChange();
+        this.updateIntegrals();
     }
 
     rangesHasChanged(ranges) {
