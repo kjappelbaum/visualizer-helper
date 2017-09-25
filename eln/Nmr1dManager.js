@@ -165,15 +165,17 @@ class Nmr1dManager {
             observe = nmrSpectrum.observeFrequencyX();
         }
 
+        const resurrectedRanges = DataObject.resurrect(ranges)
+
         if (nmrSpectrum) {
-            API.createData('annotationsNMR1d', SD.GUI.annotations1D(ranges, {
+            API.createData('annotationsNMR1d', SD.GUI.annotations1D(resurrectedRanges, {
                 line: 1,
                 fillColor: 'lightgreen',
                 strokeWidth: 0
             }));
         }
 
-        API.createData('acsNMR1d', SD.getACS(ranges, {
+        API.createData('acsNMR1d', SD.getACS(resurrectedRanges, {
             rangeForMultiplet: true,
             nucleus,
             observe
