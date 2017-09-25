@@ -259,7 +259,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     const serverJsonString = JSON.stringify(variable.data.$content);
                     const uuid = String(variable.data._id);
                     if (serverJsonString !== variable.serverJsonString) {
-                        idb.set(uuid, variable.data.resurrect());
+                        idb.set(uuid, JSON.parse(serverJsonString));
                         setTabSavedStatus(false);
                     } else {
                         // Going back to previous state sets the tab as saved
