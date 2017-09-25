@@ -68,7 +68,7 @@ class ExpandableMolecule {
             API.createData('editableMolfile', this.molfile);
         } else {
             options.prefs.push('depict');
-
+            this.createViewVariable();
         }
         API.doAction('setJSMEOptions', options);
     }
