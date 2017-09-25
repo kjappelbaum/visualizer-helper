@@ -597,8 +597,8 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 // Make sure the data change is not tracked
                 this.unbindChangeByUuid(uuid);
                 // Get from server again
-                entry = await this.get(entry);
-                this._updateByUuid(entry._id, entry, {
+                const serverEntry = await this.get(entry);
+                this._updateByUuid(entry._id, serverEntry, {
                     updateServerString: true
                 });
                 try {
@@ -609,7 +609,6 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 // Track data again
                 this.bindChangeByUuid(uuid);
                 entry.triggerChange();
-                return entry;
             }
 
             async getAttachment(entry, name, options) {
