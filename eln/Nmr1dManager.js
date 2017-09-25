@@ -110,6 +110,7 @@ class Nmr1dManager {
         // the integral update is inplace
         var ranges = new Ranges(currentRanges);
         ranges.updateIntegrals({sum: Number(ppOptions.integral || integral)});
+        currentRanges.triggerChange();
     }
 
     _getNMR(currentNMRLine) {
