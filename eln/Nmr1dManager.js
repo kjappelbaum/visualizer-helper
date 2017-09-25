@@ -3,6 +3,7 @@ import API from 'src/util/api';
 import UI from 'src/util/ui';
 import {getData} from './jpaths';
 import SD from './libs/SD';
+import * as GUI from './nmrGUI';
 import CCE from './libs/CCE';
 
 const Ranges = SD.Ranges;
@@ -165,17 +166,15 @@ class Nmr1dManager {
             observe = nmrSpectrum.observeFrequencyX();
         }
 
-        const resurrectedRanges = ranges.resurrect ? ranges.resurrect() : ranges;
-
         if (nmrSpectrum) {
-            API.createData('annotationsNMR1d', SD.GUI.annotations1D(resurrectedRanges, {
+            API.createData('annotationsNMR1d', GUI.annotations1D(ranges, {
                 line: 1,
                 fillColor: 'lightgreen',
                 strokeWidth: 0
             }));
         }
 
-        API.createData('acsNMR1d', SD.getACS(resurrectedRanges, {
+        API.createData('acsNMR1d', SD.getACS(ranges, {
             rangeForMultiplet: true,
             nucleus,
             observe
@@ -215,7 +214,7 @@ class Nmr1dManager {
 
         if (!ranges) return;
 
-        var rangesWasChanged = SD.GUI.ensureRangesHighlight(ranges);
+        var rangesWasChanged = GUI.ensureRangesHighlight(ranges);
         if (rangesWasChanged) {
             ranges.triggerChange();
         }
