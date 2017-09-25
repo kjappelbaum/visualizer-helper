@@ -97,7 +97,6 @@ class Nmr1dManager {
             if (updateIntegral) {
                 this.updateIntegral({range: nmr.range});
             }
-            this.updateIntegralsFromSpectrum(nmr);
         }
     }
 
@@ -110,17 +109,6 @@ class Nmr1dManager {
         // the integral update is inplace
         var ranges = new Ranges(currentRanges);
         ranges.updateIntegrals({sum: Number(ppOptions.integral || integral)});
-    }
-
-    async updateIntegralsFromSpectrum(nmr) {
-        const spectrum = await this._getNMR(nmr);
-        if (spectrum && spectrum.sd) {
-            const range = nmr.range;
-            var ppOptions = API.getData('nmr1hOptions');
-            spectrum.updateIntegrals(range, {
-                nH: Number(ppOptions.integral)
-            });
-        }
     }
 
     _getNMR(currentNMRLine) {
