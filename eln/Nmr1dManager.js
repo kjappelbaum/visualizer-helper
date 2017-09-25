@@ -104,7 +104,7 @@ class Nmr1dManager {
     updateIntegrals(integral) {
         var ppOptions = API.getData('nmr1hOptions');
         var currentRanges = API.getData('currentNmrRanges');
-        if (!currentRanges) return;
+        if (!currentRanges || currentRanges.length===0) return;
 
         // We initialize ranges with the DataObject so that
         // the integral update is inplace
