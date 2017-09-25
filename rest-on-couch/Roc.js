@@ -608,6 +608,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 }
                 // Track data again
                 this.bindChangeByUuid(uuid);
+                entry.triggerChange();
                 return entry;
             }
 
