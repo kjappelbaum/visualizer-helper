@@ -165,7 +165,7 @@ class Nmr1dManager {
             observe = nmrSpectrum.observeFrequencyX();
         }
 
-        const resurrectedRanges = DataObject.resurrect(ranges)
+        const resurrectedRanges = ranges.resurrect ? ranges.resurrect() : ranges;
 
         if (nmrSpectrum) {
             API.createData('annotationsNMR1d', SD.GUI.annotations1D(resurrectedRanges, {
