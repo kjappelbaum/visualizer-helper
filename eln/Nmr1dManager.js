@@ -187,10 +187,10 @@ class Nmr1dManager {
     async updateIntegralsFromSpectrum() {
         const nmr = API.getData('currentNmr');
         const spectrum = await this._getNMR(nmr);
-        if (spectrum && spectrum.sd) {
-            const range = nmr.range;
+        if (spectrum && spectrum.sd && nmr.range && nmr.range.length > 0) {
+            const ranges = new Ranges(nmr.range);
             var ppOptions = API.getData('nmr1hOptions');
-            spectrum.updateIntegrals(range, {
+            spectrum.updateIntegrals(ranges, {
                 nH: Number(ppOptions.integral)
             });
         }
