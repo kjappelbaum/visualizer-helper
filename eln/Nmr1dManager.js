@@ -161,6 +161,7 @@ class Nmr1dManager {
                 break;
             case 'nmrChanged':
                 this.updateIntegralOptions();
+                this._createNMRannotationsAndACS();
                 break;
             default:
                 return false;
@@ -256,8 +257,9 @@ class Nmr1dManager {
         });
     }
 
-    async _createNMRannotationsAndACS(ranges) {
+    async _createNMRannotationsAndACS() {
         var nmrLine = API.getData('currentNmr');
+        var ranges = nmrLine.range;
         var nmrSpectrum = await this._getNMR(nmrLine);
         var nucleus = nmrLine.nucleus[0];
         var observe = nmrLine.frequency;
@@ -321,15 +323,22 @@ class Nmr1dManager {
     }
 
     async rangesHasChanged() {
-        const ranges = API.getData('currentNmrRanges');
-        const currentIntegrals = ranges.map(range => Number(range.integral)).sort().join();
+        const ranges = API.getData('currentNmr').range;
         await this.updateIntegralsFromSpectrum();
-        const newIntegrals = ranges.map(range => Number(range.integral)).sort().join();
+        const newRangesID=this._getRangesID(ranges);
+
         var highlightWasUpdated = GUI.ensureRangesHighlight(ranges);
-        if (highlightWasUpdated || currentIntegrals !== newIntegrals) {
+        if (highlightWasUpdated || this.previousRangesID !== newRangesID) {
             ranges.triggerChange();
+            this._createNMRannotationsAndACS();
         }
-        this._createNMRannotationsAndACS(ranges);
+        this.previousRangesID=newRangesID;
+    }
+
+    _getRangesID(ranges) {
+        return ranges.map((range) => {
+            return `i: ${Number(range.integral)} from: ${Number(range.from)} to: ${Number(range.to)}`;
+        }).sort().join();
     }
 
     initializeNMROptions() {
