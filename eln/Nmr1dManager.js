@@ -9,10 +9,100 @@ import CCE from './libs/CCE';
 const Ranges = SD.Ranges;
 const NMR = SD.NMR;
 
+const nmr1hOndeTemplates = {
+    full: {
+        type: 'object',
+        properties: {
+            integral: {
+                type: 'number',
+                title: 'value to fit the spectrum integral',
+                label: 'Integral'
+            },
+            noiseFactor: {
+                type: 'number',
+                title: 'Mutiplier of the auto-detected noise level',
+                label: 'noiseFactor'
+            },
+            clean: {
+                type: 'number',
+                title: 'Delete signals with integration less than input value',
+                label: 'clean'
+            },
+            compile: {
+                type: 'boolean',
+                title: 'Compile the multiplets',
+                label: 'compile'
+            },
+            optimize: {
+                type: 'boolean',
+                title: 'Optimize the peaks to fit the spectrum',
+                label: 'optimize'
+            },
+            integralFn: {
+                type: 'string',
+                title: 'Type of integration',
+                label: 'Integral type',
+                enum: [
+                    'sum',
+                    'peaks'
+                ]
+            },
+            type: {
+                type: 'string',
+                title: 'Nucleus',
+                label: 'Nucleus',
+                editable: false
+            },
+            removeImpurities: {
+                type: 'object',
+                label: 'Remove solvent impurities',
+                properties: {
+                    useIt: {
+                        type: 'boolean',
+                        label: 'Remove Impurities',
+                    },
+                    error: {
+                        type: 'number',
+                        label: 'Tolerance',
+                        title: 'Allowed error in ppm'
+                    }
+                }
+            }
+        }
+    },
+    short: {
+        type: 'object',
+        properties: {
+            integral: {
+                type: 'number',
+                title: 'Total integral value',
+                label: 'Integral'
+            },
+            removeImpurities: {
+                type: 'object',
+                label: 'Remove solvent impurities',
+                properties: {
+                    useIt: {
+                        type: 'boolean',
+                        label: 'Remove Impurities',
+                    },
+                    error: {
+                        type: 'number',
+                        label: 'Tolerance',
+                        title: 'Allowed error in ppm'
+                    }
+                }
+            }
+        }
+    }
+};
+API.cache('nmr1hOndeTemplates', nmr1hOndeTemplates);
+
 class Nmr1dManager {
     constructor(sample) {
         this.spectra = {};
         this.sample = sample;
+        this.initializeNMROptions();
     }
 
     handleAction(action) {
@@ -28,11 +118,10 @@ class Nmr1dManager {
                 var advancedOptions1H = !API.cache('nmr1hAdvancedOptions');
                 API.cache('nmr1hAdvancedOptions', advancedOptions1H);
                 if (advancedOptions1H) {
-                    API.createData('nmr1hOndeTemplate', API.getData('nmr1hOndeTemplates').full);
+                    API.createData('nmr1hOndeTemplate', API.cache('nmr1hOndeTemplates').full);
                 } else {
-                    API.createData('nmr1hOndeTemplate', API.getData('nmr1hOndeTemplates').short);
+                    API.createData('nmr1hOndeTemplate', API.cache('nmr1hOndeTemplates').short);
                 }
-
                 break;
             case 'resetNMR1d':
                 var type = action.name.replace(/[^0-9]/g, '');
@@ -42,8 +131,6 @@ class Nmr1dManager {
                 API.createData('annotationNMR' + type, null);
                 API.createData('acsNMR' + type, null);
                 break;
-
-
             case 'switchNMRLayer':
                 var goToLayer = action.value.dimension > 1 ? 'nmr2D' : 'Default layer';
                 API.switchToLayer(goToLayer);
@@ -73,9 +160,7 @@ class Nmr1dManager {
                 this._autoRanges(currentNmr);
                 break;
             case 'nmrChanged':
-                if (action.value.dimension <= 1) {
-                    this.executePeakPicking(action.value, true);
-                }
+                this.updateIntegralOptions();
                 break;
             default:
                 return false;
@@ -83,28 +168,38 @@ class Nmr1dManager {
         return true;
     }
 
-    executePeakPicking(nmr, updateIntegral) {
+    updateIntegralOptions() {
+        const nmr = API.getData('currentNmr');
         if (nmr.dimension > 1) {
-            return false;
+            return;
         }
-        if (nmr.nucleus && nmr.nucleus[0].replace(/[0-9]/,'')!=='H' ) {
-            return false;
+        if (nmr.nucleus && nmr.nucleus[0].replace(/[0-9]/, '') !== 'H') {
+            return;
         }
 
         if (!nmr.range || !nmr.range.length) {
-            this.updateIntegral({mf: true});
-            this._autoRanges(nmr);
+            this.updateIntegralOptionsFromMF();
         } else {
-            if (updateIntegral) {
-                this.updateIntegral({range: nmr.range});
-            }
+            this.updateIntegralOptionsFromRanges();
+        }
+    }
+
+    async updateIntegralsFromSpectrum() {
+        const nmr = API.getData('currentNmr');
+        const spectrum = await this._getNMR(nmr);
+        if (spectrum && spectrum.sd) {
+            const range = nmr.range;
+            var ppOptions = API.getData('nmr1hOptions');
+            spectrum.updateIntegrals(range, {
+                nH: Number(ppOptions.integral)
+            });
         }
     }
 
     updateIntegrals(integral) {
         var ppOptions = API.getData('nmr1hOptions');
         var currentRanges = API.getData('currentNmrRanges');
-        if (!currentRanges || currentRanges.length===0) return;
+        if (!currentRanges || currentRanges.length === 0) return;
 
         // We initialize ranges with the DataObject so that
         // the integral update is inplace
@@ -138,7 +233,11 @@ class Nmr1dManager {
             var ppOptions = API.getData('nmr1hOptions').resurrect();
             var removeImpurityOptions = {};
             if (ppOptions.removeImpurities.useIt) {
-                removeImpurityOptions = {solvent: nmrLine.solvent, nH: Number(ppOptions.integral), error: ppOptions.removeImpurities.error};
+                removeImpurityOptions = {
+                    solvent: nmrLine.solvent,
+                    nH: Number(ppOptions.integral),
+                    error: ppOptions.removeImpurities.error
+                };
             }
             var ranges = nmrSpectrum.getRanges({
                 nH: Number(ppOptions.integral),
@@ -158,7 +257,7 @@ class Nmr1dManager {
     }
 
     async _createNMRannotationsAndACS(ranges) {
-        var nmrLine=API.getData('currentNmr');
+        var nmrLine = API.getData('currentNmr');
         var nmrSpectrum = await this._getNMR(nmrLine);
         var nucleus = nmrLine.nucleus[0];
         var observe = nmrLine.frequency;
@@ -182,64 +281,65 @@ class Nmr1dManager {
         }));
     }
 
-    updateIntegral(opts) {
-        opts = opts || {};
-        var integral;
-        if (opts.range) {
-            let sum = 0;
-            for (const range of opts.range) {
-                sum += range.integral;
-            }
-            integral = Math.round(sum);
-        } else {
-            const mf = getData(this.sample, 'mf') + '';
-            if (mf) {
-                const chemcalc = CCE.analyseMF(mf);
-                if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
-                    integral = chemcalc.atoms.H;
-                }
+    getNumberHydrogens() {
+        const mf = getData(this.sample, 'mf') + '';
+        if (mf) {
+            const chemcalc = CCE.analyseMF(mf);
+            if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
+                return chemcalc.atoms.H || 100;
             }
         }
-
-        if (typeof integral !== 'number' || Number.isNaN(integral) || ! integral) {
-            integral = 100;
-        }
-        const nmr1hOptions = API.getData('nmr1hOptions');
-        nmr1hOptions.integral = integral;
-        nmr1hOptions.triggerChange();
-        this.updateIntegrals();
+        return 100;
     }
 
-    rangesHasChanged(ranges) {
-        ranges = ranges || API.getData('currentNmrRanges');
+    updateIntegralOptionsFromMF() {
+        var options = API.getData('nmr1hOptions');
+        const currentIntegral = Number(options.integral);
+        const newIntegral = this.getNumberHydrogens();
+        if (currentIntegral !== newIntegral) {
+            options.setChildSync(['integral'], newIntegral);
+        }
+    }
 
-        if (!ranges) return;
+    // todo : migrate this code to spectra-data-ranges
+    getRangesTotalIntegral() {
+        var ranges = API.getData('currentNmrRanges') || [];
+        let sum = 0;
+        for (const range of ranges) {
+            sum += range.integral;
+        }
+        return sum;
+    }
 
-        var rangesWasChanged = GUI.ensureRangesHighlight(ranges);
-        if (rangesWasChanged) {
+    updateIntegralOptionsFromRanges() {
+        var options = API.getData('nmr1hOptions');
+        const currentIntegral = Number(options.integral);
+        const newIntegral = Math.round(this.getRangesTotalIntegral());
+        if (currentIntegral !== newIntegral) {
+            options.setChildSync(['integral'], newIntegral);
+        }
+    }
+
+    async rangesHasChanged() {
+        const ranges = API.getData('currentNmrRanges');
+        const currentIntegrals = ranges.map(range => Number(range.integral)).sort().join();
+        await this.updateIntegralsFromSpectrum();
+        const newIntegrals = ranges.map(range => Number(range.integral)).sort().join();
+        var highlightWasUpdated = GUI.ensureRangesHighlight(ranges);
+        if (highlightWasUpdated || currentIntegrals !== newIntegrals) {
             ranges.triggerChange();
         }
         this._createNMRannotationsAndACS(ranges);
-        return rangesWasChanged;
     }
 
-    async initializeNMRAssignment(nmr) {
-        if (nmr && nmr.length) {
-            for (var i = 0; i < nmr.length; i++) {
-                if (!nmr[i].range) {
-                    nmr[i].range = [];
-                }
-             //   this.rangesHasChanged(nmr.getChildSync([i, 'range']));
-            }
-        }
-
-        await API.createData('nmr1hOptions', {
+    initializeNMROptions() {
+        API.createData('nmr1hOptions', {
             noiseFactor: 0.8,
             clean: 0.5,
             compile: true,
             optimize: false,
             integralType: 'sum',
-            integral: 100,
+            integral: this.getNumberHydrogens(),
             type: '1H',
             removeImpurities: {
                 useIt: false,
@@ -247,99 +347,7 @@ class Nmr1dManager {
             }
         });
 
-        var nmr1hOndeTemplates = await API.createData('nmr1hOndeTemplates', {
-            full: {
-                type: 'object',
-                properties: {
-                    integral: {
-                        type: 'number',
-                        title: 'value to fit the spectrum integral',
-                        label: 'Integral'
-                    },
-                    noiseFactor: {
-                        type: 'number',
-                        title: 'Mutiplier of the auto-detected noise level',
-                        label: 'noiseFactor'
-                    },
-                    clean: {
-                        type: 'number',
-                        title: 'Delete signals with integration less than input value',
-                        label: 'clean'
-                    },
-                    compile: {
-                        type: 'boolean',
-                        title: 'Compile the multiplets',
-                        label: 'compile'
-                    },
-                    optimize: {
-                        type: 'boolean',
-                        title: 'Optimize the peaks to fit the spectrum',
-                        label: 'optimize'
-                    },
-                    integralFn: {
-                        type: 'string',
-                        title: 'Type of integration',
-                        label: 'Integral type',
-                        enum: [
-                            'sum',
-                            'peaks'
-                        ]
-                    },
-                    type: {
-                        type: 'string',
-                        title: 'Nucleus',
-                        label: 'Nucleus',
-                        editable: false
-                    },
-                    removeImpurities: {
-                        type: 'object',
-                        label: 'Remove solvent impurities',
-                        properties: {
-                            useIt: {
-                                type: 'boolean',
-                                label: 'Remove Impurities',
-                            },
-                            error: {
-                                type: 'number',
-                                label: 'Tolerance',
-                                title: 'Allowed error in ppm'
-                            }
-                        }
-                    }
-                }
-            },
-            short: {
-                type: 'object',
-                properties: {
-                    integral: {
-                        type: 'number',
-                        title: 'Total integral value',
-                        label: 'Integral'
-                    },
-                    removeImpurities: {
-                        type: 'object',
-                        label: 'Remove solvent impurities',
-                        properties: {
-                            useIt: {
-                                type: 'boolean',
-                                label: 'Remove Impurities',
-                            },
-                            error: {
-                                type: 'number',
-                                label: 'Tolerance',
-                                title: 'Allowed error in ppm'
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        await API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short);
-
-        var currentNmr = API.getData('currentNmr');
-        if (currentNmr) {
-            this.updateIntegral({range: currentNmr.getChildSync(['range'])});
-        }
+        API.createData('nmr1hOndeTemplate', nmr1hOndeTemplates.short);
     }
 }
 

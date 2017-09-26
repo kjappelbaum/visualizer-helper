@@ -4,7 +4,7 @@ import MF from './MF';
 import Datas from 'src/main/datas';
 import API from 'src/util/api';
 import UI from 'src/util/ui';
-import {createVar, getData} from './jpaths';
+import {createVar} from './jpaths';
 import elnPlugin from './libs/elnPlugin';
 import Roc from '../rest-on-couch/Roc';
 import CCE from './libs/CCE';
@@ -72,6 +72,7 @@ class Sample {
         createVar(sampleVar, 'density');
         createVar(sampleVar, 'ir');
         createVar(sampleVar, 'mass');
+        createVar(sampleVar, 'nmr');
         createVar(sampleVar, 'xray');
         createVar(sampleVar, 'chromatogram');
         createVar(sampleVar, 'image');
@@ -80,37 +81,25 @@ class Sample {
 
         this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
         this.nmr1dManager = new Nmr1dManager(this.sample);
-        this.nmr1dManager.initializeNMRAssignment(getData(this.sample, 'nmr'));
-        createVar(sampleVar, 'nmr');
+
         this.mf = new MF(this.sample);
         this.mf.fromMF();
 
         this.onChange = (event) => {
             var jpathStr = event.jpath.join('.');
 
-            if (jpathStr.replace(/\.\d+\..*/, '') === '$content.spectra.nmr') {
-                // execute peak picking
-                var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
-                this.nmr1dManager.executePeakPicking(currentNmr);
-            }
-
-
             if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
                 this.nmr1dManager.rangesHasChanged();
             }
 
             switch (event.jpath.join('.')) {
-                case '':
-                    this.nmr1dManager.initializeNMRAssignment(getData(this.sample, 'nmr'));
-                    createVar(sampleVar, 'nmr');
-                    break;
                 case '$content.general.molfile':
                     this.mf.fromMolfile();
                     break;
                 case '$content.general.mf':
                     try {
                         this.mf.fromMF();
-                        this.nmr1dManager.updateIntegral({mf: true});
+                        this.nmr1dManager.updateIntegralOptionsFromMF();
                     } catch (e) {
                         console.log(e);
                     }
@@ -118,16 +107,12 @@ class Sample {
                 case '$content.general.sequence':
                     try {
                         var sequenceOriginal = (this.sample.getChildSync(['$content', 'general', 'sequence']) || '') + '';
-                        var sequence=CCE.convertAASequence(sequenceOriginal);
+                        var sequence = CCE.convertAASequence(sequenceOriginal);
                         this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
                     } catch (e) {
                         console.log(e);
                     }
                     break;
-
-
-
-
                 default:
                     break; // ignore
             }
@@ -214,9 +199,9 @@ class Sample {
             case 'createOptions':
                 var advancedOptions1H = API.cache('nmr1hAdvancedOptions');
                 if (advancedOptions1H) {
-                    API.createData('nmr1hOndeTemplate', API.getData('nmr1hOndeTemplates').full);
+                    API.createData('nmr1hOndeTemplate', API.cache('nmr1hOndeTemplates').full);
                 } else {
-                    API.createData('nmr1hOndeTemplate', API.getData('nmr1hOndeTemplates').short);
+                    API.createData('nmr1hOndeTemplate', API.cache('nmr1hOndeTemplates').short);
                 }
                 break;
             case 'deleteAttachment':
@@ -240,13 +225,9 @@ class Sample {
                 const ok = await UI.confirm('Are you sure you want to refresh? This will discard your local modifications.');
                 if (!ok) return;
                 this.unbindChange();
-                await this.roc.discardLocal(this.sample);
-                this.nmr1dManager.initializeNMRAssignment(API.getData('currentNmr'));
                 this.expandableMolecule.unbindChange();
-                this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
-                this.mf = new MF(this.sample);
-                this.mf.fromMF();
-                this.bindChange();
+                await this.roc.discardLocal(this.sample);
+                this._loadInstanceInVisualizer();
                 break;
             }
             default:

@@ -54,12 +54,8 @@ class Sample {
         this.onChange = (event) => {
             var jpathStr = event.jpath.join('.');
 
-            // We have modified the nmr annotations
             if (jpathStr.replace(/\.\d+\..*/, '') === '$content.spectra.nmr') {
-                // execute peak picking
-                var currentNmr = this.sample.getChildSync(jpathStr.replace(/(\.\d+)\..*/, '$1').split('.'));
-                this.nmr1dManager.executePeakPicking(currentNmr);
-                // this.nmr1dManager.updateIntegrals();
+                this.nmr1dManager.updateIntegralOptions();
             }
 
             switch (event.jpath.join('.')) {
@@ -106,7 +102,6 @@ class Sample {
         });
     }
 
-
     bindChange() {
         this.sample.unbindChange(this.onChange);
         this.sample.onChange(this.onChange);
@@ -148,7 +143,6 @@ class Sample {
 
     handleAction(action) {
         if (!action) return;
-
         if (this.expandableMolecule) {
             this.expandableMolecule.handleAction(action);
         }
