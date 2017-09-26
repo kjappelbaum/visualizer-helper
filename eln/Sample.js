@@ -79,11 +79,7 @@ class Sample {
         createVar(sampleVar, 'sampleCode');
         createVar(sampleVar, 'attachments');
 
-        this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
-        this.nmr1dManager = new Nmr1dManager(this.sample);
-
-        this.mf = new MF(this.sample);
-        this.mf.fromMF();
+        this._initializeObjects();
 
         this.onChange = (event) => {
             var jpathStr = event.jpath.join('.');
@@ -119,6 +115,14 @@ class Sample {
         };
 
         this.bindChange();
+    }
+
+    _initializeObjects() {
+        this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
+        this.nmr1dManager = new Nmr1dManager(this.sample);
+
+        this.mf = new MF(this.sample);
+        this.mf.fromMF();
     }
 
     bindChange() {
@@ -227,7 +231,8 @@ class Sample {
                 this.unbindChange();
                 this.expandableMolecule.unbindChange();
                 await this.roc.discardLocal(this.sample);
-                this._loadInstanceInVisualizer();
+                this._initializeObjects();
+                this.bindChange();
                 break;
             }
             default:
