@@ -84,6 +84,8 @@ class Sample {
         this.onChange = (event) => {
             var jpathStr = event.jpath.join('.');
 
+            console.log('on change', jpathStr);
+
             if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
                 this.nmr1dManager.rangesHasChanged();
             }

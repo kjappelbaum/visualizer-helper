@@ -230,6 +230,7 @@ class Nmr1dManager {
     }
 
     _autoRanges(nmrLine) {
+        console.log('autoRanges');
         this._getNMR(nmrLine).then(nmrSpectrum => {
             var ppOptions = API.getData('nmr1hOptions').resurrect();
             var removeImpurityOptions = {};
