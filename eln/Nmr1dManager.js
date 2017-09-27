@@ -162,6 +162,11 @@ class Nmr1dManager {
                 }
                 this._autoRanges(currentNmr);
                 break;
+            case 'clearAssignments':
+                var ranges=this.getCurrentRanges();
+                ranges.forEach( a => a.diaID=[]);
+                ranges.triggerChange();
+                break;
             case 'nmrChanged':
                 this.updateIntegralOptions();
                 this.rangesHasChanged();
