@@ -96,7 +96,7 @@ class Sample {
                         this.mf.fromMF();
                         this.nmr1dManager.updateIntegralOptionsFromMF();
                     } catch (e) {
-                        console.log(e);
+                        console.log(e); // eslint-disable-line no-console
                     }
                     break;
                 case '$content.general.sequence':
@@ -105,7 +105,7 @@ class Sample {
                         var sequence = CCE.convertAASequence(sequenceOriginal);
                         this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
                     } catch (e) {
-                        console.log(e);
+                        console.log(e); // eslint-disable-line no-console
                     }
                     break;
                 default:
