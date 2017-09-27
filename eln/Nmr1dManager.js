@@ -161,12 +161,21 @@ class Nmr1dManager {
                 break;
             case 'nmrChanged':
                 this.updateIntegralOptions();
-                this._createNMRannotationsAndACS();
+                this.ensureHighlights(false);
                 break;
             default:
                 return false;
         }
         return true;
+    }
+
+    getCurrentRanges() {
+        const nmr = API.getData('currentNmr');
+        if (nmr !== null) {
+            return nmr.getChildSync(['range']);
+        } else {
+            return null;
+        }
     }
 
     updateIntegralOptions() {
@@ -199,7 +208,7 @@ class Nmr1dManager {
 
     updateIntegrals(integral) {
         var ppOptions = API.getData('nmr1hOptions');
-        var currentRanges = API.getData('currentNmrRanges');
+        var currentRanges = this.getCurrentRanges();
         if (!currentRanges || currentRanges.length === 0) return;
 
         // We initialize ranges with the DataObject so that
@@ -324,16 +333,21 @@ class Nmr1dManager {
     }
 
     async rangesHasChanged() {
-        const ranges = API.getData('currentNmr').range;
+        const ranges = this.getCurrentRanges();
         await this.updateIntegralsFromSpectrum();
-        const newRangesID=this._getRangesID(ranges);
+        const newRangesID = this._getRangesID(ranges);
 
-        var highlightWasUpdated = GUI.ensureRangesHighlight(ranges);
-        if (highlightWasUpdated || this.previousRangesID !== newRangesID) {
+        this.ensureHighlights(this.previousRangesID !== newRangesID);
+        this.previousRangesID = newRangesID;
+    }
+
+    ensureHighlights(forceTrigger) {
+        const ranges = this.getCurrentRanges();
+        const highlightWasUpdated = GUI.ensureRangesHighlight(ranges);
+        if (highlightWasUpdated || forceTrigger) {
             ranges.triggerChange();
             this._createNMRannotationsAndACS();
         }
-        this.previousRangesID=newRangesID;
     }
 
     _getRangesID(ranges) {
