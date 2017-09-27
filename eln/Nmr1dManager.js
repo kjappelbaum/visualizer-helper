@@ -55,7 +55,7 @@ const nmr1hOndeTemplates = {
             },
             removeImpurities: {
                 type: 'object',
-                label: 'Remove solvent impurities',
+                label: 'Remove residual solvent, TMS and water',
                 properties: {
                     useIt: {
                         type: 'boolean',
