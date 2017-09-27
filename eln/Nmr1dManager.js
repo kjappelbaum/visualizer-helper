@@ -164,8 +164,23 @@ class Nmr1dManager {
                 break;
             case 'clearAssignments':
                 var ranges=this.getCurrentRanges();
-                ranges.forEach( a => a.diaID=[]);
+                ranges.forEach( a => {
+                    if (a.signal) {
+                        a.signal.forEach( b => b.diaID=[] );
+                    }
+                });
                 ranges.triggerChange();
+                break;
+            case 'clearAllAssignments':
+                var nmr=this.sample.$content.spectra.nmr;
+                nmr.forEach( n => {
+                    n.range.forEach( a => {
+                        if (a.signal) {
+                            a.signal.forEach( b => b.diaID=[] );
+                        }
+                    });
+                });
+                this.getCurrentRanges().triggerChange();
                 break;
             case 'nmrChanged':
                 this.updateIntegralOptions();
