@@ -378,9 +378,7 @@ class Nmr1dManager {
     }
 
     _getRangesID(ranges) {
-        return ranges.map((range) => {
-            return `i: ${Number(range.integral)} from: ${Number(range.from)} to: ${Number(range.to)}`;
-        }).sort().join();
+        return JSON.stringify(ranges);
     }
 
     initializeNMROptions() {
