@@ -150,6 +150,9 @@ class Nmr1dManager {
                 }
                 break;
             case 'executePeakPicking':
+                var options = API.getData('nmr1hOptions');
+                delete options.from;
+                delete options.to;
                 var currentNmr = API.getData('currentNmr');
                 if (currentNmr.dimension > 1) {
                     if (typeof UI !== 'undefined') {
@@ -161,7 +164,10 @@ class Nmr1dManager {
                 break;
             case 'nmrChanged':
                 this.updateIntegralOptions();
-                this.ensureHighlights(false);
+                this.rangesHasChanged();
+                break;
+            case 'setIntegralFromMF':
+                this.updateIntegralOptionsFromMF();
                 break;
             default:
                 return false;
@@ -180,7 +186,7 @@ class Nmr1dManager {
 
     updateIntegralOptions() {
         const nmr = API.getData('currentNmr');
-        if (nmr.dimension > 1) {
+        if (!nmr || nmr.dimension > 1) {
             return;
         }
         if (nmr.nucleus && nmr.nucleus[0].replace(/[0-9]/, '') !== 'H') {
@@ -239,7 +245,6 @@ class Nmr1dManager {
     }
 
     _autoRanges(nmrLine) {
-        console.log('autoRanges');
         this._getNMR(nmrLine).then(nmrSpectrum => {
             var ppOptions = API.getData('nmr1hOptions').resurrect();
             var removeImpurityOptions = {};
@@ -366,7 +371,7 @@ class Nmr1dManager {
             integral: this.getNumberHydrogens(),
             type: '1H',
             removeImpurities: {
-                useIt: false,
+                useIt: true,
                 error: 0.025
             }
         });

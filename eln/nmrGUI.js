@@ -95,7 +95,8 @@ function annotations1D(ranges, optionsG) {
             annotation.position = [{x: index.delta - options.width, y: (line * height) + 'px'},
                 {x: index.delta + options.width, y: (line * height + 3) + 'px'}];
         } else {
-            if (!index.to || !index.from || index.to === index.from) {
+            if ((typeof index.to === 'undefined' || typeof index.from === 'undefined' || index.to === index.from) &&
+                 (index.signal && index.signal.length > 0)) {
                 annotation.position = [{x: index.signal[0].delta - options.width, y: (options.line * height) + 'px'},
                     {x: index.signal[0].delta + options.width, y: (options.line * height + 8) + 'px'}];
             } else {

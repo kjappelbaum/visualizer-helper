@@ -83,9 +83,6 @@ class Sample {
 
         this.onChange = (event) => {
             var jpathStr = event.jpath.join('.');
-
-            console.log('on change', jpathStr);
-
             if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
                 this.nmr1dManager.rangesHasChanged();
             }
@@ -235,6 +232,7 @@ class Sample {
                 await this.roc.discardLocal(this.sample);
                 this._initializeObjects();
                 this.bindChange();
+                this.nmr1dManager.handleAction({name: 'nmrChanged'});
                 break;
             }
             default:
