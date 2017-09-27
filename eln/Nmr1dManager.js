@@ -336,7 +336,7 @@ class Nmr1dManager {
         await this.updateIntegralsFromSpectrum();
         const newRangesID = this._getRangesID(ranges);
 
-        this.ensureHighlights(ranges, this.previousRangesID !== newRangesID);
+        this.ensureHighlights(this.previousRangesID !== newRangesID);
         this.previousRangesID = newRangesID;
     }
 
