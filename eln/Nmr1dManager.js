@@ -163,25 +163,26 @@ class Nmr1dManager {
                 this._autoRanges(currentNmr);
                 break;
             case 'clearAssignments':
-                var ranges=this.getCurrentRanges();
-                ranges.forEach( a => {
-                    if (a.signal) {
-                        a.signal.forEach( b => b.diaID=[] );
-                    }
-                });
-                var ranges=this.getCurrentRanges();
-                if (ranges) ranges.triggerChange();
+                var ranges = this.getCurrentRanges();
+                if (ranges) {
+                    ranges.forEach(a => {
+                        if (a.signal) {
+                            a.signal.forEach(b => b.diaID = []);
+                        }
+                    });
+                    ranges.triggerChange();
+                }
                 break;
             case 'clearAllAssignments':
-                var nmr=this.sample.$content.spectra.nmr;
-                nmr.forEach( n => {
-                    n.range.forEach( a => {
+                var nmr = this.sample.$content.spectra.nmr;
+                nmr.forEach(n => {
+                    n.range.forEach(a => {
                         if (a.signal) {
-                            a.signal.forEach( b => b.diaID=[] );
+                            a.signal.forEach(b => b.diaID = []);
                         }
                     });
                 });
-                var ranges=this.getCurrentRanges();
+                var ranges = this.getCurrentRanges();
                 if (ranges) ranges.triggerChange();
                 break;
             case 'nmrChanged':
