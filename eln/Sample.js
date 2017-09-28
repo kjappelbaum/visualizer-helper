@@ -90,7 +90,7 @@ class Sample {
             switch (event.jpath.join('.')) {
                 case '$content.general.molfile':
                     this.mf.fromMolfile();
-                    this.nmr1dManager.handleAction({name:'clearAllAssignments'});
+                    this.nmr1dManager.handleAction({name: 'clearAllAssignments'});
                     break;
                 case '$content.general.mf':
                     try {
