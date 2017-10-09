@@ -43,6 +43,7 @@ module.exports = {
 function fromChemexper(chemexper) {
     const mol = chemexper.row.mol;
     const mf = chemexper.row.mf && chemexper.row.mf[0] && chemexper.row.mf[0].value.value;
+    const cas = chemexper.row.rn && chemexper.row.rn.map(rn => ({value: numberToCas(rn.value.value)}));
     return {
         $content: {
             general: {
@@ -52,7 +53,7 @@ function fromChemexper(chemexper) {
                 mf
             },
             identifier: {
-                cas: chemexper.row.rn.map(rn => ({value: numberToCas(rn.value.value)}))
+                cas
             },
             stock: {
                 catalogNumber: chemexper.row.code
