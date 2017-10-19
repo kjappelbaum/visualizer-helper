@@ -44,7 +44,7 @@ function fromChemexper(chemexper) {
     const mol = chemexper.row.mol;
     const mf = chemexper.row.mf && chemexper.row.mf[0] && chemexper.row.mf[0].value.value;
     const cas = chemexper.row.rn && chemexper.row.rn.map(rn => ({value: numberToCas(rn.value.value)}));
-    if (! chemexper.row.iupac) chemexper.row.iupac=[];
+    if (!chemexper.row.iupac) chemexper.row.iupac = [];
     return {
         $content: {
             general: {
