@@ -5,7 +5,7 @@ We retrieve some exercises for structural analysis
  */
 
 
-import OCL from '../eln/libs/OCLE';
+import OCLE from '../eln/libs/OCLE';
 import CA from 'src/util/couchdbAttachments';
 
 
@@ -39,16 +39,24 @@ async function fetchData(query=undefined, url='https://couch.cheminfo.org/chemin
     var data={};
 
     for (var file of files) {
-        if (! data[file.rn]) data[file.rn]={rn:file.rn};
+        if (! data[file.rn]) data[file.rn]={
+            rn:file.rn,
+            myResult:''
+        };
         var datum=data[file.rn];
         switch (file.kind) {
             case 'mol':
                 datum.mol={type:'mol2d', url: file.url};
                 var molfile=await(await fetch(file.url)).text();
-                var molecule=OCL.Molecule.fromMolfile(molfile);
+                var molecule=OCLE.Molecule.fromMolfile(molfile);
                 datum.oclCode=molecule.getIDCode();
+                datum.id=datum.rn;
+                datum.result=datum.oclCode;
                 datum.mf=molecule.getMolecularFormula().formula;
+                datum.nbDiaH=molecule.getGroupedDiastereotopicAtomIDs({atomLabel:'H'});
+                datum.nbDiaC=molecule.getGroupedDiastereotopicAtomIDs({atomLabel:'C'});
                 datum.nbH=Number(datum.mf.replace(/.*H([0-9]+).*/,'$1'));
+                datum.nbC=Number(datum.mf.replace(/.*C([0-9]+).*/,'$1'));
                 break;
             case 'mass':
                 datum.mass={type:'jcamp', url: file.url};
@@ -97,6 +105,8 @@ async function fetchData(query=undefined, url='https://couch.cheminfo.org/chemin
     for (var key of Object.keys(data)) {
         results.push(data[key]);
     }
+    var counter=1;
+    results.forEach( a => a.number = counter++ );
 
     return results;
 
