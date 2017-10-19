@@ -53,6 +53,7 @@ async function fetchData(query=undefined, url='https://couch.cheminfo.org/chemin
                 datum.id=datum.rn;
                 datum.result=datum.oclCode;
                 datum.mf=molecule.getMolecularFormula().formula;
+                molecule.addImplicitHydrogens();
                 datum.nbDiaH=molecule.getGroupedDiastereotopicAtomIDs({atomLabel:'H'}).length;
                 datum.nbDiaC=molecule.getGroupedDiastereotopicAtomIDs({atomLabel:'C'}).length;
                 datum.nbH=Number(datum.mf.replace(/.*H([0-9]+).*/,'$1'));
