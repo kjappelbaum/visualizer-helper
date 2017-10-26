@@ -5,25 +5,24 @@ import toHtmlEM from './em';
 
 export function add() {
     TypeRenderer.addType('acsir', {
-        toscreen($element, val, rootVal, options) {
-            var acsString=toHtmlIR(val);
+        toscreen($element, val) {
+            var acsString = toHtmlIR(val);
             $element.html(acsString);
         }
     });
 
     TypeRenderer.addType('acsnmr', {
-        toscreen($element, val, rootVal, options) {
-            var acsString=toHtmlNMR(val);
+        toscreen($element, val) {
+            var acsString = toHtmlNMR(val);
             $element.html(acsString);
         }
     });
 
     TypeRenderer.addType('acsem', {
-        toscreen($element, val, rootVal, options) {
-            var acsString=toHtmlEM(val);
+        toscreen($element, val) {
+            var acsString = toHtmlEM(val);
             $element.html(acsString);
         }
     });
 }
-
 

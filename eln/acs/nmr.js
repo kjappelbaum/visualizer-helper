@@ -1,13 +1,13 @@
 import SD from '../libs/SD';
 
 
-export default function toHTML(value, options={}) {
-    var acsString="";
+export default function toHTML(value) {
+    var acsString = '';
     if (value && value.range) {
 
-        var ranges=new SD.Ranges(value.range);
-        var nucleus='';
-        if (Array.isArray(value.nucleus)) nucleus=value.nucleus[0];
+        var ranges = new SD.Ranges(value.range);
+        var nucleus = '1H';
+        if (! Array.isArray(value.nucleus)) nucleus = [value.nucleus];
         acsString += ranges.getACS({
             nucleus,
             solvent: value.solvent,
@@ -16,4 +16,3 @@ export default function toHTML(value, options={}) {
     }
     return acsString;
 }
-

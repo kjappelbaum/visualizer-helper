@@ -1,5 +1,5 @@
-function toHTML(value, options={}) {
-    var acsString="";
+function toHTML(value) {
+    var acsString = '';
     if (value && value.peak) {
         acsString += 'IR (cm<sup>-1</sup>): ';
         acsString += value.peak.map(a => Math.round(a.wavelength) + (a.kind ? '<i>' + a.kind + '</i>' : '')).join(', ');
@@ -7,4 +7,4 @@ function toHTML(value, options={}) {
     return acsString;
 }
 
-module.exports=toHTML;
+module.exports = toHTML;
