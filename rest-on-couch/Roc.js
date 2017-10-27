@@ -1,8 +1,9 @@
 'use strict';
 
-define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'superagent', 'uri/URI', 'lodash', 'src/util/couchdbAttachments', 'src/util/mimeTypes', 'src/util/IDBKeyValue'],
-    function (Datas, API, ui, Util, Debug, superagent, URI, _, CDB, mimeTypes, IDB) {
+define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/util/debug', 'superagent', 'uri/URI', 'lodash', 'src/util/couchdbAttachments', 'src/util/mimeTypes', 'src/util/IDBKeyValue', 'eventEmitter'],
+    function (Datas, API, ui, Util, Debug, superagent, URI, _, CDB, mimeTypes, IDB, EventEmitter) {
         const DataObject = Datas.DataObject;
+        const eventEmitters = {};
 
         const objectHasOwnProperty = Object.prototype.hasOwnProperty;
         const hasOwnProperty = function (obj, prop) {
@@ -251,6 +252,13 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     .catch(handleError(this, options));
             }
 
+            getDocumentEventEmitter(uuid) {
+                if(!eventEmitters[uuid]) {
+                    eventEmitters[uuid] = new EventEmitter();
+                }
+                return eventEmitters[uuid];
+            }
+
             bindChange(varName) {
                 const variable = this.variables[varName];
                 if (!variable) return;
@@ -261,10 +269,16 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     if (serverJsonString !== variable.serverJsonString) {
                         idb.set(uuid, JSON.parse(JSON.stringify(variable.data)));
                         setTabSavedStatus(false);
+                        if(eventEmitters[uuid]) {
+                            eventEmitters[uuid].emit('unsync');
+                        }
                     } else {
                         // Going back to previous state sets the tab as saved
                         setTabSavedStatus(true);
                         idb.delete(uuid);
+                        if(eventEmitters[uuid]) {
+                            eventEmitters[uuid].emit('sync');
+                        }
                     }
                 };
                 variable.data.onChange(variable.onChange);
