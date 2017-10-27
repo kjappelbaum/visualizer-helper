@@ -1,4 +1,4 @@
-'use strict';
+
 /*
 In the general preferences you should put something like:
 require(['TrackOptions'], function(TrackOptions) {

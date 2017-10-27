@@ -1,4 +1,3 @@
-'use strict';
 
 define(['./Roc'], function (Roc) {
     return function (opts, cb) {

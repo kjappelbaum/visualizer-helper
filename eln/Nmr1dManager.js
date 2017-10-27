@@ -107,14 +107,16 @@ class Nmr1dManager {
 
     handleAction(action) {
         switch (action.name) {
-            case 'updateRanges':
+            case 'updateRanges': {
                 this.updateIntegrals();
                 break;
-            case 'downloadSVG':
+            }
+            case 'downloadSVG': {
                 var blob = new Blob([action.value + ''], {type: 'application/jcamp-dx;charset=utf-8'});
                 fileSaver(blob, 'spectra.svg');
                 break;
-            case 'toggleNMR1hAdvancedOptions':
+            }
+            case 'toggleNMR1hAdvancedOptions': {
                 var advancedOptions1H = !API.cache('nmr1hAdvancedOptions');
                 API.cache('nmr1hAdvancedOptions', advancedOptions1H);
                 if (advancedOptions1H) {
@@ -123,7 +125,8 @@ class Nmr1dManager {
                     API.createData('nmr1hOndeTemplate', API.cache('nmr1hOndeTemplates').short);
                 }
                 break;
-            case 'resetNMR1d':
+            }
+            case 'resetNMR1d': {
                 var type = action.name.replace(/[^0-9]/g, '');
 
                 type = type + 'd';
@@ -131,7 +134,8 @@ class Nmr1dManager {
                 API.createData('annotationNMR' + type, null);
                 API.createData('acsNMR' + type, null);
                 break;
-            case 'switchNMRLayer':
+            }
+            case 'switchNMRLayer': {
                 var goToLayer = action.value.dimension > 1 ? 'nmr2D' : 'Default layer';
                 API.switchToLayer(goToLayer);
                 if (action.value.dimension > 1) {
@@ -149,7 +153,8 @@ class Nmr1dManager {
                     }
                 }
                 break;
-            case 'executePeakPicking':
+            }
+            case 'executePeakPicking': {
                 var options = API.getData('nmr1hOptions');
                 delete options.from;
                 delete options.to;
@@ -162,8 +167,9 @@ class Nmr1dManager {
                 }
                 this._autoRanges(currentNmr);
                 break;
-            case 'clearAssignments':
-                var ranges = this.getCurrentRanges();
+            }
+            case 'clearAssignments': {
+                let ranges = this.getCurrentRanges();
                 if (ranges) {
                     ranges.forEach(a => {
                         if (a.signal) {
@@ -173,7 +179,8 @@ class Nmr1dManager {
                     ranges.triggerChange();
                 }
                 break;
-            case 'clearAllAssignments':
+            }
+            case 'clearAllAssignments': {
                 var nmr = this.sample.$content.spectra.nmr;
                 nmr.forEach(n => {
                     n.range.forEach(a => {
@@ -182,18 +189,22 @@ class Nmr1dManager {
                         }
                     });
                 });
-                var ranges = this.getCurrentRanges();
+                let ranges = this.getCurrentRanges();
                 if (ranges) ranges.triggerChange();
                 break;
-            case 'nmrChanged':
+            }
+            case 'nmrChanged': {
                 this.updateIntegralOptions();
                 this.rangesHasChanged();
                 break;
-            case 'setIntegralFromMF':
+            }
+            case 'setIntegralFromMF': {
                 this.updateIntegralOptionsFromMF();
                 break;
-            default:
+            }
+            default: {
                 return false;
+            }
         }
         return true;
     }

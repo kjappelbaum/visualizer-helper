@@ -1,4 +1,3 @@
-'use strict';
 
 define(['src/util/api', 'lodash'], function (API, _) {
 

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-'use strict';
+
 /**
  * This code allows to create complex form in the twig module
  * You need in place modification

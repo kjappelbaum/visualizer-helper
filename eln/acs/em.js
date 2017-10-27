@@ -6,7 +6,6 @@ export default function toHTML(value) {
     if (value.accurate && value.accurate.mf) {
         let accurate = value.accurate;
         let cc = CCE.analyseMF(accurate.mf + '(' + accurate.modification + ')');
-        console.log(cc);
         let modification = CCE.analyseMF(accurate.modification);
         let result = [];
         let experiment = [];

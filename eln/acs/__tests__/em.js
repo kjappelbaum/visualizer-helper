@@ -19,7 +19,6 @@ var entry = {
 describe('ACS string for EM', () => {
     it('default options', () => {
         var html = toHTML(entry);
-        console.log(html);
         expect(html).toBe('IR (cm<sup>-1</sup>): 1000<i>w</i>, 2000<i>m</i>, 3000<i>S</i>');
     });
 });

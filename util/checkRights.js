@@ -1,4 +1,3 @@
-'use strict';
 
 /**
 Checks if one of the usernames is part of the rights list

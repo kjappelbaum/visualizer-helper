@@ -1,4 +1,3 @@
-'use strict';
 
 define(['src/util/api'], function (API) {
     return async function createMatrixClass(classURL, spectraDataSet, options = {}) {

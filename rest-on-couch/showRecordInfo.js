@@ -1,4 +1,3 @@
-'use strict';
 
 define(['src/util/ui'], function (UI) {
 

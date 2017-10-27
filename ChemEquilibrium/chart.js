@@ -1,4 +1,3 @@
-'use strict';
 
 define(['src/util/color'], function (Color) {
     return {

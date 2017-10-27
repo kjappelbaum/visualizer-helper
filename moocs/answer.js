@@ -1,4 +1,3 @@
-'use strict';
 
 define(['mathjs'], function (mathjs) {
     var exports = {};
