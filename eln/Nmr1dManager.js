@@ -236,7 +236,6 @@ class Nmr1dManager {
 
     async updateIntegralsFromSpectrum() {
         const nmr = API.getData('currentNmr');
-        debugger;
         const spectrum = await this._getNMR(nmr);
         if (spectrum && spectrum.sd && nmr.range && nmr.range.length > 0) {
             const ranges = new Ranges(nmr.range);
