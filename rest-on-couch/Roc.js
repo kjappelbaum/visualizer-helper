@@ -253,9 +253,13 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
 
             getDocumentEventEmitter(uuid) {
                 if (!eventEmitters[uuid]) {
-                    eventEmitters[uuid] = new EventEmitter();
+                    // We use this object to store some state...
+                    eventEmitters[uuid] = {
+                        isSync: true,
+                        eventEmitter: new EventEmitter()
+                    };
                 }
-                return eventEmitters[uuid];
+                return eventEmitters[uuid].eventEmitter;
             }
 
             bindChange(varName) {
@@ -269,14 +273,20 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                         idb.set(uuid, JSON.parse(JSON.stringify(variable.data)));
                         setTabSavedStatus(false);
                         if (eventEmitters[uuid]) {
-                            eventEmitters[uuid].emit('unsync');
+                            if (eventEmitters[uuid].isSync) {
+                                eventEmitters[uuid].isSync = false;
+                                eventEmitters[uuid].eventEmitter.emit('unsync');
+                            }
                         }
                     } else {
                         // Going back to previous state sets the tab as saved
                         setTabSavedStatus(true);
                         idb.delete(uuid);
                         if (eventEmitters[uuid]) {
-                            eventEmitters[uuid].emit('sync');
+                            if (!eventEmitters[uuid].isSync) {
+                                eventEmitters[uuid].isSync = true;
+                                eventEmitters[uuid].eventEmitter.emit('sync');
+                            }
                         }
                     }
                 };
