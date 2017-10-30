@@ -137,7 +137,7 @@ class Nmr1dManager {
             }
             case 'switchNMRLayer': {
                 var goToLayer = action.value.dimension > 1 ? 'nmr2D' : 'Default layer';
-                API.switchToLayer(goToLayer);
+                API.switchToLayer(goToLayer, {autoSize: true});
                 if (action.value.dimension > 1) {
                     if (action.value.jcamp) {
                         API.createData('blackNMR2d', action.value.jcamp.data);
@@ -236,6 +236,7 @@ class Nmr1dManager {
 
     async updateIntegralsFromSpectrum() {
         const nmr = API.getData('currentNmr');
+        debugger;
         const spectrum = await this._getNMR(nmr);
         if (spectrum && spectrum.sd && nmr.range && nmr.range.length > 0) {
             const ranges = new Ranges(nmr.range);
