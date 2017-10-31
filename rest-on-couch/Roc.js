@@ -262,6 +262,17 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 return eventEmitters[uuid].eventEmitter;
             }
 
+            _emitSync(uuid, syncStatus) {
+                uuid = String(uuid);
+                setTabSavedStatus(syncStatus);
+                if (eventEmitters[uuid]) {
+                    if (eventEmitters[uuid].isSync) {
+                        eventEmitters[uuid].isSync = !!syncStatus;
+                        eventEmitters[uuid].eventEmitter.emit(syncStatus ? 'sync' : 'unsync');
+                    }
+                }
+            }
+
             bindChange(varName) {
                 const variable = this.variables[varName];
                 if (!variable) return;
@@ -271,23 +282,12 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     const uuid = String(variable.data._id);
                     if (serverJsonString !== variable.serverJsonString) {
                         idb.set(uuid, JSON.parse(JSON.stringify(variable.data)));
-                        setTabSavedStatus(false);
-                        if (eventEmitters[uuid]) {
-                            if (eventEmitters[uuid].isSync) {
-                                eventEmitters[uuid].isSync = false;
-                                eventEmitters[uuid].eventEmitter.emit('unsync');
-                            }
-                        }
+                        this._emitSync(false);
+
                     } else {
                         // Going back to previous state sets the tab as saved
-                        setTabSavedStatus(true);
                         idb.delete(uuid);
-                        if (eventEmitters[uuid]) {
-                            if (!eventEmitters[uuid].isSync) {
-                                eventEmitters[uuid].isSync = true;
-                                eventEmitters[uuid].eventEmitter.emit('sync');
-                            }
-                        }
+                        this._emitSync(true);
                     }
                 };
                 variable.data.onChange(variable.onChange);
@@ -914,7 +914,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                             let doc = this.variables[key].data;
                             if (options.updateServerString) {
                                 this.variables[key].serverJsonString = JSON.stringify(doc.$content);
-                                setTabSavedStatus(true);
+                                this._emitSync(true);
                             }
                             this._updateDocument(doc, data, options);
                         }
