@@ -366,7 +366,7 @@ class Nmr1dManager {
         var options = API.getData('nmr1hOptions');
         const currentIntegral = Number(options.integral);
         const newIntegral = Math.round(this.getRangesTotalIntegral());
-        if (currentIntegral !== newIntegral) {
+        if (currentIntegral !== newIntegral && newIntegral > 0) {
             options.setChildSync(['integral'], newIntegral);
         }
     }
