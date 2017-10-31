@@ -33,6 +33,13 @@ class Sample {
         }
         this.roc = roc;
 
+        if (options.onSync) {
+            var emitter = this.roc.getDocumentEventEmitter(uuid);
+            emitter.on('sync', () => options.onSync(true));
+            emitter.on('unsync', () => options.onSync(false));
+        }
+
+
         this.uuid = uuid;
         if (!this.uuid) {
             UI.showNotification('Cannot create an editable sample without an uuid', 'error');
