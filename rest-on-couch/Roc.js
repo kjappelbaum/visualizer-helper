@@ -282,12 +282,12 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     const uuid = String(variable.data._id);
                     if (serverJsonString !== variable.serverJsonString) {
                         idb.set(uuid, JSON.parse(JSON.stringify(variable.data)));
-                        this._emitSync(false);
+                        this._emitSync(uuid, false);
 
                     } else {
                         // Going back to previous state sets the tab as saved
                         idb.delete(uuid);
-                        this._emitSync(true);
+                        this._emitSync(uuid, true);
                     }
                 };
                 variable.data.onChange(variable.onChange);
@@ -914,7 +914,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                             let doc = this.variables[key].data;
                             if (options.updateServerString) {
                                 this.variables[key].serverJsonString = JSON.stringify(doc.$content);
-                                this._emitSync(true);
+                                this._emitSync(uuid, true);
                             }
                             this._updateDocument(doc, data, options);
                         }
