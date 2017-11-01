@@ -255,20 +255,20 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 if (!eventEmitters[uuid]) {
                     // We use this object to store some state...
                     eventEmitters[uuid] = {
-                        isSync: true,
+                        isSync: undefined,
                         eventEmitter: new EventEmitter()
                     };
                 }
                 return eventEmitters[uuid].eventEmitter;
             }
 
-            _emitSync(uuid, syncStatus) {
+            _emitSync(uuid, isSync) {
                 uuid = String(uuid);
-                setTabSavedStatus(syncStatus);
+                setTabSavedStatus(isSync);
                 if (eventEmitters[uuid]) {
-                    if (eventEmitters[uuid].isSync) {
-                        eventEmitters[uuid].isSync = !!syncStatus;
-                        eventEmitters[uuid].eventEmitter.emit(syncStatus ? 'sync' : 'unsync');
+                    if (eventEmitters[uuid].isSync !== isSync) {
+                        eventEmitters[uuid].isSync = isSync;
+                        eventEmitters[uuid].eventEmitter.emit(isSync ? 'sync' : 'unsync');
                     }
                 }
             }
