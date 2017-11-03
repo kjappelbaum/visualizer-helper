@@ -32,7 +32,7 @@ define([], function () {
                     }
                     break;
                 default:
-                    throw new Error(`Unexpected target: ${evt.target.__name}`);
+                    // throw new Error(`Unexpected target: ${evt.target.__name}`);
             }
             window.localStorage.setItem(cookieName, JSON.stringify(myAnswers));
         });
