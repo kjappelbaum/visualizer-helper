@@ -117,7 +117,7 @@ function annotations1D(ranges, optionsG) {
                 anchor: 'middle',
                 color: options.labelColor,
                 position: {x: (annotation.position[0].x + annotation.position[1].x) / 2,
-                    y: ((options.line + options.lineLabel) * height) + 'px', dy: '5px'}
+                    y: ((options.line + options.lineLabel) * height) + 'px', dy: '10px'}
             };
         }
 
