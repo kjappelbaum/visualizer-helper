@@ -4,6 +4,7 @@ function toAnnotations(peaks, options = {}) {
         strokeColor = 'red'
     } = options;
 
+    if (! peaks) return;
 
     return peaks.map(a => {
         var annotation = {line: 1,
