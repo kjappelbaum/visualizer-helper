@@ -131,7 +131,7 @@ function annotations1D(ranges, optionsG) {
                 color: options.labelColor,
                 position: {
                     x: (annotation.position[0].x + annotation.position[1].x) / 2,
-                    dy: height+20+'px'
+                    dy: height + 20 + 'px'
                 }
             };
         }
@@ -143,15 +143,15 @@ function annotations1D(ranges, optionsG) {
     }
 
     // we could shift the annotations to prevent overlap
-    if (! options.fromToc) {
-        annotations.sort( (a,b) => b.position[0].x-a.position[0].x);
-        annotations.forEach( (a,i) => {
-            a.position[0].dy=25*(i%2)+'px;';
-            a.position[1].dy=25*(i%2)+'px;';
+    if (!options.fromToc) {
+        annotations.sort((a, b) => b.position[0].x - a.position[0].x);
+        annotations.forEach((a, i) => {
+            a.position[0].dy = 25 * (i % 2) + 'px;';
+            a.position[1].dy = 25 * (i % 2) + 'px;';
             if (a.label) {
-                a.label.position.dy=25*(i%2)+height+20+'px'
+                a.label.position.dy = 25 * (i % 2) + height + 20 + 'px';
             }
-        })
+        });
     }
 
     return annotations;
