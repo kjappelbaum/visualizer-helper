@@ -144,7 +144,7 @@ function annotations1D(ranges, optionsG) {
 
     // we could shift the annotations to prevent overlap
     if (! options.fromToc) {
-        annotations.sort( (a,b) => a.position[0].x-b.position[0].x);
+        annotations.sort( (a,b) => b.position[0].x-a.position[0].x);
         annotations.forEach( (a,i) => {
             a.position[0].dy=25*(i%2)+'px;';
             a.position[1].dy=25*(i%2)+'px;';
