@@ -95,16 +95,29 @@ function annotations1D(ranges, optionsG) {
         if (options.fromToc) {
             let line = options.line < options.maxLines ? options.line : options.maxLines - 1;
             annotation._highlight = [options.line];
-            annotation.position = [{x: index.delta - options.width, y: (line * height) + 'px'},
-                {x: index.delta + options.width, y: (line * height + 3) + 'px'}];
+            annotation.position = [
+                {
+                    x: index.delta - options.width,
+                    y: (line * height) + 'px'
+                }, {
+                    x: index.delta + options.width,
+                    y: (line * height + 3) + 'px'
+                }];
         } else {
             if ((typeof index.to === 'undefined' || typeof index.from === 'undefined' || index.to === index.from) &&
                  (index.signal && index.signal.length > 0)) {
                 annotation.position = [{x: index.signal[0].delta - options.width, y: (options.line * height) + 'px'},
                     {x: index.signal[0].delta + options.width, y: (options.line * height + 8) + 'px'}];
             } else {
-                annotation.position = [{x: index.to, y: (options.line * height) + 'px'},
-                    {x: index.from, y: (options.line * height + 8) + 'px'}];
+                annotation.position = [
+                    {
+                        x: index.to,
+                        y: (options.line * height) + 'px'
+                    }, {
+                        x: index.from,
+                        y: (options.line * height + 8) + 'px'
+                    }
+                ];
             }
         }
 
@@ -116,17 +129,31 @@ function annotations1D(ranges, optionsG) {
                 size: '11px',
                 anchor: 'middle',
                 color: options.labelColor,
-                position: {x: (annotation.position[0].x + annotation.position[1].x) / 2,
-                    y: ((options.line + options.lineLabel) * height) + 'px', dy: '10px'}
+                position: {
+                    x: (annotation.position[0].x + annotation.position[1].x) / 2,
+                    dy: height+20+'px'
+                }
             };
         }
-
         annotation.selectable = options.selectable;
         annotation.strokeColor = options.strokeColor;
         annotation.strokeWidth = options.strokeWidth;
         annotation.fillColor = options.fillColor;
         annotation.info = index;
     }
+
+    // we could shift the annotations to prevent overlap
+    if (! options.fromToc) {
+        annotations.sort( (a,b) => a.position[0].x-b.position[0].x);
+        annotations.forEach( (a,i) => {
+            a.position[0].dy=25*(i%2)+'px;';
+            a.position[1].dy=25*(i%2)+'px;';
+            if (a.label) {
+                a.label.position.dy=25*(i%2)+height+20+'px'
+            }
+        })
+    }
+
     return annotations;
 }
 
