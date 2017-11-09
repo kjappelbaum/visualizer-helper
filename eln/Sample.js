@@ -169,7 +169,7 @@ class Sample {
                 nmr: 'NMR (jcamp, pdf)',
                 mass: 'Mass (jcamp, pdf, netcdf, xml)',
                 ir: 'Infrared (jcamp, pdf)',
-                chromatogram: 'GCMS (jcamp, pdf, netcdf, xml)',
+                chromatogram: 'Chromatogram LC, GC, LC/MS, GC/MS (jcamp, pdf, netcdf, xml)',
                 thermogravimetricAnalysis: 'Thermogravimetric Analysis (txt)',
                 differentialScanningCalorimetry: 'Differential Scanning Calorimetry (txt)',
                 xray: 'Xray (cif, pdb)',
@@ -230,7 +230,8 @@ class Sample {
             case 'attachNMR':
             case 'attachIR':
             case 'attachMass': {
-                var type = action.name.replace('attach', '').toLowerCase();
+                var tempType = action.name.replace('attach', '');
+                var type = tempType.charAt(0).toLowerCase() + tempType.slice(1);
                 var droppedDatas = action.value;
                 droppedDatas = droppedDatas.file || droppedDatas.str;
                 await this.attachFiles(droppedDatas, type);
