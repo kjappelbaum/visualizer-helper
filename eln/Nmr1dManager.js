@@ -194,6 +194,8 @@ class Nmr1dManager {
                 break;
             }
             case 'nmrChanged': {
+                // Init ranges if does not exist
+                this.initCurrentNmrRanges();
                 this.updateIntegralOptions();
                 this.rangesHasChanged();
                 break;
@@ -207,6 +209,15 @@ class Nmr1dManager {
             }
         }
         return true;
+    }
+
+    initCurrentNmrRanges() {
+        const nmr = API.getData('currentNmr');
+        if (nmr.range === undefined) {
+            const currentNmrVar = API.getVar('currentNmr');
+            API.setVariable('currentNmrRanges', currentNmrVar, ['range']);
+            nmr.setChildSync(['range'], []);
+        }
     }
 
     getCurrentRanges() {
