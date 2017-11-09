@@ -82,6 +82,8 @@ class Sample {
         createVar(sampleVar, 'nmr');
         createVar(sampleVar, 'xray');
         createVar(sampleVar, 'chromatogram');
+        createVar(sampleVar, 'thermogravimetricAnalysis');
+        createVar(sampleVar, 'differentialScanningCalorimetry');
         createVar(sampleVar, 'image');
         createVar(sampleVar, 'sampleCode');
         createVar(sampleVar, 'attachments');
@@ -166,8 +168,10 @@ class Sample {
             type = await UI.choose({
                 nmr: 'NMR (jcamp, pdf)',
                 mass: 'Mass (jcamp, pdf, netcdf, xml)',
-                ir: 'Infra-red (jcamp, pdf)',
+                ir: 'Infrared (jcamp, pdf)',
                 chromatogram: 'GCMS (jcamp, pdf, netcdf, xml)',
+                thermogravimetricAnalysis: 'Thermogravimetric Analysis (txt)',
+                differentialScanningCalorimetry: 'Differential Scanning Calorimetry (txt)',
                 xray: 'Xray (cif, pdb)',
                 image: 'Images (jpg, png or tiff)',
                 other: 'Other'
