@@ -27,6 +27,10 @@ class Sample {
         };
 
         this.sample = JSON.parse(JSON.stringify(s));
+        if (this.sample.$content.general.molfile) {
+            // Let the mf be calculated from the molfile
+            delete this.sample.$content.general.mf;
+        }
         this.options = Object.assign({}, defaultOptions, options);
         Object.assign(this.sample, this.options.sample);
         this._init();
