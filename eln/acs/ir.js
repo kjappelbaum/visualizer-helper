@@ -13,12 +13,12 @@ function format1(value) {
     return acsString;
 }
 
-// IR (cm-1): 2929 (w), 3521 (w), 3016 (w), 3065 (w), 2853 (w), 1766S, 1495 (w),
+// IR (νmax, cm-1) 2929 (w), 3521 (w), 3016 (w), 3065 (w), 2853 (w), 1766S, 1495 (w),
 function format2(value) {
     var acsString = '';
     if (value && value.peak) {
-        acsString += 'IR (cm<sup>-1</sup>): ';
-        acsString += value.peak.map(a => Math.round(a.wavelength) + (a.kind ? ' (' + a.kind + ')' : '')).join(', ');
+        acsString += 'IR (ν<sub>max</sub>, cm<sup>-1</sup>) ';
+        acsString += value.peak.map(a => Math.round(a.wavelength) + (a.kind ? ' (' + a.kind.toLowerCase() + ')' : '')).join(', ');
     }
     return acsString;
 }
