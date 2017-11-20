@@ -196,6 +196,7 @@ class Nmr1dManager {
                 break;
             }
             case 'nmrChanged': {
+                if (!API.getData('currentNmr')) break;
                 // Init ranges if does not exist
                 this.initCurrentNmrRanges();
                 this.updateIntegralOptions();
