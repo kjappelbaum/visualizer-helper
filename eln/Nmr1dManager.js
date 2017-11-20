@@ -183,11 +183,13 @@ class Nmr1dManager {
             case 'clearAllAssignments': {
                 var nmr = this.sample.$content.spectra.nmr;
                 nmr.forEach(n => {
-                    n.range.forEach(a => {
-                        if (a.signal) {
-                            a.signal.forEach(b => b.diaID = []);
-                        }
-                    });
+                    if (n.range) {
+                        n.range.forEach(a => {
+                            if (a.signal) {
+                                a.signal.forEach(b => b.diaID = []);
+                            }
+                        });
+                    }
                 });
                 let ranges = this.getCurrentRanges();
                 if (ranges) ranges.triggerChange();
@@ -247,6 +249,7 @@ class Nmr1dManager {
 
     async updateIntegralsFromSpectrum() {
         const nmr = API.getData('currentNmr');
+        if (!nmr) return;
         const spectrum = await this._getNMR(nmr);
         if (spectrum && spectrum.sd && nmr.range && nmr.range.length > 0) {
             const ranges = new Ranges(nmr.range);
