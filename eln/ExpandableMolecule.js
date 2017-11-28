@@ -116,6 +116,11 @@ class ExpandableMolecule {
         }
     }
 
+    setMolfile(molfile) {
+        const editableMolfile = API.getData('editableMolfile');
+        if (editableMolfile) editableMolfile.setValue(molfile || '');
+    }
+
     handleAction(action) {
         if (!action) return false;
         switch (action.name) {
