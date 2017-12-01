@@ -16,7 +16,6 @@ module.exports = {
             cache = {};
             API.cache('search-database-molecules', cache);
         }
-        console.time('build ocl structure database');
         const db = new OCLE.DB();
         for (let i = 0; i < l; i++) {
             if (options.showLoading) {
@@ -48,7 +47,6 @@ module.exports = {
         if (options.showLoading) {
             API.stopLoading('mol');
         }
-        console.timeEnd('build ocl structure database');
         return db;
     },
     query(db, molfile, options = {}) {
