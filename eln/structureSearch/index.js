@@ -42,6 +42,17 @@ module.exports = {
                 cache[idcode] = ocl;
             }
 
+            if (options.calculateProperties === true) {
+                const prop = new OCLE.MoleculeProperties(ocl);
+                mol.value.properties = {
+                    acc: prop.acceptorCount,
+                    don: prop.donorCount,
+                    logp: prop.logP,
+                    logs: prop.logS,
+                    psa: prop.polarSurfaceArea,
+                    rot: prop.rotatableBondCount,
+                };
+            }
             db.push(ocl, mol);
         }
         if (options.showLoading) {
@@ -49,26 +60,46 @@ module.exports = {
         }
         return db;
     },
-    query(db, molfile, options = {}) {
+
+    queryWithOCLID(db, oclid, options) {
+        if (!db) return null;
+        if (!oclid) {
+            return getDataIfExists(db);
+        }
+        const molecule = OCLE.Molecule.fromIDCode(oclid);
+        return module.exports.queryWithMolecule(db, molecule, options);
+    },
+
+    queryWithMolfile(db, molfile, options) {
         if (!db) return null;
         molfile = String(molfile);
         if (!molfile) {
-            if (db.data) {
-                return db.data.slice();
-            } else {
-                return null;
-            }
+            return getDataIfExists(db);
         }
-        const query = OCLE.Molecule.fromMolfile(molfile);
+        const molecule = OCLE.Molecule.fromMolfile(molfile);
+        return module.exports.queryWithMolecule(db, molecule, options);
+    },
+
+    queryWithMolecule(db, molecule, options = {}) {
+        if (!db) return null;
+        if (!molecule) {
+            return getDataIfExists(db);
+        }
+
         if (options.setFragment) {
-            query.setFragment(true);
+            molecule.setFragment(true);
         }
         const queryOptions = {
             mode: String(options.mode)
         };
-        const result = db.search(query, queryOptions);
-
+        const result = db.search(molecule, queryOptions);
+        if (result === -1) return null;
+        console.log(result);
         return result.data.slice();
+    },
+
+    query(db, molfile, options) {
+        return module.exports.queryWithMolfile(db, molfile, options);
     },
 
     groupByIDCode(data, options = {}) {
@@ -95,3 +126,11 @@ module.exports = {
         return g;
     }
 };
+
+function getDataIfExists(db) {
+    if (db.data) {
+        return db.data.slice();
+    } else {
+        return null;
+    }
+}
