@@ -94,7 +94,6 @@ module.exports = {
         };
         const result = db.search(molecule, queryOptions);
         if (result === -1) return null;
-        console.log(result);
         return result.data.slice();
     },
 
