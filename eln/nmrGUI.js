@@ -90,11 +90,10 @@ function annotations1D(ranges, optionsG) {
 
         annotations.push(annotation);
         annotation.line = options.line;
-        annotation._highlight = index._highlight;
+        annotation._highlight = options._higlight || index._highlight;
 
         if (options.fromToc) {
             let line = options.line < options.maxLines ? options.line : options.maxLines - 1;
-            annotation._highlight = [options.line];
             annotation.position = [
                 {
                     x: index.delta - options.width,
