@@ -93,32 +93,21 @@ function annotations1D(ranges, optionsG) {
         annotation.line = options.line;
         annotation._highlight = options._highlight || currentRange._highlight;
 
-        if (options.fromToc) {
-            let line = options.line < options.maxLines ? options.line : options.maxLines - 1;
+
+        if ((typeof currentRange.to === 'undefined' || typeof currentRange.from === 'undefined' || currentRange.to === currentRange.from) &&
+                (currentRange.signal && currentRange.signal.length > 0)) {
+            annotation.position = [{x: currentRange.signal[0].delta - options.width, y: (options.line * height) + 'px'},
+                {x: currentRange.signal[0].delta + options.width, y: (options.line * height + 8) + 'px'}];
+        } else {
             annotation.position = [
                 {
-                    x: currentRange.delta - options.width,
-                    y: (line * height) + 'px'
+                    x: currentRange.to,
+                    y: (options.line * height) + 'px'
                 }, {
-                    x: currentRange.delta + options.width,
-                    y: (line * height + 3) + 'px'
-                }];
-        } else {
-            if ((typeof currentRange.to === 'undefined' || typeof currentRange.from === 'undefined' || currentRange.to === currentRange.from) &&
-                 (currentRange.signal && currentRange.signal.length > 0)) {
-                annotation.position = [{x: currentRange.signal[0].delta - options.width, y: (options.line * height) + 'px'},
-                    {x: currentRange.signal[0].delta + options.width, y: (options.line * height + 8) + 'px'}];
-            } else {
-                annotation.position = [
-                    {
-                        x: currentRange.to,
-                        y: (options.line * height) + 'px'
-                    }, {
-                        x: currentRange.from,
-                        y: (options.line * height + 8) + 'px'
-                    }
-                ];
-            }
+                    x: currentRange.from,
+                    y: (options.line * height + 8) + 'px'
+                }
+            ];
         }
 
         annotation.type = options.type;
@@ -142,7 +131,7 @@ function annotations1D(ranges, optionsG) {
     }
 
     // we could shift the annotations to prevent overlap
-    if (!options.fromToc) {
+    if (options.zigzag) {
         annotations.sort((a, b) => b.position[0].x - a.position[0].x);
         annotations.forEach((a, i) => {
             a.position[0].dy = 25 * (i % 2) + 'px;';
