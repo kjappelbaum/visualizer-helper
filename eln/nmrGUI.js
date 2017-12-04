@@ -85,36 +85,36 @@ function annotations1D(ranges, optionsG) {
     var annotations = [];
 
     for (var i = 0; i < ranges.length; i++) {
-        var index = ranges[i];
+        var currentRange = ranges[i];
         var annotation = {};
         annotation.info = ranges[i];
 
         annotations.push(annotation);
         annotation.line = options.line;
-        annotation._highlight = options._higlight || index._highlight;
+        annotation._highlight = options._highlight || currentRange._highlight;
 
         if (options.fromToc) {
             let line = options.line < options.maxLines ? options.line : options.maxLines - 1;
             annotation.position = [
                 {
-                    x: index.delta - options.width,
+                    x: currentRange.delta - options.width,
                     y: (line * height) + 'px'
                 }, {
-                    x: index.delta + options.width,
+                    x: currentRange.delta + options.width,
                     y: (line * height + 3) + 'px'
                 }];
         } else {
-            if ((typeof index.to === 'undefined' || typeof index.from === 'undefined' || index.to === index.from) &&
-                 (index.signal && index.signal.length > 0)) {
-                annotation.position = [{x: index.signal[0].delta - options.width, y: (options.line * height) + 'px'},
-                    {x: index.signal[0].delta + options.width, y: (options.line * height + 8) + 'px'}];
+            if ((typeof currentRange.to === 'undefined' || typeof currentRange.from === 'undefined' || currentRange.to === currentRange.from) &&
+                 (currentRange.signal && currentRange.signal.length > 0)) {
+                annotation.position = [{x: currentRange.signal[0].delta - options.width, y: (options.line * height) + 'px'},
+                    {x: currentRange.signal[0].delta + options.width, y: (options.line * height + 8) + 'px'}];
             } else {
                 annotation.position = [
                     {
-                        x: index.to,
+                        x: currentRange.to,
                         y: (options.line * height) + 'px'
                     }, {
-                        x: index.from,
+                        x: currentRange.from,
                         y: (options.line * height + 8) + 'px'
                     }
                 ];
@@ -123,9 +123,9 @@ function annotations1D(ranges, optionsG) {
 
         annotation.type = options.type;
 
-        if (!options.noLabel && index.integral) {
+        if (!options.noLabel && currentRange.integral) {
             annotation.label = {
-                text: Number(index.integral).toFixed(options.toFixed),
+                text: Number(currentRange.integral).toFixed(options.toFixed),
                 size: '11px',
                 anchor: 'middle',
                 color: options.labelColor,
