@@ -87,6 +87,7 @@ function annotations1D(ranges, optionsG) {
     for (var i = 0; i < ranges.length; i++) {
         var index = ranges[i];
         var annotation = {};
+        annotation.info = ranges[i];
 
         annotations.push(annotation);
         annotation.line = options.line;
@@ -138,7 +139,6 @@ function annotations1D(ranges, optionsG) {
         annotation.strokeColor = options.strokeColor;
         annotation.strokeWidth = options.strokeWidth;
         annotation.fillColor = options.fillColor;
-        annotation.info = index;
     }
 
     // we could shift the annotations to prevent overlap

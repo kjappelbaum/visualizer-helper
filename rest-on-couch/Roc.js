@@ -755,8 +755,12 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             async createUserToken(options) {
                 await this.__ready;
                 options = createOptions(options, 'createUserToken');
-                return superagent.post(`${this.databaseUrl}/user/_me/token`)
-                    .withCredentials()
+                const request = superagent.post(`${this.databaseUrl}/user/_me/token`)
+                    .withCredentials();
+                if (options.rights) {
+                    request.query({rights: options.rights.join(',')});
+                }
+                return request
                     .then(handleSuccess(this, options))
                     .then(res => res.body)
                     .catch(handleError(this, options));
