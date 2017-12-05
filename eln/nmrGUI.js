@@ -105,7 +105,7 @@ function annotations1D(ranges, optionsG) {
                     y: (options.line * height) + 'px'
                 }, {
                     x: currentRange.from,
-                    y: (options.line * height + 8) + 'px'
+                    y: (options.line * height + 5) + 'px'
                 }
             ];
         }
