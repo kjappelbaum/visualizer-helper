@@ -81,7 +81,12 @@ function ensureRangesHighlight(ranges) {
 
 function annotations1D(ranges, optionsG) {
     var options = Object.assign({}, options1D, optionsG);
-    var height = options.height;
+    let {
+        height,
+        line,
+        dy = [0, 0],
+        y
+    } = options;
     var annotations = [];
 
     for (var i = 0; i < ranges.length; i++) {
@@ -90,7 +95,7 @@ function annotations1D(ranges, optionsG) {
         annotation.info = ranges[i];
 
         annotations.push(annotation);
-        annotation.line = options.line;
+        annotation.line = line;
         annotation._highlight = options._highlight || currentRange._highlight;
 
 
@@ -102,10 +107,12 @@ function annotations1D(ranges, optionsG) {
             annotation.position = [
                 {
                     x: currentRange.to,
-                    y: (options.line * height) + 'px'
+                    y: (y) ? y[0] : (options.line * height) + 'px',
+                    dy: dy[0]
                 }, {
                     x: currentRange.from,
-                    y: (options.line * height + 5) + 'px'
+                    y: (y) ? y[1] : (options.line * height + 5) + 'px',
+                    dy: dy[1]
                 }
             ];
         }
