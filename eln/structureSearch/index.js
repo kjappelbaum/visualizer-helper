@@ -86,9 +86,6 @@ module.exports = {
             return getDataIfExists(db);
         }
 
-        if (options.setFragment) {
-            molecule.setFragment(true);
-        }
         const queryOptions = {
             mode: String(options.mode)
         };
