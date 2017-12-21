@@ -17,9 +17,10 @@ module.exports = {
             API.cache('search-database-molecules', cache);
         }
         const db = new OCLE.DB();
+        const date = Date.now();
         for (let i = 0; i < l; i++) {
             if (options.showLoading) {
-                if (i % 1000 === 0) {
+                if (i % 1000 === 0 && Date.now() - date > 500) {
                     await waitImmediate();
                     API.loading('mol', 'Loading molecules (' + (i + 1) + '/' + l + ')');
                 }
@@ -66,7 +67,7 @@ module.exports = {
         if (!oclid) {
             return getDataIfExists(db);
         }
-        const molecule = OCLE.Molecule.fromIDCode(oclid);
+        const molecule = OCLE.Molecule.fromIDCode(String(oclid));
         return module.exports.queryWithMolecule(db, molecule, options);
     },
 

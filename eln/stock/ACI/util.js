@@ -1,5 +1,6 @@
 import OCL from 'openchemlib/openchemlib-core';
 import UI from 'src/util/ui';
+import _ from 'lodash';
 
 module.exports = function (roc, prefix) {
     function getMoleculeWithSalts(options) {
@@ -36,40 +37,20 @@ module.exports = function (roc, prefix) {
         // init some variables
         const newOclid = String(newOcl.idCode || newOcl.value);
         const general = doc.$content.general;
-        const misc = doc.$content.misc;
-        const saltCode = general.saltCode;
-        const nbSalts = general.nbSalts;
 
-        // update free base
+        // structure
         const freeBaseMolecule = OCL.Molecule.fromIDCode(newOclid);
         const freeBaseOcl = freeBaseMolecule.getIDCodeAndCoordinates();
         const baseMf = freeBaseMolecule.getMolecularFormula();
 
-        misc.freeBase = {
-            mf: baseMf.formula,
-            mw: baseMf.relativeWeight,
-            ocl: {
-                value: freeBaseOcl.idCode,
-                coordinates: freeBaseOcl.coordinates
-            }
-        };
 
-
-        const moleculeWithSalts = getMoleculeWithSalts({
-            nbSalts,
-            saltCode,
-            idCode: newOclid
-        });
-        const withSaltsMf = moleculeWithSalts.getMolecularFormula();
-        const newOclWithSalts = getOclDistinguishOr(moleculeWithSalts);
-
-        general.mf = withSaltsMf.formula;
-        general.mw = withSaltsMf.relativeWeight;
-        general.molfile = moleculeWithSalts.toMolfileV3();
+        general.mf = baseMf.formula;
+        general.mw = baseMf.relativeWeight;
+        general.molfile = freeBaseMolecule.toMolfileV3();
         general.ocl = {
-            value: newOclWithSalts.idCode,
-            coordinates: newOclWithSalts.coordinates,
-            index: moleculeWithSalts.getIndex()
+            value: freeBaseOcl.idCode,
+            coordinates: freeBaseOcl.coordinates,
+            index: freeBaseMolecule.getIndex()
         };
     }
 
@@ -77,12 +58,16 @@ module.exports = function (roc, prefix) {
         let doc = await roc.document(docId);
         const oclid = newOcl.idCode || newOcl.value;
         // update $id and structure with salt
-        updateInternalDocumentWithNewStructure(doc, newOcl);
-        debugger;
-        delete doc._id;
-        doc.$id = await getNextSampleWithSaltID(oclid, doc.$content.general.saltCode);
-        await roc.create(doc);
-        await roc.delete(docId);
+        let newDoc = Object.assign({}, doc);
+        updateInternalDocumentWithNewStructure(newDoc, newOcl);
+        delete newDoc._id;
+        newDoc.$id = await getNextSampleWithSaltID(oclid, doc.$content.general.saltCode);
+        newDoc = await roc.create(newDoc);
+        console.log('new doc', newDoc._id, newDoc.$id);
+        console.log('old doc', doc._id, doc.$id);
+        await roc.delete(doc._id);
+        // doc.$deleted = true;
+        // await roc.update(doc);
     }
 
     async function updateInternalStructureByUpdate(docId, newOcl) {
@@ -98,20 +83,27 @@ module.exports = function (roc, prefix) {
         }
         const oldDups = await getDups(oldOclid);
         const newDups = await getDups(newOclid);
-        if (!isUnique(newDups) || !isUnique(oldDups)) {
-            throw new Error('There are ID conflicts to resolve');
-        }
+
         if (newDups.length > 0) {
             // warn user
             // Create new entry for each old one
-            const confirmed = await UI.confirm('Same ACI number cannot be reused. The update of the structure will create a new ACI number? do you want to continue?');
+            const confirmed = await UI.confirm(`
+                The same ACI number cannot be reused because the new structure already exists as ${newDups[0].value[0]}.
+                The entries will be updated using this ACI number.<br/><br/>
+                This operation will update ${oldDups.length} entries.<br>
+                Do you want to proceed?
+            `);
             if (!confirmed) return;
             for (let dup of oldDups) {
                 await updateInternalStructureByCreate(dup.id, newOcl);
             }
         } else if (oldDups.length > 0) {
             // warn user
-            const confirmed = await UI.confirm('The same ACI number can be reused. Do you want to proceed?');
+            const confirmed = await UI.confirm(`
+                The same ACI number can be reused.<br/><br/>
+                The operation will update ${oldDups.length} entries.<br/>
+                Do you want to proceed?
+            `);
             if (!confirmed) return;
             for (let dup of oldDups) {
                 await updateInternalStructureByUpdate(dup.id, newOcl);
@@ -139,20 +131,31 @@ module.exports = function (roc, prefix) {
         return prefix + '-' + nextIDStr;
     }
 
-    function getDups(oclid) {
+    async function getDups(oclid) {
         const oclidStr = String(oclid);
-        return roc.query('idWithOCLID', {
+        let dups = await roc.query('idWithOCLID', {
             startkey: [oclidStr],
             endkey: [oclidStr, '\ufff0']
         });
+
+        if (!isUnique(dups)) {
+            throw new Error(`Found ID conflict with ${oclid}`);
+        }
+
+        dups.forEach(d => d.key.shift());
+        // unique by oclid + $id
+        return _.uniqBy(dups, dup => dup.key[0] + dup.value.join());
     }
 
-    async function getNextSampleWithSaltID(oclid, salt) {
+    async function getInternalIDInfo(oclid, salt) {
+        const info = {};
         let dups = await getDups(oclid);
-        dups.forEach(d => d.key.shift());
+        info.codeCount = dups.length;
         if (dups.length === 0) {
             const code = await getNextID();
-            return [code, salt, 1];
+            info.nextId = [code, salt, 1];
+            info.saltCount = 0;
+            return info;
         }
         const code = dups[0].value[0];
         const unique = isUnique(dups);
@@ -160,26 +163,30 @@ module.exports = function (roc, prefix) {
         // only keep structures with same salt
         dups = dups.filter(dup => dup.value[1] === String(salt));
 
+        info.saltCount = dups.length;
         if (dups.length === 0) {
-            return [code, salt, 1];
+            info.nextId = [code, salt, 1];
+            return info;
         }
         const nextBatchNumber = getNextBatchNumber(dups);
         const newId = dups[0].value.slice();
         newId[newId.length - 1] = nextBatchNumber;
-        return newId;
+        info.nextId = newId;
+        return info;
+    }
+
+    async function getNextSampleWithSaltID(oclid, salt) {
+        const info = await getInternalIDInfo(oclid, salt);
+        return info.nextId;
     }
 
     async function getNextSampleID(oclid) {
-        const dups = await roc.query('idWithOCLID', {
-            startkey: [oclid],
-            endkey: [oclid, '\ufff0']
-        });
+        const dups = await getDups(oclid);
         if (dups.length === 0) {
             const code = await getNextID();
             return [code, 1];
         }
-        const unique = isUnique(dups);
-        if (!unique) throw new Error('conflict with this structure');
+
         const nextBatchNumber = getNextBatchNumber(dups);
         const newId = dups[0].value.slice();
         newId[newId.length - 1] = nextBatchNumber;
@@ -187,6 +194,7 @@ module.exports = function (roc, prefix) {
     }
 
     function isUnique(dups) {
+        // We check the unicity
         const keys = dups.map(v => v.key);
         if (keys.length === 0) return true;
         const id = keys[0][2];
@@ -200,10 +208,17 @@ module.exports = function (roc, prefix) {
         return Math.max.apply(null, values.map(v => v.value[v.value.length - 1])) + 1;
     }
 
+    function getSaltMW(salt, nbSalts) {
+        if (!salts[salt]) throw new Error(`Unknow salt ${salt}`);
+        return salts[salt].mw * nbSalts;
+    }
+
     return {
+        getSaltMW,
         updateInternalStructure,
         getNextSampleID,
         getNextSampleWithSaltID,
+        getInternalIDInfo,
         salts
     };
 };
@@ -211,17 +226,26 @@ module.exports = function (roc, prefix) {
 
 var salts = {
     NX: {
-        name: 'Free base'
+        name: 'Free base',
+        mf: '',
+        mw: 0
+    },
+    XX: {
+        name: 'Unknown salt',
+        mf: '',
+        mw: 0
     },
     AA: {
         idCode: 'fHdP@@',
         name: 'Hydrochloride',
-        mf: 'HCl'
+        mf: 'HCl',
+        mw: 36.46094
     },
     AB: {
         idCode: 'fHv`d@',
         name: 'Sodium',
-        mf: 'Na+'
+        mf: 'Na+',
+        mw: 22.99
     },
     AC: {
         idCode: 'fHfH@@',
@@ -362,3 +386,4 @@ var salts = {
         name: 'Perchlorate'
     }
 };
+
