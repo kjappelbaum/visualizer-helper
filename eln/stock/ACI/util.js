@@ -63,8 +63,6 @@ module.exports = function (roc, prefix) {
         delete newDoc._id;
         newDoc.$id = await getNextSampleWithSaltID(oclid, doc.$content.general.saltCode);
         newDoc = await roc.create(newDoc);
-        console.log('new doc', newDoc._id, newDoc.$id);
-        console.log('old doc', doc._id, doc.$id);
         await roc.delete(doc._id);
         // doc.$deleted = true;
         // await roc.update(doc);
@@ -219,7 +217,9 @@ module.exports = function (roc, prefix) {
         getNextSampleID,
         getNextSampleWithSaltID,
         getInternalIDInfo,
-        salts
+        salts,
+        getMoleculeWithSalts,
+        getOclDistinguishOr
     };
 };
 
