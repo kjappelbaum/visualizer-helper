@@ -1,1 +1,1 @@
-export {default} from 'https://www.lactame.com/lib/openchemlib-extended/2.4.0/openchemlib-extended.js';
+export {default} from 'https://www.lactame.com/lib/openchemlib-extended/3.1.0/openchemlib-extended.js';

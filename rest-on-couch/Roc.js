@@ -40,6 +40,9 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             get: {
                 401: 'Unauthorized to get entry'
             },
+            getAll: {
+                401: 'Unauthorized to get all entries'
+            },
             create: {
                 200: 'Entry created',
                 201: 'Entry created',
@@ -348,6 +351,22 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                     return data;
                 }
                 return doc;
+            }
+
+            async getAll(options) {
+                await this.__ready;
+                options = createOptions(options, 'getAll');
+                try {
+                    const res = await superagent.get(`${this.entryUrl}/_all`)
+                        .withCredentials();
+                    if (res.body && res.status === 200) {
+                        return res.body;
+                    }
+                    return null;
+                } catch (e) {
+                    handleError(this, options);
+                    return null;
+                }
             }
 
             async get(entry, options) {
