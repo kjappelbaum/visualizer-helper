@@ -145,6 +145,32 @@ class Sample {
         if (this.options.bindChange) this.sample.unbindChange(this.onChange);
     }
 
+    /** An image with a special name that is used to display on the
+     * first page of a sample
+     */
+    async handleOverview(variableName) {
+        let data = API.getData(variableName);
+        if (data && data.file && data.file[0]) {
+            let file = data.file[0];
+            // we only accepts 3 mimetype
+            switch (file.mimetype) {
+                case 'image/png':
+                    file.filename = 'overview.png';
+                    break;
+                case 'image/jpeg':
+                    file.filename = 'overview.jpg';
+                    break;
+                case 'image/svg+xml':
+                    file.filename = 'overview.svg';
+                    break;
+                default:
+                    UI.showNotification('For overview only the following formats are allowed: png, jpg and svg.', 'error');
+                    return undefined;
+            }
+            return this.handleDrop(variableName, false);
+        }
+        return undefined;
+    }
 
     async handleDrop(name, askType) {
         var type;
@@ -158,7 +184,9 @@ class Sample {
                 droppedNmr: 'nmr',
                 droppedIR: 'ir',
                 droppedMS: 'mass',
-                droppedXray: 'xray'
+                droppedXray: 'xray',
+                droppedOverview: 'image',
+                droppedImage: 'image',
             };
             if (!types[name]) {
                 throw new Error('Unexpected variable name');
