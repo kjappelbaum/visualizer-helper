@@ -815,7 +815,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 const uuid = getUuid(entry);
                 const eventEmmitter = eventEmitters[uuid];
                 if (eventEmmitter && eventEmmitter.isSync === false) {
-                    throw new Error('Cannot update group while sample is edited');
+                    throw new Error('Cannot update group while entry is edited');
                 }
                 var method = remove ? 'del' : 'put';
                 await this.__ready;
