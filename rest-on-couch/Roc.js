@@ -85,6 +85,10 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 401: 'Unauthorized to add group',
                 200: 'Group added to entry'
             },
+            deleteGroup: {
+                401: 'Unauthorized to remove group',
+                200: 'Group removed from entry'
+            },
             getTokens: {},
             getToken: {},
             createToken: {
@@ -815,7 +819,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 }
                 var method = remove ? 'del' : 'put';
                 await this.__ready;
-                options = createOptions(options, 'addGroup');
+                options = createOptions(options, remove ? 'deleteGroup' : 'addGroup');
                 return superagent[method](`${this.entryUrl}/${uuid}/_owner/${String(group)}`)
                     .withCredentials()
                     .then(handleSuccess(this, options))
