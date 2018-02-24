@@ -261,6 +261,10 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                         isSync: undefined,
                         eventEmitter: new EventEmitter()
                     };
+                } else {
+                    if (!eventEmitters[uuid].eventEmitter) {
+                        eventEmitters[uuid].eventEmitter = new EventEmitter();
+                    }
                 }
                 return eventEmitters[uuid].eventEmitter;
             }
@@ -271,8 +275,14 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 if (eventEmitters[uuid]) {
                     if (eventEmitters[uuid].isSync !== isSync) {
                         eventEmitters[uuid].isSync = isSync;
-                        eventEmitters[uuid].eventEmitter.emit(isSync ? 'sync' : 'unsync');
+                        if (eventEmitters[uuid].eventEmitter) {
+                            eventEmitters[uuid].eventEmitter.emit(isSync ? 'sync' : 'unsync');
+                        }
                     }
+                } else {
+                    eventEmitters[uuid] = {
+                        isSync
+                    };
                 }
             }
 
@@ -798,6 +808,10 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             }
 
             async addGroup(entry, group, options, remove) {
+                const eventEmmitter = eventEmitters[entry._uuid];
+                if (eventEmmitter && !eventEmmitter.isSync) {
+                    throw new Error('Cannot update group while sample is edited');
+                }
                 var method = remove ? 'del' : 'put';
                 await this.__ready;
                 const uuid = getUuid(entry);
