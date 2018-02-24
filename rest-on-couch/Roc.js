@@ -808,13 +808,13 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             }
 
             async addGroup(entry, group, options, remove) {
-                const eventEmmitter = eventEmitters[entry._uuid];
+                const uuid = getUuid(entry);
+                const eventEmmitter = eventEmitters[uuid];
                 if (eventEmmitter && !eventEmmitter.isSync) {
                     throw new Error('Cannot update group while sample is edited');
                 }
                 var method = remove ? 'del' : 'put';
                 await this.__ready;
-                const uuid = getUuid(entry);
                 options = createOptions(options, 'addGroup');
                 return superagent[method](`${this.entryUrl}/${uuid}/_owner/${String(group)}`)
                     .withCredentials()
