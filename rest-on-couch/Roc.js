@@ -814,7 +814,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             async addGroup(entry, group, options, remove) {
                 const uuid = getUuid(entry);
                 const eventEmmitter = eventEmitters[uuid];
-                if (eventEmmitter && !eventEmmitter.isSync) {
+                if (eventEmmitter && eventEmmitter.isSync === false) {
                     throw new Error('Cannot update group while sample is edited');
                 }
                 var method = remove ? 'del' : 'put';
