@@ -1,18 +1,16 @@
-"use strict";
-
-define(["src/util/ui"], function(ui) {
-  return async function createSample(roc, allGroups) {
-    const storageKey = "eln-new-sample-default-groups";
-    var entrysample = { $content: {} };
-    var data = { allGroups };
-    var toFill = { group: {} };
-    const allGroupNames = allGroups.map(g => g.name);
-    let groupPref = localStorage.getItem(storageKey);
-    groupPref = groupPref ? JSON.parse(groupPref) : [];
-    groupPref = _.intersection(allGroupNames, groupPref);
-    groupPref.forEach(group => (toFill.group[group] = true));
-    const result = await ui.form(
-      `
+define(['src/util/ui', 'lodash'], function (ui, _) {
+    return async function createSample(roc, allGroups) {
+        const storageKey = 'eln-new-sample-default-groups';
+        var entrysample = {$content: {}};
+        var data = {allGroups};
+        var toFill = {group: {}};
+        const allGroupNames = allGroups.map(g => g.name);
+        let groupPref = localStorage.getItem(storageKey);
+        groupPref = groupPref ? JSON.parse(groupPref) : [];
+        groupPref = _.intersection(allGroupNames, groupPref);
+        groupPref.forEach(group => (toFill.group[group] = true));
+        const result = await ui.form(
+            `
               <div>
               <form>
                   <table>
@@ -26,6 +24,7 @@ define(["src/util/ui"], function(ui) {
                   </tr>
                   <tr>
                   <th>Groups</th>
+                  Select the groups who should have access to the sample. If you don't select any group, only you will have access to it.
                   <td>
                   {% for group in allGroups %}
                     <div>
@@ -41,16 +40,23 @@ define(["src/util/ui"], function(ui) {
               </form>
               </div>
           `,
-      toFill,
-      { twig: data }
-    );
-    if (!result || !result.code || result.batch == null) return;
+            toFill,
+            {
+                twig: data,
+                dialog: {
+                    width: 500
+                }
+            }
+        );
+        if (!result || !result.code || result.batch == null) return;
 
-    const selected = Object.keys(result.group).filter(key => result.group[key]);
+        const selected = Object.keys(result.group).filter(
+            key => result.group[key]
+        );
 
-    entrysample.$id = [result.code, result.batch];
-    entrysample.$owners = selected;
-    localStorage.setItem(storageKey, JSON.stringify(selected));
-    // return roc.create(entrysample);
-  };
+        entrysample.$id = [result.code, result.batch];
+        entrysample.$owners = selected;
+        localStorage.setItem(storageKey, JSON.stringify(selected));
+        // return roc.create(entrysample);
+    };
 });
