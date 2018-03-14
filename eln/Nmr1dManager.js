@@ -136,7 +136,7 @@ class Nmr1dManager {
                 break;
             }
             case 'switchNMRLayer': {
-                var goToLayer = action.value.dimension > 1 ? 'nmr2D' : 'Default layer';
+                var goToLayer = action.value && action.value.dimension > 1 ? 'nmr2D' : 'Default layer';
                 API.switchToLayer(goToLayer, {autoSize: true});
                 if (action.value.dimension > 1) {
                     if (action.value.jcamp) {
