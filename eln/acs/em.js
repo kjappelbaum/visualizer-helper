@@ -1,4 +1,4 @@
-import CCE from '../libs/CCE';
+import EMDB from '../libs/EMDB';
 
 export default function toHTML(value) {
     let acsString = '';
