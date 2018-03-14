@@ -85,6 +85,10 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 401: 'Unauthorized to add group',
                 200: 'Group added to entry'
             },
+            deleteGroup: {
+                401: 'Unauthorized to remove group',
+                200: 'Group removed from entry'
+            },
             getTokens: {},
             getToken: {},
             createToken: {
@@ -261,6 +265,10 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                         isSync: undefined,
                         eventEmitter: new EventEmitter()
                     };
+                } else {
+                    if (!eventEmitters[uuid].eventEmitter) {
+                        eventEmitters[uuid].eventEmitter = new EventEmitter();
+                    }
                 }
                 return eventEmitters[uuid].eventEmitter;
             }
@@ -271,8 +279,14 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
                 if (eventEmitters[uuid]) {
                     if (eventEmitters[uuid].isSync !== isSync) {
                         eventEmitters[uuid].isSync = isSync;
-                        eventEmitters[uuid].eventEmitter.emit(isSync ? 'sync' : 'unsync');
+                        if (eventEmitters[uuid].eventEmitter) {
+                            eventEmitters[uuid].eventEmitter.emit(isSync ? 'sync' : 'unsync');
+                        }
                     }
+                } else {
+                    eventEmitters[uuid] = {
+                        isSync
+                    };
                 }
             }
 
@@ -798,10 +812,14 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             }
 
             async addGroup(entry, group, options, remove) {
+                const uuid = getUuid(entry);
+                const eventEmmitter = eventEmitters[uuid];
+                if (eventEmmitter && eventEmmitter.isSync === false) {
+                    throw new Error('Cannot update group while entry is edited');
+                }
                 var method = remove ? 'del' : 'put';
                 await this.__ready;
-                const uuid = getUuid(entry);
-                options = createOptions(options, 'addGroup');
+                options = createOptions(options, remove ? 'deleteGroup' : 'addGroup');
                 return superagent[method](`${this.entryUrl}/${uuid}/_owner/${String(group)}`)
                     .withCredentials()
                     .then(handleSuccess(this, options))
