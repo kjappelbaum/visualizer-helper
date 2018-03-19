@@ -10,7 +10,7 @@ module.exports = {
             .then(function (result) {
                 result = result.body && result.body.entry;
                 if (!result) {
-                    ui.showNotification('No results', 'warn');
+                    ui.showNotification('No results in reference DB', 'warn');
                     return Promise.resolve([]);
                 }
                 var list = [];
