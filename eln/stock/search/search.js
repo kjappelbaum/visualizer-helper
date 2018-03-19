@@ -28,7 +28,7 @@ module.exports = {
                     let names=[];
                     // we start with the title
                     if (d.$content.general && d.$content.general.title) {
-                        names.push(d.$conent.general.title);
+                        names.push(d.$content.general.title);
                     }
                     // then the names
                     if (d.$content.general && d.$content.general.name>0) {
