@@ -1,1 +1,1 @@
-export {default} from 'https://www.lactame.com/lib/mass-database-manager/0.0.9/mass-database-manager.js';
+export {default} from 'https://www.lactame.com/lib/mass-database-manager/0.1.0/mass-database-manager.js';
