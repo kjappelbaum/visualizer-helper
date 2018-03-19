@@ -25,15 +25,22 @@ module.exports = {
                 endkey: ['sample', [term + '\ufff0', {}]]
             }).then(data => {
                 data.forEach(d => {
-
-                    const name = d.$content.general.name || [];
+                    let names=[];
+                    // we start with the title
+                    if (d.$content.general && d.$content.general.title) {
+                        names.push(d.$conent.general.title);
+                    }
+                    // then the names
+                    if (d.$content.general && d.$content.general.name>0) {
+                        names.push(...d.$content.general.name.map( (d) => d.value ))
+                    }
+                    names.push(d.$id.join(' '));
+                    if (d.$content.general && d.$content.general.description) {
+                        names.push(d.$conent.general.description);
+                    }
                     d.id = d._id;
                     d.source = 'sample';
-                    d.names = _.uniq([
-                        d.$id.join(' '),
-                        d.$content.general.description,
-                        ...name.filter(n => n.language === undefined || n.language.match(/^(en)|(EN)$/)).map(n => n.value)
-                    ]);
+                    d.names = _.uniq(names);
                 });
                 return data;
             });
