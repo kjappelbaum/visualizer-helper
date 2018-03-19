@@ -36,7 +36,7 @@ module.exports = {
                     }
                     names.push(d.$id.join(' '));
                     if (d.$content.general && d.$content.general.description) {
-                        names.push(d.$conent.general.description);
+                        names.push(d.$content.general.description);
                     }
                     d.id = d._id;
                     d.source = 'sample';
