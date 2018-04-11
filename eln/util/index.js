@@ -1,2 +1,2 @@
-export {appendedDragAndDrop} from './appendedDragAndDrop';
-export {getChartFromMass} from './getChartFromMass';
+export { appendedDragAndDrop } from './appendedDragAndDrop';
+export { getChartFromMass } from './getChartFromMass';

@@ -1,7 +1,15 @@
-extends: 'eslint-config-cheminfo'
+extends: cheminfo
 env:
   amd: true
   browser: true
   jest: true
 parserOptions:
   sourceType: module
+rules:
+  import/no-amd: 0
+  import/unambiguous: 0
+  import/no-unresolved: 0
+  import/no-extraneous-dependencies: 0
+  import/default: 0
+  import/no-named-as-default: 0
+  import/no-named-as-default-member: 0

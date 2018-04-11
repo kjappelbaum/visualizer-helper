@@ -1,45 +1,45 @@
 import EMDB from '../libs/EMDB';
 
 export default function toHTML(value) {
-    if (!value.accurate || !value.accurate.mf) return '';
+  if (!value.accurate || !value.accurate.mf) return '';
 
-    let accurate = value.accurate;
-    let mfInfo = (new EMDB.Util.MF(accurate.mf + '(' + accurate.modification + ')')).getInfo();
-    let modificationInfo = (new EMDB.Util.MF(accurate.modification)).getInfo();
+  let accurate = value.accurate;
+  let mfInfo = (new EMDB.Util.MF(`${accurate.mf}(${accurate.modification})`)).getInfo();
+  let modificationInfo = (new EMDB.Util.MF(accurate.modification)).getInfo();
 
-    let result = [];
-    let experiment = [];
-    experiment.push('HRMS');
-    let inParenthesis = [];
-    if (value.ionisation) inParenthesis.push(value.ionisation);
-    if (value.analyzer) inParenthesis.push(value.analyzer);
-    if (inParenthesis.length > 0) experiment.push('(' + inParenthesis.join('/') + ')');
-    experiment.push('m/z:');
-    result.push(experiment.join(' '));
+  let result = [];
+  let experiment = [];
+  experiment.push('HRMS');
+  let inParenthesis = [];
+  if (value.ionisation) inParenthesis.push(value.ionisation);
+  if (value.analyzer) inParenthesis.push(value.analyzer);
+  if (inParenthesis.length > 0) experiment.push(`(${inParenthesis.join('/')})`);
+  experiment.push('m/z:');
+  result.push(experiment.join(' '));
 
-    var modificationMF = modificationInfo.mf.replace(/\(.*/, '');
-    if (modificationMF) {
-        result.push('[M + ' + modificationMF + ']' + getCharge(modificationInfo.charge));
-    } else {
-        result.push('[M]' + getCharge(modificationInfo.charge));
-    }
-    result.push('Calcd for');
-    var mf = mfInfo.mf.replace(/\(.*/, '').replace(/([^+-])([0-9]+)/g, '$1<sub>$2</sub>');
+  var modificationMF = modificationInfo.mf.replace(/\(.*/, '');
+  if (modificationMF) {
+    result.push(`[M + ${modificationMF}]${getCharge(modificationInfo.charge)}`);
+  } else {
+    result.push(`[M]${getCharge(modificationInfo.charge)}`);
+  }
+  result.push('Calcd for');
+  var mf = mfInfo.mf.replace(/\(.*/, '').replace(/([^+-])([0-9]+)/g, '$1<sub>$2</sub>');
 
-    result.push(mf + getCharge(mfInfo.charge));
+  result.push(mf + getCharge(mfInfo.charge));
 
-    result.push(mfInfo.observedMonoisotopicMass.toFixed(4) + ';');
-    result.push('Found');
-    result.push(Number(accurate.value).toFixed(4));
+  result.push(`${mfInfo.observedMonoisotopicMass.toFixed(4)};`);
+  result.push('Found');
+  result.push(Number(accurate.value).toFixed(4));
 
-    return result.join(' ') + '.';
+  return `${result.join(' ')}.`;
 }
 
 function getCharge(charge) {
-    if (!charge) charge = 1;
-    if (charge > 0) charge = '+' + charge;
-    if (charge === '+1') charge = '+';
-    if (charge === -1) charge = '-';
-    return '<sup>' + charge + '</sup>';
+  if (!charge) charge = 1;
+  if (charge > 0) charge = `+${charge}`;
+  if (charge === '+1') charge = '+';
+  if (charge === -1) charge = '-';
+  return `<sup>${charge}</sup>`;
 }
 

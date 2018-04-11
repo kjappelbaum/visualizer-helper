@@ -37,32 +37,32 @@ jpaths.attachments = ['attachmentList'];
 
 
 export function createVar(variable, varName) {
-    check(varName);
-    API.setVariable(varName, variable, jpaths[varName]);
+  check(varName);
+  API.setVariable(varName, variable, jpaths[varName]);
 }
 
 export function getData(sample, varName) {
-    check(varName);
-    sample = _getData(sample);
-    return sample.getChildSync(jpaths[varName]);
+  check(varName);
+  sample = _getData(sample);
+  return sample.getChildSync(jpaths[varName]);
 }
 
 export function setData(sample, varName) {
-    check(varName);
-    // todo fix this
-    //sample = get(sample);
-    sample.setChildSync(jpaths[varName]);
+  check(varName);
+  // todo fix this
+  // sample = get(sample);
+  sample.setChildSync(jpaths[varName]);
 }
 
 function check(varName) {
-    if (!jpaths[varName]) {
-        throw new Error(`jpath for ${varName} not defined`);
-    }
+  if (!jpaths[varName]) {
+    throw new Error(`jpath for ${varName} not defined`);
+  }
 }
 
 function _getData(variable) {
-    if (DataObject.getType(variable) === 'string') {
-        return API.getData(variable);
-    }
-    return variable;
+  if (DataObject.getType(variable) === 'string') {
+    return API.getData(variable);
+  }
+  return variable;
 }

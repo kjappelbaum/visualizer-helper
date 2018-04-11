@@ -23,13 +23,15 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-es2015-modules-amd-if-required": "^1.0.4",
     "babel-preset-es2017": "^6.16.0",
-    "eslint": "^3.19.0",
-    "eslint-config-cheminfo": "^1.7.0",
+    "eslint": "^4.19.1",
+    "eslint-config-cheminfo": "^1.17.2",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-jest": "^21.15.0",
     "eslint-plugin-no-only-tests": "^1.1.0",
     "jest": "^21.2.1"
   },
   "dependencies": {
-    "babel-jest": "^22.4.1",
+    "babel-jest": "^22.4.3",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0"
   }
 }
