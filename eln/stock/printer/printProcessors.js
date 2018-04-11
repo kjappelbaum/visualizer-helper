@@ -9,10 +9,13 @@ define([
     '../../libs/Image',
     '../../libs/OCLE'
 ], function (Datas, API, UI, twig, canvg, typerenderer, $, IJS, OCL) {
+    OCL = OCL.default;
+    IJS = IJS.default;
     const DataObject = Datas.DataObject;
-    let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    let chars =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
-// Use a lookup table to find the index.
+    // Use a lookup table to find the index.
     let lookup = new Uint8Array(256);
     for (let i = 0; i < chars.length; i++) {
         lookup[chars.charCodeAt(i)] = i;
@@ -23,21 +26,27 @@ define([
                 const res = await fillFields(printFormat.customFields, data);
                 if (res === null) return null;
             }
-            if (!printFormat.twig) throw new Error('twig processor expect twig property in format');
+            if (!printFormat.twig) {
+                throw new Error(
+                    'twig processor expect twig property in format'
+                );
+            }
             var template = twig.twig({
                 data: DataObject.resurrect(printFormat.twig)
             });
 
             //Render molfile if exists
             var text = template.render(DataObject.resurrect(data));
-            if (data.molfile && printFormat.molfileOptions && printFormat.molfileOptions.width) {
-                const encoder = new TextEncoder();
-                text = text.replace(/END\s*$/, '');
-                text += `GRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat.molfileOptions.y || 0}\n`;
-                const mol = await getMolBmp(data.molfile, printFormat.molfileOptions);
-                const end = '\n!+ 0 100 200 1\nEND\n';
-                return Promise.resolve(concatenate(Uint8Array, encoder.encode(text), mol, encoder.encode(end)));
-
+            if (
+                data.molfile &&
+                printFormat.molfileOptions &&
+                printFormat.molfileOptions.width
+            ) {
+                if (printFormat.printerType === 'zebra') {
+                    return enhanceZebraFormat(printFormat, text, data);
+                } else {
+                    return enhanceCognitiveFormat(printFormat, text, data);
+                }
             } else {
                 return Promise.resolve(text);
             }
@@ -46,14 +55,55 @@ define([
         molecule: async function (printFormat, data) {
             const mol = await getMolBmp(data.molfile);
             const encoder = new TextEncoder();
-            const part1 = encoder.encode('! 0 90 193 1\nVARIABLE DARKNESS 500\nPITCH 200\nWIDTH 240\nGRAPHIC BMP 100 93\n');
+            const part1 = encoder.encode(
+                '! 0 90 193 1\nVARIABLE DARKNESS 500\nPITCH 200\nWIDTH 240\nGRAPHIC BMP 100 93\n'
+            );
             const part2 = encoder.encode('!+ 0 100 200 1\nEND\n');
             const toSend = concatenate(Uint8Array, part1, mol, part2);
             return toSend;
         }
     };
 
-    async function getMolBmp(molfile, options) {
+    async function enhanceZebraFormat(printFormat, text, data) {
+        const factor = 1;
+        const width =
+            Math.ceil(printFormat.molfileOptions.width / factor / 8) * 8;
+        const height =
+            Math.ceil(printFormat.molfileOptions.height / factor / 8) * 8;
+        const molfileOptions = Object.assign({}, printFormat.molfileOptions, {
+            width,
+            height
+        });
+        let image = await getMolImage(data.molfile, molfileOptions);
+        image = image.invert(); // Why do we need to invert here but not when encoding in BMP?
+        const hexa = await dataToHexa(image.data);
+
+        const totalBytes = image.width * image.height / 8;
+        const bytesPerRow = image.width / 8;
+        text = text.replace(
+            /\^XZ$/,
+            `^FO${printFormat.molfileOptions.x || 0},${printFormat
+                .molfileOptions.y || 0}^XGR:SAMPLE.GRF,${factor},${factor}^XZ`
+        );
+        return `~DGR:SAMPLE.GRF,${totalBytes},${bytesPerRow},${hexa}\r\n${text}`;
+    }
+
+    async function enhanceCognitiveFormat(printFormat, text, data) {
+        const encoder = new TextEncoder();
+        text = text.replace(/END\s*$/, '');
+        text += `GRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat
+            .molfileOptions.y || 0}\n`;
+        const mol = await getMolBmp(data.molfile, printFormat.molfileOptions);
+        const end = '\n!+ 0 100 200 1\nEND\n';
+        return concatenate(
+            Uint8Array,
+            encoder.encode(text),
+            mol,
+            encoder.encode(end)
+        );
+    }
+
+    async function getMolImage(molfile, options) {
         const defaultMolOptions = {
             width: 100
         };
@@ -73,6 +123,11 @@ define([
 
         var image = await IJS.load(pngUrl);
         var mask = image.grey({keepAlpha: true}).mask();
+        return mask;
+    }
+
+    async function getMolBmp(molfile, options) {
+        const mask = await getMolImage(molfile, options);
         const bmp = mask.toBase64('bmp');
         return decode(bmp);
     }
@@ -121,8 +176,19 @@ define([
         return bytes;
     }
 
+    function dataToHexa(arr) {
+        return Array.prototype.map
+            .call(arr, function (n) {
+                let hex = n.toString(16);
+                if (hex.length === 1) hex = '0' + hex;
+                return hex;
+            })
+            .join('');
+    }
+
     function fillFields(fields, data) {
-        return UI.form(`
+        return UI.form(
+            `
             <div>
                 <form>
                 <table>
@@ -131,7 +197,9 @@ define([
                 <input type="submit"/>
                 </form>
             </div>
-    `, data);
+    `,
+            data
+        );
     }
 
     function renderField(field) {

@@ -1,6 +1,7 @@
 define(['superagent', 'uri/URI'], function (superagent, URI) {
-    class PrintServer {
+    class ZebraPrintServer {
         constructor(server, opts) {
+            this.server = server;
             opts = opts || {};
             if (opts.proxy) {
                 this.url = new URI(opts.proxy)
@@ -8,37 +9,26 @@ define(['superagent', 'uri/URI'], function (superagent, URI) {
                     .normalize()
                     .href();
             } else {
-                this.url = new URI(String(server.url)).normalize().href();
+                throw new Error('zebra printers need a proxy');
             }
         }
 
         getDeviceIds() {
-            const url = new URI(this.url).segment('devices/id').href();
-            return getData(url);
+            return Promise.resolve([this.server.macAddress]);
         }
 
         async print(id, printData) {
             const url = new URI(this.url)
-                .segment('send')
-                .segmentCoded(id)
+                .segment('pstprnt')
                 .normalize()
                 .href();
 
             return superagent
                 .post(url)
-                .set(
-                    'Content-Type',
-                    typeof printData === 'string'
-                        ? 'text/plain'
-                        : 'application/octet-stream'
-                )
+                .set('Content-Type', 'text/plain')
                 .send(printData);
         }
     }
 
-    async function getData(url) {
-        return (await superagent.get(url)).body;
-    }
-
-    return PrintServer;
+    return ZebraPrintServer;
 });

@@ -1,17 +1,21 @@
-
 define([
     'src/util/api',
     './PrinterInstance',
     './printProcessors',
-    './PrintServer',
+    './printServerFactory',
     '../../../rest-on-couch/Roc'
-]
-    , function (API, Printer, processors, PrintServer, Roc) {
+], function (API, Printer, processors, printServerFactory, Roc) {
     const SECOND = 1000;
     const MINUTE = 60 * SECOND;
     const LIMIT = 11 * MINUTE;
     return async function (opts) {
-        var printerRoc, formatsRoc, printServerRoc, printers, printFormats, printServers, allIds;
+        var printerRoc,
+            formatsRoc,
+            printServerRoc,
+            printers,
+            printFormats,
+            printServers,
+            allIds;
         var onlineServers, onlinePrinters;
 
         const exports = {
@@ -35,41 +39,67 @@ define([
                     sort: (a, b) => b.$modificationDate - a.$modificationDate
                 });
 
-                printServers = await printServerRoc.view('printServerByMacAddress', {
-                    varName: 'printServers',
-                    sort: (a, b) => b.$modificationDate - a.$modificationDate
-                });
-                onlineServers = printServers.filter(ps => Date.now() - ps.$modificationDate < LIMIT);
-                onlinePrinters = printers.filter(p => onlineServers.find(ps => ps.$content.macAddress === p.$content.macAddress));
+                printServers = await printServerRoc.view(
+                    'printServerByMacAddress',
+                    {
+                        varName: 'printServers',
+                        sort: (a, b) =>
+                            b.$modificationDate - a.$modificationDate
+                    }
+                );
+                onlineServers = printServers.filter(
+                    ps =>
+                        ps.$content.isOnline !== false &&
+                        Date.now() - ps.$modificationDate < LIMIT
+                );
+                onlinePrinters = printers.filter(p =>
+                    onlineServers.find(
+                        ps => ps.$content.macAddress === p.$content.macAddress
+                    )
+                );
 
-                await Promise.all(onlineServers.map(ps => {
-                    return exports.getConnectedPrinters(ps.$content).then(ids => {
-                        ps.ids = ids;
-                        ids.forEach(id => allIds.add(id));
-                        ps.responds = true;
-                        ps.color = 'lightgreen';
-                    }).catch(() => {
-                        ps.ids = [];
-                        ps.responds = false;
-                        ps.color = 'pink';
-                    }).then(() => {
-                        ps.triggerChange();
-                    });
-                }));
+                await Promise.all(
+                    onlineServers.map(ps => {
+                        return exports
+                            .getConnectedPrinters(ps.$content)
+                            .then(ids => {
+                                ps.ids = ids;
+                                ids.forEach(id => allIds.add(id));
+                                ps.responds = true;
+                                ps.color = 'lightgreen';
+                            })
+                            .catch(() => {
+                                ps.ids = [];
+                                ps.responds = false;
+                                ps.color = 'pink';
+                            })
+                            .then(() => {
+                                ps.triggerChange();
+                            });
+                    })
+                );
 
                 API.createData('allIds', Array.from(allIds));
             },
 
             async getConnectedPrinters(s) {
-                const server = new PrintServer(s, opts);
-                return server.getDeviceIds();
+                const printServer = printServerFactory(s, opts);
+                return printServer.getDeviceIds();
             },
 
             async print(printer, printFormat, data) {
                 printer = await printerRoc.get(printer);
                 printFormat = await formatsRoc.get(printFormat);
-                const printServer = printServers.find(ps => String(ps.$content.macAddress) === String(printer.$content.macAddress));
-                const p = new Printer(printer.$content, printServer.$content, opts);
+                const printServer = printServers.find(
+                    ps =>
+                        String(ps.$content.macAddress) ===
+                        String(printer.$content.macAddress)
+                );
+                const p = new Printer(
+                    printer.$content,
+                    printServer.$content,
+                    opts
+                );
                 await p.print(printFormat.$content, data);
             },
 
@@ -99,30 +129,51 @@ define([
                 await formatsRoc.delete(format);
             },
 
-                // get online printers that can print a given format
+            // get online printers that can print a given format
             async getPrinters(format) {
                 if (!format) return onlinePrinters;
                 format = await formatsRoc.get(format);
-                const onlineMacAdresses = onlinePrinters
-                        .map(ps => ps.$content.macAddress);
+                const onlineMacAdresses = onlinePrinters.map(
+                    ps => ps.$content.macAddress
+                );
                 return printers
-                        .filter(p => onlineMacAdresses.includes(p.$content.macAddress))
-                        .filter(p => {
-                            return format.$content.models.filter(m => String(m.name) === String(p.$content.model)).length > 0;
-                        });
+                    .filter(p =>
+                        onlineMacAdresses.includes(p.$content.macAddress)
+                    )
+                    .filter(p => {
+                        return (
+                            format.$content.models.filter(
+                                m => String(m.name) === String(p.$content.model)
+                            ).length > 0
+                        );
+                    });
             },
 
             async getFormats(printer, type) {
                 if (!printer) {
                     var formats = printFormats.filter(f => {
-                        return onlinePrinters.some(printer => f.$content.models.some(m => String(m.name) === String(printer.$content.model)));
+                        return onlinePrinters.some(printer =>
+                            f.$content.models.some(
+                                m =>
+                                    String(m.name) ===
+                                    String(printer.$content.model)
+                            )
+                        );
                     });
                 } else {
                     printer = await printerRoc.get(printer);
-                    formats = printFormats.filter(f => f.$content.models.some(m => String(m.name) === String(printer.$content.model)));
+                    formats = printFormats.filter(f =>
+                        f.$content.models.some(
+                            m =>
+                                String(m.name) ===
+                                String(printer.$content.model)
+                        )
+                    );
                 }
                 if (type) {
-                    formats = formats.filter(f => String(f.$content.type) === type);
+                    formats = formats.filter(
+                        f => String(f.$content.type) === type
+                    );
                 }
                 return formats;
             },
@@ -141,9 +192,7 @@ define([
             }
         };
 
-
         await exports.refresh();
         return exports;
     };
-
 });
