@@ -15,9 +15,11 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
         throw new Error('processor does not exist');
       }
       processData(printFormat, data);
-      const printData = await processors[
-        String(printFormat.processor)
-      ].call(null, printFormat, data);
+      const printData = await processors[String(printFormat.processor)].call(
+        null,
+        printFormat,
+        data
+      );
       if (printData === null) return null;
       return this.printServer.print(this.id, printData);
     }
@@ -32,14 +34,8 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
           data.id = data.$id.join(' ');
           if (data.$content.general) {
             if (data.$content.general.description) {
-              data.line1 = data.$content.general.description.substring(
-                0,
-                60
-              );
-              data.line2 = data.$content.general.description.substring(
-                60,
-                120
-              );
+              data.line1 = data.$content.general.description.substring(0, 60);
+              data.line2 = data.$content.general.description.substring(60, 120);
             } else {
               data.line1 = '';
               data.line2 = '';
@@ -52,12 +48,10 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
         }
         break;
       }
-      case 'location': {
+      case 'location':
         break;
-      }
-      default: {
-        throw new Error('Printer could not process data');
-      }
+      default:
+        break;
     }
   }
 
