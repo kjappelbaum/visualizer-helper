@@ -13,9 +13,9 @@ define([
   IJS = IJS.default;
   const DataObject = Datas.DataObject;
   let chars =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
-    // Use a lookup table to find the index.
+  // Use a lookup table to find the index.
   let lookup = new Uint8Array(256);
   for (let i = 0; i < chars.length; i++) {
     lookup[chars.charCodeAt(i)] = i;
@@ -27,9 +27,7 @@ define([
         if (res === null) return null;
       }
       if (!printFormat.twig) {
-        throw new Error(
-          'twig processor expect twig property in format'
-        );
+        throw new Error('twig processor expect twig property in format');
       }
       var template = twig.twig({
         data: DataObject.resurrect(printFormat.twig)
@@ -39,8 +37,8 @@ define([
       var text = template.render(DataObject.resurrect(data));
       if (
         data.molfile &&
-                printFormat.molfileOptions &&
-                printFormat.molfileOptions.width
+        printFormat.molfileOptions &&
+        printFormat.molfileOptions.width
       ) {
         if (printFormat.printerType === 'zebra') {
           return enhanceZebraFormat(printFormat, text, data);
@@ -50,26 +48,14 @@ define([
       } else {
         return Promise.resolve(text);
       }
-    },
-
-    molecule: async function (printFormat, data) {
-      const mol = await getMolBmp(data.molfile);
-      const encoder = new TextEncoder();
-      const part1 = encoder.encode(
-        '! 0 90 193 1\nVARIABLE DARKNESS 500\nPITCH 200\nWIDTH 240\nGRAPHIC BMP 100 93\n'
-      );
-      const part2 = encoder.encode('!+ 0 100 200 1\nEND\n');
-      const toSend = concatenate(Uint8Array, part1, mol, part2);
-      return toSend;
     }
   };
 
   async function enhanceZebraFormat(printFormat, text, data) {
     const factor = 1;
-    const width =
-            Math.ceil(printFormat.molfileOptions.width / factor / 8) * 8;
+    const width = Math.ceil(printFormat.molfileOptions.width / factor / 8) * 8;
     const height =
-            Math.ceil(printFormat.molfileOptions.height / factor / 8) * 8;
+      Math.ceil(printFormat.molfileOptions.height / factor / 8) * 8;
     const molfileOptions = Object.assign({}, printFormat.molfileOptions, {
       width,
       height
@@ -82,8 +68,8 @@ define([
     const bytesPerRow = image.width / 8;
     text = text.replace(
       /\^XZ$/,
-      `^FO${printFormat.molfileOptions.x || 0},${printFormat
-        .molfileOptions.y || 0}^XGR:SAMPLE.GRF,${factor},${factor}^XZ`
+      `^FO${printFormat.molfileOptions.x || 0},${printFormat.molfileOptions.y ||
+        0}^XGR:SAMPLE.GRF,${factor},${factor}^XZ`
     );
     return `~DGR:SAMPLE.GRF,${totalBytes},${bytesPerRow},${hexa}\r\n${text}`;
   }
