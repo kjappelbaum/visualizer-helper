@@ -14,7 +14,7 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
       if (!processors[printFormat.processor]) {
         throw new Error('processor does not exist');
       }
-      processData(printFormat, data);
+      data = processData(printFormat, data);
       const printData = await processors[String(printFormat.processor)].call(
         null,
         printFormat,
@@ -28,30 +28,36 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
   function processData(printFormat, data) {
     switch (printFormat.type) {
       case 'sample': {
+        const result = {};
         if (data.$content && data.$content) {
-          data.uuidShort = data._id.substring(0, 12);
-          data.b64Short = Util.hexToBase64(data.uuidShort);
-          data.id = data.$id.join(' ');
+          result.entry = data;
+          result.uuidShort = data._id.substring(0, 12);
+          result.b64Short = Util.hexToBase64(data.uuidShort);
+          result.id = data.$id.join(' ');
           if (data.$content.general) {
             if (data.$content.general.description) {
-              data.line1 = data.$content.general.description.substring(0, 60);
-              data.line2 = data.$content.general.description.substring(60, 120);
+              result.line1 = data.$content.general.description.substring(0, 60);
+              result.line2 = data.$content.general.description.substring(
+                60,
+                120
+              );
             } else {
-              data.line1 = '';
-              data.line2 = '';
+              result.line1 = '';
+              result.line2 = '';
             }
-            data.molfile = data.$content.general.molfile;
+            result.molfile = String(data.$content.general.molfile);
           }
         }
         if (data.molfile) {
-          data.molfile = String(data.molfile);
+          Object.assign(result, data, {
+            molfile: String(data.molfile)
+          });
         }
-        break;
+        return result;
       }
       case 'location':
-        break;
       default:
-        break;
+        return data;
     }
   }
 
