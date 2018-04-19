@@ -32,7 +32,7 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
         if (data.$content && data.$content) {
           result.entry = data;
           result.uuidShort = data._id.substring(0, 12);
-          result.b64Short = Util.hexToBase64(data.uuidShort);
+          result.b64Short = Util.hexToBase64(result.uuidShort);
           result.id = data.$id.join(' ');
           if (data.$content.general) {
             if (data.$content.general.description) {
