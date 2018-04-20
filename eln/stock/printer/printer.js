@@ -101,6 +101,7 @@ define([
       async createPrinter(printer) {
         printer.$kind = 'printer';
         await printerRoc.create(printer);
+        await exports.refresh();
       },
 
       async createFormat(format) {
