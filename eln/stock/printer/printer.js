@@ -78,7 +78,7 @@ define([
         API.createData('allIds', Array.from(allIds));
         API.createData(
           'printerModels',
-          printers.map((p) => p.model).filter((model) => model)
+          printers.map((p) => p.$content.model).filter((model) => model)
         );
       },
 
