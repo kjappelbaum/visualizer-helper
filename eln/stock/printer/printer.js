@@ -39,18 +39,14 @@ define([
           sort: (a, b) => b.$modificationDate - a.$modificationDate
         });
 
-        printServers = await printServerRoc.view(
-          'printServerByMacAddress',
-          {
-            varName: 'printServers',
-            sort: (a, b) =>
-              b.$modificationDate - a.$modificationDate
-          }
-        );
+        printServers = await printServerRoc.view('printServerByMacAddress', {
+          varName: 'printServers',
+          sort: (a, b) => b.$modificationDate - a.$modificationDate
+        });
         onlineServers = printServers.filter(
           (ps) =>
             ps.$content.isOnline !== false &&
-                        Date.now() - ps.$modificationDate < LIMIT
+            Date.now() - ps.$modificationDate < LIMIT
         );
         onlinePrinters = printers.filter((p) =>
           onlineServers.find(
@@ -80,6 +76,10 @@ define([
         );
 
         API.createData('allIds', Array.from(allIds));
+        API.createData(
+          'printerModels',
+          printers.map((p) => p.model).filter((model) => model)
+        );
       },
 
       async getConnectedPrinters(s) {
@@ -93,13 +93,9 @@ define([
         const printServer = printServers.find(
           (ps) =>
             String(ps.$content.macAddress) ===
-                        String(printer.$content.macAddress)
+            String(printer.$content.macAddress)
         );
-        const p = new Printer(
-          printer.$content,
-          printServer.$content,
-          opts
-        );
+        const p = new Printer(printer.$content, printServer.$content, opts);
         await p.print(printFormat.$content, data);
       },
 
@@ -137,9 +133,7 @@ define([
           (ps) => ps.$content.macAddress
         );
         return printers
-          .filter((p) =>
-            onlineMacAdresses.includes(p.$content.macAddress)
-          )
+          .filter((p) => onlineMacAdresses.includes(p.$content.macAddress))
           .filter((p) => {
             return (
               format.$content.models.filter(
@@ -154,9 +148,7 @@ define([
           var formats = printFormats.filter((f) => {
             return onlinePrinters.some((printer) =>
               f.$content.models.some(
-                (m) =>
-                  String(m.name) ===
-                                    String(printer.$content.model)
+                (m) => String(m.name) === String(printer.$content.model)
               )
             );
           });
@@ -164,16 +156,12 @@ define([
           printer = await printerRoc.get(printer);
           formats = printFormats.filter((f) =>
             f.$content.models.some(
-              (m) =>
-                String(m.name) ===
-                                String(printer.$content.model)
+              (m) => String(m.name) === String(printer.$content.model)
             )
           );
         }
         if (type) {
-          formats = formats.filter(
-            (f) => String(f.$content.type) === type
-          );
+          formats = formats.filter((f) => String(f.$content.type) === type);
         }
         return formats;
       },
