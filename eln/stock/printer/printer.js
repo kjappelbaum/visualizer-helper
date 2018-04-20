@@ -76,10 +76,9 @@ define([
         );
 
         API.createData('allIds', Array.from(allIds));
-        API.createData(
-          'printerModels',
-          printers.map((p) => p.$content.model).filter((model) => model)
-        );
+        const printerModels = new Set();
+        printers.forEach((p) => printerModels.add(String(p.$content.model)));
+        API.createData('printerModels', Array.from(printerModels));
       },
 
       async getConnectedPrinters(s) {
