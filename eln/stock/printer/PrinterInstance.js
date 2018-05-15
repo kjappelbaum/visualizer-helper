@@ -11,20 +11,23 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
     }
 
     async print(printFormat, data) {
-      if (!processors[printFormat.processor]) {
-        throw new Error('processor does not exist');
-      }
-      data = processData(printFormat, data);
-      const printData = await processors[String(printFormat.processor)].call(
-        null,
-        printFormat,
-        data
-      );
+      const printData = await getPrintData(printFormat, data);
       if (printData === null) return null;
       return this.printServer.print(this.id, printData);
     }
   }
 
+  async function getPrintData(printFormat, data) {
+    if (!processors[printFormat.processor]) {
+      throw new Error('processor does not exist');
+    }
+    data = processData(printFormat, data);
+    return processors[String(printFormat.processor)].call(
+      null,
+      printFormat,
+      data
+    );
+  }
 
   function processData(printFormat, data) {
     switch (printFormat.type) {
@@ -57,12 +60,14 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
         return result;
       }
       case 'location':
+        return data;
       default:
         return data;
     }
   }
 
   Printer.processData = processData;
+  Printer.getPrintData = getPrintData;
 
   return Printer;
 });
