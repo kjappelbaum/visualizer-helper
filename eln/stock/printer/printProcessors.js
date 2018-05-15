@@ -51,7 +51,16 @@ define([
     }
   };
 
+
+  function checkIfMolfile(data) {
+    if (data.molfile && data.molfile.split(/[\r\n]+/).length > 5) {
+      return true;
+    }
+    return false;
+  }
+
   async function enhanceZebraFormat(printFormat, text, data) {
+    if (!checkIfMolfile(data)) return text;
     const factor = 1;
     const width = Math.ceil(printFormat.molfileOptions.width / factor / 8) * 8;
     const height =
@@ -75,6 +84,7 @@ define([
   }
 
   async function enhanceCognitiveFormat(printFormat, text, data) {
+    if (!checkIfMolfile(data)) return text;
     const encoder = new TextEncoder();
     text = text.replace(/END\s*$/, '');
     text += `GRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat
