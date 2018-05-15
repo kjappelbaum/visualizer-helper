@@ -25,41 +25,44 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
     }
   }
 
-  function processData(printFormat, data) {
-    switch (printFormat.type) {
-      case 'sample': {
-        const result = {};
-        if (data.$content && data.$content) {
-          result.entry = data;
-          result.uuidShort = data._id.substring(0, 12);
-          result.b64Short = Util.hexToBase64(result.uuidShort);
-          result.id = data.$id.join(' ');
-          if (data.$content.general) {
-            if (data.$content.general.description) {
-              result.line1 = data.$content.general.description.substring(0, 60);
-              result.line2 = data.$content.general.description.substring(
-                60,
-                120
-              );
-            } else {
-              result.line1 = '';
-              result.line2 = '';
-            }
-            result.molfile = String(data.$content.general.molfile);
-          }
-        }
-        if (data.molfile) {
-          Object.assign(result, data, {
-            molfile: String(data.molfile)
-          });
-        }
-        return result;
-      }
-      case 'location':
-      default:
-        return data;
-    }
-  }
+  Printer.prototype.processData = processData;
 
   return Printer;
 });
+
+
+function processData(printFormat, data) {
+  switch (printFormat.type) {
+    case 'sample': {
+      const result = {};
+      if (data.$content && data.$content) {
+        result.entry = data;
+        result.uuidShort = data._id.substring(0, 12);
+        result.b64Short = Util.hexToBase64(result.uuidShort);
+        result.id = data.$id.join(' ');
+        if (data.$content.general) {
+          if (data.$content.general.description) {
+            result.line1 = data.$content.general.description.substring(0, 60);
+            result.line2 = data.$content.general.description.substring(
+              60,
+              120
+            );
+          } else {
+            result.line1 = '';
+            result.line2 = '';
+          }
+          result.molfile = String(data.$content.general.molfile);
+        }
+      }
+      if (data.molfile) {
+        Object.assign(result, data, {
+          molfile: String(data.molfile)
+        });
+      }
+      return result;
+    }
+    case 'location':
+    default:
+      return data;
+  }
+}
