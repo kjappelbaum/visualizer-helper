@@ -32,7 +32,6 @@ define([
       var template = twig.twig({
         data: DataObject.resurrect(printFormat.twig)
       });
-
       // Render molfile if exists
       var text = template.render(DataObject.resurrect(data));
       if (
@@ -76,9 +75,9 @@ define([
     const totalBytes = image.width * image.height / 8;
     const bytesPerRow = image.width / 8;
     text = text.replace(
-      /\^XZ$/,
+      /\^XZ[\r\n]+$/,
       `^FO${printFormat.molfileOptions.x || 0},${printFormat.molfileOptions.y ||
-        0}^XGR:SAMPLE.GRF,${factor},${factor}^XZ`
+        0}^XGR:SAMPLE.GRF,${factor},${factor}\r\n^XZ`
     );
     return `~DGR:SAMPLE.GRF,${totalBytes},${bytesPerRow},${hexa}\r\n${text}`;
   }
