@@ -37,7 +37,8 @@ define([
       if (
         data.molfile &&
         printFormat.molfileOptions &&
-        printFormat.molfileOptions.width
+        printFormat.molfileOptions.width > 100 &&
+        printFormat.molfileOptions.height > 100
       ) {
         if (printFormat.printerType === 'zebra') {
           return enhanceZebraFormat(printFormat, text, data);
