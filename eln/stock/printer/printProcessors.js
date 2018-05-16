@@ -108,8 +108,9 @@ define([
     const svgString = mol.toSVG(options.width, options.height, '', {
       noImplicitAtomLabelColors: true,
       suppressChiralText: true,
-      bold: true,
-      strokeWidth: 2
+      fontWeight: 'bold',
+      strokeWidth: 2,
+      factorTextSize: 1.4,
     });
     const canvas = document.createElement('canvas');
     canvg(canvas, svgString);
