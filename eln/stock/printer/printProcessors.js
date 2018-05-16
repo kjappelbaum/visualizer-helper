@@ -21,10 +21,16 @@ define([
     lookup[chars.charCodeAt(i)] = i;
   }
   return {
-    twig: async function (printFormat, data) {
+    twig: async function (printFormat, data, options) {
       if (printFormat.customFields && printFormat.customFields.length) {
-        const res = await fillFields(printFormat.customFields, data);
-        if (res === null) return null;
+        if (options.creation) {
+          printFormat.customFields.forEach((field) => {
+            data[field.name] = field.label;
+          });
+        } else {
+          const res = await fillFields(printFormat.customFields, data);
+          if (res === null) return null;
+        }
       }
       if (!printFormat.twig) {
         throw new Error('twig processor expect twig property in format');

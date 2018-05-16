@@ -17,7 +17,7 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
     }
   }
 
-  async function getPrintData(printFormat, data) {
+  async function getPrintData(printFormat, data, options = {}) {
     if (!processors[printFormat.processor]) {
       throw new Error('processor does not exist');
     }
@@ -25,7 +25,8 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
     return processors[String(printFormat.processor)].call(
       null,
       printFormat,
-      data
+      data,
+      options
     );
   }
 
