@@ -84,7 +84,7 @@ define([
   }
 
   async function enhanceCognitiveFormat(printFormat, text, data) {
-    if (!checkIfMolfile(data)) return concatenate(Uint8Array, text);
+    if (!checkIfMolfile(data)) return concatenate(Uint8Array, encoder.encode(text));
     const encoder = new TextEncoder();
     text = text.replace(/END\s*$/, '');
     text += `GRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat
