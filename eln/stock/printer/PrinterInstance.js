@@ -40,7 +40,7 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
             result.b64Short = Util.hexToBase64(result.uuidShort);
           }
           if (data.$id) {
-            result.id = data.$id.join(' ');
+            result.id = data.$id;
           }
           if (data.$content.general) {
             if (data.$content.general.description) {

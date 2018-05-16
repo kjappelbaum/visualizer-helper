@@ -47,7 +47,8 @@ define([
       } else {
         return Promise.resolve(text);
       }
-    }
+    },
+    getMolImage
   };
 
 
@@ -60,24 +61,23 @@ define([
 
   async function enhanceZebraFormat(printFormat, text, data) {
     if (!checkIfMolfile(data)) return text;
-    const factor = 1;
-    const width = Math.ceil(printFormat.molfileOptions.width / factor / 8) * 8;
-    const height =
-      Math.ceil(printFormat.molfileOptions.height / factor / 8) * 8;
+    const renderingScale = printFormat.molfileOptions.renderingScale || 1;
+    const width = Math.ceil(printFormat.molfileOptions.width / 8) * 8;
+    const height = Math.ceil(printFormat.molfileOptions.height / 8) * 8;
     const molfileOptions = Object.assign({}, printFormat.molfileOptions, {
       width,
-      height
+      height,
+      renderingScale
     });
     let image = await getMolImage(data.molfile, molfileOptions);
     image = image.invert(); // Why do we need to invert here but not when encoding in BMP?
     const hexa = await dataToHexa(image.data);
-
     const totalBytes = image.width * image.height / 8;
     const bytesPerRow = image.width / 8;
     text = text.replace(
       /\^XZ[\r\n]+$/,
       `^FO${printFormat.molfileOptions.x || 0},${printFormat.molfileOptions.y ||
-        0}^XGR:SAMPLE.GRF,${factor},${factor}\r\n^XZ`
+        0}^XGR:SAMPLE.GRF,1,1\r\n^XZ`
     );
     return `~DGR:SAMPLE.GRF,${totalBytes},${bytesPerRow},${hexa}\r\n${text}`;
   }
@@ -98,27 +98,38 @@ define([
     );
   }
 
-  async function getMolImage(molfile, options) {
+  async function getMolImage(molfile, options = {}) {
     const defaultMolOptions = {
       width: 100
     };
+    const renderingScale = options.renderingScale;
     options = Object.assign({}, defaultMolOptions, options);
     if (!options.height) options.height = options.width;
     const mol = OCL.Molecule.fromMolfile(molfile);
-    const svgString = mol.toSVG(options.width, options.height, '', {
+    const svgString = mol.toSVG(options.width / renderingScale, options.height / renderingScale, '', {
       noImplicitAtomLabelColors: true,
       suppressChiralText: true,
       fontWeight: 'bold',
-      strokeWidth: 2,
+      strokeWidth: 1.5,
       factorTextSize: 1.4,
     });
     const canvas = document.createElement('canvas');
-    canvg(canvas, svgString);
+    canvas.height = options.height;
+    canvas.width = options.width;
+    canvg(canvas, svgString, {
+      ignoreDimensions: true,
+      log: true,
+      scaleWidth: options.width,
+      scaleHeight: options.height,
+    });
 
     var pngUrl = canvas.toDataURL('png');
 
     var image = await IJS.load(pngUrl);
-    var mask = image.grey({ keepAlpha: true }).mask();
+
+    console.log(image);
+
+    var mask = image.grey({ keepAlpha: true }).mask({ threshold: 0.9 });
     return mask;
   }
 
