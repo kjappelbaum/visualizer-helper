@@ -62,6 +62,10 @@ module.exports = {
     var f = {};
     const formats = API.getData(`${type}Formats`).resurrect();
     if (!formats) throw new Error('No printer formats available');
+    var lastPrinterFormat = localStorage.getItem('lastPrinterFormat');
+    formats.forEach((format) => {
+      format.id = `${format.printer._id};${format.format._id}`;
+    });
     await ui.form(`
             <div>
                 <form>
@@ -71,7 +75,7 @@ module.exports = {
                         <td>
                             <select name="printer">
                                 {% for format in formats %}
-                                    <option value="{{ format.printer._id }};{{ format.format._id }}">{{ format.printer["$content"].name }} - {{ format.format["$content"].name }}</option>
+                                    <option {{ (format.id==lastPrinterFormat) ? 'selected' : '' }} value="{{ format.id }}">{{ format.printer["$content"].name }} - {{ format.format["$content"].name }}</option>
                                 {% endfor %}
                              </select>
                         </td>
@@ -80,8 +84,9 @@ module.exports = {
                 <input type="submit"/>
                 </form>
             </div>
-    `, f, { twig: { formats } });
+    `, f, { twig: { formats, lastPrinterFormat } });
     if (!f.printer) return f.printer;
+    localStorage.setItem('lastPrinterFormat', f.printer);
     return String(f.printer);
   }
 };
