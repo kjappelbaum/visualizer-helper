@@ -21,10 +21,16 @@ define([
     lookup[chars.charCodeAt(i)] = i;
   }
   return {
-    twig: async function (printFormat, data) {
+    twig: async function (printFormat, data, options) {
       if (printFormat.customFields && printFormat.customFields.length) {
-        const res = await fillFields(printFormat.customFields, data);
-        if (res === null) return null;
+        if (options.creation) {
+          printFormat.customFields.forEach((field) => {
+            data[field.name] = field.label;
+          });
+        } else {
+          const res = await fillFields(printFormat.customFields, data);
+          if (res === null) return null;
+        }
       }
       if (!printFormat.twig) {
         throw new Error('twig processor expect twig property in format');
@@ -32,13 +38,13 @@ define([
       var template = twig.twig({
         data: DataObject.resurrect(printFormat.twig)
       });
-
       // Render molfile if exists
       var text = template.render(DataObject.resurrect(data));
       if (
         data.molfile &&
         printFormat.molfileOptions &&
-        printFormat.molfileOptions.width
+        printFormat.molfileOptions.width > 100 &&
+        printFormat.molfileOptions.height > 100
       ) {
         if (printFormat.printerType === 'zebra') {
           return enhanceZebraFormat(printFormat, text, data);
@@ -48,33 +54,43 @@ define([
       } else {
         return Promise.resolve(text);
       }
-    }
+    },
+    getMolImage
   };
 
+
+  function checkIfMolfile(data) {
+    if (data.molfile && data.molfile.split(/[\r\n]+/).length > 5) {
+      return true;
+    }
+    return false;
+  }
+
   async function enhanceZebraFormat(printFormat, text, data) {
-    const factor = 1;
-    const width = Math.ceil(printFormat.molfileOptions.width / factor / 8) * 8;
-    const height =
-      Math.ceil(printFormat.molfileOptions.height / factor / 8) * 8;
+    if (!checkIfMolfile(data)) return text;
+    const renderingScale = printFormat.molfileOptions.renderingScale || 1;
+    const width = Math.ceil(printFormat.molfileOptions.width / 8) * 8;
+    const height = Math.ceil(printFormat.molfileOptions.height / 8) * 8;
     const molfileOptions = Object.assign({}, printFormat.molfileOptions, {
       width,
-      height
+      height,
+      renderingScale
     });
     let image = await getMolImage(data.molfile, molfileOptions);
     image = image.invert(); // Why do we need to invert here but not when encoding in BMP?
     const hexa = await dataToHexa(image.data);
-
     const totalBytes = image.width * image.height / 8;
     const bytesPerRow = image.width / 8;
     text = text.replace(
-      /\^XZ$/,
+      /\^XZ[\r\n]+$/,
       `^FO${printFormat.molfileOptions.x || 0},${printFormat.molfileOptions.y ||
-        0}^XGR:SAMPLE.GRF,${factor},${factor}^XZ`
+        0}^XGR:SAMPLE.GRF,1,1\r\n^XZ`
     );
     return `~DGR:SAMPLE.GRF,${totalBytes},${bytesPerRow},${hexa}\r\n${text}`;
   }
 
   async function enhanceCognitiveFormat(printFormat, text, data) {
+    if (!checkIfMolfile(data)) return concatenate(Uint8Array, encoder.encode(text));
     const encoder = new TextEncoder();
     text = text.replace(/END\s*$/, '');
     text += `GRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat
@@ -89,26 +105,38 @@ define([
     );
   }
 
-  async function getMolImage(molfile, options) {
+  async function getMolImage(molfile, options = {}) {
     const defaultMolOptions = {
       width: 100
     };
+    const renderingScale = options.renderingScale;
     options = Object.assign({}, defaultMolOptions, options);
     if (!options.height) options.height = options.width;
     const mol = OCL.Molecule.fromMolfile(molfile);
-    const svgString = mol.toSVG(options.width, options.height, '', {
+    const svgString = mol.toSVG(options.width / renderingScale, options.height / renderingScale, '', {
       noImplicitAtomLabelColors: true,
       suppressChiralText: true,
-      bold: true,
-      strokeWidth: 2
+      fontWeight: 'bold',
+      strokeWidth: 1.5,
+      factorTextSize: 1.4,
     });
     const canvas = document.createElement('canvas');
-    canvg(canvas, svgString);
+    canvas.height = options.height;
+    canvas.width = options.width;
+    canvg(canvas, svgString, {
+      ignoreDimensions: true,
+      log: true,
+      scaleWidth: options.width,
+      scaleHeight: options.height,
+    });
 
     var pngUrl = canvas.toDataURL('png');
 
     var image = await IJS.load(pngUrl);
-    var mask = image.grey({ keepAlpha: true }).mask();
+
+    console.log(image);
+
+    var mask = image.grey({ keepAlpha: true }).mask({ threshold: 0.9 });
     return mask;
   }
 
