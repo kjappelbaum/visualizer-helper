@@ -189,6 +189,7 @@ class Sample {
         droppedXray: 'xray',
         droppedOverview: 'image',
         droppedImage: 'image',
+        droppedDna: 'dna'
       };
       if (!types[name]) {
         throw new Error('Unexpected variable name');
