@@ -2,7 +2,7 @@
 import { confirm } from 'src/util/ui';
 import TypeRenderer from 'src/util/typerenderer';
 
-const statuses = {
+export const statuses = {
   // statusCode: [statusName, statusColor]
   0: ['Cancelled', '#AAAAAA'],
   10: ['Pending', '#FFDC00'],
