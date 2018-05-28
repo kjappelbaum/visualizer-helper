@@ -1,5 +1,6 @@
 
 import { confirm } from 'src/util/ui';
+import TypeRenderer from 'src/util/typerenderer';
 
 const statuses = {
   // statusCode: [statusName, statusColor]
@@ -10,6 +11,14 @@ const statuses = {
   90: ['Error', '#FF4136']
 };
 const muteSuccess = { muteSuccess: true };
+
+export function appendRenderType() {
+  TypeRenderer.addType('requestStatus', {
+    toscreen($element, val) {
+      $element.html(getStatusName(val));
+    }
+  });
+}
 
 export function getStatus(code) {
   if (statuses[code]) {
