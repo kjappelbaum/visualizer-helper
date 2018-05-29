@@ -7,8 +7,7 @@ require(['Track'], function(Track) {
 */
 
 define(['jquery', 'src/util/api', 'src/util/versioning'], function ($, API, Versioning) {
-  function track(cookieName, defaultValue, options) {
-    options = options || {};
+  function track(cookieName, defaultValue, options = {}) {
     var varName = options.varName || cookieName;
     var data = API.getData(varName);
     if (data) return Promise.resolve(data);
