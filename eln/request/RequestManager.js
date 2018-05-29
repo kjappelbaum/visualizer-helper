@@ -2,46 +2,58 @@
 import { confirm } from 'src/util/ui';
 import TypeRenderer from 'src/util/typerenderer';
 
-export const statuses = {
-  // statusCode: [statusName, statusColor]
-  0: ['Cancelled', '#AAAAAA'],
-  10: ['Pending', '#FFDC00'],
-  20: ['Processing', '#0074D9'],
-  30: ['Finished', '#01FF70'],
-  90: ['Error', '#FF4136']
+export const status = {
+  10: { description: 'Pending', color: '#FFDC00' },
+  20: { description: 'Processing', color: '#0074D9' },
+  30: { description: 'Finished', color: '#01FF70' },
+  80: { description: 'Error', color: '#FF4136' },
+  90: { description: 'Cancelled', color: '#AAAAAA' }
 };
 const muteSuccess = { muteSuccess: true };
 
-export function appendRenderType() {
-  TypeRenderer.addType('requestStatus', {
-    toscreen($element, val) {
-      $element.html(getStatusName(val));
-    }
-  });
+// we systematically add the type renderer
+TypeRenderer.addType('requeststatus', {
+  toscreen($element, val) {
+    $element.html(getStatusDescription(val));
+  }
+});
+
+
+export function getStatusArray() {
+  var statusArray = Object.keys(status).map(
+    (key) => ({
+      code: key,
+      description: status[key].description,
+      color: status[key].color
+    })
+  );
+  return statusArray;
 }
 
 export function getStatus(code) {
-  if (statuses[code]) {
-    return statuses[code];
+  if (status[code]) {
+    return status[code];
   }
   throw new Error(`No such status: ${code}`);
 }
 
-export function getStatusName(code) {
-  return getStatus(code)[0];
+export function getStatusDescription(code) {
+  if (!status[code]) return 'Status does not exist';
+  return status[code].description;
 }
 
 export function getStatusColor(code) {
-  return getStatus(code)[1];
+  if (!status[code]) return '#FFFFFF';
+  return status[code].color;
 }
 
-export function getStatusCode(name) {
-  for (const status in statuses) {
-    if (statuses[status][0] === name) {
-      return Number(status);
+export function getStatusCode(description) {
+  for (const key of Object.keys(status)) {
+    if (status[key].description === description) {
+      return Number(key);
     }
   }
-  throw new Error(`No such status: ${name}`);
+  throw new Error(`No such status: ${description}`);
 }
 
 export default class RequestManager {
