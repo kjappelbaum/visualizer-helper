@@ -4,9 +4,10 @@ import UI from 'src/util/ui';
 
 import Status from './Status';
 
-export default processAction;
+var roc;
 
 async function processAction(actionName, actionValue) {
+  roc = this.roc;
   switch (actionName) {
     case 'requestFromScan':
       requestFromScan(actionValue);
@@ -72,7 +73,7 @@ async function refreshRequests(options) {
     queryOptions.startkey = [statusCode];
     queryOptions.endkey = [statusCode];
   }
-  var results = await this.roc.query('analysisRequestByKindAndStatus', queryOptions);
+  var results = await roc.query('analysisRequestByKindAndStatus', queryOptions);
   results.forEach((result) => {
     result.color = Status.getStatusColor(Number(result.value.status.status));
   });
@@ -84,7 +85,7 @@ async function requestFromUUID(uuid) {
     API.createData('request', {});
     return;
   }
-  let request = await this.roc.document(uuid);
+  let request = await roc.document(uuid);
   API.createData('request', request);
   let requestVar = await API.getVar('request');
   API.setVariable('status', requestVar, ['$content', 'status']);
@@ -144,15 +145,15 @@ async function askNewStatus(request) {
 
 async function prependStatus(request, newStatus) {
   request.$content.status.unshift({
-    status: newStatus,
+    status: Number(newStatus),
     date: Date.now()
   });
-  await this.roc.update(request);
+  await roc.update(request);
 }
 
 
 async function createForm() {
-  var groups = (await this.roc.getGroupMembership()).map((g) => g.name);
+  var groups = (await roc.getGroupMembership()).map((g) => g.name);
   var possibleGroups = ['mine'].concat(groups);
   var defaultGroup = window.localStorage.getItem('eln-default-sample-group');
   if (possibleGroups.indexOf(defaultGroup) === -1) {
@@ -179,3 +180,5 @@ async function createForm() {
   API.createData('formSchema', schema);
 }
 
+
+export default processAction;
