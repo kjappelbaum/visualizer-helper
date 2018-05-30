@@ -1,0 +1,181 @@
+
+import API from 'src/util/api';
+import UI from 'src/util/ui';
+
+import Status from './Status';
+
+export default processAction;
+
+async function processAction(actionName, actionValue) {
+  switch (actionName) {
+    case 'requestFromScan':
+      requestFromScan(actionValue);
+      break;
+    case 'requestFromUUID':
+      requestFromUUID(actionValue);
+      break;
+    case 'changeStatus':
+      {
+        let request = API.getData('request');
+        var newStatus = await askNewStatus(request);
+        await prependStatus(request, newStatus);
+        API.doAction('refreshRequests');
+        API.createData('status', []);
+        API.doAction('setSelected', []);
+      }
+      break;
+    case 'createForm':
+      createForm();
+      break;
+    case 'refreshRequests':
+      refreshRequests(API.getData('preferences'));
+      break;
+    case 'updateFilters':
+      refreshRequests(actionValue);
+      break;
+    case 'bulkChangeStatus':
+      await bulkChangeStatus(API.getData('selected'));
+      API.doAction('refreshRequests');
+      API.createData('status', []);
+      API.doAction('setSelected', []);
+      break;
+    default:
+      throw Error(`the action "${actionValue}" is unknown`);
+  }
+}
+
+
+function requestFromScan(scan) {
+  let uuid = scan.replace(/[^a-z0-9:_]/g, '');
+  if (uuid.includes('_')) {
+    uuid = uuid.replace(/.*_r:([a-z0-9]*).*/, '$1');
+  }
+  if (uuid.length === 0) return;
+  if (uuid.length !== 32) {
+    UI.showNotification(`Not found uuid: ${uuid}`);
+    return;
+  }
+  requestFromUUID(uuid);
+}
+
+async function refreshRequests(options) {
+  var queryOptions = {
+    sort: (a, b) => a.value.status.date - b.value.status.date
+  };
+  if (String(options.group) === 'mine') {
+    queryOptions.mine = true;
+  } else {
+    queryOptions.groups = [String(options.groups)];
+  }
+  if (String(options.status) !== 'any') {
+    var statusCode = Status.getStatusCode(String(options.status));
+    queryOptions.startkey = [statusCode];
+    queryOptions.endkey = [statusCode];
+  }
+  var results = await this.roc.query('analysisRequestByKindAndStatus', queryOptions);
+  results.forEach((result) => {
+    result.color = Status.getStatusColor(Number(result.value.status.status));
+  });
+  API.createData('requests', results);
+}
+
+async function requestFromUUID(uuid) {
+  if (!uuid) {
+    API.createData('request', {});
+    return;
+  }
+  let request = await this.roc.document(uuid);
+  API.createData('request', request);
+  let requestVar = await API.getVar('request');
+  API.setVariable('status', requestVar, ['$content', 'status']);
+}
+
+async function bulkChangeStatus(selected) {
+  var newStatus = await askNewStatus();
+  for (var requestToc of selected) {
+    var request = await roc.document(String(requestToc.id));
+    ensureStatus(request);
+    await prependStatus(request, newStatus);
+  }
+}
+
+function ensureStatus(request) {
+  if (!request.$content) request.$content = {};
+  if (!request.$content.status) request.$content.status = [];
+}
+
+async function askNewStatus(request) {
+  var currentStatusCode = '';
+  if (request) {
+    ensureStatus(request);
+    let status = request.$content.status;
+    currentStatusCode = status.length > 0 ? String(status[0].status) : '';
+  }
+  var statusArray = Status.getStatusArray();
+  var currentStatus = -1;
+  statusArray.forEach((item, i) => {
+    if (String(currentStatusCode) === item.code) currentStatus = i;
+  });
+  if (currentStatus < statusArray.length - 1) {
+    currentStatus++;
+  }
+
+  let newStatus = await UI.form(`
+        <style>
+            #status {
+                zoom: 1.5;
+            }
+        </style>
+        <div id='status'>
+            <b>Please select the new status</b>
+            <p>&nbsp;</p>
+            <form>
+                <select name="status">
+                    ${statusArray.map((item, i) =>
+    `<option value="${i}" ${(i === currentStatus) ? 'selected' : ''}>${item.description}</option>`
+  )}
+                </select>
+                <input type="submit" value="Submit"/>
+            </form>
+        </div>
+    `, {});
+  return statusArray[newStatus.status].code;
+}
+
+async function prependStatus(request, newStatus) {
+  request.$content.status.unshift({
+    status: newStatus,
+    date: Date.now()
+  });
+  await this.roc.update(request);
+}
+
+
+async function createForm() {
+  var groups = (await this.roc.getGroupMembership()).map((g) => g.name);
+  var possibleGroups = ['mine'].concat(groups);
+  var defaultGroup = window.localStorage.getItem('eln-default-sample-group');
+  if (possibleGroups.indexOf(defaultGroup) === -1) {
+    defaultGroup = 'all';
+  }
+  var possibleStatus = ['any'].concat(Status.getStatusArray().map((s) => s.description));
+  var schema = {
+    type: 'object',
+    properties: {
+      group: {
+        type: 'string',
+        enum: possibleGroups,
+        default: defaultGroup,
+        required: true
+      },
+      status: {
+        type: 'string',
+        enum: possibleStatus,
+        default: '30',
+        required: true
+      }
+    }
+  };
+  API.createData('formSchema', schema);
+}
+

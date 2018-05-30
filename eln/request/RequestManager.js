@@ -1,60 +1,10 @@
 
 import { confirm } from 'src/util/ui';
-import TypeRenderer from 'src/util/typerenderer';
 
-export const status = {
-  10: { description: 'Pending', color: '#FFDC00' },
-  20: { description: 'Processing', color: '#0074D9' },
-  30: { description: 'Finished', color: '#01FF70' },
-  80: { description: 'Error', color: '#FF4136' },
-  90: { description: 'Cancelled', color: '#AAAAAA' }
-};
+import Status from './Status';
+import processAction from './processAction';
+
 const muteSuccess = { muteSuccess: true };
-
-// we systematically add the type renderer
-TypeRenderer.addType('requeststatus', {
-  toscreen($element, val) {
-    $element.html(getStatusDescription(val));
-  }
-});
-
-
-export function getStatusArray() {
-  var statusArray = Object.keys(status).map(
-    (key) => ({
-      code: key,
-      description: status[key].description,
-      color: status[key].color
-    })
-  );
-  return statusArray;
-}
-
-export function getStatus(code) {
-  if (status[code]) {
-    return status[code];
-  }
-  throw new Error(`No such status: ${code}`);
-}
-
-export function getStatusDescription(code) {
-  if (!status[code]) return 'Status does not exist';
-  return status[code].description;
-}
-
-export function getStatusColor(code) {
-  if (!status[code]) return '#FFFFFF';
-  return status[code].color;
-}
-
-export function getStatusCode(description) {
-  for (const key of Object.keys(status)) {
-    if (status[key].description === description) {
-      return Number(key);
-    }
-  }
-  throw new Error(`No such status: ${description}`);
-}
 
 export default class RequestManager {
   constructor(roc, options) {
@@ -73,10 +23,6 @@ export default class RequestManager {
     return Number(this.getStatus(request).status);
   }
 
-  getLastStatus(request) {
-    return request.$content.status[request.$content.status.length - 1];
-  }
-
   async cancel(request) {
     if (this.getStatusCode(request) === 0) {
       return null;
@@ -89,7 +35,7 @@ export default class RequestManager {
 
   async setStatus(request, status) {
     if (typeof status !== 'number') {
-      status = getStatusCode(status);
+      status = Status.getStatusCode(status);
     }
     if (this.getStatusCode(request) === status) {
       return;
@@ -199,6 +145,8 @@ export default class RequestManager {
   }
 }
 
+RequestManager.prototype.processAction = processAction;
+
 function addChangeListener(view) {
   const id = view.onChange((event, triggerId) => {
     if (triggerId !== id) {
@@ -215,7 +163,7 @@ function updateView(view, id) {
 
 function updateRequest(request) {
   const lastStatus = request.$content.status[0];
-  const status = getStatus(lastStatus.status);
+  const status = Status.getStatus(lastStatus.status);
   request.statusText = status[0];
   request.statusColor = status[1];
 }
