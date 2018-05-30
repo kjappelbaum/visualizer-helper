@@ -66,7 +66,7 @@ async function refreshRequests(options) {
   if (String(options.group) === 'mine') {
     queryOptions.mine = true;
   } else {
-    queryOptions.groups = [String(options.groups)];
+    queryOptions.groups = [String(options.group)];
   }
   if (String(options.status) !== 'any') {
     var statusCode = Status.getStatusCode(String(options.status));
