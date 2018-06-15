@@ -1,5 +1,3 @@
-
-import bioParsers from 'bioParsers';
 import Twig from 'lib/twigjs/twig';
 import 'angularplasmid';
 import typerenderer from 'src/util/typerenderer';
@@ -51,15 +49,6 @@ const template = (options) => {
         </plasmid>`;
 };
 
-export function parse(gb) {
-  var d;
-  // The bioParsers API is really strange. It uses a callback even though it is synchronous
-  bioParsers.genbankToJson(gb, function (data) {
-    d = data;
-  });
-  return d;
-}
-
 export function filterCircular(gb) {
   return gb.filter((seq) => seq.parsedSequence && seq.parsedSequence.circular);
 }
@@ -81,7 +70,9 @@ export async function getSvgString(parsedGb, options) {
   // eslint-disable-next-line no-undef
   options = DataObject.resurrect(options);
   const svg = await getSvg(parsedGb, options);
-  return $('<div>').append(svg).html();
+  return $('<div>')
+    .append(svg)
+    .html();
 }
 
 export async function getSvg(parsedGb, options) {
