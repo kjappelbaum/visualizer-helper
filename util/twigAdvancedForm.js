@@ -105,7 +105,6 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
 
     // need to replicate rows based on the external variable
     function updateTwig() {
-      // debugger;
       do {
         var elements = dom.find('[data-repeat]:not([data-index])');
         elements.each(function (index, row) {

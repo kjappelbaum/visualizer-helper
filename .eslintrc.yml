@@ -5,6 +5,8 @@ env:
   jest: true
 parserOptions:
   sourceType: module
+  ecmaVersion: '2018'
+
 rules:
   import/no-amd: 0
   import/unambiguous: 0
