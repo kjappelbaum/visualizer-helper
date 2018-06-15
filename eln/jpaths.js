@@ -28,13 +28,21 @@ jpaths.density = ['$content', 'physical', 'density'];
 jpaths.ir = ['$content', 'spectra', 'ir'];
 jpaths.mass = ['$content', 'spectra', 'mass'];
 jpaths.nmr = ['$content', 'spectra', 'nmr'];
+jpaths.nucleic = ['$content', 'biology', 'nucleic'];
 jpaths.chromatogram = ['$content', 'spectra', 'chromatogram'];
-jpaths.thermogravimetricAnalysis = ['$content', 'spectra', 'thermogravimetricAnalysis'];
-jpaths.differentialScanningCalorimetry = ['$content', 'spectra', 'differentialScanningCalorimetry'];
+jpaths.thermogravimetricAnalysis = [
+  '$content',
+  'spectra',
+  'thermogravimetricAnalysis'
+];
+jpaths.differentialScanningCalorimetry = [
+  '$content',
+  'spectra',
+  'differentialScanningCalorimetry'
+];
 jpaths.xray = ['$content', 'spectra', 'xray'];
 jpaths.image = ['$content', 'image'];
 jpaths.attachments = ['attachmentList'];
-
 
 export function createVar(variable, varName) {
   check(varName);
