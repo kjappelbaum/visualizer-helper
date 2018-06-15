@@ -10,4 +10,5 @@ export function explodeNucleic(nucleic) {
       });
     }
   }
+  return result;
 }
