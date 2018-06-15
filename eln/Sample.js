@@ -89,6 +89,7 @@ class Sample {
     createVar(sampleVar, 'image');
     createVar(sampleVar, 'sampleCode');
     createVar(sampleVar, 'attachments');
+    createVar(sampleVar, 'nucleic');
 
     this._initializeObjects();
 
