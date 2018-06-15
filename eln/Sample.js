@@ -102,7 +102,7 @@ class Sample {
 
       switch (event.jpath.join('.')) {
         case '$content.biology.nucleic':
-          API.createData('explodedNucleic', explodeNucleic(this.sample.$content.biology.nucleic))
+          API.createData('explodedNucleic', explodeNucleic(this.sample.$content.biology.nucleic));
           break;
         case '$content.general.molfile':
           this.mf.fromMolfile();
