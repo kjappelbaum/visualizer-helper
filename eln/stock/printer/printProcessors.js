@@ -134,8 +134,6 @@ define([
 
     var image = await IJS.load(pngUrl);
 
-    console.log(image);
-
     var mask = image.grey({ keepAlpha: true }).mask({ threshold: 0.9 });
     return mask;
   }
