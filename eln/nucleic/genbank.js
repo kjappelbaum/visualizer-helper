@@ -27,9 +27,9 @@ const template = (options) => {
   options = Object.assign({}, templateOptions, options);
   return `
         {% set p = parsed %}
-        {% set features = parsed.parsedSequence.features %}
-        {% set interval = p.parsedSequence.size / 25 %}
-        <plasmid plasmidWidth='600' plasmidHeight='600' id='p1' sequencelength='{{ p.parsedSequence.size }}' width="600" height="600">
+        {% set features = parsed.features %}
+        {% set interval = p.size / 25 %}
+        <plasmid plasmidWidth='600' plasmidHeight='600' id='p1' sequencelength='{{ p.size }}' width="600" height="600">
             <style>
                 ${options.style}
             </style>
@@ -44,7 +44,7 @@ const template = (options) => {
                 </trackmarker>
                     {% endif %}
                 {% endfor %}
-                <tracklabel text='{{ p.parsedSequence.name }}' style='font-size:25px;font-weight:bold'></tracklabel>
+                <tracklabel text='{{ p.name }}' style='font-size:25px;font-weight:bold'></tracklabel>
             </plasmidtrack>
         </plasmid>`;
 };
@@ -59,7 +59,7 @@ export function getFeatureTypes(parsedGb) {
   }
   const s = new Set();
   parsedGb.forEach((d) => {
-    d.parsedSequence.features.forEach((f) => {
+    d.features.forEach((f) => {
       s.add(f.type);
     });
   });
