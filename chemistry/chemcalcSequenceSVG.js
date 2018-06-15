@@ -1,8 +1,9 @@
 
-import sequenceSplitter from './sequenceSplitter';
-
 define(
-  ['https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8145c522b71fc9c872cb0bcae49a/dist/snap.svg-min.js'], function (Snap) {
+  [
+    'https://www.lactame.com/github/adobe-webplatform/Snap.svg/84fbff7d512c8145c522b71fc9c872cb0bcae49a/dist/snap.svg-min.js',
+    './sequenceSplitter'
+], function (Snap, sequenceSplitter) {
     function getSVG(sequence, analysisResult, options) {
       const {
         width = 600,
