@@ -10,6 +10,7 @@ import MF from './MF';
 import { createVar } from './jpaths';
 import elnPlugin from './libs/elnPlugin';
 import CCE from './libs/CCE';
+import { explodeNucleic } from './nucleic/util';
 
 const DataObject = Datas.DataObject;
 
@@ -100,6 +101,9 @@ class Sample {
       }
 
       switch (event.jpath.join('.')) {
+        case '$content.biology.nucleic':
+          API.createData('explodedNucleic', explodeNucleic(this.sample.$content.biology.nucleic))
+          break;
         case '$content.general.molfile':
           this.mf.fromMolfile();
           this.nmr1dManager.handleAction({ name: 'clearAllAssignments' });
