@@ -5,6 +5,11 @@ const DataObject = Datas.DataObject;
 
 const jpaths = {};
 
+// general
+jpaths.image = ['$content', 'image'];
+jpaths.attachments = ['attachmentList'];
+
+// For samples
 jpaths.sampleCode = ['$id', 0];
 jpaths.batchCode = ['$id', 1];
 jpaths.creationDate = ['$creationDate'];
@@ -41,8 +46,12 @@ jpaths.differentialScanningCalorimetry = [
   'differentialScanningCalorimetry'
 ];
 jpaths.xray = ['$content', 'spectra', 'xray'];
-jpaths.image = ['$content', 'image'];
-jpaths.attachments = ['attachmentList'];
+
+// For reactions
+jpaths.reactionCode = ['$id'];
+jpaths.procedure = ['$content', 'procedure'];
+jpaths.reagents = ['$content', 'reagents'];
+jpaths.products = ['$content', 'products'];
 
 export function createVar(variable, varName) {
   check(varName);
