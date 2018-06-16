@@ -46,12 +46,13 @@ module.exports = async function loadTemplates(categories, options = {}) {
   for (let category of categories) {
     let currentTemplates = await templateRoc.query(
       'template', {
-        startkey: category
+        startkey: category,
+        endkey: category+'\uFFFF'
       }
     );
     templates.push(...currentTemplates);
   }
-
+s
   // could be improved to remember the last selected format
 
   await API.createData(variableName, templates);
