@@ -53,6 +53,12 @@ module.exports = async function loadTemplates(categories, options = {}) {
     templates.push(...currentTemplates);
   }
 
+  templates.sort( (a,b) {
+    if (a.title < b.title) return -1;
+    if (a.title > b.title) return 1;
+    return 0;
+  });
+
   // could be improved to remember the last selected format
 
   await API.createData(variableName, templates);
