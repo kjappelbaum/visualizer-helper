@@ -62,9 +62,6 @@ module.exports = async function loadTemplates(categories, options = {}) {
   // could be improved to remember the last selected format
 
   await API.createData(variableName, templates);
-  setTimeout(() => {
-    API.doAction('setTemplate', 0);
-  }, 10);
 
   return templates;
 };
