@@ -54,7 +54,7 @@ define(['src/util/ui'], function (UI) {
 
     UI.dialog(html, {
       width: 800,
-      height: 400,
+      height: 600,
       title: 'Security record information'
     });
   }
