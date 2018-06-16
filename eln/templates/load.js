@@ -52,7 +52,7 @@ module.exports = async function loadTemplates(categories, options = {}) {
     );
     templates.push(...currentTemplates);
   }
-s
+
   // could be improved to remember the last selected format
 
   await API.createData(variableName, templates);
