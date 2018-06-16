@@ -54,8 +54,8 @@ module.exports = async function loadTemplates(categories, options = {}) {
   }
 
   templates.sort( (a,b) {
-    if (a.title < b.title) return -1;
-    if (a.title > b.title) return 1;
+    if (a.value.title < b.value.title) return -1;
+    if (a.value.title > b.value.title) return 1;
     return 0;
   });
 
