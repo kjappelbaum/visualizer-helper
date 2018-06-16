@@ -637,7 +637,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
             throw new Error('no processor');
           }
 
-          await this.processor.process(type, entry.$content, attachment);
+          await this.processor.process(type, entry.$content, attachment, attachOptions.customMetadata);
           this.typeUrl(entry.$content, entry);
           await this.update(entry);
         } catch (e) {

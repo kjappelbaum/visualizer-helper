@@ -176,7 +176,14 @@ class Sample {
     return undefined;
   }
 
-  async handleDrop(name, askType) {
+  /**
+   * 
+   * @param {string} name 
+   * @param {boolean} askType 
+   * @param {object} options 
+   * @param {string} [options.customMetadata]
+   */
+  async handleDrop(name, askType, options) {
     var type;
     if (!name) {
       throw new Error('handleDrop expects a variable name');
@@ -229,7 +236,7 @@ class Sample {
     if (type === 'other') {
       await this.roc.addAttachment(this.sample, droppedDatas);
     } else {
-      await this.attachFiles(droppedDatas, type);
+      await this.attachFiles(droppedDatas, type, options);
     }
   }
 
@@ -285,7 +292,7 @@ class Sample {
     }
   }
 
-  async attachFiles(files, type) {
+  async attachFiles(files, type, options) {
     if (!files || !type) return;
 
     if (!Array.isArray(files)) {
@@ -293,7 +300,7 @@ class Sample {
     }
     for (let i = 0; i < files.length; i++) {
       const data = DataObject.resurrect(files[i]);
-      await this.roc.attach(type, this.sample, data);
+      await this.roc.attach(type, this.sample, data, options);
     }
   }
 }
