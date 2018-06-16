@@ -10,7 +10,6 @@ import MF from './MF';
 import { createVar } from './jpaths';
 import elnPlugin from './libs/elnPlugin';
 import CCE from './libs/CCE';
-import { explodeNucleic } from './nucleic/util';
 
 const DataObject = Datas.DataObject;
 
@@ -42,10 +41,12 @@ class Sample {
       emitter.on('unsync', () => options.onSync(false));
     }
 
-
     this.uuid = uuid;
     if (!this.uuid) {
-      UI.showNotification('Cannot create an editable sample without an uuid', 'error');
+      UI.showNotification(
+        'Cannot create an editable sample without an uuid',
+        'error'
+      );
       return;
     }
     this._loadInstanceInVisualizer();
@@ -94,7 +95,7 @@ class Sample {
 
     this._initializeObjects();
 
-    this.onChange = (event) => {
+    this.onChange = event => {
       var jpathStr = event.jpath.join('.');
       if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
         this.nmr1dManager.rangesHasChanged();
@@ -115,7 +116,11 @@ class Sample {
           break;
         case '$content.general.sequence':
           try {
-            var sequenceOriginal = `${this.sample.getChildSync(['$content', 'general', 'sequence']) || ''}`;
+            var sequenceOriginal = `${this.sample.getChildSync([
+              '$content',
+              'general',
+              'sequence'
+            ]) || ''}`;
             var sequence = CCE.convertAASequence(sequenceOriginal);
             this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
           } catch (e) {
@@ -150,8 +155,8 @@ class Sample {
   }
 
   /** An image with a special name that is used to display on the
-     * first page of a sample
-     */
+   * first page of a sample
+   */
   async handleOverview(variableName) {
     let data = API.getData(variableName);
     if (data && data.file && data.file[0]) {
@@ -168,7 +173,10 @@ class Sample {
           file.filename = 'overview.svg';
           break;
         default:
-          UI.showNotification('For overview only the following formats are allowed: png, jpg and svg.', 'error');
+          UI.showNotification(
+            'For overview only the following formats are allowed: png, jpg and svg.',
+            'error'
+          );
           return undefined;
       }
       return this.handleDrop(variableName, false);
@@ -205,26 +213,31 @@ class Sample {
       }
       type = types[name];
     } else {
-      type = await UI.choose({
-        nmr: 'NMR (jcamp, pdf)',
-        mass: 'Mass (jcamp, pdf, netcdf, xml)',
-        ir: 'Infrared (jcamp, pdf)',
-        chromatogram: 'Chromatogram LC, GC, LC/MS, GC/MS (jcamp, pdf, netcdf, xml)',
-        thermogravimetricAnalysis: 'Thermogravimetric Analysis (txt)',
-        differentialScanningCalorimetry: 'Differential Scanning Calorimetry (txt)',
-        xray: 'Xray (cif, pdb)',
-        image: 'Images (jpg, png or tiff)',
-        other: 'Other'
-      }, {
-        noConfirmation: true,
-        columns: [
-          {
-            id: 'description',
-            name: 'description',
-            field: 'description'
-          }
-        ]
-      });
+      type = await UI.choose(
+        {
+          nmr: 'NMR (jcamp, pdf)',
+          mass: 'Mass (jcamp, pdf, netcdf, xml)',
+          ir: 'Infrared (jcamp, pdf)',
+          chromatogram:
+            'Chromatogram LC, GC, LC/MS, GC/MS (jcamp, pdf, netcdf, xml)',
+          thermogravimetricAnalysis: 'Thermogravimetric Analysis (txt)',
+          differentialScanningCalorimetry:
+            'Differential Scanning Calorimetry (txt)',
+          xray: 'Xray (cif, pdb)',
+          image: 'Images (jpg, png or tiff)',
+          other: 'Other'
+        },
+        {
+          noConfirmation: true,
+          columns: [
+            {
+              id: 'description',
+              name: 'description',
+              field: 'description'
+            }
+          ]
+        }
+      );
       if (!type) return;
     }
 
@@ -243,7 +256,8 @@ class Sample {
   async handleAction(action) {
     if (!action) return;
 
-    if (this.expandableMolecule && this.expandableMolecule.handleAction(action)) return;
+    if (this.expandableMolecule && this.expandableMolecule.handleAction(action))
+      return;
     if (this.nmr1dManager && this.nmr1dManager.handleAction(action)) return;
 
     switch (action.name) {
@@ -253,9 +267,15 @@ class Sample {
       case 'createOptions':
         var advancedOptions1H = API.cache('nmr1hAdvancedOptions');
         if (advancedOptions1H) {
-          API.createData('nmr1hOndeTemplate', API.cache('nmr1hOndeTemplates').full);
+          API.createData(
+            'nmr1hOndeTemplate',
+            API.cache('nmr1hOndeTemplates').full
+          );
         } else {
-          API.createData('nmr1hOndeTemplate', API.cache('nmr1hOndeTemplates').short);
+          API.createData(
+            'nmr1hOndeTemplate',
+            API.cache('nmr1hOndeTemplates').short
+          );
         }
         break;
       case 'deleteAttachment':
@@ -277,7 +297,9 @@ class Sample {
         break;
       }
       case 'refresh': {
-        const ok = await UI.confirm('Are you sure you want to refresh? This will discard your local modifications.');
+        const ok = await UI.confirm(
+          'Are you sure you want to refresh? This will discard your local modifications.'
+        );
         if (!ok) return;
         this.unbindChange();
         this.expandableMolecule.unbindChange();
