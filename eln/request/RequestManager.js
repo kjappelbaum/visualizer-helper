@@ -124,6 +124,22 @@ export default class RequestManager {
     }
   }
 
+  /**
+   * 
+   * @param {string} scan : either the result of a scan or an uuid
+   */
+  async getRequest(scan) {
+    let uuid = scan.replace(/[^a-z0-9:_]/g, '');
+    if (uuid.includes('_')) {
+      uuid = uuid.replace(/.*_r:([a-z0-9]*).*/, '$1');
+    }
+    if (uuid.length === 0) return;
+    if (uuid.length !== 32) {
+      return;
+    }
+    return await roc.document(uuid);
+  }
+
   async getSample(request) {
     return this.sampleRoc.document(request.$content.productUuid);
   }
