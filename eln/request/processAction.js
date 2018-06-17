@@ -13,7 +13,7 @@ async function processAction(actionName, actionValue) {
       requestFromScan(actionValue);
       break;
     case 'requestFromUUID':
-      requestFromUUID(actionValue);
+      requestFromScan(actionValue);
       break;
     case 'changeStatus':
       {
@@ -46,17 +46,15 @@ async function processAction(actionName, actionValue) {
 }
 
 
-function requestFromScan(scan) {
-  let uuid = scan.replace(/[^a-z0-9:_]/g, '');
-  if (uuid.includes('_')) {
-    uuid = uuid.replace(/.*_r:([a-z0-9]*).*/, '$1');
-  }
-  if (uuid.length === 0) return;
-  if (uuid.length !== 32) {
-    UI.showNotification(`Not found uuid: ${uuid}`);
+async function requestFromScan(scan) {
+  var request = await this.getRequest(scan);
+  if (!request) {
+    API.createData('request', {});
     return;
   }
-  requestFromUUID(uuid);
+  API.createData('request', request);
+  let requestVar = await API.getVar('request');
+  API.setVariable('status', requestVar, ['$content', 'status']);
 }
 
 async function refreshRequests(options) {
@@ -78,17 +76,6 @@ async function refreshRequests(options) {
     result.color = Status.getStatusColor(Number(result.value.status.status));
   });
   API.createData('requests', results);
-}
-
-async function requestFromUUID(uuid) {
-  if (!uuid) {
-    API.createData('request', {});
-    return;
-  }
-  let request = await roc.document(uuid);
-  API.createData('request', request);
-  let requestVar = await API.getVar('request');
-  API.setVariable('status', requestVar, ['$content', 'status']);
 }
 
 async function bulkChangeStatus(selected) {
