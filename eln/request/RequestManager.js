@@ -3,7 +3,7 @@ import { confirm } from 'src/util/ui';
 
 import Status from './Status';
 import processAction from './processAction';
-import Roc from '../rest-on-couch/Roc';
+import Roc from '../../rest-on-couch/Roc';
 
 const muteSuccess = { muteSuccess: true };
 
