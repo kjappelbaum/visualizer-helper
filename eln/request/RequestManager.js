@@ -137,7 +137,7 @@ export default class RequestManager {
     if (uuid.length !== 32) {
       return;
     }
-    return await roc.document(uuid);
+    return await this.roc.document(uuid);
   }
 
   async getSample(request) {
