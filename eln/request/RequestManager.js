@@ -3,13 +3,17 @@ import { confirm } from 'src/util/ui';
 
 import Status from './Status';
 import processAction from './processAction';
+import Roc from '../rest-on-couch/Roc';
 
 const muteSuccess = { muteSuccess: true };
 
 export default class RequestManager {
-  constructor(roc, options) {
+  constructor(couchDB, options) {
     options = options || {};
-    this.roc = roc;
+    this.roc = new Roc({
+      url: couchDB.url,
+      database: couchDB.database,
+    });
     this.sampleRoc = options.sampleRoc || null;
     this.servicesRoc = options.servicesRoc || null;
     this.servicesView = null;
