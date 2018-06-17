@@ -4,10 +4,8 @@ import UI from 'src/util/ui';
 
 import Status from './Status';
 
-var roc;
 
 async function processAction(actionName, actionValue) {
-  roc = this.roc;
   switch (actionName) {
     case 'requestFromScan':
       requestFromScan(actionValue);
@@ -71,7 +69,7 @@ async function refreshRequests(options) {
     queryOptions.startkey = [statusCode];
     queryOptions.endkey = [statusCode];
   }
-  var results = await roc.query('analysisRequestByKindAndStatus', queryOptions);
+  var results = await this.roc.query('analysisRequestByKindAndStatus', queryOptions);
   results.forEach((result) => {
     result.color = Status.getStatusColor(Number(result.value.status.status));
   });
