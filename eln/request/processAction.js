@@ -4,8 +4,12 @@ import UI from 'src/util/ui';
 
 import Status from './Status';
 
+var roc;
+var requestManager;
 
 async function processAction(actionName, actionValue) {
+  roc = this.roc;
+  requestManager = this;
   switch (actionName) {
     case 'requestFromScan':
       requestFromScan(actionValue);
@@ -45,11 +49,12 @@ async function processAction(actionName, actionValue) {
 
 
 async function requestFromScan(scan) {
-  var request = await this.getRequest(scan);
+  var request = await requestManager.getRequest(scan);
   if (!request) {
     API.createData('request', {});
     return;
   }
+
   API.createData('request', request);
   let requestVar = await API.getVar('request');
   API.setVariable('status', requestVar, ['$content', 'status']);
@@ -69,7 +74,7 @@ async function refreshRequests(options) {
     queryOptions.startkey = [statusCode];
     queryOptions.endkey = [statusCode];
   }
-  var results = await this.roc.query('analysisRequestByKindAndStatus', queryOptions);
+  var results = await roc.query('analysisRequestByKindAndStatus', queryOptions);
   results.forEach((result) => {
     result.color = Status.getStatusColor(Number(result.value.status.status));
   });

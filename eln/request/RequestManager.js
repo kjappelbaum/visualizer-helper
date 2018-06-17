@@ -165,9 +165,7 @@ export default class RequestManager {
   }
 }
 
-RequestManager.prototype.processAction = function(name, value) {
-  processAction.call(this, name, value);
-}
+RequestManager.prototype.processAction = processAction;
 
 function addChangeListener(view) {
   const id = view.onChange((event, triggerId) => {
