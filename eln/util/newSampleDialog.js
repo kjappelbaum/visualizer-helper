@@ -48,15 +48,13 @@ define(['src/util/ui', 'lodash'], function (ui, _) {
         }
       }
     );
-    if (!result || !result.code || result.batch == null) return;
+    if (!result || !result.code || result.batch == null) return undefined;
 
-    const selected = Object.keys(result.group).filter(
-      (key) => result.group[key]
-    );
+    const selected = Object.keys(result.group).filter((key) => result.group[key]);
 
     entrysample.$id = [result.code, result.batch];
     entrysample.$owners = selected;
     localStorage.setItem(storageKey, JSON.stringify(selected));
-    // return roc.create(entrysample);
+    return roc.create(entrysample);
   };
 });
