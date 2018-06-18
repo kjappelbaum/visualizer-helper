@@ -1,9 +1,9 @@
-
 import { confirm } from 'src/util/ui';
+
+import Roc from '../../rest-on-couch/Roc';
 
 import Status from './Status';
 import processAction from './processAction';
-import Roc from '../../rest-on-couch/Roc';
 
 const muteSuccess = { muteSuccess: true };
 
@@ -12,7 +12,7 @@ export default class RequestManager {
     options = options || {};
     this.roc = new Roc({
       url: couchDB.url,
-      database: couchDB.database,
+      database: couchDB.database
     });
     this.sampleRoc = options.sampleRoc || null;
     this.servicesRoc = options.servicesRoc || null;
@@ -125,7 +125,7 @@ export default class RequestManager {
   }
 
   /**
-   * 
+   *
    * @param {string} scan : either the result of a scan or an uuid
    */
   async getRequest(scan) {
@@ -133,11 +133,11 @@ export default class RequestManager {
     if (uuid.includes('_')) {
       uuid = uuid.replace(/.*_r:([a-z0-9]*).*/, '$1');
     }
-    if (uuid.length === 0) return;
+    if (uuid.length === 0) return undefined;
     if (uuid.length !== 32) {
-      return;
+      return undefined;
     }
-    return await this.roc.document(uuid);
+    return this.roc.document(uuid);
   }
 
   async getSample(request) {
@@ -155,9 +155,9 @@ export default class RequestManager {
     const instrument = analysis.instrument;
     const configName = analysis.configuration;
     return services
-      .find((s) => String(s.$id) === String(serviceId)).$content.instruments
-      .find((i) => String(i.name) === String(instrument)).experiments
-      .find((e) => String(e.name) === String(configName));
+      .find((s) => String(s.$id) === String(serviceId))
+      .$content.instruments.find((i) => String(i.name) === String(instrument))
+      .experiments.find((e) => String(e.name) === String(configName));
   }
 
   async getUserInfo() {

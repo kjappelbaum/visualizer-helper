@@ -7,9 +7,7 @@ import API from 'src/util/api';
  */
 
 module.exports = async function loadTemplates(categories, options = {}) {
-  const {
-    variableName = 'templates'
-  } = options;
+  const { variableName = 'templates' } = options;
   if (typeof categories === 'string') {
     categories = [categories];
   }
@@ -21,19 +19,22 @@ module.exports = async function loadTemplates(categories, options = {}) {
 
   var templateRoc;
   if (roc) {
-    await fetch(`${roc.url}/db/templates/_query/template`).then(() => {
-      templateRoc = new Roc({
-        database: 'templates',
-        url: roc.url,
-        track: false
+    await fetch(`${roc.url}/db/templates/_query/template`)
+      .then(() => {
+        templateRoc = new Roc({
+          database: 'templates',
+          url: roc.url,
+          track: false
+        });
+      })
+      .catch(() => {
+        // no local templates database, we use the default one
+        templateRoc = new Roc({
+          database: 'templates',
+          url: 'https://mydb.cheminfo.org',
+          track: false
+        });
       });
-    }).catch(() => { // no local templates database, we use the default one
-      templateRoc = new Roc({
-        database: 'templates',
-        url: 'https://mydb.cheminfo.org',
-        track: false
-      });
-    });
   } else {
     templateRoc = new Roc({
       database: 'templates',
@@ -44,16 +45,14 @@ module.exports = async function loadTemplates(categories, options = {}) {
 
   var templates = [];
   for (let category of categories) {
-    let currentTemplates = await templateRoc.query(
-      'template', {
-        startkey: category,
-        endkey: category+'\uFFFF'
-      }
-    );
+    let currentTemplates = await templateRoc.query('template', {
+      startkey: category,
+      endkey: `${category}\uFFFF`
+    });
     templates.push(...currentTemplates);
   }
 
-  templates.sort( (a,b) => {
+  templates.sort((a, b) => {
     if (a.value.title < b.value.title) return -1;
     if (a.value.title > b.value.title) return 1;
     return 0;
@@ -65,4 +64,3 @@ module.exports = async function loadTemplates(categories, options = {}) {
 
   return templates;
 };
-

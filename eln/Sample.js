@@ -95,7 +95,7 @@ class Sample {
 
     this._initializeObjects();
 
-    this.onChange = event => {
+    this.onChange = (event) => {
       var jpathStr = event.jpath.join('.');
       if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
         this.nmr1dManager.rangesHasChanged();
@@ -185,10 +185,10 @@ class Sample {
   }
 
   /**
-   * 
-   * @param {string} name 
-   * @param {boolean} askType 
-   * @param {object} options 
+   *
+   * @param {string} name
+   * @param {boolean} askType
+   * @param {object} options
    * @param {string} [options.customMetadata]
    */
   async handleDrop(name, askType, options) {
@@ -256,8 +256,12 @@ class Sample {
   async handleAction(action) {
     if (!action) return;
 
-    if (this.expandableMolecule && this.expandableMolecule.handleAction(action))
+    if (
+      this.expandableMolecule &&
+      this.expandableMolecule.handleAction(action)
+    ) {
       return;
+    }
     if (this.nmr1dManager && this.nmr1dManager.handleAction(action)) return;
 
     switch (action.name) {

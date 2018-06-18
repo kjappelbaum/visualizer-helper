@@ -65,7 +65,7 @@ class BioReaction {
     createVar(sampleVar, 'reagents');
     createVar(sampleVar, 'attachments');
 
-    this.onChange = event => {
+    this.onChange = (event) => {
       var jpathStr = event.jpath.join('.');
 
       switch (event.jpath.join('.')) {
