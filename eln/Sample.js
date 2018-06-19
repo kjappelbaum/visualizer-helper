@@ -82,6 +82,8 @@ class Sample {
     createVar(sampleVar, 'mp');
     createVar(sampleVar, 'density');
     createVar(sampleVar, 'ir');
+    createVar(sampleVar, 'uv');
+    createVar(sampleVar, 'raman');
     createVar(sampleVar, 'mass');
     createVar(sampleVar, 'nmr');
     createVar(sampleVar, 'xray');
