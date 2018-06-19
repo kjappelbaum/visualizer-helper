@@ -221,6 +221,7 @@ class Sample {
           nmr: 'NMR (jcamp, pdf)',
           mass: 'Mass (jcamp, pdf, netcdf, xml)',
           ir: 'Infrared (jcamp, pdf)',
+          uv: 'UV (jcamp, pdf)',
           chromatogram:
             'Chromatogram LC, GC, LC/MS, GC/MS (jcamp, pdf, netcdf, xml)',
           thermogravimetricAnalysis: 'Thermogravimetric Analysis (txt)',
