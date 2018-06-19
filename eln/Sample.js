@@ -204,6 +204,7 @@ class Sample {
       var types = {
         droppedNmr: 'nmr',
         droppedIR: 'ir',
+        droppedUV: 'uv',
         droppedMS: 'mass',
         droppedXray: 'xray',
         droppedOverview: 'image',
