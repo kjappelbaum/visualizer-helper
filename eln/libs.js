@@ -4,5 +4,6 @@ export { default as CCE } from './libs/CCE';
 export { default as elnPlugin } from './libs/elnPlugin';
 export { default as Image } from './libs/Image';
 export { default as EMDB } from './libs/EMDB';
+export { default as convertToJcamp } from './libs/convertToJcamp';
 export { parseXY } from './libs/parseXY';
 export { convert } from './libs/jcampconverter';

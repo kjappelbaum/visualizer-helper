@@ -10,6 +10,7 @@ import MF from './MF';
 import { createVar } from './jpaths';
 import elnPlugin from './libs/elnPlugin';
 import CCE from './libs/CCE';
+import convertToJcamp from './libs/convertToJcamp';
 
 const DataObject = Datas.DataObject;
 
@@ -97,7 +98,7 @@ class Sample {
 
     this._initializeObjects();
 
-    this.onChange = (event) => {
+    this.onChange = event => {
       var jpathStr = event.jpath.join('.');
       if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
         this.nmr1dManager.rangesHasChanged();
@@ -106,7 +107,9 @@ class Sample {
       switch (event.jpath.join('.')) {
         case '$content.general.molfile':
           this.mf.fromMolfile();
-          this.nmr1dManager.handleAction({ name: 'clearAllAssignments' });
+          this.nmr1dManager.handleAction({
+            name: 'clearAllAssignments'
+          });
           break;
         case '$content.general.mf':
           try {
@@ -188,17 +191,18 @@ class Sample {
 
   /**
    *
-   * @param {string} name
+   * @param {string} variableName
    * @param {boolean} askType
    * @param {object} options
    * @param {string} [options.customMetadata]
+   * @param {boolean} [options.autoJcamp] - converts automatically tsv, txt and csv to jcamp
    */
-  async handleDrop(name, askType, options) {
+  async handleDrop(variableName, askType, options = {}) {
     var type;
-    if (!name) {
+    if (!variableName) {
       throw new Error('handleDrop expects a variable name');
     }
-    name = String(name);
+    variableName = String(variableName);
     if (!askType) {
       // maps name of variable to type of data
       var types = {
@@ -211,10 +215,10 @@ class Sample {
         droppedImage: 'image',
         droppedGenbank: 'genbank'
       };
-      if (!types[name]) {
+      if (!types[variableName]) {
         throw new Error('Unexpected variable name');
       }
-      type = types[name];
+      type = types[variableName];
     } else {
       type = await UI.choose(
         {
@@ -247,8 +251,35 @@ class Sample {
 
     // Dropped data can be an array
     // Expecting format as from drag and drop module
-    var droppedDatas = API.getData(name);
+    var droppedDatas = API.getData(variableName);
     droppedDatas = droppedDatas.file || droppedDatas.str;
+
+    /*
+          Possible autoconvertion of text file to jcamp
+          * if filename ends with TXT, TSV or CSV
+          * use convert-to-jcamp
+        */
+    if (options.autoJcamp) {
+      let extension = droppedDatas.filename.replace(/.*\./, '').toLowerCase();
+      if (extension === 'txt' || extension === 'csv' || extension === 'tsv') {
+        var jcampTypes = {
+          nmr: 'NMR SPECTRUM',
+          ir: 'IR SPECTRUM',
+          uv: 'UV SPECTRUM',
+          mass: 'MASS SPECTRUM'
+        };
+        if (jcampTypes[type]) {
+          droppedDatas.filename = droppedDatas.filename.replace(/\..*?$/, '');
+          droppedDatas.mimetype = 'chemical/x-jcamp-dx';
+          convertToJcamp('', {
+            meta: {
+              title: droppedDatas.filename,
+              type: jcampTypes[type]
+            }
+          });
+        }
+      }
+    }
 
     if (type === 'other') {
       await this.roc.addAttachment(this.sample, droppedDatas);
