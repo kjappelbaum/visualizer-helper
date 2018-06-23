@@ -1,4 +1,3 @@
-
 define(['src/util/api', 'lodash'], function (API, _) {
   function track(localName, defaultValue, comparator, options) {
     options = options || {};
