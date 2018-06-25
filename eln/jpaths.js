@@ -33,6 +33,7 @@ jpaths.density = ['$content', 'physical', 'density'];
 jpaths.ir = ['$content', 'spectra', 'ir'];
 jpaths.raman = ['$content', 'spectra', 'raman'];
 jpaths.uv = ['$content', 'spectra', 'uv'];
+jpaths.iv = ['$content', 'spectra', 'iv'];
 jpaths.mass = ['$content', 'spectra', 'mass'];
 jpaths.nmr = ['$content', 'spectra', 'nmr'];
 jpaths.nucleic = ['$content', 'biology', 'nucleic'];

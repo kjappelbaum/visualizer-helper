@@ -87,6 +87,7 @@ class Sample {
     createVar(sampleVar, 'raman');
     createVar(sampleVar, 'mass');
     createVar(sampleVar, 'nmr');
+    createVar(sampleVar, 'iv');
     createVar(sampleVar, 'xray');
     createVar(sampleVar, 'chromatogram');
     createVar(sampleVar, 'thermogravimetricAnalysis');
@@ -209,6 +210,7 @@ class Sample {
         droppedNmr: 'nmr',
         droppedIR: 'ir',
         droppedUV: 'uv',
+        droppedIV: 'iv',
         droppedMS: 'mass',
         droppedXray: 'xray',
         droppedOverview: 'image',
@@ -222,12 +224,13 @@ class Sample {
     } else {
       type = await UI.choose(
         {
-          nmr: 'NMR (jcamp, pdf)',
-          mass: 'Mass (jcamp, pdf, netcdf, xml)',
-          ir: 'Infrared (jcamp, pdf)',
-          uv: 'UV (jcamp, pdf)',
+          nmr: 'NMR (csv, tsv, txt, jcamp, pdf)',
+          mass: 'Mass (csv, tsv, txt, jcamp, pdf, netcdf, xml)',
+          ir: 'Infrared (csv, tsv, txt, jcamp, pdf)',
+          uv: 'UV (csv, tsv, txt, jcamp, pdf)',
+          iv: 'IV (csv, tsv, txt, jcamp, pdf)',
           chromatogram:
-            'Chromatogram LC, GC, LC/MS, GC/MS (jcamp, pdf, netcdf, xml)',
+            'Chromatogram LC, GC, LC/MS, GC/MS (csv, tsv, txt, jcamp, pdf, netcdf, xml)',
           thermogravimetricAnalysis: 'Thermogravimetric Analysis (txt)',
           differentialScanningCalorimetry:
             'Differential Scanning Calorimetry (txt)',
@@ -260,23 +263,30 @@ class Sample {
           * use convert-to-jcamp
         */
     if (options.autoJcamp) {
-      let extension = droppedDatas.filename.replace(/.*\./, '').toLowerCase();
-      if (extension === 'txt' || extension === 'csv' || extension === 'tsv') {
-        var jcampTypes = {
-          nmr: 'NMR SPECTRUM',
-          ir: 'IR SPECTRUM',
-          uv: 'UV SPECTRUM',
-          mass: 'MASS SPECTRUM'
-        };
-        if (jcampTypes[type]) {
-          droppedDatas.filename = droppedDatas.filename.replace(/\..*?$/, '');
-          droppedDatas.mimetype = 'chemical/x-jcamp-dx';
-          convertToJcamp('', {
-            meta: {
-              title: droppedDatas.filename,
-              type: jcampTypes[type]
-            }
-          });
+      for (let droppedData of droppedDatas) {
+        let extension = droppedData.filename.replace(/.*\./, '').toLowerCase();
+        if (extension === 'txt' || extension === 'csv' || extension === 'tsv') {
+          var jcampTypes = {
+            nmr: 'NMR SPECTRUM',
+            ir: 'IR SPECTRUM',
+            iv: 'IV SPECTRUM',
+            uv: 'UV SPECTRUM',
+            mass: 'MASS SPECTRUM'
+          };
+
+          if (jcampTypes[type]) {
+            droppedData.filename = `${droppedData.filename.replace(/\..*?$/, '')}.jdx`;
+            droppedData.mimetype = 'chemical/x-jcamp-dx';
+            droppedData.contentType = 'chemical/x-jcamp-dx';
+            droppedData.content = convertToJcamp(droppedData.content, {
+              meta: {
+                title: droppedData.filename,
+                type: jcampTypes[type]
+              }
+            });
+          } else {
+            console.log('Could not convert to jcamp file: ', type);
+          }
         }
       }
     }
