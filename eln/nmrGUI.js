@@ -97,7 +97,18 @@ function annotations1D(ranges, optionsG) {
     annotations.push(annotation);
     annotation.line = line;
     annotation._highlight = options._highlight || currentRange._highlight;
-
+    if (!annotation._highlight && currentRange.signal) {
+      annotation._highlight = [];
+      for (let signal of currentRange.signal) {
+        if (signal._highlight) {
+          if (signal._highlight instanceof Array) {
+            annotation._highlight.push(...signal._highlight);
+          } else {
+            annotation._highlight.push(signal._highlight);
+          }
+        }
+      }
+    }
 
     if ((typeof currentRange.to === 'undefined' || typeof currentRange.from === 'undefined' || currentRange.to === currentRange.from) &&
                 (currentRange.signal && currentRange.signal.length > 0)) {
