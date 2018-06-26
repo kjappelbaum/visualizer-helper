@@ -258,31 +258,101 @@ class Sample {
     droppedDatas = droppedDatas.file || droppedDatas.str;
 
     /*
-          Possible autoconvertion of text file to jcamp
-          * if filename ends with TXT, TSV or CSV
-          * use convert-to-jcamp
-        */
+      Possible autoconvertion of text file to jcamp
+      * if filename ends with TXT, TSV or CSV
+      * use convert-to-jcamp
+    */
     if (options.autoJcamp) {
+      var jcampTypes = {
+        nmr: {
+          type: 'NMR SPECTRUM',
+          xUnit: 'Delta [ppm]',
+          yUnit: 'Relative'
+        },
+        ir: {
+          type: 'IR SPECTRUM',
+          xUnit: 'wavelength [cm-1]',
+          yUnit: ['Transmittance (%)', 'Absorbance']
+        },
+        iv: {
+          type: 'IV SPECTRUM',
+          xUnit: ['mV', 'µV'],
+          yUnit: ['mA', 'µA'],
+        },
+        uv: {
+          type: 'UV SPECTRUM',
+          xUnit: 'wavelength [nm]',
+          yUnit: 'Absorbance'
+        },
+        mass: {
+          type: 'MASS SPECTRUM',
+          xUnit: 'm/z [Da]',
+          yUnit: 'Relative'
+        }
+      };
+
       for (let droppedData of droppedDatas) {
         let extension = droppedData.filename.replace(/.*\./, '').toLowerCase();
         if (extension === 'txt' || extension === 'csv' || extension === 'tsv') {
-          var jcampTypes = {
-            nmr: 'NMR SPECTRUM',
-            ir: 'IR SPECTRUM',
-            iv: 'IV SPECTRUM',
-            uv: 'UV SPECTRUM',
-            mass: 'MASS SPECTRUM'
-          };
+          let info = jcampTypes[type];
+          info.filename = `${droppedData.filename.replace(/\..*?$/, '')}.jdx`;
+          if (info) {
+            // we will ask for meta information
+            let meta = await UI.form(`
+              <style>
+                  #jcamp {
+                      zoom: 1.5;
+                  }
+              </style>
+              <div id='jcamp'>
+                  <b>Automatic conversion of text file to jcamp</b>
+                  <form>
+                  <table>
+                  <tr>
+                    <th>Kind</th>
+                    <td><input type="text" readonly name="type" value="${info.type}"></td>
+                  </tr>
+                  <tr>
+                    <th>Filename (ending with .jdx)</th>
+                    <td><input type="text" pattern=".*\\.jdx$" name="filename" value="${info.filename}"></td>
+                  </tr>
+                  <tr>
+                    <th>xUnit (horizon axis)</th>
+                    ${(info.xUnit instanceof Array) ?
+    `<td><select name="xUnit">${info.xUnit.map((xUnit) =>
+      `<option value="${xUnit}">${xUnit}</option>`
+    )}</select></td>` :
+    `<td><input type="text" readonly name="xUnit" value="${info.xUnit}"></td>`
+}
+                  </tr>
+                  <tr>
+                  <th>yUnit (vectical axis)</th>
+                  ${(info.yUnit instanceof Array) ?
+    `<td><select name="yUnit">${info.yUnit.map((yUnit) =>
+      `<option value="${yUnit}">${yUnit}</option>`
+    )}</select></td>` :
+    `<td><input type="text" readonly name="yUnit" value="${info.yUnit}"></td>`
+}
+                </tr>
+                  </table>
+                    <input type="submit" value="Submit"/>
+                  </form>
+              </div>
+            `, {},
+            {
+              dialog: {
+                width: 600
+              }
+            }
+            );
+            console.log('META', meta);
+            if (!meta) return;
 
-          if (jcampTypes[type]) {
-            droppedData.filename = `${droppedData.filename.replace(/\..*?$/, '')}.jdx`;
+            droppedData.filename = `${meta.filename}`;
             droppedData.mimetype = 'chemical/x-jcamp-dx';
             droppedData.contentType = 'chemical/x-jcamp-dx';
             droppedData.content = convertToJcamp(droppedData.content, {
-              meta: {
-                title: droppedData.filename,
-                type: jcampTypes[type]
-              }
+              meta
             });
           } else {
             console.log('Could not convert to jcamp file: ', type);
@@ -290,13 +360,14 @@ class Sample {
         }
       }
     }
-
+    console.log('TYPE', type);
     if (type === 'other') {
       await this.roc.addAttachment(this.sample, droppedDatas);
     } else {
       await this.attachFiles(droppedDatas, type, options);
     }
   }
+
 
   async handleAction(action) {
     if (!action) return;
