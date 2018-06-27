@@ -276,8 +276,17 @@ class Sample {
         },
         iv: {
           type: 'IV SPECTRUM',
-          xUnit: ['V', 'mV', 'µV'],
-          yUnit: ['mA', 'µA']
+          xUnit: [
+            'Potential vs Fc/Fc+ [V]',
+            'Potential vs Ag/AgNO3 [V]',
+            'Potential vs Ag/AgCl/KCl [V]',
+            'Potential vs Ag/AgCl/NaCl [V]',
+            'Potential vs SCE [V]',
+            'Potential vs NHE [V]',
+            'Potential vs SSCE [V]',
+            'Potential vs Hg/Hg2SO4/K2SO4 [V]'
+          ],
+          yUnit: ['Current [mA]', 'Current [µA]']
         },
         uv: {
           type: 'UV SPECTRUM',
@@ -314,7 +323,7 @@ class Sample {
                   </tr>
                   <tr>
                     <th>Filename (ending with .jdx)</th>
-                    <td><input type="text" pattern=".*\\.jdx$" name="filename" value="${info.filename}"></td>
+                    <td><input type="text" pattern=".*\\.jdx$" name="filename" size=40 value="${info.filename}"></td>
                   </tr>
                   <tr>
                     <th>xUnit (horizon axis)</th>
