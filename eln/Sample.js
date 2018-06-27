@@ -276,8 +276,8 @@ class Sample {
         },
         iv: {
           type: 'IV SPECTRUM',
-          xUnit: ['mV', 'µV'],
-          yUnit: ['mA', 'µA'],
+          xUnit: ['V', 'mV', 'µV'],
+          yUnit: ['mA', 'µA']
         },
         uv: {
           type: 'UV SPECTRUM',
