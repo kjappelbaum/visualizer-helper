@@ -96,6 +96,9 @@ class Sample {
     createVar(sampleVar, 'sampleCode');
     createVar(sampleVar, 'attachments');
     createVar(sampleVar, 'nucleic');
+    createVar(sampleVar, 'firstNucleicSeq');
+    createVar(sampleVar, 'firstPeptidicSeq');
+    createVar(sampleVar, 'firstPeptidicSeqSequence');
 
     this._initializeObjects();
 

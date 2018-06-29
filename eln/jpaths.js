@@ -38,6 +38,9 @@ jpaths.mass = ['$content', 'spectra', 'mass'];
 jpaths.nmr = ['$content', 'spectra', 'nmr'];
 jpaths.nucleic = ['$content', 'biology', 'nucleic'];
 jpaths.chromatogram = ['$content', 'spectra', 'chromatogram'];
+jpaths.firstNucleicSeq = ['$content', 'biology', 'nucleic', 0, 'seq', 0];
+jpaths.firstPeptidicSeq = ['$content', 'biology', 'peptidic', 0, 'seq', 0];
+jpaths.firstPeptidicSeqSequence = ['$content', 'biology', 'peptidic', 0, 'seq', 0, 'sequence'];
 jpaths.thermogravimetricAnalysis = [
   '$content',
   'spectra',
