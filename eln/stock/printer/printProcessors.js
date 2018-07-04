@@ -116,6 +116,7 @@ define([
     const svgString = mol.toSVG(options.width / renderingScale, options.height / renderingScale, '', {
       noImplicitAtomLabelColors: true,
       suppressChiralText: true,
+      suppressESR: true,
       suppressCIPParity: true,
       noStereoProblem: true,
       fontWeight: 'bold',
