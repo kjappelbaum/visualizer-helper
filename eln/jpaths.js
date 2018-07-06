@@ -30,6 +30,9 @@ jpaths.bp = ['$content', 'physical', 'bp'];
 jpaths.nd = ['$content', 'physical', 'nd'];
 jpaths.mp = ['$content', 'physical', 'mp'];
 jpaths.density = ['$content', 'physical', 'density'];
+jpaths.stockHistory = ['$content', 'stock', 'history'];
+jpaths.lastStock = ['$content', 'stock', 'history', 0];
+jpaths.supplier = ['$content', 'stock', 'supplier'];
 jpaths.ir = ['$content', 'spectra', 'ir'];
 jpaths.raman = ['$content', 'spectra', 'raman'];
 jpaths.uv = ['$content', 'spectra', 'uv'];
@@ -40,7 +43,15 @@ jpaths.nucleic = ['$content', 'biology', 'nucleic'];
 jpaths.chromatogram = ['$content', 'spectra', 'chromatogram'];
 jpaths.firstNucleicSeq = ['$content', 'biology', 'nucleic', 0, 'seq', 0];
 jpaths.firstPeptidicSeq = ['$content', 'biology', 'peptidic', 0, 'seq', 0];
-jpaths.firstPeptidicSeqSequence = ['$content', 'biology', 'peptidic', 0, 'seq', 0, 'sequence'];
+jpaths.firstPeptidicSeqSequence = [
+  '$content',
+  'biology',
+  'peptidic',
+  0,
+  'seq',
+  0,
+  'sequence'
+];
 jpaths.thermogravimetricAnalysis = [
   '$content',
   'spectra',

@@ -82,6 +82,9 @@ class Sample {
     createVar(sampleVar, 'nd');
     createVar(sampleVar, 'mp');
     createVar(sampleVar, 'density');
+    createVar(sampleVar, 'stockHistory');
+    createVar(sampleVar, 'lastStock');
+    createVar(sampleVar, 'supplier');
     createVar(sampleVar, 'ir');
     createVar(sampleVar, 'uv');
     createVar(sampleVar, 'raman');
