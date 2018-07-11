@@ -38,10 +38,10 @@ export async function getChartFromMass(experiment, options = {}) {
     } else {
       throw new Error(`unsupported encoding ${experiment.jcamp.encoding}`);
     }
-  } else if (experiment.txt) {
-    let name = options.name || String(experiment.txt.filename).match(/([^/]+)\..+/)[1];
-    if (String(experiment.txt.encoding) === 'text') {
-      let points = parseXY(String(experiment.txt.content), { arrayType: 'xxyy', uniqueX: true });
+  } else if (experiment.text) {
+    let name = options.name || String(experiment.text.filename).match(/([^/]+)\..+/)[1];
+    if (String(experiment.text.encoding) === 'text') {
+      let points = parseXY(String(experiment.text.content), { arrayType: 'xxyy', uniqueX: true });
       return {
         data: [
           {
@@ -51,8 +51,8 @@ export async function getChartFromMass(experiment, options = {}) {
           }
         ]
       };
-    } else if (experiment.txt.dUrl) {
-      let content = await fetch(String(experiment.txt.dUrl), { credentials: 'include' }).then((r) => r.text());
+    } else if (experiment.text.dUrl) {
+      let content = await fetch(String(experiment.text.dUrl), { credentials: 'include' }).then((r) => r.text());
       let points = parseXY(content, { arrayType: 'xxyy', uniqueX: true });
       return {
         data: [
@@ -64,7 +64,7 @@ export async function getChartFromMass(experiment, options = {}) {
         ]
       };
     } else {
-      throw new Error(`unsupported encoding ${experiment.txt.encoding}`);
+      throw new Error(`unsupported encoding ${experiment.text.encoding}`);
     }
   } else {
     throw new Error('the file should be a jcamp or text');

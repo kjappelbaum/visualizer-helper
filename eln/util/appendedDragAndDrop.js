@@ -27,7 +27,7 @@ export function appendedDragAndDrop(experimentalFiles, targetName) {
       if (property !== 'file') {
         target.push({ [property]: file });
       } else if (String(file.encoding) === 'text') {
-        target.push({ txt: file });
+        target.push({ text: file });
       } else {
         target.push({ file: file });
       }
@@ -63,7 +63,7 @@ function getTargetType(content) {
   if (content.slice(0, 3) === 'CDF') {
     return 'cdf';
   }
-  return 'txt';
+  return 'text';
 }
 
 // https://stackoverflow.com/questions/36487636/javascript-convert-array-buffer-to-string
