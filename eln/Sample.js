@@ -360,13 +360,17 @@ class Sample {
               }
             }
             );
-            console.log('META', meta);
             if (!meta) return;
 
             droppedData.filename = `${meta.filename}`;
             droppedData.mimetype = 'chemical/x-jcamp-dx';
             droppedData.contentType = 'chemical/x-jcamp-dx';
-            droppedData.content = convertToJcamp(droppedData.content, {
+            let content = droppedData.content;
+            if (droppedData.encoding === 'base64') {
+              content = atob(droppedData.content);
+              droppedData.encoding = 'text';
+            }
+            droppedData.content = convertToJcamp(content, {
               meta
             });
           } else {
