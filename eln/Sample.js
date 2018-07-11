@@ -310,7 +310,7 @@ class Sample {
         let extension = droppedData.filename.replace(/.*\./, '').toLowerCase();
         if (extension === 'txt' || extension === 'csv' || extension === 'tsv') {
           let info = jcampTypes[type];
-          info.filename = `${droppedData.filename.replace(/\..*?$/, '')}.jdx`;
+          info.filename = `${droppedData.filename.replace(/\.[^.]*$/, '')}.jdx`;
           if (info) {
             // we will ask for meta information
             let meta = await UI.form(`
