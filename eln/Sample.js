@@ -124,7 +124,12 @@ class Sample {
             console.log(e); // eslint-disable-line no-console
           }
           break;
-        case '$content.biology.'
+        case '$content.biology.nucleic':
+
+          break;
+          case '$content.biology.peptidic':
+
+          break;
         case '$content.general.sequence':
           try {
             var sequenceOriginal = `${this.sample.getChildSync([
