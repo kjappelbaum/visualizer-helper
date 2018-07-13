@@ -128,7 +128,16 @@ class Sample {
 
           break;
           case '$content.biology.peptidic':
-
+            var sequenceOriginal = `${this.sample.getChildSync([
+              '$content',
+              'biology',
+              'peptidic',
+              '0',
+              'seq',
+              '0'
+            ]) || ''}`;
+            var sequence = CCE.convertAASequence(sequenceOriginal);
+            this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
           break;
         case '$content.general.sequence':
           try {
