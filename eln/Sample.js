@@ -10,6 +10,8 @@ import MF from './MF';
 import { createVar } from './jpaths';
 import elnPlugin from './libs/elnPlugin';
 import CCE from './libs/CCE';
+import EMDB from './libs/EMDB';
+
 import convertToJcamp from './libs/convertToJcamp';
 
 const DataObject = Datas.DataObject;
@@ -56,9 +58,8 @@ class Sample {
   async _loadInstanceInVisualizer() {
     this.sample = await this.roc.document(this.uuid, this.options);
 
-    if (!this.sample.$content.general) {
-      this.sample.$content.general = {};
-    }
+
+    updateSample(this.sample);
 
     var sampleVar = API.getVar(this.options.varName);
 
@@ -108,7 +109,7 @@ class Sample {
       if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
         this.nmr1dManager.rangesHasChanged();
       }
-
+      console.log('event',event.jpath.join('.'));
       switch (event.jpath.join('.')) {
         case '$content.general.molfile':
           this.mf.fromMolfile();
@@ -124,20 +125,7 @@ class Sample {
             console.log(e); // eslint-disable-line no-console
           }
           break;
-        case '$content.biology.nucleic':
-
-          break;
-          case '$content.biology.peptidic':
-            var sequenceOriginal = `${this.sample.getChildSync([
-              '$content',
-              'biology',
-              'peptidic',
-              '0',
-              'seq',
-              '0'
-            ]) || ''}`;
-            var sequence = CCE.convertAASequence(sequenceOriginal);
-            this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
+        case '$content.biology':
           break;
         case '$content.general.sequence':
           try {
@@ -416,6 +404,36 @@ class Sample {
       case 'save':
         await this.roc.update(this.sample);
         break;
+      case 'calculeMFFromSequence':
+        var sequencePeptidic = this.sample.getChildSync([
+          '$content',
+          'biology',
+          'peptidic',
+          '0',
+          'seq',
+          '0',
+          'sequence'
+        ]);
+        var sequenceNucleic = this.sample.getChildSync([
+          '$content',
+          'biology',
+          'nucleic',
+          '0',
+          'seq',
+          '0',
+          'sequence'
+        ]);
+        if (sequencePeptidic) {
+          var sequence = CCE.convertAASequence(sequencePeptidic);
+          this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
+        }
+        if (sequenceNucleic) {
+          alert('We cannot yet convert nucleic sequences to molecular formula')
+          /*
+          var sequence = CCE.convertAASequence(sequencePeptidic);
+          this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
+          */
+        }
       case 'createOptions':
         var advancedOptions1H = API.cache('nmr1hAdvancedOptions');
         if (advancedOptions1H) {
@@ -479,4 +497,23 @@ class Sample {
   }
 }
 
+function updateSample(sample) {
+  console.log('Update sample');
+  if (!sample.$content.general) {
+    sample.$content.general = {};
+  }
+  /** This is the old place we used to put the sequence.
+   * By default we expect it is a peptidic sequence
+   */
+  if (sample.$content.general.sequence) {
+    console.log('Migrating sequence', sample.$content.general.sequence)
+    if (! sample.$content.biology) sample.$content.biology={};
+    if (! sample.$content.biology.peptidic) sample.$content.biology.peptidic=[];
+    if (! sample.$content.biology.peptidic.length>0) sample.$content.biology.peptidic[0]={};
+    if (! sample.$content.biology.peptidic[0].seq) sample.$content.biology.peptidic[0].seq=[];
+    if (! sample.$content.biology.peptidic[0].seq.length>0) sample.$content.biology.peptidic[0].seq[0]={};
+    sample.setChildSync(['$content', 'biology', 'peptidic',0,'seq',0,'sequence'], sample.$content.general.sequence);
+    sample.$content.general.sequence=undefined;
+  }
+}
 module.exports = Sample;
