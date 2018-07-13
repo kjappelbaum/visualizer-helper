@@ -18,7 +18,7 @@ module.exports = `
     <h1>Peptidic sequences</h1>
     
     <table>
-        <tr data-repeat='peptide'>
+        <tr data-repeat='peptidic'>
             <td>
                 <table>
                     <tr data-repeat='seq'>
@@ -31,10 +31,7 @@ module.exports = `
                                 <option value='Antibody'>Antibody</option>
                                 <option value='Monoclonal antibody'>Monoclonal antibody</option>
                             </select><br>
-                            <textarea cols=80 rows=5 data-field='sequence'></textarea>
-                        </td>
-                        <td>
-                            <input type='text' size=10 data-field='firstname'>
+                            <textarea cols=100 rows=7 data-field='sequence'></textarea>
                         </td>
                     </tr>
                 </table>
@@ -61,10 +58,7 @@ module.exports = `
                             - Circular: 
                             <input type='checkbox' data-field='circular'>
                             <br>
-                            <textarea cols=80 rows=5 data-field='sequence'></textarea>
-                        </td>
-                        <td>
-                            <input type='text' size=10 data-field='firstname'>
+                            <textarea cols=100 rows=7 data-field='sequence'></textarea>
                         </td>
                     </tr>
                 </table>
