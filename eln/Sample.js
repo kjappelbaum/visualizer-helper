@@ -9,7 +9,6 @@ import Nmr1dManager from './Nmr1dManager';
 import MF from './MF';
 import { createVar } from './jpaths';
 import elnPlugin from './libs/elnPlugin';
-// import CCE from './libs/CCE';
 import EMDB from './libs/EMDB';
 import convertToJcamp from './libs/convertToJcamp';
 
@@ -127,20 +126,6 @@ class Sample {
           break;
         case '$content.general.sequence':
           throw new Error('Trying to change old sequence, this is a bug');
-          /*
-          try {
-            var sequenceOriginal = `${this.sample.getChildSync([
-              '$content',
-              'general',
-              'sequence'
-            ]) || ''}`;
-            var sequence = CCE.convertAASequence(sequenceOriginal);
-            this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
-          } catch (e) {
-            console.log(e); // eslint-disable-line no-console
-          }
-          break;
-          */
         default:
           break; // ignore
       }
@@ -415,7 +400,7 @@ class Sample {
           'sequence'
         ]);
         if (sequencePeptidic) {
-          let sequence = EMDB.Util.Peptide.sequenceToMF(sequencePeptidic);
+          let sequence = EMDB.Util.Peptide.sequenceToMF(String(sequencePeptidic));
           this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
         }
         var sequenceNucleic = JSON.parse(JSON.stringify(this.sample.getChildSync([

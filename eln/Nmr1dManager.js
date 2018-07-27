@@ -5,7 +5,7 @@ import UI from 'src/util/ui';
 import { getData } from './jpaths';
 import SD from './libs/SD';
 import * as GUI from './nmrGUI';
-import CCE from './libs/CCE';
+import EMDB from './libs/EMDB';
 
 const Ranges = SD.Ranges;
 const NMR = SD.NMR;
@@ -352,11 +352,11 @@ class Nmr1dManager {
   }
 
   getNumberHydrogens() {
-    const mf = `${getData(this.sample, 'mf')}`;
+    const mf = String(getData(this.sample, 'mf'));
     if (mf) {
-      const chemcalc = CCE.analyseMF(mf);
-      if (chemcalc && chemcalc.atoms && chemcalc.atoms.H) {
-        return chemcalc.atoms.H || 100;
+      const mfInfo = (new EMDB.Util.MF(mf)).getInfo();
+      if (mfInfo && mfInfo.atoms && mfInfo.atoms.H) {
+        return mfInfo.atoms.H || 100;
       }
     }
     return 100;
