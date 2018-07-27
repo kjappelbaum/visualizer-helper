@@ -57,7 +57,6 @@ class Sample {
   async _loadInstanceInVisualizer() {
     this.sample = await this.roc.document(this.uuid, this.options);
 
-
     updateSample(this.sample);
 
     var sampleVar = API.getVar(this.options.varName);
@@ -401,7 +400,6 @@ class Sample {
       return;
     }
     if (this.nmr1dManager && this.nmr1dManager.handleAction(action)) return;
-    console.log('Action', action.name);
     switch (action.name) {
       case 'save':
         await this.roc.update(this.sample);
@@ -416,22 +414,23 @@ class Sample {
           '0',
           'sequence'
         ]);
-        var sequenceNucleic = this.sample.getChildSync([
+        if (sequencePeptidic) {
+          let sequence = EMDB.Util.Peptide.sequenceToMF(sequencePeptidic);
+          this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
+        }
+        var sequenceNucleic = JSON.parse(JSON.stringify(this.sample.getChildSync([
           '$content',
           'biology',
           'nucleic',
           '0',
           'seq',
-          '0',
-          'sequence'
-        ]);
-        if (sequencePeptidic) {
-          let sequence = EMDB.Util.Peptide.sequenceToMF(sequencePeptidic);
-          this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
-        }
-        if (true) debugger;
-        if (sequenceNucleic) {
-          let sequence = EMDB.Util.Nucleotide.sequenceToMF(sequencePeptidic);
+          '0'
+        ]))); // get rid of datatypes
+        if (sequenceNucleic && sequenceNucleic.sequence) {
+          let sequence = EMDB.Util.Nucleotide.sequenceToMF(sequenceNucleic.sequence, {
+            kind: sequenceNucleic.moleculeType,
+            circular: sequenceNucleic.circular
+          });
           this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
         }
         break;
