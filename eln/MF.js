@@ -3,7 +3,7 @@ import API from 'src/util/api';
 import UI from 'src/util/ui';
 
 import OCLE from './libs/OCLE';
-import CCE from './libs/CCE';
+import EMDB from './libs/EMDB';
 
 class MF {
   constructor(sample) {
@@ -17,19 +17,17 @@ class MF {
     } else {
       const mf = this.getMF();
       if (mf) {
-        var chemcalc = CCE.analyseMF(this.getMF());
-        if (chemcalc) {
-          this.previousEMMF = chemcalc.em;
-        }
+        let mfInfo = (new EMDB.Util.MF(mf)).getInfo();
+        this.previousEMMF = mfInfo.monoisotopicMass;
       }
     }
   }
 
   fromMolfile() {
-    var chemcalc = this._chemcalcFromMolfile();
-    if (chemcalc && this.previousEMMolfile !== chemcalc.em) {
-      this.previousEMMolfile = chemcalc.em;
-      this.setMF(chemcalc.mf);
+    var mfInfo = this._mfInfoFromMolfile();
+    if (mfInfo && this.previousEMMolfile !== mfInfo.monoisotopicMass) {
+      this.previousEMMolfile = mfInfo.monoisotopicMass;
+      this.setMF(mfInfo.mf);
     } else {
       // why should we suppress the molecular formula if it changed ???
       // this.setMF('');
@@ -37,13 +35,13 @@ class MF {
     API.createData('mfBGColor', 'white');
   }
 
-  _chemcalcFromMolfile() {
+  _mfInfoFromMolfile() {
     var molfile = this.getMolfile();
     if (molfile) {
       var molecule = OCLE.Molecule.fromMolfile(molfile);
       var mf = molecule.getMF().parts.join('.');
       try {
-        return CCE.analyseMF(mf);
+        return (new EMDB.Util.MF(mf)).getInfo();
       } catch (e) {
         if (mf !== '') {
           UI.showNotification(`Could not calculate molecular formula: ${e}`);
@@ -80,11 +78,12 @@ class MF {
       this.setEM(0);
       return;
     }
-    var chemcalc = CCE.analyseMF(this.getMF());
-    if (chemcalc && this.previousEMMF !== chemcalc.em) {
-      this.previousEMMF = chemcalc.em;
-      this.setMW(chemcalc.mw);
-      this.setEM(chemcalc.em);
+    var mfInfo = (new EMDB.Util.MF(this.getMF())).getInfo();
+
+    if (this.previousEMMF !== mfInfo.monoisotopicMass) {
+      this.previousEMMF = mfInfo.monoisotopicMass;
+      this.setMW(mfInfo.mass);
+      this.setEM(mfInfo.monoisotopicMass);
     }
   }
 
@@ -94,8 +93,9 @@ class MF {
     if (molfile) {
       var molecule = OCLE.Molecule.fromMolfile(molfile);
       var mf = molecule.getMolecularFormula().formula;
-      var existingMW = existingMF ? CCE.analyseMF(existingMF).mw : 0;
-      var newMW = mf ? CCE.analyseMF(mf).mw : 0;
+      var existingMW = existingMF ? (new EMDB.Util.MF(existingMF)).getInfo().mw : 0;
+
+      var newMW = mf ? (new EMDB.Util.MF(mf)).getInfo().mw : 0;
       if (newMW !== existingMW) {
         API.createData('mfBGColor', 'pink');
       } else {

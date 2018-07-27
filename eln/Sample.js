@@ -9,9 +9,8 @@ import Nmr1dManager from './Nmr1dManager';
 import MF from './MF';
 import { createVar } from './jpaths';
 import elnPlugin from './libs/elnPlugin';
-import CCE from './libs/CCE';
+// import CCE from './libs/CCE';
 import EMDB from './libs/EMDB';
-
 import convertToJcamp from './libs/convertToJcamp';
 
 const DataObject = Datas.DataObject;
@@ -70,7 +69,7 @@ class Sample {
     createVar(sampleVar, 'content');
     createVar(sampleVar, 'general');
     createVar(sampleVar, 'molfile');
-    createVar(sampleVar, 'sequence');
+    //    createVar(sampleVar, 'sequence');
     createVar(sampleVar, 'mf');
     createVar(sampleVar, 'mw');
     createVar(sampleVar, 'em');
@@ -109,7 +108,7 @@ class Sample {
       if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
         this.nmr1dManager.rangesHasChanged();
       }
-      console.log('event',event.jpath.join('.'));
+      console.log('event', event.jpath.join('.'));
       switch (event.jpath.join('.')) {
         case '$content.general.molfile':
           this.mf.fromMolfile();
@@ -128,6 +127,8 @@ class Sample {
         case '$content.biology':
           break;
         case '$content.general.sequence':
+          throw new Error('Trying to change old sequence, this is a bug');
+          /*
           try {
             var sequenceOriginal = `${this.sample.getChildSync([
               '$content',
@@ -140,6 +141,7 @@ class Sample {
             console.log(e); // eslint-disable-line no-console
           }
           break;
+          */
         default:
           break; // ignore
       }
@@ -399,12 +401,12 @@ class Sample {
       return;
     }
     if (this.nmr1dManager && this.nmr1dManager.handleAction(action)) return;
-
+    console.log('Action', action.name);
     switch (action.name) {
       case 'save':
         await this.roc.update(this.sample);
         break;
-      case 'calculeMFFromSequence':
+      case 'calculateMFFromSequence':
         var sequencePeptidic = this.sample.getChildSync([
           '$content',
           'biology',
@@ -424,16 +426,15 @@ class Sample {
           'sequence'
         ]);
         if (sequencePeptidic) {
-          var sequence = CCE.convertAASequence(sequencePeptidic);
+          let sequence = EMDB.Util.Peptide.sequenceToMF(sequencePeptidic);
           this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
         }
+        if (true) debugger;
         if (sequenceNucleic) {
-          alert('We cannot yet convert nucleic sequences to molecular formula')
-          /*
-          var sequence = CCE.convertAASequence(sequencePeptidic);
+          let sequence = EMDB.Util.Nucleotide.sequenceToMF(sequencePeptidic);
           this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
-          */
         }
+        break;
       case 'createOptions':
         var advancedOptions1H = API.cache('nmr1hAdvancedOptions');
         if (advancedOptions1H) {
@@ -506,14 +507,14 @@ function updateSample(sample) {
    * By default we expect it is a peptidic sequence
    */
   if (sample.$content.general.sequence) {
-    console.log('Migrating sequence', sample.$content.general.sequence)
-    if (! sample.$content.biology) sample.$content.biology={};
-    if (! sample.$content.biology.peptidic) sample.$content.biology.peptidic=[];
-    if (! sample.$content.biology.peptidic.length>0) sample.$content.biology.peptidic[0]={};
-    if (! sample.$content.biology.peptidic[0].seq) sample.$content.biology.peptidic[0].seq=[];
-    if (! sample.$content.biology.peptidic[0].seq.length>0) sample.$content.biology.peptidic[0].seq[0]={};
-    sample.setChildSync(['$content', 'biology', 'peptidic',0,'seq',0,'sequence'], sample.$content.general.sequence);
-    sample.$content.general.sequence=undefined;
+    console.log('Migrating sequence', sample.$content.general.sequence);
+    if (!sample.$content.biology) sample.$content.biology = {};
+    if (!sample.$content.biology.peptidic) sample.$content.biology.peptidic = [];
+    if (!sample.$content.biology.peptidic.length > 0) sample.$content.biology.peptidic[0] = {};
+    if (!sample.$content.biology.peptidic[0].seq) sample.$content.biology.peptidic[0].seq = [];
+    if (!sample.$content.biology.peptidic[0].seq.length > 0) sample.$content.biology.peptidic[0].seq[0] = {};
+    sample.setChildSync(['$content', 'biology', 'peptidic', 0, 'seq', 0, 'sequence'], sample.$content.general.sequence);
+    sample.$content.general.sequence = undefined;
   }
 }
 module.exports = Sample;
