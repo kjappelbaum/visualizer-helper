@@ -20,12 +20,20 @@ module.exports = async function loadTemplates(categories, options = {}) {
   var templateRoc;
   if (roc) {
     await fetch(`${roc.url}/db/templates/_query/template`)
-      .then(() => {
-        templateRoc = new Roc({
-          database: 'templates',
-          url: roc.url,
-          track: false
-        });
+      .then((result) => {
+        if (result.status === 200) {
+          templateRoc = new Roc({
+            database: 'templates',
+            url: roc.url,
+            track: false
+          });
+        } else {
+          templateRoc = new Roc({
+            database: 'templates',
+            url: 'https://mydb.cheminfo.org',
+            track: false
+          });
+        }
       })
       .catch(() => {
         // no local templates database, we use the default one
