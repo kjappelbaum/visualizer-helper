@@ -12,7 +12,8 @@ export default class RequestManager {
     options = options || {};
     this.roc = new Roc({
       url: couchDB.url,
-      database: couchDB.database
+      database: couchDB.database,
+      kind: 'analysisRequest'
     });
     this.sampleRoc = options.sampleRoc || null;
     this.servicesRoc = options.servicesRoc || null;
