@@ -102,7 +102,7 @@ class Sample {
 
     this._initializeObjects();
 
-    this.onChange = event => {
+    this.onChange = (event) => {
       var jpathStr = event.jpath.join('.');
       if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
         this.nmr1dManager.rangesHasChanged();
@@ -315,39 +315,39 @@ class Sample {
                   <tr>
                     <th>Kind</th>
                     <td><input type="text" readonly name="type" value="${
-                      info.type
-                    }"></td>
+  info.type
+}"></td>
                   </tr>
                   <tr>
                     <th>Filename (ending with .jdx)</th>
                     <td><input type="text" pattern=".*\\.jdx$" name="filename" size=40 value="${
-                      info.filename
-                    }"></td>
+  info.filename
+}"></td>
                   </tr>
                   <tr>
                     <th>xUnit (horizon axis)</th>
                     ${
-                      info.xUnit instanceof Array
-                        ? `<td><select name="xUnit">${info.xUnit.map(
-                            xUnit =>
-                              `<option value="${xUnit}">${xUnit}</option>`
-                          )}</select></td>`
-                        : `<td><input type="text" readonly name="xUnit" value="${
-                            info.xUnit
-                          }"></td>`
-                    }
+  info.xUnit instanceof Array
+    ? `<td><select name="xUnit">${info.xUnit.map(
+      (xUnit) =>
+        `<option value="${xUnit}">${xUnit}</option>`
+    )}</select></td>`
+    : `<td><input type="text" readonly name="xUnit" value="${
+      info.xUnit
+    }"></td>`
+}
                   </tr>
                   <tr>
                   <th>yUnit (vectical axis)</th>
                   ${
-                    info.yUnit instanceof Array
-                      ? `<td><select name="yUnit">${info.yUnit.map(
-                          yUnit => `<option value="${yUnit}">${yUnit}</option>`
-                        )}</select></td>`
-                      : `<td><input type="text" readonly name="yUnit" value="${
-                          info.yUnit
-                        }"></td>`
-                  }
+  info.yUnit instanceof Array
+    ? `<td><select name="yUnit">${info.yUnit.map(
+      (yUnit) => `<option value="${yUnit}">${yUnit}</option>`
+    )}</select></td>`
+    : `<td><input type="text" readonly name="yUnit" value="${
+      info.yUnit
+    }"></td>`
+}
                 </tr>
                   </table>
                     <input type="submit" value="Submit"/>
@@ -418,8 +418,7 @@ class Sample {
           );
           this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
         }
-        var sequenceNucleic = JSON.parse(
-          JSON.stringify(
+        var sequenceNucleic =
             this.sample.getChildSync([
               '$content',
               'biology',
@@ -427,9 +426,10 @@ class Sample {
               '0',
               'seq',
               '0'
-            ])
-          )
-        ); // get rid of datatypes
+            ]);
+        if (sequenceNucleic) {
+          sequenceNucleic = JSON.parse(JSON.stringify(sequenceNucleic));
+        } // get rid of datatypes
         if (sequenceNucleic && sequenceNucleic.sequence) {
           let sequence = EMDB.Util.Nucleotide.sequenceToMF(
             sequenceNucleic.sequence,
@@ -515,14 +515,18 @@ function updateSample(sample) {
   if (sample.$content.general.sequence) {
     console.log('Migrating sequence', sample.$content.general.sequence);
     if (!sample.$content.biology) sample.$content.biology = {};
-    if (!sample.$content.biology.peptidic)
+    if (!sample.$content.biology.peptidic) {
       sample.$content.biology.peptidic = [];
-    if (!sample.$content.biology.peptidic.length > 0)
-      sample.$content.biology.peptidic[0] = {};
-    if (!sample.$content.biology.peptidic[0].seq)
+    }
+    if (!sample.$content.biology.peptidic.length > 0) {
+ sample.$content.biology.peptidic[0] = {};
+    }
+    if (!sample.$content.biology.peptidic[0].seq) {
       sample.$content.biology.peptidic[0].seq = [];
-    if (!sample.$content.biology.peptidic[0].seq.length > 0)
-      sample.$content.biology.peptidic[0].seq[0] = {};
+    }
+    if (!sample.$content.biology.peptidic[0].seq.length > 0) {
+ sample.$content.biology.peptidic[0].seq[0] = {};
+    }
     sample.setChildSync(
       ['$content', 'biology', 'peptidic', 0, 'seq', 0, 'sequence'],
       sample.$content.general.sequence
