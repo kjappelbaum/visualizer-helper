@@ -30,7 +30,8 @@ async function track() {
     if (molfile) {
         if (typeof OCLE === 'undefined') {
             let OCLE = await API.require('vh/eln/libs/OCLE');
-            const molecule = OCLE.Molecule.fromMolfile(molfile);
+            let Molecule = OCLE.default || OCLE;
+            const molecule = Molecule.fromMolfile(molfile);
             API.createData('molfile', molecule.toMolfile());
         } else {
             const molecule = OCLE.Molecule.fromMolfile(molfile);
@@ -39,7 +40,8 @@ async function track() {
     } else if (smiles) {
         if (typeof OCLE === 'undefined') {
             let OCLE = await API.require('vh/eln/libs/OCLE');
-            const molecule = OCLE.Molecule.fromSmiles(smiles);
+            let Molecule = OCLE.default || OCLE;
+            const molecule = Molecule.fromSmiles(smiles);
             console.log(molecule.toMolfile())
             API.createData('molfile', molecule.toMolfile());
         } else {
