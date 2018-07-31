@@ -231,9 +231,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
       });
     }
 
-
-    // when the value of a row change we should rename property if it was hidden
-    document.getElementById(divID).addEventListener('change', function (event) {
+    function changeInputFct(event) {
       var target = $(event.target);
       if (target.attr('name-empty')) {
         var empties = target.closest('tr').children('td:not(:has(table))').find('[name-empty]');
@@ -242,7 +240,10 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
           $(element).removeAttr('name-empty');
         });
       }
-    });
+    }
+    // when the value of a row change we should rename property if it was hidden
+    document.getElementById(divID).addEventListener('change', changeInputFct);
+    document.getElementById(divID).addEventListener('input', changeInputFct);
 
     document.getElementById(divID).addEventListener('click', function (event) {
       var from = event.target;
