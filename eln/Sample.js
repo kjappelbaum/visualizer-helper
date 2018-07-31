@@ -519,13 +519,13 @@ function updateSample(sample) {
       sample.$content.biology.peptidic = [];
     }
     if (!sample.$content.biology.peptidic.length > 0) {
- sample.$content.biology.peptidic[0] = {};
+      sample.$content.biology.peptidic[0] = {};
     }
     if (!sample.$content.biology.peptidic[0].seq) {
       sample.$content.biology.peptidic[0].seq = [];
     }
     if (!sample.$content.biology.peptidic[0].seq.length > 0) {
- sample.$content.biology.peptidic[0].seq[0] = {};
+      sample.$content.biology.peptidic[0].seq[0] = {};
     }
     sample.setChildSync(
       ['$content', 'biology', 'peptidic', 0, 'seq', 0, 'sequence'],

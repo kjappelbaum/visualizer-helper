@@ -4,7 +4,7 @@ import API from 'src/util/api';
 import Versioning from 'src/util/versioning';
 import URI from 'uri/URI';
 
-function track() {
+async function track() {
     var externalInfo = JSON.parse(window.localStorage.getItem('external_cache') || '{}');
     var smiles = externalInfo.smiles;
     var molfile = externalInfo.molfile;
@@ -29,21 +29,19 @@ function track() {
 
     if (molfile) {
         if (typeof OCLE === 'undefined') {
-            return API.require('vh/eln/libs/OCLE').then( function(OCLE) {
-                const molecule = OCLE.Molecule.fromMolfile(molfile);
-                API.createData('molfile', molecule.toMolfile());
-            });
+            let OCLE = await API.require('vh/eln/libs/OCLE');
+            const molecule = OCLE.Molecule.fromMolfile(molfile);
+            API.createData('molfile', molecule.toMolfile());
         } else {
             const molecule = OCLE.Molecule.fromMolfile(molfile);
             API.createData('molfile', molecule.toMolfile());
         }
     } else if (smiles) {
         if (typeof OCLE === 'undefined') {
-            return API.require('vh/eln/libs/OCLE').then( function(OCLE) {
-                const molecule = OCLE.Molecule.fromSmiles(smiles);
-                console.log(molecule.toMolfile())
-                API.createData('molfile', molecule.toMolfile());
-            });
+            let OCLE = await API.require('vh/eln/libs/OCLE');
+            const molecule = OCLE.Molecule.fromSmiles(smiles);
+            console.log(molecule.toMolfile())
+            API.createData('molfile', molecule.toMolfile());
         } else {
             const molecule = OCLE.Molecule.fromSmiles(smiles);
             API.createData('molfile', molecule.toMolfile());
