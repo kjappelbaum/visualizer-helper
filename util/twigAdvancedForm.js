@@ -252,6 +252,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
       var table = $(from).closest('tbody');
       var tr = $(from).closest('tr');
       switch (from.className) {
+        case 'form-button addRow':
         case 'addRow':
           // if we try to add a row we should check if
           // there is already an empty one
@@ -273,6 +274,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
           clone.find('[name-empty]')[0].focus();
           rename(table);
           break;
+        case 'form-button removeRow':
         case 'removeRow':
           var base = getBase(tr);
           if (base) {
