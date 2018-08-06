@@ -81,8 +81,8 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
     var dom = $(document.getElementById(divID));
     // Add the buttons ADD / REMOVE
     dom.find('[data-repeat]').prepend(`
-                <td class='addRow'></td>
-                <td class='removeRow'></td>
+                <td><span class="form-button addRow" /></td>
+                <td><span class="form-button removeRow" /></td>
             `);
 
 
@@ -95,7 +95,9 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
     // Add the style
     dom.parent().prepend(
       `<style>
+                #${divID} .addRow {height: 14px;}
                 #${divID} .addRow:before {content: "+"; cursor: pointer;}
+                #${divID} .removeRow {height: 14px;}
                 #${divID} .removeRow:before {content: "-"; cursor: pointer;}
                 #${divID} :focus {box-shadow: 0 0 2px 2px rgba(81, 203, 238, 1);}
                 #${divID} td, #extendedForm th {vertical-align: top;}
@@ -250,6 +252,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
       var table = $(from).closest('tbody');
       var tr = $(from).closest('tr');
       switch (from.className) {
+        case 'form-button addRow':
         case 'addRow':
           // if we try to add a row we should check if
           // there is already an empty one
@@ -271,6 +274,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
           clone.find('[name-empty]')[0].focus();
           rename(table);
           break;
+        case 'form-button removeRow':
         case 'removeRow':
           var base = getBase(tr);
           if (base) {
