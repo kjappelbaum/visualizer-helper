@@ -1,4 +1,3 @@
-
 import API from 'src/util/api';
 import UI from 'src/util/ui';
 
@@ -17,10 +16,34 @@ class MF {
     } else {
       const mf = this.getMF();
       if (mf) {
-        let mfInfo = (new EMDB.Util.MF(mf)).getInfo();
+        let mfInfo = new EMDB.Util.MF(mf).getInfo();
         this.previousEMMF = mfInfo.monoisotopicMass;
       }
     }
+  }
+
+  getIsotopicDistributionInstance(options) {
+    options = Object.assign(
+      {},
+      {
+        ionizations: '+',
+        fwhm: 0.01,
+        maxLines: 5000,
+        minY: 1e-8
+      },
+      options
+    );
+    return new EMDB.Util.IsotopicDistribution(this.getMF(), options);
+  }
+
+  getIsotopicDistribution(options) {
+    let isotopicDistribution = this.getIsotopicDistributionInstance(options);
+    return isotopicDistribution.getXY();
+  }
+
+  getMassParts(options) {
+    let isotopicDistribution = this.getIsotopicDistributionInstance(options);
+    return isotopicDistribution.getParts();
   }
 
   fromMolfile() {
@@ -41,7 +64,7 @@ class MF {
       var molecule = OCLE.Molecule.fromMolfile(molfile);
       var mf = molecule.getMF().parts.join('.');
       try {
-        return (new EMDB.Util.MF(mf)).getInfo();
+        return new EMDB.Util.MF(mf).getInfo();
       } catch (e) {
         if (mf !== '') {
           UI.showNotification(`Could not calculate molecular formula: ${e}`);
@@ -52,7 +75,9 @@ class MF {
   }
 
   getMF() {
-    return String(this.sample.getChildSync(['$content', 'general', 'mf']) || '');
+    return String(
+      this.sample.getChildSync(['$content', 'general', 'mf']) || ''
+    );
   }
 
   getMolfile() {
@@ -78,7 +103,7 @@ class MF {
       this.setEM(0);
       return;
     }
-    var mfInfo = (new EMDB.Util.MF(this.getMF())).getInfo();
+    var mfInfo = new EMDB.Util.MF(this.getMF()).getInfo();
 
     if (this.previousEMMF !== mfInfo.monoisotopicMass) {
       this.previousEMMF = mfInfo.monoisotopicMass;
@@ -93,9 +118,11 @@ class MF {
     if (molfile) {
       var molecule = OCLE.Molecule.fromMolfile(molfile);
       var mf = molecule.getMolecularFormula().formula;
-      var existingMW = existingMF ? (new EMDB.Util.MF(existingMF)).getInfo().mw : 0;
+      var existingMW = existingMF
+        ? new EMDB.Util.MF(existingMF).getInfo().mw
+        : 0;
 
-      var newMW = mf ? (new EMDB.Util.MF(mf)).getInfo().mw : 0;
+      var newMW = mf ? new EMDB.Util.MF(mf).getInfo().mw : 0;
       if (newMW !== existingMW) {
         API.createData('mfBGColor', 'pink');
       } else {
