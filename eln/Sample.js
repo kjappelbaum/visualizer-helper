@@ -120,7 +120,7 @@ class Sample {
             this.mf.fromMF();
             this.nmr1dManager.updateIntegralOptionsFromMF();
           } catch (e) {
-            UI.showNotification(`MF problem: ${e.toString()}`, 'error');
+            UI.showNotification(`MF problem: ${e.toString()}`, 'warning');
             console.log(e); // eslint-disable-line no-console
           }
           break;
