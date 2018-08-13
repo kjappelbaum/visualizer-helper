@@ -120,6 +120,7 @@ class Sample {
             this.mf.fromMF();
             this.nmr1dManager.updateIntegralOptionsFromMF();
           } catch (e) {
+            UI.showNotification(`MF problem: ${e.toString()}`, 'error');
             console.log(e); // eslint-disable-line no-console
           }
           break;
@@ -418,15 +419,14 @@ class Sample {
           );
           this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
         }
-        var sequenceNucleic =
-            this.sample.getChildSync([
-              '$content',
-              'biology',
-              'nucleic',
-              '0',
-              'seq',
-              '0'
-            ]);
+        var sequenceNucleic = this.sample.getChildSync([
+          '$content',
+          'biology',
+          'nucleic',
+          '0',
+          'seq',
+          '0'
+        ]);
         if (sequenceNucleic) {
           sequenceNucleic = JSON.parse(JSON.stringify(sequenceNucleic));
         } // get rid of datatypes
