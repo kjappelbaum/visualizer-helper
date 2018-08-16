@@ -107,7 +107,6 @@ class Sample {
       if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
         this.nmr1dManager.rangesHasChanged();
       }
-      console.log('event', event.jpath.join('.'));
       switch (event.jpath.join('.')) {
         case '$content.general.molfile':
           this.mf.fromMolfile();
@@ -376,12 +375,12 @@ class Sample {
               meta
             });
           } else {
+            // eslint-disable-next-line no-console
             console.log('Could not convert to jcamp file: ', type);
           }
         }
       }
     }
-    console.log('TYPE', type);
     if (type === 'other') {
       await this.roc.addAttachment(this.sample, droppedDatas);
     } else {
@@ -505,7 +504,6 @@ class Sample {
 }
 
 function updateSample(sample) {
-  console.log('Update sample');
   if (!sample.$content.general) {
     sample.$content.general = {};
   }
@@ -513,6 +511,7 @@ function updateSample(sample) {
    * By default we expect it is a peptidic sequence
    */
   if (sample.$content.general.sequence) {
+    // eslint-disable-next-line no-console
     console.log('Migrating sequence', sample.$content.general.sequence);
     if (!sample.$content.biology) sample.$content.biology = {};
     if (!sample.$content.biology.peptidic) {

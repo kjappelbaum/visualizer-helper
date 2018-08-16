@@ -32,6 +32,5 @@ module.exports = function sequenceSplitter(sequence) {
       }
     }
   }
-  console.log(parts);
   return parts;
 };

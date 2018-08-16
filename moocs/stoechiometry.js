@@ -1,5 +1,7 @@
-
-define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.lactame.com/lib/ml/1.0.0/ml.js'], function (CC, ml) {
+define([
+  'https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js',
+  'https://www.lactame.com/lib/ml/1.0.0/ml.js'
+], function (CC, ml) {
   var exports = {};
   exports.findCoefficients = function (reagents, products) {
     var atoms = {};
@@ -44,7 +46,6 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
       }
     }
 
-
     matrix = new ml.Matrix(matrix).transpose();
 
     var result;
@@ -81,13 +82,19 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
   };
 
   exports.formatResult = function (reagents, products, result) {
-    var rstr = reagents.map(function (value, index) {
-      return `<span style="color:red;">${result[index]}</span>${value}`;
-    }).join(' + ');
+    var rstr = reagents
+      .map(function (value, index) {
+        return `<span style="color:red;">${result[index]}</span>${value}`;
+      })
+      .join(' + ');
 
-    var pstr = products.map(function (value, index) {
-      return `<span style="color:red;">${result[reagents.length + index]}</span>${value}`;
-    }).join(' + ');
+    var pstr = products
+      .map(function (value, index) {
+        return `<span style="color:red;">${
+          result[reagents.length + index]
+        }</span>${value}`;
+      })
+      .join(' + ');
 
     var str = `${rstr} → ${pstr}`;
     return str;
@@ -95,6 +102,7 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
 
   function findDiag0Pos(matrix) {
     for (var i = 0; i < matrix.rows; i++) {
+      // eslint-disable-next-line no-compare-neg-zero
       if (matrix[i][i] === 0 || matrix[i][i] === -0) return i;
     }
     return null;
@@ -102,4 +110,3 @@ define(['https://www.lactame.com/lib/chemcalc/3.0.6/chemcalc.js', 'https://www.l
 
   return exports;
 });
-

@@ -1,4 +1,3 @@
-
 define(['src/util/color'], function (Color) {
   return {
     getChart(x, y, options) {
@@ -10,13 +9,13 @@ define(['src/util/color'], function (Color) {
         data: [],
         axis: [
           {
-            label: options.xLabel || '',
-          }, {
-            label: options.yLabel || '',
+            label: options.xLabel || ''
+          },
+          {
+            label: options.yLabel || ''
           }
         ]
       };
-
 
       var species = Object.keys(y[0]);
       var colors = Color.getDistinctColors(species.length);
@@ -24,7 +23,8 @@ define(['src/util/color'], function (Color) {
       for (var i = 0; i < species.length; i++) {
         var data = {};
         chart.data.push(data);
-        data.y = y.map(function (y) {
+        // eslint-disable-next-line no-loop-func
+        data.y = y.map((y) => {
           return y[species[i]];
         });
         if (options.xLog) {

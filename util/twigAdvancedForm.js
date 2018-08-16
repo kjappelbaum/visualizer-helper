@@ -105,38 +105,40 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
     );
 
 
+    function handleDataRepeat(index, row) {
+      row = $(row);
+      var jpath = getJpath(row);
+      var variable = (data) ? data.getChildSync(jpath) : '';
+      var table = row.closest('table');
+      var length = 0;
+      var empty = false;
+      if (!variable || variable.length === 0) {
+        length = 1;
+        empty = true;
+      } else if (Array.isArray(variable)) {
+        length = variable.length;
+      } else {
+        console.log('Wrong variable type', variable);
+      }
+      for (var i = 0; i < length; i++) {
+        var currentRow;
+        if (i === 0) {
+          currentRow = row;
+        } else {
+          currentRow = row.clone();
+          table.append(currentRow);
+        }
+        currentRow.attr('data-index', i);
+        renameRow(currentRow, jpath, i, empty);
+      }
+      rename(table);
+    }
+
     // need to replicate rows based on the external variable
     function updateTwig() {
       do {
         var elements = dom.find('[data-repeat]:not([data-index])');
-        elements.each(function (index, row) {
-          row = $(row);
-          var jpath = getJpath(row);
-          var variable = (data) ? data.getChildSync(jpath) : '';
-          var table = row.closest('table');
-          var length = 0;
-          var empty = false;
-          if (!variable || variable.length === 0) {
-            length = 1;
-            empty = true;
-          } else if (Array.isArray(variable)) {
-            length = variable.length;
-          } else {
-            console.log('Wrong variable type', variable);
-          }
-          for (var i = 0; i < length; i++) {
-            var currentRow;
-            if (i === 0) {
-              currentRow = row;
-            } else {
-              currentRow = row.clone();
-              table.append(currentRow);
-            }
-            currentRow.attr('data-index', i);
-            renameRow(currentRow, jpath, i, empty);
-          }
-          rename(table);
-        });
+        elements.each(handleDataRepeat);
       } while (elements.length > 0);
 
       // we force the incorporation of the data in the form
@@ -192,6 +194,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
         var replace = `${base}.${rowIndex}`;
         for (var attr of ['name', 'name-empty']) {
           $(row).find(`[${attr}]`).each(
+            // eslint-disable-next-line no-loop-func
             function (index, element) {
               element = $(element);
               var name = element.attr(attr);
