@@ -115,7 +115,7 @@ define(['src/main/datas', 'src/util/api', 'src/util/ui', 'src/util/util', 'src/u
     }
 
     const viewSearchJsonify = ['key', 'startkey', 'endkey'];
-    const viewSearch = ['limit', 'mine', 'groups', 'descending', 'reduce'];
+    const viewSearch = ['limit', 'mine', 'groups', 'descending', 'reduce', 'include_docs'];
     const mandatoryOptions = ['url', 'database'];
 
     const idb = new IDB('roc-documents');
