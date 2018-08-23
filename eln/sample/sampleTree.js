@@ -1,4 +1,4 @@
-import d3 from 'd3-hierarchy';
+import { stratify } from 'd3-hierarchy';
 import treeUtil from 'src/util/tree';
 
 // data should have id as first level property
@@ -6,12 +6,11 @@ import treeUtil from 'src/util/tree';
 export function getTree(data) {
   fillGaps(data);
 
-  const stratify = d3
-    .stratify()
+  const strat = stratify()
     .id(getId)
     .parentId(getParentId);
 
-  let tree = stratify(data);
+  let tree = strat(data);
   tree.each(node => {
     node.index = node.id;
   });
