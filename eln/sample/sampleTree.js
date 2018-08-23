@@ -66,11 +66,11 @@ function getParentIdFunction(idProperty) {
 function getCreateParent(idProperty) {
   return function createParent(element) {
     let id = _.get(element, idProperty);
+    const parent = {};
     const parentId = id.slice();
     parentId.pop();
-    return {
-      id: parentId
-    };
+    _.set(parent, idProperty, parentId);
+    return parent;
   };
 }
 
