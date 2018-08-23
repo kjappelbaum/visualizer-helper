@@ -1,10 +1,14 @@
 import { stratify } from 'd3-hierarchy';
 import treeUtil from 'src/util/tree';
+import _ from 'lodash';
 
 // data should have id as first level property
 // id should be an array that represents the hierarchy
-export function getTree(data) {
-  fillGaps(data);
+export function getTree(data, options = { idProperty: 'id' }) {
+  const { idProperty } = options;
+  const getId = getIdFunction(idProperty);
+  const getParentId = getParentIdFunction(idProperty);
+  fillGaps(data, options);
 
   const strat = stratify()
     .id(getId)
@@ -12,7 +16,7 @@ export function getTree(data) {
 
   let tree = strat(data);
   tree.each(node => {
-    node.index = node.id;
+    node.index = _.property(node, idProperty);
   });
   return tree;
 }
@@ -23,44 +27,58 @@ const defaultAnnotationOptions = { label: ['label'] };
 export function getAnnotatedTree(
   data,
   annotations,
-  annotationOptions = defaultAnnotationOptions
+  annotationOptions = defaultAnnotationOptions,
+  options = { idProperty: 'id' }
 ) {
-  let tree = getTree(data);
+  let { idProperty } = options;
+  let tree = getTree(data, options);
   for (let key in annotations) {
     annotations[key] = DataObject.check(annotations[key], true);
   }
 
   tree.each(node => {
-    node.index = node.id;
+    node.index = _.get(node, idProperty);
   });
 
   tree = treeUtil.annotateTree(tree, annotations, annotationOptions);
   return tree;
 }
 
-function getId(d) {
-  return d.id.length === 0 ? '.' : d.id.join('.');
-}
-
-function getParentId(d) {
-  let id = d.id;
-  if (id.length === 0) {
-    return null;
-  }
-  id = id.slice();
-  id.pop();
-  return getId({ id });
-}
-
-function createParent(element) {
-  const parentId = element.id.slice();
-  parentId.pop();
-  return {
-    id: parentId
+function getIdFunction(idProperty) {
+  return function getId(d) {
+    const id = _.get(d, idProperty);
+    return id.length === 0 ? '.' : id.join('.');
   };
 }
 
-function fillGaps(data) {
+function getParentIdFunction(idProperty) {
+  const getId = getIdFunction(idProperty);
+  return function getParentId(d) {
+    let id = _.get(d, idProperty);
+    if (id.length === 0) {
+      return null;
+    }
+    id = id.slice();
+    id.pop();
+    return getId({ id });
+  };
+}
+function getCreateParent(idProperty) {
+  return function createParent(element) {
+    let id = _.get(element, idProperty);
+    const parentId = id.slice();
+    parentId.pop();
+    return {
+      id: parentId
+    };
+  };
+}
+
+function fillGaps(data, options) {
+  const { idProperty } = options;
+  const getId = getIdFunction(idProperty);
+  const getParentId = getParentIdFunction(idProperty);
+  const createParent = getCreateParent(idProperty);
   const map = new Map();
   for (let element of data) {
     const id = getId(element);
