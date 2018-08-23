@@ -18,6 +18,7 @@ export function getTree(data, options = { idProperty: 'id' }) {
   tree.each(node => {
     node.index = _.property(node, idProperty);
   });
+
   return tree;
 }
 
@@ -26,10 +27,10 @@ const defaultAnnotationOptions = { label: ['label'] };
 // Creates tree and annotates it
 export function getAnnotatedTree(
   data,
-  annotations,
   annotationOptions = defaultAnnotationOptions,
   options = { idProperty: 'id' }
 ) {
+  const annotations = {};
   let { idProperty } = options;
   let tree = getTree(data, options);
   for (let key in annotations) {
@@ -38,6 +39,7 @@ export function getAnnotatedTree(
 
   tree.each(node => {
     node.index = _.get(node, idProperty);
+    annotations[node.index] = node.data;
   });
 
   tree = treeUtil.annotateTree(tree, annotations, annotationOptions);
