@@ -12,6 +12,9 @@ export function getTree(data) {
     .parentId(getParentId);
 
   let tree = stratify(data);
+  tree.each(node => {
+    node.index = node.id;
+  });
   return tree;
 }
 
