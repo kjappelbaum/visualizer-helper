@@ -47,7 +47,7 @@ export function getAnnotatedTree(
 function getIdFunction(idProperty) {
   return function getId(d) {
     const id = _.get(d, idProperty);
-    return id.length === 0 ? '.' : id.join('.');
+    return idToString(id);
   };
 }
 
@@ -60,7 +60,7 @@ function getParentIdFunction(idProperty) {
     }
     id = id.slice();
     id.pop();
-    return getId({ id });
+    return idToString(id);
   };
 }
 function getCreateParent(idProperty) {
@@ -103,4 +103,8 @@ function fillGaps(data, options) {
   for (let element of data) {
     fillParents(element);
   }
+}
+
+function idToString(id) {
+  return id.length === 0 ? '.' : id.join('.');
 }
