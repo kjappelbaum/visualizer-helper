@@ -38,7 +38,7 @@ export function getAnnotatedTree(
   }
 
   tree.each(node => {
-    node.index = _.get(node, idProperty);
+    node.index = idToString(_.get(node.data, idProperty));
     annotations[node.index] = node.data;
   });
 
