@@ -109,7 +109,7 @@ define([
     const defaultMolOptions = {
       width: 100
     };
-    const renderingScale = options.renderingScale;
+    const renderingScale = options.renderingScale || 1;
     options = Object.assign({}, defaultMolOptions, options);
     if (!options.height) options.height = options.width;
     const mol = OCL.Molecule.fromMolfile(molfile);
