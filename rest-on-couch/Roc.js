@@ -11,7 +11,7 @@ define([
   'src/util/mimeTypes',
   'src/util/IDBKeyValue',
   'eventEmitter'
-], function(
+], function (
   Datas,
   API,
   ui,
@@ -29,7 +29,7 @@ define([
   const eventEmitters = {};
 
   const objectHasOwnProperty = Object.prototype.hasOwnProperty;
-  const hasOwnProperty = function(obj, prop) {
+  const hasOwnProperty = function (obj, prop) {
     return objectHasOwnProperty.call(obj, prop);
   };
 
@@ -219,7 +219,7 @@ define([
       return superagent
         .get(requestUrl)
         .withCredentials()
-        .then(res => {
+        .then((res) => {
           if (res && res.body && res.status === 200) {
             if (options.filter) {
               res.body = res.body.filter(options.filter);
@@ -231,7 +231,7 @@ define([
               for (var i = 0; i < res.body.length; i++) {
                 this.typeUrl(res.body[i].$content, res.body[i]);
               }
-              return API.createData(options.varName, res.body).then(data => {
+              return API.createData(options.varName, res.body).then((data) => {
                 this.variables[options.varName] = {
                   type: 'view',
                   options,
@@ -262,7 +262,7 @@ define([
       return superagent
         .get(requestUrl)
         .withCredentials()
-        .then(res => {
+        .then((res) => {
           if (res && res.body && res.status === 200) {
             if (options.filter) {
               res.body = res.body.filter(options.filter);
@@ -291,7 +291,7 @@ define([
               };
             }
             if (options.varName) {
-              return API.createData(options.varName, res.body).then(data => {
+              return API.createData(options.varName, res.body).then((data) => {
                 this.variables[options.varName] = {
                   type: 'query',
                   options,
@@ -453,7 +453,7 @@ define([
         .get(`${this.entryUrl}/${uuid}`)
         .query(options.query)
         .withCredentials()
-        .then(res => {
+        .then((res) => {
           if (res.body && res.status === 200) {
             this._defaults(res.body.$content);
             if (!options.noUpdate) {
@@ -487,7 +487,7 @@ define([
       return superagent
         .get(groupUrl)
         .withCredentials()
-        .then(res => res.body)
+        .then((res) => res.body)
         .catch(handleError(this, options));
     }
 
@@ -500,7 +500,7 @@ define([
       return superagent
         .get(url)
         .withCredentials()
-        .then(res => res.body)
+        .then((res) => res.body)
         .catch(handleError(this, options));
     }
 
@@ -516,13 +516,13 @@ define([
         .withCredentials()
         .send(entry)
         .then(handleSuccess(this, options))
-        .then(res => {
+        .then((res) => {
           if (res.body && (res.status === 200 || res.status === 201)) {
             return this.get(res.body.id);
           }
           return null;
         })
-        .then(entry => {
+        .then((entry) => {
           if (!entry) return null;
           this.typeUrl(entry.$content, entry);
           let keys = Object.keys(this.variables);
@@ -554,7 +554,7 @@ define([
         .withCredentials()
         .send(reqEntry)
         .then(handleSuccess(this, options))
-        .then(res => {
+        .then((res) => {
           if (res.body && res.status === 200) {
             entry._rev = res.body.rev;
             entry.$creationDate = res.body.$creationDate;
@@ -629,15 +629,15 @@ define([
       }
 
       var toDelete = this._findFilename(row);
-      toDelete = toDelete.map(d => String(d.filename));
+      toDelete = toDelete.map((d) => String(d.filename));
 
       // We compute the difference between the delete and still present attachment
       // entries, just in case there are 2 for the same attachment. In that case the
       // attachment should not be deleted
       var toKeep = this._findFilename(entry.$content, toDelete);
       toKeep = toKeep
-        .map(k => String(k.filename))
-        .filter(k => k === row.filename);
+        .map((k) => String(k.filename))
+        .filter((k) => k === row.filename);
       toDelete = _.difference(toDelete, toKeep);
       await this.deleteAttachment(entry, toDelete, options);
       arr.splice(idx, 1);
@@ -675,8 +675,9 @@ define([
 
     async attachBulk(type, entry, attachments, options) {
       if (!attachments.length) return null;
-      if (attachments.length === 1)
+      if (attachments.length === 1) {
         return this.attach(type, entry, attachments[0], options);
+      }
       await this.__ready;
       const attachOptions = createOptions(options, 'attach');
       try {
@@ -802,7 +803,7 @@ define([
         }
       }
 
-      attachments.forEach(attachment => {
+      attachments.forEach((attachment) => {
         setContentType(attachment);
       });
 
@@ -851,7 +852,7 @@ define([
         .get(tokenUrl)
         .withCredentials()
         .then(handleSuccess(this, options))
-        .then(res => res.body)
+        .then((res) => res.body)
         .catch(handleError(this, options));
     }
 
@@ -867,7 +868,7 @@ define([
         .get(tokenUrl)
         .withCredentials()
         .then(handleSuccess(this, options))
-        .then(res => res.body)
+        .then((res) => res.body)
         .catch(handleError(this, options));
     }
 
@@ -879,7 +880,7 @@ define([
         .post(`${this.entryUrl}/${uuid}/_token`)
         .withCredentials()
         .then(handleSuccess(this, options))
-        .then(res => res.body)
+        .then((res) => res.body)
         .catch(handleError(this, options));
     }
 
@@ -894,7 +895,7 @@ define([
       }
       return request
         .then(handleSuccess(this, options))
-        .then(res => res.body)
+        .then((res) => res.body)
         .catch(handleError(this, options));
     }
 
@@ -910,7 +911,7 @@ define([
         .del(tokenUrl)
         .withCredentials()
         .then(handleSuccess(this, options))
-        .then(res => res.body)
+        .then((res) => res.body)
         .catch(handleError(this, options));
     }
 
@@ -928,7 +929,7 @@ define([
       )
         .withCredentials()
         .then(handleSuccess(this, options))
-        .then(res => {
+        .then((res) => {
           if (!options.noUpdate) {
             return this.get(uuid).then(() => res.body);
           } else {
@@ -950,7 +951,7 @@ define([
         .del(`${this.entryUrl}/${uuid}`)
         .withCredentials()
         .then(handleSuccess(this, options))
-        .then(res => {
+        .then((res) => {
           if (res.body && res.status === 200) {
             for (let key in this.variables) {
               const idx = this._findIndexByUuid(uuid, key);
@@ -1000,7 +1001,7 @@ define([
       if (!this.variables[key]) return null;
       if (this.variables[key].type === 'view') {
         return this.variables[key].data.find(
-          entry => String(entry._id) === String(uuid)
+          (entry) => String(entry._id) === String(uuid)
         );
       } else if (this.variables[key].type === 'document') {
         if (String(this.variables[key].data._id) === String(uuid)) {
@@ -1027,7 +1028,7 @@ define([
       ) {
         return this.variables[key].data;
       } else if (this.variables[key].type === 'view') {
-        return this.variables[key].data.find(entry =>
+        return this.variables[key].data.find((entry) =>
           _.isEqual(id, DataObject.resurrect(entry.$id))
         );
       }
@@ -1040,11 +1041,11 @@ define([
         return -1;
       } else if (this.variables[key].type === 'view') {
         return this.variables[key].data.findIndex(
-          entry => String(entry._id) === String(uuid)
+          (entry) => String(entry._id) === String(uuid)
         );
       } else if (this.variables[key].type === 'query') {
         return this.variables[key].data.findIndex(
-          entry => String(entry.id) === String(uuid)
+          (entry) => String(entry.id) === String(uuid)
         );
       }
       return -1;
@@ -1134,9 +1135,10 @@ define([
 
     _findFilename(v, filename) {
       var r = [];
-      if (!Array.isArray(filename) && typeof filename !== 'undefined')
+      if (!Array.isArray(filename) && typeof filename !== 'undefined') {
         filename = [filename];
-      this._traverseFilename(v, function(v) {
+      }
+      this._traverseFilename(v, function (v) {
         if (typeof filename === 'undefined') {
           r.push(v);
         } else if (filename.indexOf(String(v.filename)) !== -1) {
@@ -1157,7 +1159,7 @@ define([
     }
 
     untypeUrl(v) {
-      this._traverseFilename(v, v => {
+      this._traverseFilename(v, (v) => {
         if (v.data && v.data.url) {
           delete v.data;
         }
@@ -1165,7 +1167,7 @@ define([
     }
 
     typeUrl(v, entry) {
-      this._traverseFilename(v, v => {
+      this._traverseFilename(v, (v) => {
         var filename = String(v.filename);
         if (!entry._attachments) return;
         var att = entry._attachments[filename];
@@ -1213,7 +1215,7 @@ define([
   }
 
   function handleError(ctx, options) {
-    return function(err) {
+    return function (err) {
       if (!options.mute || !options.muteError) {
         if (err.status || err.timeout) {
           // error comes from superagent
@@ -1228,7 +1230,7 @@ define([
   }
 
   function handleSuccess(ctx, options) {
-    return function(data) {
+    return function (data) {
       if (!options.mute && !options.muteSuccess) {
         if (data.status) {
           handleSuperagentSuccess(data, ctx, options);

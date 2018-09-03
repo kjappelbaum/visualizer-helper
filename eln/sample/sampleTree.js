@@ -1,6 +1,9 @@
 import { stratify } from 'd3-hierarchy';
 import treeUtil from 'src/util/tree';
 import _ from 'lodash';
+import Datas from 'src/main/datas';
+
+const DataObject = Datas.DataObject;
 
 // data should have id as first level property
 // id should be an array that represents the hierarchy
@@ -15,7 +18,7 @@ export function getTree(data, options = { idProperty: 'id' }) {
     .parentId(getParentId);
 
   let tree = strat(data);
-  tree.each(node => {
+  tree.each((node) => {
     node.index = _.property(node, idProperty);
   });
 
@@ -37,7 +40,7 @@ export function getAnnotatedTree(
     annotations[key] = DataObject.check(annotations[key], true);
   }
 
-  tree.each(node => {
+  tree.each((node) => {
     node.index = idToString(_.get(node.data, idProperty));
     annotations[node.index] = node.data;
   });
@@ -54,7 +57,6 @@ function getIdFunction(idProperty) {
 }
 
 function getParentIdFunction(idProperty) {
-  const getId = getIdFunction(idProperty);
   return function getParentId(d) {
     let id = _.get(d, idProperty);
     if (id.length === 0) {
