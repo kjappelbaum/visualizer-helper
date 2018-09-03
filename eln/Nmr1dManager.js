@@ -43,10 +43,7 @@ const nmr1hOndeTemplates = {
         type: 'string',
         title: 'Type of integration',
         label: 'Integral type',
-        enum: [
-          'sum',
-          'peaks'
-        ]
+        enum: ['sum', 'peaks']
       },
       type: {
         type: 'string',
@@ -60,7 +57,7 @@ const nmr1hOndeTemplates = {
         properties: {
           useIt: {
             type: 'boolean',
-            label: 'Remove Impurities',
+            label: 'Remove Impurities'
           },
           error: {
             type: 'number',
@@ -85,7 +82,7 @@ const nmr1hOndeTemplates = {
         properties: {
           useIt: {
             type: 'boolean',
-            label: 'Remove Impurities',
+            label: 'Remove Impurities'
           },
           error: {
             type: 'number',
@@ -113,7 +110,9 @@ class Nmr1dManager {
         break;
       }
       case 'downloadSVG': {
-        var blob = new Blob([`${action.value}`], { type: 'application/jcamp-dx;charset=utf-8' });
+        var blob = new Blob([`${action.value}`], {
+          type: 'application/jcamp-dx;charset=utf-8'
+        });
         fileSaver(blob, 'spectra.svg');
         break;
       }
@@ -121,9 +120,15 @@ class Nmr1dManager {
         var advancedOptions1H = !API.cache('nmr1hAdvancedOptions');
         API.cache('nmr1hAdvancedOptions', advancedOptions1H);
         if (advancedOptions1H) {
-          API.createData('nmr1hOndeTemplate', API.cache('nmr1hOndeTemplates').full);
+          API.createData(
+            'nmr1hOndeTemplate',
+            API.cache('nmr1hOndeTemplates').full
+          );
         } else {
-          API.createData('nmr1hOndeTemplate', API.cache('nmr1hOndeTemplates').short);
+          API.createData(
+            'nmr1hOndeTemplate',
+            API.cache('nmr1hOndeTemplates').short
+          );
         }
         break;
       }
@@ -137,7 +142,10 @@ class Nmr1dManager {
         break;
       }
       case 'switchNMRLayer': {
-        var goToLayer = action.value && action.value.dimension > 1 ? 'nmr2D' : 'Default layer';
+        var goToLayer =
+          action.value && action.value.dimension > 1
+            ? 'nmr2D'
+            : 'Default layer';
         API.switchToLayer(goToLayer, { autoSize: true });
         if (action.value.dimension > 1) {
           if (action.value.jcamp) {
@@ -161,13 +169,23 @@ class Nmr1dManager {
         var currentNmr = API.getData('currentNmr');
         if (currentNmr.dimension > 1) {
           if (typeof UI !== 'undefined') {
-            UI.showNotification('Peak picking can only be applied on 1D spectra', 'warning');
+            UI.showNotification(
+              'Peak picking can only be applied on 1D spectra',
+              'warning'
+            );
           }
           return false;
         }
         this._autoRanges(currentNmr);
         break;
       }
+      case 'deleteAllRanges':
+        var ranges = API.getData('currentNmrRanges');
+        while (ranges.length) {
+          ranges.pop();
+        }
+        ranges.triggerChange();
+        break;
       case 'clearAssignments': {
         let ranges = this.getCurrentRanges();
         if (ranges) {
@@ -337,24 +355,30 @@ class Nmr1dManager {
     }
 
     if (nmrSpectrum) {
-      API.createData('annotationsNMR1d', GUI.annotations1D(ranges, {
-        line: 1,
-        fillColor: 'lightgreen',
-        strokeWidth: 0
-      }));
+      API.createData(
+        'annotationsNMR1d',
+        GUI.annotations1D(ranges, {
+          line: 1,
+          fillColor: 'lightgreen',
+          strokeWidth: 0
+        })
+      );
     }
 
-    API.createData('acsNMR1d', SD.getACS(ranges, {
-      rangeForMultiplet: true,
-      nucleus,
-      observe
-    }));
+    API.createData(
+      'acsNMR1d',
+      SD.getACS(ranges, {
+        rangeForMultiplet: true,
+        nucleus,
+        observe
+      })
+    );
   }
 
   getNumberHydrogens() {
     const mf = String(getData(this.sample, 'mf'));
     if (mf) {
-      const mfInfo = (new EMDB.Util.MF(mf)).getInfo();
+      const mfInfo = new EMDB.Util.MF(mf).getInfo();
       if (mfInfo && mfInfo.atoms && mfInfo.atoms.H) {
         return mfInfo.atoms.H || 100;
       }

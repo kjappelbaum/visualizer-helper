@@ -99,7 +99,7 @@ define([
     const end = '\n!+ 0 100 200 1\nEND\n';
     return concatenate(
       Uint8Array,
-      encoder.encode(text),
+      encoder.encode(text),git lo
       mol,
       encoder.encode(end)
     );
