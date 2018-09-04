@@ -400,7 +400,9 @@ class Nmr1dManager {
     var ranges = API.getData('currentNmrRanges') || [];
     let sum = 0;
     for (const range of ranges) {
-      sum += range.integral;
+      if (SD.Ranges.shouldIntegrate(range)) {
+        sum += range.integral;
+      }
     }
     return sum;
   }

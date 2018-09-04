@@ -14,7 +14,15 @@ var options1D = {
   fromToc: false
 };
 
-var options2D = { type: 'rect', labelColor: 'red', strokeColor: 'red', strokeWidth: '1px', fillColor: 'green', width: '6px', height: '6px' };
+var options2D = {
+  type: 'rect',
+  labelColor: 'red',
+  strokeColor: 'red',
+  strokeWidth: '1px',
+  fillColor: 'green',
+  width: '6px',
+  height: '6px'
+};
 
 /**
  * Add missing highlight in ranges array
@@ -60,9 +68,14 @@ function ensureRangesHighlight(ranges) {
         // there is some newHighlight and before it was just a random number
         // or the highlight changed
         if (
-          (newHighlight.length > 0 && range._highlight.length > 0 && range._highlight[0].match(/^[0-9.]+$/)) ||
-                    (newHighlight.length !== 0 && range._highlight.join('.') !== newHighlight.join('.')) ||
-                    (newHighlight.length === 0 && range._highlight.length > 0 && !range._highlight[0].match(/^[0-9.]+$/))
+          (newHighlight.length > 0 &&
+            range._highlight.length > 0 &&
+            range._highlight[0].match(/^[0-9.]+$/)) ||
+          (newHighlight.length !== 0 &&
+            range._highlight.join('.') !== newHighlight.join('.')) ||
+          (newHighlight.length === 0 &&
+            range._highlight.length > 0 &&
+            !range._highlight[0].match(/^[0-9.]+$/))
         ) {
           range._highlight = newHighlight;
           isChanged = true;
@@ -78,15 +91,9 @@ function ensureRangesHighlight(ranges) {
   return isChanged;
 }
 
-
 function annotations1D(ranges, optionsG) {
   var options = Object.assign({}, options1D, optionsG);
-  let {
-    height,
-    line,
-    dy = [0, 0],
-    y
-  } = options;
+  let { height, line, dy = [0, 0], y } = options;
   var annotations = [];
 
   for (var i = 0; i < ranges.length; i++) {
@@ -110,34 +117,55 @@ function annotations1D(ranges, optionsG) {
       }
     }
 
-    if ((typeof currentRange.to === 'undefined' || typeof currentRange.from === 'undefined' || currentRange.to === currentRange.from) &&
-                (currentRange.signal && currentRange.signal.length > 0)) {
+    if (
+      (typeof currentRange.to === 'undefined' ||
+        typeof currentRange.from === 'undefined' ||
+        currentRange.to === currentRange.from) &&
+      (currentRange.signal && currentRange.signal.length > 0)
+    ) {
       annotation.position = [
-        { x: currentRange.signal[0].delta - options.width, y: `${options.line * height}px` },
-        { x: currentRange.signal[0].delta + options.width, y: `${options.line * height + 8}px` }
+        {
+          x: currentRange.signal[0].delta - options.width,
+          y: `${options.line * height}px`
+        },
+        {
+          x: currentRange.signal[0].delta + options.width,
+          y: `${options.line * height + 8}px`
+        }
       ];
     } else {
       annotation.position = [
         {
           x: currentRange.to,
-          y: (y) ? y[0] : `${options.line * height}px`,
+          y: y ? y[0] : `${options.line * height}px`,
           dy: dy[0]
-        }, {
+        },
+        {
           x: currentRange.from,
-          y: (y) ? y[1] : `${options.line * height + 5}px`,
+          y: y ? y[1] : `${options.line * height + 5}px`,
           dy: dy[1]
         }
       ];
     }
 
     annotation.type = options.type;
-
+    let labelColor = 'lightgrey';
     if (!options.noLabel && currentRange.integral) {
+      if (
+        !currentRange.kind ||
+        (String(currentRange.kind) !== 'solvent' &&
+          String(currentRange.kind) !== 'reference' &&
+          String(currentRange.kind) !== 'impurity' &&
+          String(currentRange.kind) !== 'standard')
+      ) {
+        labelColor = options.labelColor;
+      }
+
       annotation.label = {
         text: Number(currentRange.integral).toFixed(options.toFixed),
         size: '11px',
         anchor: 'middle',
-        color: options.labelColor,
+        color: labelColor,
         position: {
           x: (annotation.position[0].x + annotation.position[1].x) / 2,
           dy: `${height + 20}px`
@@ -179,14 +207,21 @@ function annotations2D(zones, optionsG) {
     signal._highlight = annotation._highlight;
 
     annotation.position = [
-      { x: signal.fromTo[0].from - 0.01, y: signal.fromTo[1].from - 0.01, dx: options.width, dy: options.height },
+      {
+        x: signal.fromTo[0].from - 0.01,
+        y: signal.fromTo[1].from - 0.01,
+        dx: options.width,
+        dy: options.height
+      },
       { x: signal.fromTo[0].to + 0.01, y: signal.fromTo[1].to + 0.01 }
     ];
     annotation.fillColor = options.fillColor;
-    annotation.label = { text: signal.remark,
+    annotation.label = {
+      text: signal.remark,
       position: {
         x: signal.signal[0].delta[0],
-        y: signal.signal[0].delta[1] - 0.025 }
+        y: signal.signal[0].delta[1] - 0.025
+      }
     };
     if (signal.integral === 1) {
       annotation.strokeColor = options.strokeColor;
