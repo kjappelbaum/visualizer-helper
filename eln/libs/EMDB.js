@@ -1,1 +1,1 @@
-export { default } from 'https://www.lactame.com/lib/mass-database-manager/0.0.11/mass-database-manager.min.js';
+export { default } from 'https://www.lactame.com/lib/molecular-formula/0.1.2/emdb.js';
