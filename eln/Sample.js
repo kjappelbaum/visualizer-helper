@@ -9,7 +9,7 @@ import Nmr1dManager from './Nmr1dManager';
 import MF from './MF';
 import { createVar } from './jpaths';
 import elnPlugin from './libs/elnPlugin';
-import EMDB from './libs/EMDB';
+import MolecularFormula from './libs/MolecularFormula';
 import convertToJcamp from './libs/convertToJcamp';
 
 const DataObject = Datas.DataObject;
@@ -413,7 +413,7 @@ class Sample {
           'sequence'
         ]);
         if (sequencePeptidic) {
-          let sequence = EMDB.Util.Peptide.sequenceToMF(
+          let sequence = MolecularFormula.Peptide.sequenceToMF(
             String(sequencePeptidic)
           );
           this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
@@ -430,7 +430,7 @@ class Sample {
           sequenceNucleic = JSON.parse(JSON.stringify(sequenceNucleic));
         } // get rid of datatypes
         if (sequenceNucleic && sequenceNucleic.sequence) {
-          let sequence = EMDB.Util.Nucleotide.sequenceToMF(
+          let sequence = MolecularFormula.Nucleotide.sequenceToMF(
             sequenceNucleic.sequence,
             {
               kind: sequenceNucleic.moleculeType,

@@ -2,7 +2,7 @@ import API from 'src/util/api';
 import UI from 'src/util/ui';
 
 import OCLE from './libs/OCLE';
-import EMDB from './libs/EMDB';
+import MolecularFormula from './libs/MolecularFormula';
 
 class MF {
   constructor(sample) {
@@ -16,7 +16,7 @@ class MF {
     } else {
       const mf = this.getMF();
       if (mf) {
-        let mfInfo = new EMDB.Util.MF(mf).getInfo();
+        let mfInfo = new MolecularFormula.MF(mf).getInfo();
         this.previousEMMF = mfInfo.monoisotopicMass;
       }
     }
@@ -33,7 +33,7 @@ class MF {
       },
       options
     );
-    return new EMDB.Util.IsotopicDistribution(this.getMF(), options);
+    return new MolecularFormula.IsotopicDistribution(this.getMF(), options);
   }
 
   getIsotopicDistribution(options) {
@@ -64,7 +64,7 @@ class MF {
       var molecule = OCLE.Molecule.fromMolfile(molfile);
       var mf = molecule.getMF().parts.join('.');
       try {
-        return new EMDB.Util.MF(mf).getInfo();
+        return new MolecularFormula.MF(mf).getInfo();
       } catch (e) {
         if (mf !== '') {
           UI.showNotification(`Could not calculate molecular formula: ${e}`);
@@ -103,7 +103,7 @@ class MF {
       this.setEM(0);
       return;
     }
-    var mfInfo = new EMDB.Util.MF(this.getMF()).getInfo();
+    var mfInfo = new MolecularFormula.MF(this.getMF()).getInfo();
 
     if (this.previousEMMF !== mfInfo.monoisotopicMass) {
       this.previousEMMF = mfInfo.monoisotopicMass;
@@ -119,10 +119,10 @@ class MF {
       var molecule = OCLE.Molecule.fromMolfile(molfile);
       var mf = molecule.getMolecularFormula().formula;
       var existingMW = existingMF
-        ? new EMDB.Util.MF(existingMF).getInfo().mw
+        ? new MolecularFormula.MF(existingMF).getInfo().mw
         : 0;
 
-      var newMW = mf ? new EMDB.Util.MF(mf).getInfo().mw : 0;
+      var newMW = mf ? new MolecularFormula.MF(mf).getInfo().mw : 0;
       if (newMW !== existingMW) {
         API.createData('mfBGColor', 'pink');
       } else {

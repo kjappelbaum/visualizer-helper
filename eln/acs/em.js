@@ -1,11 +1,15 @@
-import EMDB from '../libs/EMDB';
+import MolecularFormula from '../libs/MolecularFormula';
 
 export default function toHTML(value) {
   if (!value.accurate || !value.accurate.mf) return '';
 
   let accurate = value.accurate;
-  let mfInfo = (new EMDB.Util.MF(`${accurate.mf}(${accurate.modification})`)).getInfo();
-  let modificationInfo = (new EMDB.Util.MF(accurate.modification)).getInfo();
+  let mfInfo = new EMolecularFormula.MF(
+    `${accurate.mf}(${accurate.modification})`
+  ).getInfo();
+  let modificationInfo = new MolecularFormula.MF(
+    accurate.modification
+  ).getInfo();
 
   let result = [];
   let experiment = [];
@@ -24,7 +28,9 @@ export default function toHTML(value) {
     result.push(`[M]${getCharge(modificationInfo.charge)}`);
   }
   result.push('Calcd for');
-  var mf = mfInfo.mf.replace(/\(.*/, '').replace(/([^+-])([0-9]+)/g, '$1<sub>$2</sub>');
+  var mf = mfInfo.mf
+    .replace(/\(.*/, '')
+    .replace(/([^+-])([0-9]+)/g, '$1<sub>$2</sub>');
 
   result.push(mf + getCharge(mfInfo.charge));
 
@@ -42,4 +48,3 @@ function getCharge(charge) {
   if (charge === -1) charge = '-';
   return `<sup>${charge}</sup>`;
 }
-

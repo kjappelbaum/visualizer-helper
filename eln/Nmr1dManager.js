@@ -5,7 +5,7 @@ import UI from 'src/util/ui';
 import { getData } from './jpaths';
 import SD from './libs/SD';
 import * as GUI from './nmrGUI';
-import EMDB from './libs/EMDB';
+import MolecularFormula from './libs/MolecularFormula';
 
 const Ranges = SD.Ranges;
 const NMR = SD.NMR;
@@ -378,7 +378,7 @@ class Nmr1dManager {
   getNumberHydrogens() {
     const mf = String(getData(this.sample, 'mf'));
     if (mf) {
-      const mfInfo = new EMDB.Util.MF(mf).getInfo();
+      const mfInfo = new MolecularFormula.MF(mf).getInfo();
       if (mfInfo && mfInfo.atoms && mfInfo.atoms.H) {
         return mfInfo.atoms.H || 100;
       }
