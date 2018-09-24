@@ -4,7 +4,7 @@ export default function toHTML(value) {
   if (!value.accurate || !value.accurate.mf) return '';
 
   let accurate = value.accurate;
-  let mfInfo = new EMolecularFormula.MF(
+  let mfInfo = new MolecularFormula.MF(
     `${accurate.mf}(${accurate.modification})`
   ).getInfo();
   let modificationInfo = new MolecularFormula.MF(
