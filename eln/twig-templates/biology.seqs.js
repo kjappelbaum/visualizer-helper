@@ -54,7 +54,7 @@ module.exports = `
                                 <option value='ds-DNA'>ds-DNA</option>
                                 <option value='RNA'>RNA</option>
                             </select>&nbsp;
-                            5': <select data-field='5prime'>
+                            5': <select data-field='fivePrime'>
                                 <option value='Alcohol'>Alcohol</option>
                                 <option value='Monophosphate'>Monophosphate</option>
                                 <option value='Diphosphate'>Diphosphate</option>

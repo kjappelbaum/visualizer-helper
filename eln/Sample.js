@@ -434,7 +434,8 @@ class Sample {
             sequenceNucleic.sequence,
             {
               kind: sequenceNucleic.moleculeType,
-              circular: sequenceNucleic.circular
+              circular: sequenceNucleic.circular,
+              fivePrime: sequenceNucleic.fivePrime
             }
           );
           this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
