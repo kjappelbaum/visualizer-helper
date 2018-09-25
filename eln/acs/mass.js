@@ -1,6 +1,42 @@
 import MolecularFormula from '../libs/MolecularFormula';
 
 export default function toHTML(value) {
+  let results = [];
+  let exactMass = formatExactMass(value);
+  if (exactMass) results.push(exactMass);
+  let peaks = formatPeaks(value);
+  if (peaks) results.push(peaks);
+  return results.join(', ');
+}
+
+function getCharge(charge) {
+  if (!charge) charge = 1;
+  if (charge > 0) charge = `+${charge}`;
+  if (charge === '+1') charge = '+';
+  if (charge === -1) charge = '-';
+  return `<sup>${charge}</sup>`;
+}
+
+function formatPeaks(value) {
+  if (!value.peak) return '';
+
+  let experiment = [];
+  experiment.push('MS');
+  let inParenthesis = [];
+  if (value.ionisation) inParenthesis.push(value.ionisation);
+  if (value.analyzer) inParenthesis.push(value.analyzer);
+  if (inParenthesis.length > 0) experiment.push(`(${inParenthesis.join('/')})`);
+  experiment.push('m/z:');
+
+  let peaks = [];
+  for (let peak of value.peak) {
+    peaks.push(`${peak.mass} (${peak.intensity})`);
+  }
+
+  return experiment + peaks.join(', ');
+}
+
+function formatExactMass(value) {
   if (!value.accurate || !value.accurate.mf) return '';
 
   let accurate = value.accurate;
@@ -39,12 +75,4 @@ export default function toHTML(value) {
   result.push(Number(accurate.value).toFixed(4));
 
   return `${result.join(' ')}.`;
-}
-
-function getCharge(charge) {
-  if (!charge) charge = 1;
-  if (charge > 0) charge = `+${charge}`;
-  if (charge === '+1') charge = '+';
-  if (charge === -1) charge = '-';
-  return `<sup>${charge}</sup>`;
 }
