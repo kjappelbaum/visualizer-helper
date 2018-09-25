@@ -2,11 +2,16 @@ function toAnnotations(peaks, options = {}) {
   var { fillColor = 'green', strokeColor = 'red' } = options;
 
   if (!peaks) return [];
+  let shouldRefresh = false;
+  let annotations = peaks.map((peak) => {
+    if (!Object.prototype.hasOwnProperty.call(peak, '_highlight')) {
+      peak._highlight = Math.random();
+      shouldRefresh = true;
+    }
 
-  return peaks.map((a) => {
     var annotation = {
       line: 1,
-      _highlight: [a._highlight],
+      _highlight: [peak._highlight],
       type: 'rect',
       strokeColor: strokeColor,
       strokeWidth: 0,
@@ -14,31 +19,37 @@ function toAnnotations(peaks, options = {}) {
     };
     annotation.label = [
       {
-        text: Number(a.mass).toFixed(1),
+        text: Number(peak.mass).toFixed(1),
         size: '18px',
         anchor: 'middle',
         color: 'red',
         position: {
-          x: a.mass,
-          y: a.intensity,
+          x: peak.mass,
+          y: peak.intensity,
           dy: '-22px'
         }
       }
     ];
     annotation.position = [
       {
-        x: a.mass - 2,
-        y: a.intensity,
+        x: peak.mass - 2,
+        y: peak.intensity,
         dy: '-20px'
       },
       {
-        x: a.mass + 2,
-        y: a.intensity,
+        x: peak.mass + 2,
+        y: peak.intensity,
         dy: '-10px'
       }
     ];
     return annotation;
   });
+
+  if (shouldRefresh) {
+    peaks.triggerChange();
+  }
+
+  return annotations;
 }
 
 module.exports = toAnnotations;
