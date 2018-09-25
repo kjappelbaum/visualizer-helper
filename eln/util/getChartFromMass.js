@@ -9,7 +9,8 @@ import { parseXY } from '../libs/parseXY';
  */
 export async function getChartFromMass(experiment, options = {}) {
   if (experiment.jcamp) {
-    let name = options.name || String(experiment.jcamp.filename).match(/([^/]+)\..+/)[1];
+    let name =
+      options.name || String(experiment.jcamp.filename).match(/([^/]+)\..+/)[1];
     if (String(experiment.jcamp.encoding) === 'text') {
       let result = convert(String(experiment.jcamp.content), { xy: true });
       let points = result.spectra[0].data[0];
@@ -23,7 +24,9 @@ export async function getChartFromMass(experiment, options = {}) {
         ]
       };
     } else if (experiment.jcamp.dUrl) {
-      let content = await fetch(String(experiment.jcamp.dUrl), { credentials: 'include' }).then((r) => r.text());
+      let content = await fetch(String(experiment.jcamp.dUrl), {
+        credentials: 'include'
+      }).then((r) => r.text());
       let result = convert(content, { xy: true });
       let points = result.spectra[0].data[0];
       return {
@@ -35,13 +38,19 @@ export async function getChartFromMass(experiment, options = {}) {
           }
         ]
       };
+    } else if (String(experiment.jcamp.encoding) === 'text') {
+      return {}; // no data
     } else {
       throw new Error(`unsupported encoding ${experiment.jcamp.encoding}`);
     }
   } else if (experiment.text) {
-    let name = options.name || String(experiment.text.filename).match(/([^/]+)\..+/)[1];
+    let name =
+      options.name || String(experiment.text.filename).match(/([^/]+)\..+/)[1];
     if (String(experiment.text.encoding) === 'text') {
-      let points = parseXY(String(experiment.text.content), { arrayType: 'xxyy', uniqueX: true });
+      let points = parseXY(String(experiment.text.content), {
+        arrayType: 'xxyy',
+        uniqueX: true
+      });
       return {
         data: [
           {
@@ -52,7 +61,9 @@ export async function getChartFromMass(experiment, options = {}) {
         ]
       };
     } else if (experiment.text.dUrl) {
-      let content = await fetch(String(experiment.text.dUrl), { credentials: 'include' }).then((r) => r.text());
+      let content = await fetch(String(experiment.text.dUrl), {
+        credentials: 'include'
+      }).then((r) => r.text());
       let points = parseXY(content, { arrayType: 'xxyy', uniqueX: true });
       return {
         data: [
