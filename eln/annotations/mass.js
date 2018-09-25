@@ -4,7 +4,7 @@ function toAnnotations(peaks, options = {}) {
   if (!peaks) return [];
   let shouldRefresh = false;
   let annotations = peaks.map((peak) => {
-    if (!Object.prototype.hasOwnProperty.call(peak, '_highlight')) {
+    if (!peak._highlight) {
       peak._highlight = Math.random();
       shouldRefresh = true;
     }
