@@ -2,7 +2,7 @@ import TypeRenderer from 'src/util/typerenderer';
 
 import toHtmlIR from './ir';
 import toHtmlNMR from './nmr';
-import toHtmlEM from './em';
+import toHtmlMass from './mass';
 
 export function add() {
   TypeRenderer.addType('acsir', {
@@ -19,11 +19,10 @@ export function add() {
     }
   });
 
-  TypeRenderer.addType('acsem', {
+  TypeRenderer.addType('acsms', {
     toscreen($element, val) {
-      var acsString = toHtmlEM(val);
+      var acsString = toHtmlMass(val);
       $element.html(acsString);
     }
   });
 }
-
