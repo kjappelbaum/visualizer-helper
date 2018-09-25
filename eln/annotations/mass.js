@@ -14,7 +14,7 @@ function toAnnotations(peaks, options = {}) {
     };
     annotation.label = [
       {
-        text: a.mass.toFixed(1),
+        text: Number(a.mass).toFixed(1),
         size: '18px',
         anchor: 'middle',
         color: 'red',
