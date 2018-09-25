@@ -38,7 +38,7 @@ export async function getChartFromMass(experiment, options = {}) {
           }
         ]
       };
-    } else if (String(experiment.jcamp.encoding) === 'text') {
+    } else if (experiment.jcamp.encoding === undefined) {
       return {}; // no data
     } else {
       throw new Error(`unsupported encoding ${experiment.jcamp.encoding}`);
