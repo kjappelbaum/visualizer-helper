@@ -5,6 +5,10 @@ function toAnnotations(peaks, options = {}) {
   let shouldRefresh = false;
   let annotations = peaks.map((peak) => {
     if (!peak._highlight) {
+      Object.defineProperty(peak, '_highlight', {
+        enumerable: false,
+        writable: true
+      });
       peak._highlight = Math.random();
       shouldRefresh = true;
     }
@@ -32,12 +36,12 @@ function toAnnotations(peaks, options = {}) {
     ];
     annotation.position = [
       {
-        x: peak.mass - 2,
+        x: peak.mass - 1,
         y: peak.intensity,
         dy: '-20px'
       },
       {
-        x: peak.mass + 2,
+        x: peak.mass + 1,
         y: peak.intensity,
         dy: '-10px'
       }

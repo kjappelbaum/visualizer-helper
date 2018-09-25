@@ -5,6 +5,10 @@ function toAnnotations(peaks, options = {}) {
   let shouldRefresh = false;
   let annotations = peaks.map((peak) => {
     if (!peak._highlight) {
+      Object.defineProperty(peak, '_highlight', {
+        enumerable: false,
+        writable: true
+      });
       peak._highlight = Math.random();
       shouldRefresh = true;
     }
