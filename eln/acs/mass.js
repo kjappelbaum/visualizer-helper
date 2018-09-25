@@ -18,7 +18,7 @@ function getCharge(charge) {
 }
 
 function formatPeaks(value) {
-  if (!value.peak) return '';
+  if (!value.peak || !value.peak.length > 0) return '';
 
   let experiment = [];
   experiment.push('MS');
@@ -30,10 +30,10 @@ function formatPeaks(value) {
 
   let peaks = [];
   for (let peak of value.peak) {
-    peaks.push(`${peak.mass} (${peak.intensity})`);
+    peaks.push(`${peak.mass} (${Math.round(peak.intensity)})`);
   }
 
-  return experiment + peaks.join(', ');
+  return `${experiment.join(' ')} ${peaks.join(', ')}`;
 }
 
 function formatExactMass(value) {
