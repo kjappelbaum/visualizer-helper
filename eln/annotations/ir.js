@@ -48,7 +48,7 @@ function toAnnotations(peaks, options = {}) {
     return annotation;
   });
 
-  if (shouldRefresh) {
+  if (shouldRefresh && peaks.triggerChange) {
     peaks.triggerChange();
   }
   return annotations;
