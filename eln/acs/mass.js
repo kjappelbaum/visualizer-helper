@@ -44,7 +44,7 @@ function formatExactMass(value) {
     `${accurate.mf}(${accurate.modification})`
   ).getInfo();
   let modificationInfo = new MolecularFormula.MF(
-    accurate.modification
+    String(accurate.modification)
   ).getInfo();
 
   let result = [];
