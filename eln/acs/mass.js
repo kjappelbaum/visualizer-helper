@@ -57,7 +57,9 @@ function formatExactMass(value) {
   experiment.push('m/z:');
   result.push(experiment.join(' '));
 
-  var modificationMF = modificationInfo.mf.replace(/\(.*/, '');
+  var modificationMF = new MolecularFormula.MF(
+    modificationInfo.mf.replace(/\(.*/, '')
+  ).toHtml();
   if (modificationMF) {
     result.push(`[M + ${modificationMF}]${getCharge(modificationInfo.charge)}`);
   } else {
