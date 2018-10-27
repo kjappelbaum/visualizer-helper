@@ -7,4 +7,5 @@ test('Reaction status color', () => {
   let form = Color.getForm('closed');
   expect(form.length).toBeGreaterThan(100);
   expect(form).toMatch('<option value="closed" selected>');
+  expect(Color.getNextStatus('worked-up')).toBe('purified');
 });

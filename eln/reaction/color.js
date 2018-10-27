@@ -24,6 +24,16 @@ function getLabel(statusCode) {
   return 'white';
 }
 
+function getNextStatus(statusCode) {
+  for (let i = 0; i < STATUS.length; i++) {
+    let status = STATUS[i];
+    if (status.code === statusCode && i < STATUS.length - 1) {
+      return STATUS[i + 1].code;
+    }
+  }
+  return statusCode;
+}
+
 function getForm(currentStatus) {
   return `
     <style>
@@ -53,5 +63,6 @@ module.exports = {
   STATUS,
   getColor,
   getLabel,
-  getForm
+  getForm,
+  getNextStatus
 };
