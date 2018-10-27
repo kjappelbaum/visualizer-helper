@@ -57,8 +57,8 @@ function updateStatuses(statuses) {
  @returns {object}
  */
 function updateStatus(status) {
-  if (isNaN(status.code)) {
-    switch (status.code) {
+  if (isNaN(String(status.code))) {
+    switch (String(status.code)) {
       case 'started':
         status.code = 10;
         break;
