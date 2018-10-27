@@ -131,5 +131,6 @@ module.exports = {
   getForm,
   getNextStatus,
   getColorFromReaction,
+  updateStatus,
   udpateStatuses
 };
