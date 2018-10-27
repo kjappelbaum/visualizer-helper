@@ -4,7 +4,7 @@ import Color from './color';
 
 export function add() {
   TypeRenderer.addType('reactionStatus', {
-    toscreen($element, val, rootVal, options) {
+    toscreen($element, val) {
       let label = Color.getLabel(val);
       let color = Color.getColor(val);
       $element.css('background-color', color);

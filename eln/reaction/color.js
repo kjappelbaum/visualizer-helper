@@ -48,32 +48,36 @@ function udpateStatuses(statuses) {
   for (let status of statuses) {
     updateStatus(status);
   }
+  return statuses;
 }
 
-/**
+/*
  * We will migrate all code to a number
+ @param {object} status
+ @returns {object}
  */
 function updateStatus(status) {
   if (isNaN(status.code)) {
     switch (status.code) {
       case 'started':
         status.code = 10;
-        return;
+        break;
       case 'finished':
         status.code = 20;
-        return;
+        break;
       case 'worked-up':
         status.code = 30;
-        return;
+        break;
       case 'purified':
         status.code = 40;
-        return;
+        break;
       case 'closed':
         status.code = 50;
         break;
       default:
     }
   }
+  return status;
 }
 
 function getLabel(statusCode) {
