@@ -4,7 +4,6 @@ import ui from 'src/util/ui';
 import chemspider from './chemspider';
 import chemexper from './chemexper';
 
-
 const defaultOptions = {
   chemexper: true,
   chemspider: true
@@ -36,15 +35,10 @@ module.exports = {
             }
             // then the names
             if (d.$content.general && d.$content.general.name > 0) {
-              names.push(
-                ...d.$content.general.name.map((d) => d.value)
-              );
+              names.push(...d.$content.general.name.map((d) => d.value));
             }
             names.push(d.$id.join(' '));
-            if (
-              d.$content.general &&
-                            d.$content.general.description
-            ) {
+            if (d.$content.general && d.$content.general.description) {
               names.push(d.$content.general.description);
             }
             d.id = d._id;

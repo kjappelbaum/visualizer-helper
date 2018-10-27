@@ -1,9 +1,29 @@
 const STATUS = [
-  { code: 'started', label: 'Started', color: 'rgba(244,204,204,1)' },
-  { code: 'finished', label: 'Finished', color: 'rgba(252,229,205,1)' },
-  { code: 'worked-up', label: 'Worked up', color: 'rgba(255,242,204,1)' },
-  { code: 'purified', label: 'Purified', color: 'rgba(217,234,211,1)' },
-  { code: 'closed', label: 'Closed', color: 'rgba(206,224,227,1)' }
+  {
+    code: 10,
+    label: 'Started',
+    color: 'rgba(244,204,204,1)'
+  },
+  {
+    code: 20,
+    label: 'Finished',
+    color: 'rgba(252,229,205,1)'
+  },
+  {
+    code: 30,
+    label: 'Worked up',
+    color: 'rgba(255,242,204,1)'
+  },
+  {
+    code: 40,
+    label: 'Purified',
+    color: 'rgba(217,234,211,1)'
+  },
+  {
+    code: 50,
+    label: 'Closed',
+    color: 'rgba(206,224,227,1)'
+  }
 ];
 
 function getColor(statusCode) {
@@ -16,12 +36,44 @@ function getColor(statusCode) {
 }
 
 function getColorFromReaction(reaction) {
-  let status = String(
+  let status = Number(
     reaction.$content.status &&
       reaction.$content.status[0] &&
       reaction.$content.status[0].code
   );
   return getColor(status);
+}
+
+function udpateStatuses(statuses) {
+  for (let status of statuses) {
+    updateStatus(status);
+  }
+}
+
+/**
+ * We will migrate all code to a number
+ */
+function updateStatus(status) {
+  if (isNaN(status.code)) {
+    switch (status.code) {
+      case 'started':
+        status.code = 10;
+        return;
+      case 'finished':
+        status.code = 20;
+        return;
+      case 'worked-up':
+        status.code = 30;
+        return;
+      case 'purified':
+        status.code = 40;
+        return;
+      case 'closed':
+        status.code = 50;
+        break;
+      default:
+    }
+  }
 }
 
 function getLabel(statusCode) {
@@ -74,5 +126,6 @@ module.exports = {
   getLabel,
   getForm,
   getNextStatus,
-  getColorFromReaction
+  getColorFromReaction,
+  udpateStatuses
 };
