@@ -44,7 +44,7 @@ function getColorFromReaction(reaction) {
   return getColor(status);
 }
 
-function udpateStatuses(statuses) {
+function updateStatuses(statuses) {
   for (let status of statuses) {
     updateStatus(status);
   }
@@ -132,5 +132,5 @@ module.exports = {
   getNextStatus,
   getColorFromReaction,
   updateStatus,
-  udpateStatuses
+  updateStatuses
 };
