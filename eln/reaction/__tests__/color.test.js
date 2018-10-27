@@ -8,4 +8,7 @@ test('Reaction status color', () => {
   expect(form.length).toBeGreaterThan(100);
   expect(form).toMatch('<option value="closed" selected>');
   expect(Color.getNextStatus('worked-up')).toBe('purified');
+  expect(
+    Color.getColorFromReaction({ $content: { status: [{ code: 'closed' }] } })
+  ).toBe('rgba(206,224,227,1)');
 });

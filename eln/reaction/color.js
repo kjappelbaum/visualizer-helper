@@ -15,6 +15,15 @@ function getColor(statusCode) {
   return 'white';
 }
 
+function getColorFromReaction(reaction) {
+  let status = String(
+    reaction.$content.status &&
+      reaction.$content.status[0] &&
+      reaction.$content.status[0].code
+  );
+  return getColor(status);
+}
+
 function getLabel(statusCode) {
   for (let status of STATUS) {
     if (status.code === statusCode) {
@@ -47,7 +56,7 @@ function getForm(currentStatus) {
         <form>
             <select name="status">
                 ${STATUS.map(
-    (item, i) =>
+    (item) =>
       `<option value="${item.code}" ${
         item.code === currentStatus ? 'selected' : ''
       }>${item.label}</option>`
@@ -64,5 +73,6 @@ module.exports = {
   getColor,
   getLabel,
   getForm,
-  getNextStatus
+  getNextStatus,
+  getColorFromReaction
 };
