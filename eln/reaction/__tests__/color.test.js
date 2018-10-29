@@ -12,6 +12,6 @@ test('Reaction status color', () => {
     Color.getColorFromReaction({ $content: { status: [{ code: 50 }] } })
   ).toBe('rgba(206,224,227,1)');
   let statuses = [{ code: 'started' }, { code: 'finished' }];
-  Color.updateStatuses(statuses);
+  Color.udpateStatuses(statuses);
   expect(statuses).toEqual([{ code: 10 }, { code: 20 }]);
 });
