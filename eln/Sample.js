@@ -115,13 +115,8 @@ class Sample {
           });
           break;
         case '$content.general.mf':
-          try {
-            this.mf.fromMF();
-            this.nmr1dManager.updateIntegralOptionsFromMF();
-          } catch (e) {
-            UI.showNotification(`MF problem: ${e.toString()}`, 'warning');
-            console.log(e); // eslint-disable-line no-console
-          }
+          this.mf.fromMF();
+          this.nmr1dManager.updateIntegralOptionsFromMF();
           break;
         case '$content.biology':
           break;

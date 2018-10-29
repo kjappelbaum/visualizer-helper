@@ -97,18 +97,23 @@ class MF {
   }
 
   fromMF() {
-    if (!this.getMF()) {
-      this.previousEMMF = 0;
+    try {
+      if (!this.getMF()) {
+        this.previousEMMF = 0;
+        this.setMW(0);
+        this.setEM(0);
+        return;
+      }
+      var mfInfo = new MolecularFormula.MF(this.getMF()).getInfo();
+
+      if (this.previousEMMF !== mfInfo.monoisotopicMass) {
+        this.previousEMMF = mfInfo.monoisotopicMass;
+        this.setMW(mfInfo.mass);
+        this.setEM(mfInfo.monoisotopicMass);
+      }
+    } catch (e) {
       this.setMW(0);
       this.setEM(0);
-      return;
-    }
-    var mfInfo = new MolecularFormula.MF(this.getMF()).getInfo();
-
-    if (this.previousEMMF !== mfInfo.monoisotopicMass) {
-      this.previousEMMF = mfInfo.monoisotopicMass;
-      this.setMW(mfInfo.mass);
-      this.setEM(mfInfo.monoisotopicMass);
     }
   }
 
