@@ -19,7 +19,10 @@ class MF {
         try {
           let mfInfo = new MolecularFormula.MF(mf).getInfo();
           this.previousEMMF = mfInfo.monoisotopicMass;
-        } catch (e) {}
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.log('Could not parse MF: ', mf);
+        }
       }
     }
   }
@@ -116,7 +119,8 @@ class MF {
         this.setEM(mfInfo.monoisotopicMass);
       }
     } catch (e) {
-      console.log('MF error', e);
+      // eslint-disable-next-line no-console
+      console.log('MF error', e); // disable
       this.setMW(0);
       this.setEM(0);
     }
