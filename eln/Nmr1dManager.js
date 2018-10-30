@@ -378,9 +378,13 @@ class Nmr1dManager {
   getNumberHydrogens() {
     const mf = String(getData(this.sample, 'mf'));
     if (mf) {
-      const mfInfo = new MolecularFormula.MF(mf).getInfo();
-      if (mfInfo && mfInfo.atoms && mfInfo.atoms.H) {
-        return mfInfo.atoms.H || 100;
+      try {
+        const mfInfo = new MolecularFormula.MF(mf).getInfo();
+        if (mfInfo && mfInfo.atoms && mfInfo.atoms.H) {
+          return mfInfo.atoms.H || 100;
+        }
+      } catch (e) {
+        return 100;
       }
     }
     return 100;

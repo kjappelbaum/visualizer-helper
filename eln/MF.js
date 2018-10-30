@@ -16,8 +16,10 @@ class MF {
     } else {
       const mf = this.getMF();
       if (mf) {
-        let mfInfo = new MolecularFormula.MF(mf).getInfo();
-        this.previousEMMF = mfInfo.monoisotopicMass;
+        try {
+          let mfInfo = new MolecularFormula.MF(mf).getInfo();
+          this.previousEMMF = mfInfo.monoisotopicMass;
+        } catch (e) {}
       }
     }
   }
@@ -112,6 +114,7 @@ class MF {
         this.setEM(mfInfo.monoisotopicMass);
       }
     } catch (e) {
+      console.log('MF error', e);
       this.setMW(0);
       this.setEM(0);
     }

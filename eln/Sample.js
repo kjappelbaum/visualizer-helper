@@ -59,7 +59,6 @@ class Sample {
     updateSample(this.sample);
 
     var sampleVar = API.getVar(this.options.varName);
-
     createVar(sampleVar, 'sampleCode');
     createVar(sampleVar, 'batchCode');
     createVar(sampleVar, 'creationDate');
@@ -107,7 +106,7 @@ class Sample {
       if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
         this.nmr1dManager.rangesHasChanged();
       }
-      switch (event.jpath.join('.')) {
+      switch (jpathStr) {
         case '$content.general.molfile':
           this.mf.fromMolfile();
           this.nmr1dManager.handleAction({
