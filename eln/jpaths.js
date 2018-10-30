@@ -43,7 +43,7 @@ jpaths.nucleic = ['$content', 'biology', 'nucleic'];
 jpaths.peptidic = ['$content', 'biology', 'peptidic'];
 jpaths.chromatogram = ['$content', 'spectra', 'chromatogram'];
 jpaths.biology = ['$content', 'biology'];
-jpaths.thermowgravimetricAnalysis = [
+jpaths.thermogravimetricAnalysis = [
   '$content',
   'spectra',
   'thermogravimetricAnalysis'
