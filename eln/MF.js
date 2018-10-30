@@ -64,7 +64,7 @@ class MF {
     var molfile = this.getMolfile();
     if (molfile) {
       var molecule = OCLE.Molecule.fromMolfile(molfile);
-      var mf = molecule.getMF().parts.join('.');
+      var mf = molecule.getMF().parts.join(' . ');
       try {
         return new MolecularFormula.MF(mf).getInfo();
       } catch (e) {
