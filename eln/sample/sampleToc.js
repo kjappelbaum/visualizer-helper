@@ -10,7 +10,7 @@ let lastOptions = {
  * @param {object} [options={}]
  * @param {string} [options.group='mine'] Group to retrieve products. mine, all of a specific group name
  * @param {Array} [options.groups] List of groups, this value is replace by options.group if not defined
- * @param {string} [options.varName='queryResult']
+ * @param {string} [options.varName='sampleToc']
  * @param {function} [options.sort] Callback, by default sort by reverse date
  * @param {function} [options.filter] Callback to filter the result
  */
@@ -19,6 +19,9 @@ export async function refreshSampleToc(roc, options = {}) {
   lastOptions = Object.assign(lastOptions, options);
   let { group } = lastOptions;
 
+  if (!lastOptions.varName) {
+    lastOptions.varName = 'sampleToc';
+  }
   if (!lastOptions.groups) {
     if (group === 'mine') {
       lastOptions.mine = 1;
@@ -38,7 +41,7 @@ export async function refreshSampleToc(roc, options = {}) {
       }
     };
   }
-
+  console.log(lastOptions);
   return roc.query('sample_toc', lastOptions);
 }
 
@@ -59,7 +62,8 @@ export async function initializeGroupForm(roc, options = {}) {
     varName = 'groupForm',
     cookieName = 'eln-default-sample-group'
   } = options;
-  let groups = await roc.getGroups();
+
+  let groups = (await roc.getGroupMembership()).map((g) => g.name);
   var possibleGroups = ['all', 'mine'].concat(groups);
   var defaultGroup = localStorage.getItem(cookieName);
   if (possibleGroups.indexOf(defaultGroup) === -1) {
@@ -81,13 +85,18 @@ export async function initializeGroupForm(roc, options = {}) {
   let groupForm = await API.createData(varName, {
     group: defaultGroup
   });
-
+  await refreshSampleToc(roc, {
+    group: groupForm.group
+  });
   let mainData = Versioning.getData();
   mainData.onChange((evt) => {
     if (evt.jpath[0] === varName) {
       localStorage.setItem(cookieName, groupForm.group);
-      refreshSampleToc();
+      refreshSampleToc(roc, {
+        group: groupForm.group
+      });
     }
   });
+
   return groupForm;
 }
