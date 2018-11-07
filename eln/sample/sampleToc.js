@@ -1,9 +1,9 @@
 import API from 'src/util/api';
 import Versioning from 'src/util/versioning';
 
-let lastOptions={
-    group = 'all'
-}
+let lastOptions = {
+  group: 'all'
+};
 
 /**
  * Retrieve, filter and sort the TOC
@@ -17,15 +17,13 @@ let lastOptions={
 
 export async function refreshSampleToc(roc, options = {}) {
   lastOptions = Object.assign(lastOptions, options);
-  let {
-    group
-  } = lastOptions;
+  let { group } = lastOptions;
 
   if (!lastOptions.groups) {
     if (group === 'mine') {
-        lastOptions.mine = 1;
+      lastOptions.mine = 1;
     } else if (group !== 'all') {
-        lastOptions.groups = group;
+      lastOptions.groups = group;
     }
   }
 
@@ -48,12 +46,12 @@ export async function refreshSampleToc(roc, options = {}) {
  * Retrieve the allowed groups for the logged in user and create 'groupForm' variable and 'groupFormSchema' (for onde module).
  * It will keep in a cookie the last selected group.
  * Calling this method should reload automatically the TOC
- * @param {*} roc 
+ * @param {*} roc
  * @param {object} [options={}]
  * @param {string} [varName='groupForm'] contains the name of the variable containing the form value
  * @param {string} [schemaVarName='groupFormSchema'] contains the name of the variable containing the form schema
  * @param {string} [cookieName='eln-default-sample-group''] cookie name containing the last selected group
- * 
+ * @return {string} the form to select group}
  */
 export async function initializeGroupForm(roc, options = {}) {
   const {
