@@ -739,7 +739,7 @@ define([
       return entry;
     }
 
-    async discardLocal(entry) {
+    async discardLocal(entry) { // entry or uuid
       const uuid = getUuid(entry);
       // Make sure the data change is not tracked
       this.unbindChangeByUuid(uuid);
@@ -755,7 +755,7 @@ define([
       }
       // Track data again
       this.bindChangeByUuid(uuid);
-      entry.triggerChange();
+      if (entry.triggerChange) entry.triggerChange();
     }
 
     async getAttachment(entry, name, options) {
