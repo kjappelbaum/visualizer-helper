@@ -756,6 +756,7 @@ define([
       // Track data again
       this.bindChangeByUuid(uuid);
       if (entry.triggerChange) entry.triggerChange();
+      return serverEntry;
     }
 
     async getAttachment(entry, name, options) {
