@@ -45,6 +45,7 @@ function getColorFromReaction(reaction) {
 }
 
 function updateStatuses(statuses) {
+  if (!statuses || !Array.isArray(statuses)) return [];
   for (let status of statuses) {
     updateStatus(status);
   }
