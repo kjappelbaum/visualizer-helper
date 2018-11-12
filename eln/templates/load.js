@@ -11,53 +11,26 @@ module.exports = async function loadTemplates(categories, options = {}) {
   if (typeof categories === 'string') {
     categories = [categories];
   }
-  var Roc = await API.require('vh/rest-on-couch/Roc');
 
   // we check if roc is already defined, in this case
   // we will check if the templates database exists
   var roc = API.cache('roc');
 
-  var templateRoc;
+  var templates;
   if (roc) {
-    await fetch(`${roc.url}/db/templates/_query/template`)
-      .then((result) => {
+    await fetch(`${roc.url}/db/templates/_query/template?key=abcdef`)
+      .then(async (result) => {
         if (result.status === 200) {
-          templateRoc = new Roc({
-            database: 'templates',
-            url: roc.url,
-            track: false
-          });
+          templates = await fetchAndLink(`${roc.url}`, categories);
         } else {
-          templateRoc = new Roc({
-            database: 'templates',
-            url: 'https://mydb.cheminfo.org',
-            track: false
-          });
+          templates = await fetchAndLink(undefined, categories);
         }
       })
-      .catch(() => {
-        // no local templates database, we use the default one
-        templateRoc = new Roc({
-          database: 'templates',
-          url: 'https://mydb.cheminfo.org',
-          track: false
-        });
+      .catch(async () => {
+        templates = await fetchAndLink(undefined, categories);
       });
   } else {
-    templateRoc = new Roc({
-      database: 'templates',
-      url: 'https://mydb.cheminfo.org',
-      track: false
-    });
-  }
-
-  var templates = [];
-  for (let category of categories) {
-    let currentTemplates = await templateRoc.query('template', {
-      startkey: category,
-      endkey: `${category}\uFFFF`
-    });
-    templates.push(...currentTemplates);
+    templates = await fetchAndLink(undefined, categories);
   }
 
   templates.sort((a, b) => {
@@ -67,8 +40,27 @@ module.exports = async function loadTemplates(categories, options = {}) {
   });
 
   // could be improved to remember the last selected format
-
   await API.createData(variableName, templates);
 
   return templates;
 };
+
+async function fetchAndLink(url = 'https://mydb.cheminfo.org', categories) {
+  var templates = [];
+  for (let category of categories) {
+    let startkey = category;
+    let endkey = `${category}\uFFFF`;
+    let response = await fetch(
+      `${url}/db/templates/_query/template?startkey=${startkey}&endkey=${endkey}`
+    );
+    let results = await response.json();
+    results.forEach((result) => {
+      result.document = {
+        type: 'object',
+        url: `${url}/db/templates/entry/${result.id}`
+      };
+    });
+    templates.push(...results);
+  }
+  return templates;
+}
