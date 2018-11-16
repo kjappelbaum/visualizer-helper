@@ -60,7 +60,9 @@ function fromChemexper(chemexper) {
         catalogNumber: chemexper.row.code
       },
       physical: {
-        density: chemexper.row.density
+        density: chemexper.row.density,
+        mp: chemexper.row.mp,
+        bp: chemexper.row.bp
       }
     },
     id: util.getNextUniqueId(true),
