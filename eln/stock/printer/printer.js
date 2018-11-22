@@ -86,9 +86,16 @@ define([
         return printServer.getDeviceIds();
       },
 
+      // printerFormat: uuid of the printer format or printer format document
       async print(printer, printFormat, data) {
         printer = await printerRoc.get(printer);
-        printFormat = await formatsRoc.get(printFormat);
+        if (printFormat.resurrect) {
+          printFormat = printFormat.resurrect();
+        }
+        if (typeof printFormat === 'string') {
+          printFormat = await formatsRoc.get(printFormat);
+        }
+
         const printServer = printServers.find(
           (ps) =>
             String(ps.$content.macAddress) ===
