@@ -11,7 +11,7 @@ function waitImmediate() {
 module.exports = {
   async buildDatabase(tocData, options = {}) {
     const l = tocData.length;
-    const db = new OCLE.DB({ computerProperties: options.calculateProperties });
+    const db = new OCLE.DB({ computeProperties: options.calculateProperties });
     const date = Date.now();
     for (let i = 0; i < l; i++) {
       if (options.showLoading) {
