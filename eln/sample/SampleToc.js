@@ -36,21 +36,27 @@ class SampleToc {
    * Retrieve the sample_toc and put the result in `sampleToc` variable
    */
   refresh(options = {}) {
-    let { group, sort, filter, viewName } =
-        Object.assign({}, this.options, options);
+    let { group, sort, filter, viewName } = Object.assign(
+      {},
+      this.options,
+      options
+    );
     let mine = 0;
     let groups = '';
-
+    group = String(group);
     if (group === 'mine') {
       mine = 1;
     } else if (group !== 'all') {
       groups = group;
     }
-
-    return this.roc.query(
-      viewName, { groups, mine, sort, filter, varName: this.options.varName });
+    return this.roc.query(viewName, {
+      groups,
+      mine,
+      sort,
+      filter,
+      varName: this.options.varName
+    });
   }
-
 
   /**
    * Retrieve the allowed groups for the logged in user and create 'groupForm'
