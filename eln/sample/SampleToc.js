@@ -2,7 +2,18 @@ import API from 'src/util/api';
 import Versioning from 'src/util/versioning';
 
 let defaultOptions = {
-  group: 'all'
+  group: 'all',
+  varName: 'sampleToc',
+  viewName: 'sample_toc',
+  sort: (a, b) => {
+    if (a.value.modificationDate > b.value.modificationDate) {
+      return -1;
+    } else if (a.value.modificationDate < b.value.modificationDate) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 };
 
 class SampleToc {
@@ -12,37 +23,20 @@ class SampleToc {
    * @param {object} [roc=undefined]
    * @param {string} [options.group='mine'] Group to retrieve products. mine, all of a specific group name
    * @param {string} [options.varName='sampleToc']
+   * @param {string} [options.viewName='sample_toc']
    * @param {function} [options.sort] Callback, by default sort by reverse date
    * @param {function} [options.filter] Callback to filter the result
    */
   constructor(roc, options = {}) {
     this.roc = roc;
     this.options = Object.assign({}, defaultOptions, options);
-
-    if (!this.options.varName) {
-      this.options.varName = 'sampleToc';
-    }
-
-    if (!this.options.sort) {
-      this.options.sort = function (a, b) {
-        if (a.value.modificationDate > b.value.modificationDate) {
-          return -1;
-        } else if (a.value.modificationDate < b.value.modificationDate) {
-          return 1;
-        } else {
-          return 0;
-        }
-      };
-    }
   }
 
   /**
    * Retrieve the sample_toc and put the result in `sampleToc` variable
    */
   refresh(options = {}) {
-    let {
-      group, sort, filter
-    } = Object.assign({}, this.options, options);
+    let { group, sort, filter } = Object.assign({}, this.options, options);
     let mine = 0;
     let groups = '';
 
@@ -52,27 +46,24 @@ class SampleToc {
       groups = group;
     }
 
-    return this.roc.query('sample_toc', {
-      groups,
-      mine,
-      sort,
-      filter,
-      varName: this.options.varName
-    });
+    return this.roc.query(
+      options.viewName,
+      { groups, mine, sort, filter, varName: this.options.varName });
   }
 
 
   /**
- * Retrieve the allowed groups for the logged in user and create 'groupForm' variable and 'groupFormSchema' (for onde module).
- * It will keep in a cookie the last selected group.
- * Calling this method should reload automatically the TOC
- * @param {*} roc
- * @param {object} [options={}]
- * @param {string} [varName='groupForm'] contains the name of the variable containing the form value
- * @param {string} [schemaVarName='groupFormSchema'] contains the name of the variable containing the form schema
- * @param {string} [cookieName='eln-default-sample-group''] cookie name containing the last selected group
- * @return {string} the form to select group}
- */
+   * Retrieve the allowed groups for the logged in user and create 'groupForm'
+   * variable and 'groupFormSchema' (for onde module). It will keep in a cookie
+   * the last selected group. Calling this method should reload automatically
+   * the TOC
+   * @param {*} roc
+   * @param {object} [options={}]
+   * @param {string} [varName='groupForm'] contains the name of the variable containing the form value
+   * @param {string} [schemaVarName='groupFormSchema'] contains the name of the variable containing the form schema
+   * @param {string} [cookieName='eln-default-sample-group''] cookie name containing the last selected group
+   * @return {string} the form to select group}
+   */
   async initializeGroupForm(options = {}) {
     const {
       schemaVarName = 'groupFormSchema',
@@ -99,9 +90,7 @@ class SampleToc {
     };
     API.createData(schemaVarName, schema);
 
-    let groupForm = await API.createData(varName, {
-      group: defaultGroup
-    });
+    let groupForm = await API.createData(varName, { group: defaultGroup });
 
     this.options.group = groupForm.group;
     await this.refresh();

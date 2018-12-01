@@ -1,10 +1,9 @@
-import _ from 'lodash';
 import API from 'src/util/api';
 
 import OCLE from '../libs/OCLE';
 
 function waitImmediate() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setImmediate(resolve);
   });
 }
@@ -34,11 +33,3 @@ module.exports = {
     return db;
   }
 };
-
-function getDataIfExists(db) {
-  if (db.data) {
-    return db.data.slice();
-  } else {
-    return null;
-  }
-}
