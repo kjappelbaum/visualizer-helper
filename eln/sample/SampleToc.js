@@ -36,7 +36,8 @@ class SampleToc {
    * Retrieve the sample_toc and put the result in `sampleToc` variable
    */
   refresh(options = {}) {
-    let { group, sort, filter } = Object.assign({}, this.options, options);
+    let { group, sort, filter, viewName } =
+        Object.assign({}, this.options, options);
     let mine = 0;
     let groups = '';
 
@@ -47,8 +48,7 @@ class SampleToc {
     }
 
     return this.roc.query(
-      options.viewName,
-      { groups, mine, sort, filter, varName: this.options.varName });
+      viewName, { groups, mine, sort, filter, varName: this.options.varName });
   }
 
 
