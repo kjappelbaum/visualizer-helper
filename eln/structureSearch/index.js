@@ -15,7 +15,7 @@ module.exports = {
     const date = Date.now();
     for (let i = 0; i < l; i++) {
       if (options.showLoading) {
-        if (i % 1000 === 0 && Date.now() - date > 500) {
+        if (i % 100 === 0 && Date.now() - date > 500) {
           await waitImmediate();
           API.loading('mol', `Loading molecules (${i + 1}/${l})`);
         }
