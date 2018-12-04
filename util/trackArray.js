@@ -1,10 +1,10 @@
 define(['src/util/api', 'lodash'], function (API, _) {
-  function track(localName, defaultValue, options={}) {
+  function track(localName, defaultValue, options = {}) {
     const {
-      varName=localName,
-      appendDefault=true,
-      comparator=_.isEqual
-    }=options;
+      varName = localName,
+      appendDefault = true,
+      comparator = _.isEqual
+    } = options;
 
     var data = API.getData(varName);
     if (data) return Promise.resolve(data);
@@ -12,7 +12,7 @@ define(['src/util/api', 'lodash'], function (API, _) {
     try {
       localValue = JSON.parse(window.localStorage.getItem(localName)) || [];
       if (!Array.isArray(localValue)) throw new Error('TrackArray expected an array in local storage');
-      if (localValue.length===0 || appendDefault) {
+      if (localValue.length === 0 || appendDefault) {
         localValue = localValue.concat(defaultValue);
         localValue = _.uniqWith(localValue, comparator);
       }
