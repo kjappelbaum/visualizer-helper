@@ -1,13 +1,13 @@
 define(['src/util/api', 'lodash'], function (API, _) {
-  function track(localName, defaultValue, comparator, options={}) {
+  function track(localName, defaultValue, options={}) {
     const {
       varName=localName,
-      appendDefault=true
+      appendDefault=true,
+      comparator=_.isEqual
     }=options;
 
     var data = API.getData(varName);
     if (data) return Promise.resolve(data);
-    comparator = comparator || _.isEqual;
     var localValue = [];
     try {
       localValue = JSON.parse(window.localStorage.getItem(localName)) || [];
