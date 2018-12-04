@@ -6,7 +6,7 @@ define(['src/util/api'], function (API) {
     var localValue = [];
     try {
       localValue = JSON.parse(window.localStorage.getItem(localName)) || [];
-      if (!Array.isArray(localValue)) throw new Error('TrackArray expected an array in local storage');
+      if (!Array.isArray(localValue)) throw new Error('TrackRanges expected an array in local storage');
     } catch (e) {
       return Promise.reject(e);
     }
