@@ -1,3 +1,5 @@
+// this class is not really related to a sampleToc but can be used for any TOC
+
 import API from 'src/util/api';
 import Versioning from 'src/util/versioning';
 
