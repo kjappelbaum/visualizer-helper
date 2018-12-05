@@ -91,6 +91,7 @@ class Sample {
     createVar(sampleVar, 'xray');
     createVar(sampleVar, 'chromatogram');
     createVar(sampleVar, 'thermogravimetricAnalysis');
+    createVar(sampleVar, 'elementalAnalysis');
     createVar(sampleVar, 'differentialScanningCalorimetry');
     createVar(sampleVar, 'image');
     createVar(sampleVar, 'sampleCode');
