@@ -1,4 +1,3 @@
-
 /*
 Code that allows to split a sequence of aminoacids natural or non natural
 */
