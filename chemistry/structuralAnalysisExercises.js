@@ -1,7 +1,3 @@
-/*
-We retrieve some exercises for structural analysis
- */
-
 import CA from 'src/util/couchdbAttachments';
 
 import OCLE from '../eln/libs/OCLE';
