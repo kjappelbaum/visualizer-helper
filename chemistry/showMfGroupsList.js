@@ -46,14 +46,19 @@ let html = `
             </tr>
         </thead>
         <tbody>
-            ${groups.map((group) => `
+            ${groups
+    .map(
+      (group) => `
                 <tr>
                     <td>${group.symbol}</td>
                     <td>${group.name}</td>
-                    <td>${group.mfHtml}<span style='display:none'>${group.mf}</span></td>
+                    <td>${group.mfHtml}<span style='display:none'>${
+  group.mf
+}</span></td>
                 </tr>
             `
-  ).join('\n')}
+    )
+    .join('\n')}
         </tbody>
     </table>
     <script>
@@ -62,8 +67,7 @@ let html = `
             let lines=document.getElementById('allGroups').getElementsByTagName('TR');
             for (let line of lines) {
                 let content=line.innerHTML;
-                console.log(regexp); 
-                if (content.match(regexp) || content.match(/<tr>/i)) {
+                if (content.match(regexp) || content.match(/<th>/i)) {
                     line.style.display='';
                 } else {
                     line.style.display='none';
