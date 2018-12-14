@@ -58,6 +58,9 @@ module.exports = {
 
     await printer.print(info.printer, info.format, entry);
   },
+  getFormats(type) {
+    return API.getData(`${type}Formats`).resurrect();
+  },
   async askFormat(type) {
     var f = {};
     const formats = API.getData(`${type}Formats`).resurrect();
