@@ -1,6 +1,10 @@
 import { convert } from '../libs/jcampconverter';
 import { parseXY } from '../libs/parseXY';
 
+// we extract the data from an object
+// the data may be in experiment.content
+// or in experiment.jcamp.
+
 /**
  * Create a chart object from a clicked row
  * @param {object} experiment
