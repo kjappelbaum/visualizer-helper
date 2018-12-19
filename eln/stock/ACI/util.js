@@ -25,7 +25,9 @@ module.exports = function (roc, prefix) {
   }
 
   function getOclDistinguishOr(mol) {
-    const idCode = mol.getCanonizedIDCode(OCL.Molecule.CANONIZER_DISTINGUISH_RACEMIC_OR_GROUPS);
+    const idCode = mol.getCanonizedIDCode(
+      OCL.Molecule.CANONIZER_DISTINGUISH_RACEMIC_OR_GROUPS
+    );
     const { coordinates } = mol.getIDCodeAndCoordinates();
     return {
       idCode,
@@ -42,7 +44,6 @@ module.exports = function (roc, prefix) {
     const freeBaseMolecule = OCL.Molecule.fromIDCode(newOclid);
     const freeBaseOcl = freeBaseMolecule.getIDCodeAndCoordinates();
     const baseMf = freeBaseMolecule.getMolecularFormula();
-
 
     general.mf = baseMf.formula;
     general.mw = baseMf.relativeWeight;
@@ -61,7 +62,10 @@ module.exports = function (roc, prefix) {
     let newDoc = Object.assign({}, doc);
     updateInternalDocumentWithNewStructure(newDoc, newOcl);
     delete newDoc._id;
-    newDoc.$id = await getNextSampleWithSaltID(oclid, doc.$content.general.saltCode);
+    newDoc.$id = await getNextSampleWithSaltID(
+      oclid,
+      doc.$content.general.saltCode
+    );
     newDoc = await roc.create(newDoc);
     await roc.delete(doc._id);
     // doc.$deleted = true;
@@ -86,7 +90,9 @@ module.exports = function (roc, prefix) {
       // warn user
       // Create new entry for each old one
       const confirmed = await UI.confirm(`
-                The same ACI number cannot be reused because the new structure already exists as ${newDups[0].value[0]}.
+                The same ACI number cannot be reused because the new structure already exists as ${
+  newDups[0].value[0]
+}.
                 The entries will be updated using this ACI number.<br/><br/>
                 This operation will update ${oldDups.length} entries.<br>
                 Do you want to proceed?
@@ -146,6 +152,10 @@ module.exports = function (roc, prefix) {
   }
 
   async function getInternalIDInfo(oclid, salt) {
+    salt = String(salt);
+    if (!salts[salt]) {
+      throw new Error('unknown salt');
+    }
     const info = {};
     let dups = await getDups(oclid);
     info.codeCount = dups.length;
@@ -203,7 +213,9 @@ module.exports = function (roc, prefix) {
   }
 
   function getNextBatchNumber(values) {
-    return Math.max.apply(null, values.map((v) => v.value[v.value.length - 1])) + 1;
+    return (
+      Math.max.apply(null, values.map((v) => v.value[v.value.length - 1])) + 1
+    );
   }
 
   function getSaltMW(salt, nbSalts) {
@@ -222,7 +234,6 @@ module.exports = function (roc, prefix) {
     getOclDistinguishOr
   };
 };
-
 
 var salts = {
   NX: {
@@ -386,4 +397,3 @@ var salts = {
     name: 'Perchlorate'
   }
 };
-
