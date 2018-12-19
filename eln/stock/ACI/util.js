@@ -16,11 +16,9 @@ module.exports = function (roc, prefix) {
         }
         mol.inventCoordinates();
       } else {
-        throw new Error('unknown salt');
+        throw new Error(`unknown salt ${salt}`);
       }
     }
-    // Todo: fix invent coordinates with getCanonizedIDCode
-    // mol.inventCoordinates();
     return mol;
   }
 
@@ -154,7 +152,7 @@ module.exports = function (roc, prefix) {
   async function getInternalIDInfo(oclid, salt) {
     salt = String(salt);
     if (!salts[salt]) {
-      throw new Error('unknown salt');
+      throw new Error(`unknown salt ${salt}`);
     }
     const info = {};
     let dups = await getDups(oclid);
