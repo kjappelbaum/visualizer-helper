@@ -32,7 +32,11 @@ module.exports = `
                             </select>
                             
                             <br>
-                            <textarea cols=100 rows=7 data-field='sequence'></textarea>
+                            <div style='display: flex'>
+                                N<sub>term</sub>
+                                <textarea cols=100 rows=7 data-field='sequence'></textarea>
+                                C<sub>term</sub>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -65,7 +69,11 @@ module.exports = `
                             - Circular: 
                             <input type='checkbox' data-field='circular'>
                             <br>
-                            <textarea cols=100 rows=7 data-field='sequence'></textarea>
+                            <div style='display: flex'>
+                                <span>5'</span>
+                                <textarea cols=100 rows=7 data-field='sequence'></textarea>
+                                <span>3'</span>
+                            </div>
                         </td>
                     </tr>
                 </table>
