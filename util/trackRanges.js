@@ -1,19 +1,19 @@
-
-define(['src/util/api'], function (API) {
+define(['src/util/api'], function(API) {
   async function track(localName, defaultValue, options = {}) {
     var varName = options.varName || localName;
     var annotationName = `${varName}Annotations`;
     var localValue = [];
     try {
       localValue = JSON.parse(window.localStorage.getItem(localName)) || [];
-      if (!Array.isArray(localValue)) throw new Error('TrackRanges expected an array in local storage');
+      if (!Array.isArray(localValue))
+        throw new Error('TrackRanges expected an array in local storage');
     } catch (e) {
       return Promise.reject(e);
     }
 
-    return API.createData(varName, localValue).then(function (data) {
+    return API.createData(varName, localValue).then(function(data) {
       createAnnotations(data, annotationName);
-      data.onChange(function () {
+      data.onChange(function() {
         ensureHighlight(data);
         createAnnotations(data, annotationName);
         localStorage.setItem(localName, JSON.stringify(data));
@@ -23,7 +23,6 @@ define(['src/util/api'], function (API) {
   }
 
   return track;
-
 
   function ensureHighlight(data) {
     let shouldUpdate = false;
