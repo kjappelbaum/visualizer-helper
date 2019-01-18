@@ -1191,7 +1191,7 @@ define([
           configurable: true
         });
 
-        var dUrl = `${this.entryUrl}/${entry._id}/${encodeURI(v.filename)}`;
+        var dUrl = `${this.entryUrl}/${entry._id}/${encodeURIComponent(v.filename)}`;
         v.data[prop] = dUrl;
         Object.defineProperty(v, 'dUrl', {
           value: dUrl,
