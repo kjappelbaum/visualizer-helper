@@ -212,9 +212,11 @@ define(['jquery'], function($) {
         'data-idx': idx
       });
       if (newTabLink && active && href) {
-        return $el.wrap(
-          `<a href="${href}" target="_blank" style="text-decoration: none; color: initial;" />`
-        );
+        return $el
+          .wrap(
+            `<a href="${href}" target="_blank" style="text-decoration: none; color: initial;" />`
+          )
+          .parent();
       }
       return $el;
     }
