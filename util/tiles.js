@@ -1,5 +1,4 @@
-
-define(['jquery'], function ($) {
+define(['jquery'], function($) {
   const styles = `
 <style>
 .on-tabs-tiles {
@@ -118,10 +117,12 @@ define(['jquery'], function ($) {
     onTileClick: () => {
       // noop
     },
+    isNewTabLink: false,
     ribbon: () => '',
     isLink: () => true,
     isActive: () => true,
     shouldRender: () => true,
+    href: () => null,
     backgroundColor: (tile) => tile.backgroundColor,
     color: (tile) => tile.color,
     header: (tile) => tile.header,
@@ -130,7 +131,7 @@ define(['jquery'], function ($) {
     icon: (tile) => tile.icon
   };
 
-  return function (div, options) {
+  return function(div, options) {
     let lineCount = 0;
     options = Object.assign({}, defaultOptions, options);
     const { tiles } = options;
@@ -146,16 +147,18 @@ define(['jquery'], function ($) {
     $main.addClass('on-tabs-tiles');
     $main.append(tiles.map(getTile));
 
-    $main.on('click', function (event) {
+    $main.on('click', function(event) {
       let $el;
       if ($(event.target).hasClass('cell')) {
         $el = $(event.target);
       } else {
-        $el = $(event.target).parents('.cell').first();
+        $el = $(event.target)
+          .parents('.cell')
+          .first();
       }
       let idx = $el.attr('data-idx');
       const tile = tiles[idx];
-      if (tile && options.isActive(tile)) {
+      if (tile && options.isActive(tile) && !options.isNewTabLink) {
         options.onTileClick(event, tile, $el);
       }
     });
@@ -173,6 +176,7 @@ define(['jquery'], function ($) {
       const footer = options.footer(tile);
       const title = options.title(tile);
       const icon = options.icon(tile);
+      const href = options.href(tile);
       const size = getSize(title);
 
       let iconType = /(fa|ci-icon)-/.exec(icon);
@@ -181,9 +185,18 @@ define(['jquery'], function ($) {
                 <div class="cell ${active ? 'active' : 'inactive'}">
                     <div class='content'>
                         <div class='header'>${header || ''}</div>
-                        ${icon ? `<div class="${iconType} ${icon} icon main huge"></div>` : `<div class="title main ${size}">${title || ''}</div>`}
+                        ${
+                          icon
+                            ? `<div class="${iconType} ${icon} icon main huge"></div>`
+                            : `<div class="title main ${size}">${title ||
+                                ''}</div>`
+                        }
                         <div class="footer">${footer || ''}</div>
-                        ${ribbon ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>` : ''}
+                        ${
+                          ribbon
+                            ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>`
+                            : ''
+                        }
                     </div>
                 </div>
         `);
@@ -191,12 +204,17 @@ define(['jquery'], function ($) {
       $el.css({
         color: options.color(tile),
         backgroundColor: options.backgroundColor(tile),
-        cursor: active && options.isLink(tile) ? 'pointer' : 'inherit',
+        cursor: active && options.isLink(tile) ? 'pointer' : 'inherit'
       });
 
       $el.attr({
         'data-idx': idx
       });
+      if (options.isNewTabLink && active && href) {
+        return $el.wrap(
+          `<a href="${href}" target="_blank" style="text-decoration: none; color: initial;" />`
+        );
+      }
       return $el;
     }
 
