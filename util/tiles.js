@@ -117,7 +117,7 @@ define(['jquery'], function($) {
     onTileClick: () => {
       // noop
     },
-    isNewTabLink: false,
+    isNewTabLink: () => false,
     ribbon: () => '',
     isLink: () => true,
     isActive: () => true,
@@ -158,7 +158,7 @@ define(['jquery'], function($) {
       }
       let idx = $el.attr('data-idx');
       const tile = tiles[idx];
-      if (tile && options.isActive(tile) && !options.isNewTabLink) {
+      if (tile && options.isActive(tile) && !options.isNewTabLink(tile)) {
         options.onTileClick(event, tile, $el);
       }
     });
@@ -177,6 +177,7 @@ define(['jquery'], function($) {
       const title = options.title(tile);
       const icon = options.icon(tile);
       const href = options.href(tile);
+      const newTabLink = options.isNewTabLink(tile);
       const size = getSize(title);
 
       let iconType = /(fa|ci-icon)-/.exec(icon);
@@ -210,7 +211,7 @@ define(['jquery'], function($) {
       $el.attr({
         'data-idx': idx
       });
-      if (options.isNewTabLink && active && href) {
+      if (newTabLink && active && href) {
         return $el.wrap(
           `<a href="${href}" target="_blank" style="text-decoration: none; color: initial;" />`
         );
