@@ -65,17 +65,17 @@ class Sample {
         );
         let target = document.getElementById('modules-grid');
         if (remoteURev && rev !== remoteURev && this.options.track) {
-          this.remoteHasChangedDiv = document.getElementById(
+          let remoteHasChangedDiv = document.getElementById(
             'remoteHasChanged'
           );
-          if (!this.remoteHasChangedDiv) {
+          if (!remoteHasChangedDiv) {
             let alertDiv = document.createElement('DIV');
             alertDiv.innerHTML = `<p id="remoteHasChanged" style="font-weight: bold; color: red; font-size: 3em; background-color: yellow">
 This entry has changed on the server, please reload the sample.<br>
 Your local changes will be lost.</p>`;
             target.prepend(alertDiv);
           } else {
-            this.remoteHasChangedDiv.style.display = 'block';
+            remoteHasChangedDiv.style.display = 'block';
           }
           this.remoteChanged = true;
         }
@@ -509,8 +509,11 @@ Your local changes will be lost.</p>`;
         this._initializeObjects();
         this.bindChange();
         this.remoteChanged = false;
-        if (this.remoteHasChangedDiv) {
-          this.remoteHasChangedDiv.style.display = 'none';
+        let remoteHasChangedDiv = document.getElementById(
+          'remoteHasChanged'
+        );
+        if (remoteHasChangedDiv) {
+          remoteHasChangedDiv.style.display = 'none';
         }
         this.nmr1dManager.handleAction({ name: 'nmrChanged' });
         break;

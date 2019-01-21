@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery'], function ($) {
   const styles = `
 <style>
 .on-tabs-tiles {
@@ -131,7 +131,7 @@ define(['jquery'], function($) {
     icon: (tile) => tile.icon
   };
 
-  return function(div, options) {
+  return function (div, options) {
     let lineCount = 0;
     options = Object.assign({}, defaultOptions, options);
     const { tiles } = options;
@@ -147,7 +147,7 @@ define(['jquery'], function($) {
     $main.addClass('on-tabs-tiles');
     $main.append(tiles.map(getTile));
 
-    $main.on('click', function(event) {
+    $main.on('click', function (event) {
       let $el;
       if ($(event.target).hasClass('cell')) {
         $el = $(event.target);
@@ -187,17 +187,17 @@ define(['jquery'], function($) {
                     <div class='content'>
                         <div class='header'>${header || ''}</div>
                         ${
-                          icon
-                            ? `<div class="${iconType} ${icon} icon main huge"></div>`
-                            : `<div class="title main ${size}">${title ||
+  icon
+    ? `<div class="${iconType} ${icon} icon main huge"></div>`
+    : `<div class="title main ${size}">${title ||
                                 ''}</div>`
-                        }
+}
                         <div class="footer">${footer || ''}</div>
                         ${
-                          ribbon
-                            ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>`
-                            : ''
-                        }
+  ribbon
+    ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>`
+    : ''
+}
                     </div>
                 </div>
         `);
