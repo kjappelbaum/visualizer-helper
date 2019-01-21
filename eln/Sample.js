@@ -81,7 +81,7 @@ Your local changes will be lost.</p>`;
           this.remoteChanged = true;
         }
       }
-    }, 5 * 1000);
+    }, 60 * 1000);
   }
 
   async _loadInstanceInVisualizer() {
