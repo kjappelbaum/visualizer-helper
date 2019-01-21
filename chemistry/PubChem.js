@@ -5,13 +5,13 @@ const pubchemURL = 'https://pubchem.cheminfo.org/molecules/mf?mf=';
 async function getMolecules(mf) {
   let response = await fetch(`${pubchemURL}${mf}`);
   let results = (await response.json()).result;
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     resolve(results);
   });
 }
 
 module.exports = {
-  choose: function(mf, options = {}) {
+  choose: function (mf, options = {}) {
     let promise = getMolecules(mf);
     return ui
       .choose([{ promise }], {
@@ -62,21 +62,9 @@ module.exports = {
           rowHeight: 140
         }
       })
-      .catch(function(e) {
+      .catch(function (e) {
         console.error(e); // eslint-disable-line no-console
         ui.showNotification('search failed', 'error');
       });
   }
 };
-
-function listTemplate(val, prop) {
-  return `
-    <div style="height: 100%; line-height: initial; vertical-align: middle">
-        <table style="width: 100%; text-align: center;">
-            {% for n in ${val} %}
-                <tr><td>{{ n${prop} }}</td></tr>
-            {% endfor %}
-        </table>
-    </div>
-    `;
-}
