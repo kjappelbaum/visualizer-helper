@@ -1,8 +1,11 @@
 import API from 'src/util/api';
+import UI from 'src/util/ui';
 
 import OCLE from './libs/OCLE';
 
-const noop = () => { /* noop */ };
+const noop = () => {
+  /* noop */
+};
 
 const defaultOptions = {
   onMolfileChanged: noop,
@@ -14,7 +17,9 @@ class ExpandableMolecule {
   constructor(sample, options) {
     this.options = Object.assign({}, defaultOptions, options);
     this.sample = sample;
-    this.molfile = String(this.sample.getChildSync(['$content', 'general', 'molfile']) || '');
+    this.molfile = String(
+      this.sample.getChildSync(['$content', 'general', 'molfile']) || ''
+    );
     this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
     this.expandedHydrogens = false;
     this.jsmeEditionMode = false;
@@ -30,7 +35,10 @@ class ExpandableMolecule {
       if (oclID.idCode !== this.idCode) {
         this.idCode = oclID.idCode;
         this.molfile = `${event.target}`;
-        this.sample.setChildSync(['$content', 'general', 'molfile'], this.molfile);
+        this.sample.setChildSync(
+          ['$content', 'general', 'molfile'],
+          this.molfile
+        );
         this.sample.setChildSync(['$content', 'general', 'ocl'], {
           value: oclID.idCode,
           coordinates: oclID.coordinates,
@@ -38,16 +46,14 @@ class ExpandableMolecule {
         });
       }
       this.options.onMolfileChanged(this);
+      this.updateHistory();
     };
 
-
-    API.createData('editableMolfile', this.molfile).then(
-      (editableMolfile) => {
-        this.editableMolfile = editableMolfile;
-        this.bindChange();
-        this.createViewVariable();
-      }
-    );
+    API.createData('editableMolfile', this.molfile).then((editableMolfile) => {
+      this.editableMolfile = editableMolfile;
+      this.bindChange();
+      this.createViewVariable();
+    });
   }
 
   bindChange() {
@@ -56,6 +62,35 @@ class ExpandableMolecule {
 
   unbindChange() {
     this.editableMolfile.unbindChange(this.onChange);
+  }
+
+  updateHistory() {
+    let history = JSON.parse(localStorage.getItem('moleculesHistory') || '[]');
+    let exists = false;
+    let uuid = this.sample._id;
+    let entry;
+    for (entry of history) {
+      if (entry.uuid === uuid) {
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      entry = { uuid };
+      history.push(entry);
+    }
+    entry.timestamp = Date.now();
+    entry.idCode = this.idCode;
+    entry.molfile = this.molfile;
+    entry.id = this.sample.$id
+      .resurrect()
+      .filter((a) => a)
+      .join(' ');
+    // we sort by timestamp
+    history = history.filter((entry) => entry.idCode !== 'd@');
+    history.sort((a, b) => b.timestamp - a.timestamp);
+    history.slice(0, 20);
+    localStorage.setItem('moleculesHistory', JSON.stringify(history));
   }
 
   toggleJSMEEdition() {
@@ -98,8 +133,10 @@ class ExpandableMolecule {
       let expected = (Date.now() - start) * 4 * molecule.getAllAtoms();
       if (expected > this.maxDiastereotopicCalculationTime) {
         // eslint-disable-next-line no-console
-        console.log('The diastereotopic calculation is expected to last more than 3s. No way to assign molecule.',
-          this.maxDiastereotopicCalculationTime);
+        console.log(
+          'The diastereotopic calculation is expected to last more than 3s. No way to assign molecule.',
+          this.maxDiastereotopicCalculationTime
+        );
         calculateDiastereotopicID = false;
       }
     }
@@ -123,6 +160,42 @@ class ExpandableMolecule {
     if (editableMolfile) editableMolfile.setValue(molfile || '');
   }
 
+  async loadMolfileFromHistory() {
+    let history = JSON.parse(localStorage.getItem('moleculesHistory') || '[]');
+    let molecule = await UI.choose(history, {
+      autoSelect: false,
+      noConfirmation: true,
+      returnRow: true,
+      dialog: {
+        width: 600,
+        height: 800
+      },
+      columns: [
+        {
+          id: 'id',
+          name: 'Reference',
+          jpath: ['id'],
+          maxWidth: 100
+        },
+        {
+          id: 'molfile',
+          name: 'Structure',
+          jpath: ['molfile'],
+          rendererOptions: {
+            forceType: 'mol2d'
+          }
+        }
+      ],
+      idField: 'uuid',
+      slick: {
+        rowHeight: 140
+      }
+    });
+    if (molecule) {
+      this.setMolfile(String(molecule.molfile));
+    }
+  }
+
   handleAction(action) {
     if (!action) return false;
     switch (action.name) {
@@ -135,6 +208,9 @@ class ExpandableMolecule {
         break;
       case 'swapHydrogens':
         this.setExpandedHydrogens();
+        break;
+      case 'loadMolfileFromHistory':
+        this.loadMolfileFromHistory();
         break;
       default:
         return false;
