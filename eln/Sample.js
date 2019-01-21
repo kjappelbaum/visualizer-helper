@@ -66,6 +66,8 @@ class Sample {
         if (remoteRev && rev !== remoteRev && this.options.track) {
           let remoteHasChangedDiv = document.getElementById('remoteHasChanged');
           if (!remoteHasChangedDiv) {
+            remoteHasChangedDiv.style.zIndex = 99;
+            remoteHasChangedDiv.style.position = 'fixed';
             let alertDiv = document.createElement('DIV');
             alertDiv.innerHTML = `<p id="remoteHasChanged" style="font-weight: bold; color: red; font-size: 3em; background-color: yellow">
 This entry has changed on the server, please reload the sample.<br>
