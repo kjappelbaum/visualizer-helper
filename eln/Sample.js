@@ -66,6 +66,7 @@ class Sample {
         if (remoteRev && rev !== remoteRev && this.options.track) {
           let remoteHasChangedDiv = document.getElementById('remoteHasChanged');
           if (!remoteHasChangedDiv) {
+            remoteHasChangedDiv.style = {};
             remoteHasChangedDiv.style.zIndex = 99;
             remoteHasChangedDiv.style.position = 'fixed';
             let alertDiv = document.createElement('DIV');
