@@ -59,14 +59,11 @@ class Sample {
       if (this.sample && this.sample._rev) {
         let uuid = this.sample._id;
         let rev = this.sample._rev;
-        let remoteURev = await this.roc.getHeader(uuid).etag;
-        if (!remoteURev) return;
-        remoteURev = String(remoteURev).replace(
-          /"/g,
-          ''
-        );
+        let headers = await this.roc.getHeader(uuid);
+        if (!headers || !headers.etag) return;
+        let remoteRev = String(headers.etag).replace(/"/g, '');
         let target = document.getElementById('modules-grid');
-        if (remoteURev && rev !== remoteURev && this.options.track) {
+        if (remoteRev && rev !== remoteRev && this.options.track) {
           let remoteHasChangedDiv = document.getElementById('remoteHasChanged');
           if (!remoteHasChangedDiv) {
             let alertDiv = document.createElement('DIV');
