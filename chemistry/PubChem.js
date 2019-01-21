@@ -5,13 +5,13 @@ const pubchemURL = 'https://pubchem.cheminfo.org/molecules/mf?mf=';
 async function getMolecules(mf) {
   let response = await fetch(`${pubchemURL}${mf}`);
   let results = (await response.json()).result;
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     resolve(results);
   });
 }
 
 module.exports = {
-  choose: function (mf, options = {}) {
+  choose: function (mf) {
     let promise = getMolecules(mf);
     return ui
       .choose([{ promise }], {
