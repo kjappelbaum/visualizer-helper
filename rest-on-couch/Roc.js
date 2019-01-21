@@ -440,6 +440,24 @@ define([
       }
     }
 
+    async getHeader(entry, options) {
+      await this.__ready;
+      const uuid = getUuid(entry);
+      return (
+        superagent
+          .head(`${this.entryUrl}/${uuid}`)
+          //       .query(options.query)
+          .withCredentials()
+          .then((res) => {
+            if (res.header && res.status === 200) {
+              return res.header;
+            }
+            return null;
+          })
+          .catch(handleError(this, options))
+      );
+    }
+
     async get(entry, options) {
       await this.__ready;
       const uuid = getUuid(entry);
@@ -739,7 +757,8 @@ define([
       return entry;
     }
 
-    async discardLocal(entry) { // entry or uuid
+    async discardLocal(entry) {
+      // entry or uuid
       const uuid = getUuid(entry);
       // Make sure the data change is not tracked
       this.unbindChangeByUuid(uuid);
@@ -1191,7 +1210,9 @@ define([
           configurable: true
         });
 
-        var dUrl = `${this.entryUrl}/${entry._id}/${encodeURIComponent(v.filename)}`;
+        var dUrl = `${this.entryUrl}/${entry._id}/${encodeURIComponent(
+          v.filename
+        )}`;
         v.data[prop] = dUrl;
         Object.defineProperty(v, 'dUrl', {
           value: dUrl,
