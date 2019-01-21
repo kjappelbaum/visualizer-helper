@@ -503,15 +503,15 @@ Your local changes will be lost.</p>`;
           'Are you sure you want to refresh? This will discard your local modifications.'
         );
         if (!ok) return;
-        if (this.remoteHasChangedDiv) {
-          this.remoteHasChangedDiv.style.display = 'none';
-        }
         this.unbindChange();
         this.expandableMolecule.unbindChange();
         await this.roc.discardLocal(this.sample);
         this._initializeObjects();
         this.bindChange();
         this.remoteChanged = false;
+        if (this.remoteHasChangedDiv) {
+          this.remoteHasChangedDiv.style.display = 'none';
+        }
         this.nmr1dManager.handleAction({ name: 'nmrChanged' });
         break;
       }
