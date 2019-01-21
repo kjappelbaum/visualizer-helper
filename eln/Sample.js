@@ -51,6 +51,36 @@ class Sample {
       return;
     }
     this._loadInstanceInVisualizer();
+    this._checkServerChanges();
+  }
+
+  _checkServerChanges() {
+    window.setInterval(async () => {
+      if (this.sample && this.sample._rev) {
+        let uuid = this.sample._id;
+        let rev = this.sample._rev;
+        let remoteURev = String((await this.roc.getHeader(uuid)).etag).replace(
+          /"/g,
+          ''
+        );
+        let target = document.getElementById('modules-grid');
+        if (remoteURev && rev !== remoteURev && this.options.track) {
+          this.remoteHasChangedDiv = document.getElementById(
+            'remoteHasChanged'
+          );
+          if (!this.remoteHasChangedDiv) {
+            let alertDiv = document.createElement('DIV');
+            alertDiv.innerHTML = `<p id="remoteHasChanged" style="font-weight: bold; color: red; font-size: 3em; background-color: yellow">
+This entry has changed on the server, please reload the sample.<br>
+Your local changes will be lost.</p>`;
+            target.prepend(alertDiv);
+          } else {
+            this.remoteHasChangedDiv.style.display = 'block';
+          }
+          this.remoteChanged = true;
+        }
+      }
+    }, 5 * 1000);
   }
 
   async _loadInstanceInVisualizer() {
@@ -473,11 +503,15 @@ class Sample {
           'Are you sure you want to refresh? This will discard your local modifications.'
         );
         if (!ok) return;
+        if (this.remoteHasChangedDiv) {
+          this.remoteHasChangedDiv.style.display = 'none';
+        }
         this.unbindChange();
         this.expandableMolecule.unbindChange();
         await this.roc.discardLocal(this.sample);
         this._initializeObjects();
         this.bindChange();
+        this.remoteChanged = false;
         this.nmr1dManager.handleAction({ name: 'nmrChanged' });
         break;
       }
