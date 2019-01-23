@@ -5,9 +5,7 @@ define([
   'src/util/versioning'
 ], function (API, yamlParser, UI, Versioning) {
   let tipsURL = 'https://tips.cheminfo.org/';
-
-  console.log(API);
-
+  let minDelayBetweenTips = 4 * 3600 * 1000;
   async function getViewInfo() {
     if (
       !Versioning.lastLoaded ||
@@ -36,16 +34,16 @@ define([
         let text = await response.text();
         processTipsToc(text, info);
       })
-      .catch((error) => {
-        // not found we do nothing
-      });
+      .catch();
   }
 
   function processTipsToc(yaml, info) {
     let toc = yamlParser.parse(yaml);
     let userPrefs = JSON.parse(
-      window.localStorage.getItem('tipsPreferences') || '{"views":{}}'
+      window.localStorage.getItem('tipsPreferences') ||
+        '{"lastTip":0, "views":{}}'
     );
+    if ((Date.now() - userPrefs.lastTip || 0) < minDelayBetweenTips) return;
     if (!userPrefs.views[info._id]) {
       userPrefs.views[info._id] = { lastIndex: -1 };
     }
@@ -53,9 +51,9 @@ define([
     let tips = toc.tips
       .sort((a, b) => a.index - b.index)
       .filter((a) => a.index > viewPrefs.lastIndex);
-
     if (tips.length > 0 && info.rev >= tips[0].minRev) {
       viewPrefs.lastIndex = tips[0].index;
+      userPrefs.lastTip = Date.now();
       window.localStorage.setItem('tipsPreferences', JSON.stringify(userPrefs));
       UI.dialog(
         `
