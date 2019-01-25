@@ -4,8 +4,10 @@ define([
   'src/util/ui',
   'src/util/versioning'
 ], function (API, yamlParser, UI, Versioning) {
-  let tipsURL = 'https://tips.cheminfo.org/';
+  let tipsURL = 'https://docs.cheminfo.org/tips/';
+  let pagesURL = 'https://docs.cheminfo.org/pages/';
   let minDelayBetweenTips = 4 * 3600 * 1000;
+
   async function getViewInfo() {
     if (
       !Versioning.lastLoaded ||
@@ -65,7 +67,58 @@ define([
     }
   }
 
+  async function addPageHelp() {
+    let info = await getViewInfo();
+    if (!info._id) return;
+
+    await fetch(`${pagesURL + info._id}/index.html`, { method: 'HEAD' })
+      .then(async () => {})
+      .catch();
+
+    let target = document.getElementById('modules-grid');
+    let div = document.createElement('DIV');
+    div.innerHTML = `
+      <i style="color: lightgrey; cursor: pointer;" class="fa fa-question-circle fa-3x"></i>
+      `;
+    div.style.zIndex = 99;
+    div.style.position = 'fixed';
+
+    div.addEventListener('click', () => {
+      UI.dialog(
+        `
+            <iframe frameBorder="0" width="100%" height="100%" 
+            src="${pagesURL + info._id}">
+        `,
+        { width: 900, height: 700, title: 'Did you know ?' }
+      );
+    });
+
+    target.prepend(div);
+
+    window.addEventListener(
+      'keypress',
+      (event) => {
+        if (
+          event.altKey &&
+          event.shiftKey &&
+          event.ctrlKey &&
+          event.keyCode === 8
+        ) {
+          UI.dialog(
+            `
+                <iframe frameBorder="0" width="100%" height="100%" 
+                src="${pagesURL + info._id}">
+            `,
+            { width: 900, height: 700, title: 'Did you know ?' }
+          );
+        }
+      },
+      false
+    );
+  }
+
   return {
-    showTips
+    showTips,
+    addPageHelp
   };
 });
