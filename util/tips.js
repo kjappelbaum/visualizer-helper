@@ -73,7 +73,8 @@ define([
     }
   }
 
-  async function addPageHelp() {
+  async function addPageHelp(options = {}) {
+    const { iconSize = 'fa-3x' } = options;
     let info = await getViewInfo();
     if (!info._id) return;
 
@@ -84,7 +85,7 @@ define([
     let target = document.getElementById('modules-grid');
     let div = document.createElement('DIV');
     div.innerHTML = `
-      <i style="color: lightgrey; cursor: pointer;" class="fa fa-question-circle fa-3x"></i>
+      <i style="color: lightgrey; cursor: pointer;" class="fa fa-question-circle ${iconSize}"></i>
       `;
     div.style.zIndex = 99;
     div.style.position = 'fixed';
