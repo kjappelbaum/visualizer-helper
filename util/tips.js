@@ -3,7 +3,7 @@ define([
   './yamlParser',
   'src/util/ui',
   'src/util/versioning'
-], function(API, yamlParser, UI, Versioning) {
+], function (API, yamlParser, UI, Versioning) {
   let tipsURL = 'https://docs.cheminfo.org/tips/';
   let pagesURL = 'https://docs.cheminfo.org/pages/';
   let minDelayBetweenTips = 4 * 3600 * 1000;
@@ -32,7 +32,7 @@ define([
     //  info.rev=90;
     // retrieve tips toc
     await fetch(`${tipsURL + info._id}/index.yml`)
-      .then(async response => {
+      .then(async (response) => {
         let text = await response.text();
         processTipsToc(text, info);
       })
@@ -56,9 +56,9 @@ define([
         return a;
       })
       .sort((a, b) => a.index - b.index)
-      .filter(a => a.index > viewPrefs.lastIndex)
-      .filter(a => info.rev >= (a.minRev || 0))
-      .filter(a => info.rev <= (a.maxRev || Number.MAX_SAFE_INTEGER));
+      .filter((a) => a.index > viewPrefs.lastIndex)
+      .filter((a) => info.rev >= (a.minRev || 0))
+      .filter((a) => info.rev <= (a.maxRev || Number.MAX_SAFE_INTEGER));
     if (tips.length > 0) {
       viewPrefs.lastIndex = tips[0].index;
       userPrefs.lastTip = Date.now();
@@ -103,7 +103,7 @@ define([
 
     window.addEventListener(
       'keypress',
-      event => {
+      (event) => {
         if (
           event.altKey &&
           event.shiftKey &&

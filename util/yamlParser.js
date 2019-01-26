@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*
 YAML parser for Javascript
 Author: Diogo Costa
@@ -68,7 +70,7 @@ function Block(lvl) {
     /* Blocks with greater level */
     children: [],
     /* Add a block to the children collection */
-    addChild: function (obj) {
+    addChild: function(obj) {
       this.children.push(obj);
       obj.parent = this;
       ++this.length;
@@ -109,8 +111,8 @@ function createXMLHTTPRequest() {
 
 function fromURL(src, ondone) {
   var client = createXMLHTTPRequest();
-  client.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
+  client.onreadystatechange = function() {
+    if (this.readyState === 4 && this.status === 200) {
       var txt = this.responseText;
       ondone(YAML.parse(txt));
     }
@@ -162,11 +164,13 @@ function parser(str) {
 
       var k = levels.length - 1;
       for (; k >= 0; --k) {
-        if (levels[k] == level) {
+        if (levels[k] === level) {
           currentBlock = new Block(level);
           blocks.push(currentBlock);
           levels.push(level);
-          if (blocks[k].parent != null) blocks[k].parent.addChild(currentBlock);
+          if (blocks[k].parent !== null) {
+            blocks[k].parent.addChild(currentBlock);
+          }
           added = true;
           break;
         }
@@ -189,17 +193,17 @@ function processValue(val) {
   val = val.replace(regex.trim, '');
   var m = null;
 
-  if (val == 'true') {
+  if (val === 'true') {
     return true;
-  } else if (val == 'false') {
+  } else if (val === 'false') {
     return false;
-  } else if (val == '.NaN') {
+  } else if (val === '.NaN') {
     return Number.NaN;
-  } else if (val == 'null') {
+  } else if (val === 'null') {
     return null;
-  } else if (val == '.inf') {
+  } else if (val === '.inf') {
     return Number.POSITIVE_INFINITY;
-  } else if (val == '-.inf') {
+  } else if (val === '-.inf') {
     return Number.NEGATIVE_INFINITY;
   } else if ((m = val.match(regex.dashesString))) {
     return m[1];
@@ -223,21 +227,21 @@ function processValue(val) {
     var str = false;
     for (var j = 0, lenJ = m[1].length; j < lenJ; ++j) {
       c = m[1][j];
-      if (c == "'" || c == '"') {
+      if (c === "'" || c === '"') {
         if (str === false) {
           str = c;
           content += c;
           continue;
-        } else if ((c == "'" && str == "'") || (c == '"' && str == '"')) {
+        } else if ((c === "'" && str === "'") || (c === '"' && str === '"')) {
           str = false;
           content += c;
           continue;
         }
-      } else if (str === false && (c == '[' || c == '{')) {
+      } else if (str === false && (c === '[' || c === '{')) {
         ++count;
-      } else if (str === false && (c == ']' || c == '}')) {
+      } else if (str === false && (c === ']' || c === '}')) {
         --count;
-      } else if (str === false && count == 0 && c == ',') {
+      } else if (str === false && count === 0 && c === ',') {
         res.push(processValue(content));
         content = '';
         continue;
@@ -256,21 +260,21 @@ function processValue(val) {
     var str = false;
     for (var j = 0, lenJ = m[1].length; j < lenJ; ++j) {
       c = m[1][j];
-      if (c == "'" || c == '"') {
+      if (c === "'" || c === '"') {
         if (str === false) {
           str = c;
           content += c;
           continue;
-        } else if ((c == "'" && str == "'") || (c == '"' && str == '"')) {
+        } else if ((c === "'" && str === "'") || (c === '"' && str === '"')) {
           str = false;
           content += c;
           continue;
         }
-      } else if (str === false && (c == '[' || c == '{')) {
+      } else if (str === false && (c === '[' || c === '{')) {
         ++count;
-      } else if (str === false && (c == ']' || c == '}')) {
+      } else if (str === false && (c === ']' || c === '}')) {
         --count;
-      } else if (str === false && count == 0 && c == ',') {
+      } else if (str === false && count === 0 && c === ',') {
         res.push(content);
         content = '';
         continue;
@@ -329,7 +333,7 @@ function processBlock(blocks) {
   var isMap = true;
 
   for (var j = 0, lenJ = blocks.length; j < lenJ; ++j) {
-    if (level != -1 && level != blocks[j].level) continue;
+    if (level !== -1 && level !== blocks[j].level) continue;
 
     processedBlocks.push(j);
 
@@ -344,7 +348,7 @@ function processBlock(blocks) {
       if ((m = line.match(regex.key))) {
         var key = m[1];
 
-        if (key[0] == '-') {
+        if (key[0] === '-') {
           key = key.replace(regex.item, '');
           if (isMap) {
             isMap = false;
@@ -352,25 +356,25 @@ function processBlock(blocks) {
               res = [];
             }
           }
-          if (currentObj != null) res.push(currentObj);
+          if (currentObj !== null) res.push(currentObj);
           currentObj = {};
           isMap = true;
         }
 
         if (typeof m[2] !== 'undefined') {
           var value = m[2].replace(regex.trim, '');
-          if (value[0] == '&') {
+          if (value[0] === '&') {
             var nb = processBlock(children);
-            if (currentObj != null) currentObj[key] = nb;
+            if (currentObj !== null) currentObj[key] = nb;
             else res[key] = nb;
             reference_blocks[value.substr(1)] = nb;
-          } else if (value[0] == '|') {
-            if (currentObj != null) {
+          } else if (value[0] === '|') {
+            if (currentObj !== null) {
               currentObj[key] = processLiteralBlock(children.shift());
             } else {
               res[key] = processLiteralBlock(children.shift());
             }
-          } else if (value[0] == '*') {
+          } else if (value[0] === '*') {
             var v = value.substr(1);
             var no = {};
 
@@ -381,21 +385,21 @@ function processBlock(blocks) {
                 no[k] = reference_blocks[v][k];
               }
 
-              if (currentObj != null) currentObj[key] = no;
+              if (currentObj !== null) currentObj[key] = no;
               else res[key] = no;
             }
-          } else if (value[0] == '>') {
-            if (currentObj != null) {
+          } else if (value[0] === '>') {
+            if (currentObj !== null) {
               currentObj[key] = processFoldedBlock(children.shift());
             } else {
               res[key] = processFoldedBlock(children.shift());
             }
           } else {
-            if (currentObj != null) currentObj[key] = processValue(value);
+            if (currentObj !== null) currentObj[key] = processValue(value);
             else res[key] = processValue(value);
           }
         } else {
-          if (currentObj != null) currentObj[key] = processBlock(children);
+          if (currentObj !== null) currentObj[key] = processBlock(children);
           else res[key] = processBlock(children);
         }
       } else if (line.match(/^-\s*$/)) {
@@ -405,12 +409,12 @@ function processBlock(blocks) {
             res = [];
           }
         }
-        if (currentObj != null) res.push(currentObj);
+        if (currentObj !== null) res.push(currentObj);
         currentObj = {};
         isMap = true;
         continue;
       } else if ((m = line.match(/^-\s*(.*)/))) {
-        if (currentObj != null) {
+        if (currentObj !== null) {
           currentObj.push(processValue(m[1]));
         } else {
           if (isMap) {
@@ -425,7 +429,7 @@ function processBlock(blocks) {
       }
     }
 
-    if (currentObj != null) {
+    if (currentObj !== null) {
       if (isMap) {
         isMap = false;
         if (typeof res.length === 'undefined') {
@@ -457,9 +461,9 @@ function preProcess(src) {
   for (var i in lines) {
     if ((m = lines[i].match(r))) {
       /*                var cmt = "";
-            if(typeof m[3] != "undefined")
+            if(typeof m[3] !== "undefined")
                 lines[i] = m[1];
-            else if(typeof m[3] != "undefined")
+            else if(typeof m[3] !== "undefined")
                 lines[i] = m[3];
             else
                 lines[i] = "";
@@ -506,7 +510,7 @@ module.exports = {
    * @function
    * @return Errors found when parsing the last file.
    */
-  getErrors: function () {
+  getErrors: function() {
     return errors;
   },
 
@@ -515,7 +519,7 @@ module.exports = {
    * @function
    * @return Time in milliseconds.
    */
-  getProcessingTime: function () {
+  getProcessingTime: function() {
     return processing_time;
   }
 };
