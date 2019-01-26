@@ -95,7 +95,7 @@ define([
             <iframe frameBorder="0" width="100%" height="100%" 
             src="${pagesURL + info._id}">
         `,
-        { width: 900, height: 700, title: 'Did you know ?' }
+        { width: 900, height: 700, title: 'Information about the page' }
       );
     });
 
@@ -115,7 +115,7 @@ define([
                 <iframe frameBorder="0" width="100%" height="100%" 
                 src="${pagesURL + info._id}">
             `,
-            { width: 900, height: 700, title: 'Userguide' }
+            { width: 900, height: 700, title: 'Information about the page' }
           );
         }
       },
