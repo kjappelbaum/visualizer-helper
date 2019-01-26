@@ -1,4 +1,6 @@
 function toHTML(value, options = {}) {
+  value = JSON.parse(JSON.stringify(value));
+  value.sort((a, b) => a.wavelength - b.wavelength);
   if (options.parenthesis) return format2(value);
   return format1(value);
 }
@@ -8,7 +10,9 @@ function format1(value) {
   var acsString = '';
   if (value && value.peak) {
     acsString += 'IR (cm<sup>-1</sup>): ';
-    acsString += value.peak.map((a) => Math.round(a.wavelength) + (a.kind ? `<i>${a.kind}</i>` : '')).join(', ');
+    acsString += value.peak
+      .map(a => Math.round(a.wavelength) + (a.kind ? `<i>${a.kind}</i>` : ''))
+      .join(', ');
   }
   return acsString;
 }
@@ -18,10 +22,15 @@ function format2(value) {
   var acsString = '';
   if (value && value.peak) {
     acsString += 'IR (ν<sub>max</sub>, cm<sup>-1</sup>) ';
-    acsString += value.peak.map((a) => Math.round(a.wavelength) + (a.kind ? ` (${a.kind.toLowerCase()})` : '')).join(', ');
+    acsString += value.peak
+      .map(
+        a =>
+          Math.round(a.wavelength) +
+          (a.kind ? ` (${a.kind.toLowerCase()})` : '')
+      )
+      .join(', ');
   }
   return acsString;
 }
-
 
 module.exports = toHTML;
