@@ -3,18 +3,24 @@ import ui from 'src/util/ui';
 
 import chemspider from './chemspider';
 import chemexper from './chemexper';
+import epfl from './epfl';
 
 const defaultOptions = {
   chemexper: true,
-  chemspider: true
+  chemspider: true,
+  epfl: false
 };
 
 module.exports = {
   chemspider: chemspider,
   chemexper: chemexper,
+  epfl: epfl,
   choose(term, options) {
     options = Object.assign({}, defaultOptions, options);
     const sources = [];
+    if (options.epfl) {
+      sources.push({ promise: epfl.search(term) });
+    }
     if (options.chemspider) {
       sources.push({ promise: chemspider.search(term) });
     }
