@@ -3,6 +3,8 @@ import util from 'src/util/util';
 import ui from 'src/util/ui';
 import _ from 'lodash';
 
+// example: http://stock-isic.epfl.ch/searchstock?for=json&bl=100&search=Field10.11%3D123456&bottle=123456
+
 module.exports = {
   search(term) {
     return superagent
