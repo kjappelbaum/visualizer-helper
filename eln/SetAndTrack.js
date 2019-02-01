@@ -5,58 +5,59 @@ import Versioning from 'src/util/versioning';
 import URI from 'uri/URI';
 
 async function track() {
-    var externalInfo = JSON.parse(window.localStorage.getItem('external_cache') || '{}');
-    var smiles = externalInfo.smiles;
-    var molfile = externalInfo.molfile;
-    API.createData('nmr', []);
-    API.createData('mass', []);
-    API.createData('ir', []);
+  var externalInfo = JSON.parse(
+    window.localStorage.getItem('external_cache') || '{}'
+  );
+  var smiles = externalInfo.smiles;
+  var molfile = externalInfo.molfile;
+  API.createData('nmr', []);
+  API.createData('mass', []);
+  API.createData('ir', []);
 
-    var uri = new URI(document.location.href);
-    var search = uri.search(true);
-    if (search.smiles) {
-        smiles = search.smiles;
-        molfile = '';
+  var uri = new URI(document.location.href);
+  var search = uri.search(true);
+  if (search.smiles) {
+    smiles = search.smiles;
+    molfile = '';
+  }
+
+  var data = Versioning.getData();
+  data.onChange(function(evt) {
+    if (evt.jpath.length === 1 && evt.jpath[0] === 'molfile') {
+      localStorage.setItem('molfile', evt.target.get());
     }
+  });
 
-
-    var data = Versioning.getData();
-    data.onChange(function (evt) {
-        if (evt.jpath.length === 1 && evt.jpath[0] === 'molfile') {
-            localStorage.setItem('molfile', evt.target.get());
-        }
-    });
-
-    if (molfile) {
-        if (typeof OCLE === 'undefined') {
-            let OCLE = await API.require('vh/eln/libs/OCLE');
-            let Molecule = (OCLE.default) ? OCLE.default.Molecule : OCLE.Molecule;
-            const molecule = Molecule.fromMolfile(molfile);
-            API.createData('molfile', molecule.toMolfile());
-        } else {
-            const molecule = OCLE.Molecule.fromMolfile(molfile);
-            API.createData('molfile', molecule.toMolfile());
-        }
-    } else if (smiles) {
-        if (typeof OCLE === 'undefined') {
-            let OCLE = await API.require('vh/eln/libs/OCLE');
-            let Molecule = (OCLE.default) ? OCLE.default.Molecule : OCLE.Molecule;
-            const molecule = Molecule.fromSmiles(smiles);
-            console.log(molecule.toMolfile())
-            API.createData('molfile', molecule.toMolfile());
-        } else {
-            const molecule = OCLE.Molecule.fromSmiles(smiles);
-            API.createData('molfile', molecule.toMolfile());
-        }
+  if (molfile) {
+    if (typeof OCLE === 'undefined') {
+      let OCLE = await API.require('vh/eln/libs/OCLE');
+      let Molecule = OCLE.default ? OCLE.default.Molecule : OCLE.Molecule;
+      const molecule = Molecule.fromMolfile(molfile);
+      API.createData('molfile', molecule.toMolfile());
     } else {
-        molfile = window.localStorage.getItem('molfile');
-        if (molfile) {
-            API.createData('molfile', molfile);
-        } else {
-            API.createData('molfile', '');
-        }
+      const molecule = OCLE.Molecule.fromMolfile(molfile);
+      API.createData('molfile', molecule.toMolfile());
     }
-    return Promise.resolve();
+  } else if (smiles) {
+    if (typeof OCLE === 'undefined') {
+      let OCLE = await API.require('vh/eln/libs/OCLE');
+      let Molecule = OCLE.default ? OCLE.default.Molecule : OCLE.Molecule;
+      const molecule = Molecule.fromSmiles(smiles);
+      console.log(molecule.toMolfile());
+      API.createData('molfile', molecule.toMolfile());
+    } else {
+      const molecule = OCLE.Molecule.fromSmiles(smiles);
+      API.createData('molfile', molecule.toMolfile());
+    }
+  } else {
+    molfile = window.localStorage.getItem('molfile');
+    if (molfile) {
+      API.createData('molfile', molfile);
+    } else {
+      API.createData('molfile', '');
+    }
+  }
+  return Promise.resolve(externalInfo);
 }
 
-module.exports=track();
+module.exports = track();
