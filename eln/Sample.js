@@ -9,7 +9,6 @@ import Nmr1dManager from './Nmr1dManager';
 import MF from './MF';
 import { createVar } from './jpaths';
 import elnPlugin from './libs/elnPlugin';
-import MolecularFormula from './libs/MolecularFormula';
 import Sequence from './Sequence';
 import convertToJcamp from './libs/convertToJcamp';
 
@@ -51,8 +50,18 @@ class Sample {
       );
       return;
     }
-    this._loadInstanceInVisualizer();
+    this.sample = this.roc
+      .document(this.uuid, this.options)
+      .then(async (sample) => {
+        this.sample = sample;
+        this._loadInstanceInVisualizer();
+      });
+
     this._checkServerChanges();
+  }
+
+  waitSampleLoaded() {
+    return this.sample;
   }
 
   _checkServerChanges() {
@@ -86,8 +95,6 @@ Your local changes will be lost.</p>`;
   }
 
   async _loadInstanceInVisualizer() {
-    this.sample = await this.roc.document(this.uuid, this.options);
-
     updateSample(this.sample);
 
     var sampleVar = API.getVar(this.options.varName);
