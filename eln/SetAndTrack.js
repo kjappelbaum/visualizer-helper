@@ -36,8 +36,9 @@ async function track() {
       API.createData('molfile', molecule.toMolfile());
     }
   } else if (sample.smiles) {
+    let OCLE;
     if (typeof OCLE === 'undefined') {
-      let OCLE = await API.require('vh/eln/libs/OCLE');
+      OCLE = await API.require('vh/eln/libs/OCLE');
     }
     let Molecule = OCLE.default ? OCLE.default.Molecule : OCLE.Molecule;
     const molecule = Molecule.fromSmiles(sample.smiles);
