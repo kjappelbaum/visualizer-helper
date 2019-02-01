@@ -12,7 +12,7 @@ function explodeSequences(sample) {
   if (
     sequenceNucleic &&
     sequenceNucleic.sequence &&
-    String(sequenceNucleic.sequence)
+    String(sequenceNucleic.sequence) // could be removed with new MolecularFormula library
   ) {
     sequenceNucleic.sequence = MolecularFormula.Nucleotide.sequenceToMF(
       String(sequenceNucleic.sequence)
