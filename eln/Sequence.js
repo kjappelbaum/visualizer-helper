@@ -9,9 +9,13 @@ function explodeSequences(sample) {
     );
   }
   var sequenceNucleic = getFirstNucleotide(sample);
-  if (sequenceNucleic && sequenceNucleic.sequence) {
+  if (
+    sequenceNucleic &&
+    sequenceNucleic.sequence &&
+    String(sequenceNucleic.sequence)
+  ) {
     sequenceNucleic.sequence = MolecularFormula.Nucleotide.sequenceToMF(
-      String(sequenceNucleic)
+      String(sequenceNucleic.sequence)
     );
   }
   sample.triggerChange();
