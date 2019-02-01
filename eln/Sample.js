@@ -10,6 +10,7 @@ import MF from './MF';
 import { createVar } from './jpaths';
 import elnPlugin from './libs/elnPlugin';
 import MolecularFormula from './libs/MolecularFormula';
+import Sequence from './Sequence';
 import convertToJcamp from './libs/convertToJcamp';
 
 const DataObject = Datas.DataObject;
@@ -428,44 +429,11 @@ Your local changes will be lost.</p>`;
       case 'save':
         await this.roc.update(this.sample);
         break;
+      case 'explodeSequences':
+        Sequence.explodeSequences(this.sample);
+        break;
       case 'calculateMFFromSequence':
-        var sequencePeptidic = this.sample.getChildSync([
-          '$content',
-          'biology',
-          'peptidic',
-          '0',
-          'seq',
-          '0',
-          'sequence'
-        ]);
-        if (sequencePeptidic) {
-          let sequence = MolecularFormula.Peptide.sequenceToMF(
-            String(sequencePeptidic)
-          );
-          this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
-        }
-        var sequenceNucleic = this.sample.getChildSync([
-          '$content',
-          'biology',
-          'nucleic',
-          '0',
-          'seq',
-          '0'
-        ]);
-        if (sequenceNucleic) {
-          sequenceNucleic = JSON.parse(JSON.stringify(sequenceNucleic));
-        } // get rid of datatypes
-        if (sequenceNucleic && sequenceNucleic.sequence) {
-          let sequence = MolecularFormula.Nucleotide.sequenceToMF(
-            sequenceNucleic.sequence,
-            {
-              kind: sequenceNucleic.moleculeType,
-              circular: sequenceNucleic.circular,
-              fivePrime: sequenceNucleic.fivePrime
-            }
-          );
-          this.sample.setChildSync(['$content', 'general', 'mf'], sequence);
-        }
+        Sequence.calculateMFFromSequence(this.sample);
         break;
       case 'createOptions':
         var advancedOptions1H = API.cache('nmr1hAdvancedOptions');
