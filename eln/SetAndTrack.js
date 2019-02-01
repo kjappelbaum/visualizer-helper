@@ -5,20 +5,17 @@ import Versioning from 'src/util/versioning';
 import URI from 'uri/URI';
 
 async function track() {
-  var externalInfo = JSON.parse(
+  var sample = JSON.parse(
     window.localStorage.getItem('external_cache') || '{}'
   );
-  var smiles = externalInfo.smiles;
-  var molfile = externalInfo.molfile;
   API.createData('nmr', []);
   API.createData('mass', []);
   API.createData('ir', []);
-
   var uri = new URI(document.location.href);
   var search = uri.search(true);
   if (search.smiles) {
-    smiles = search.smiles;
-    molfile = '';
+    sample.smiles = search.smiles;
+    sample.molfile = '';
   }
 
   var data = Versioning.getData();
@@ -28,36 +25,35 @@ async function track() {
     }
   });
 
-  if (molfile) {
+  if (sample.molfile) {
     if (typeof OCLE === 'undefined') {
       let OCLE = await API.require('vh/eln/libs/OCLE');
       let Molecule = OCLE.default ? OCLE.default.Molecule : OCLE.Molecule;
-      const molecule = Molecule.fromMolfile(molfile);
+      const molecule = Molecule.fromMolfile(sample.molfile);
       API.createData('molfile', molecule.toMolfile());
     } else {
-      const molecule = OCLE.Molecule.fromMolfile(molfile);
+      const molecule = OCLE.Molecule.fromMolfile(sample.molfile);
       API.createData('molfile', molecule.toMolfile());
     }
-  } else if (smiles) {
+  } else if (sample.smiles) {
     if (typeof OCLE === 'undefined') {
       let OCLE = await API.require('vh/eln/libs/OCLE');
       let Molecule = OCLE.default ? OCLE.default.Molecule : OCLE.Molecule;
-      const molecule = Molecule.fromSmiles(smiles);
-      console.log(molecule.toMolfile());
+      const molecule = Molecule.fromSmiles(sample.smiles);
       API.createData('molfile', molecule.toMolfile());
     } else {
-      const molecule = OCLE.Molecule.fromSmiles(smiles);
+      const molecule = OCLE.Molecule.fromSmiles(sample.smiles);
       API.createData('molfile', molecule.toMolfile());
     }
   } else {
-    molfile = window.localStorage.getItem('molfile');
-    if (molfile) {
-      API.createData('molfile', molfile);
+    sample.molfile = window.localStorage.getItem('molfile');
+    if (sample.molfile) {
+      API.createData('molfile', sample.molfile);
     } else {
       API.createData('molfile', '');
     }
   }
-  return Promise.resolve(externalInfo);
+  return Promise.resolve(sample);
 }
 
 module.exports = track();
