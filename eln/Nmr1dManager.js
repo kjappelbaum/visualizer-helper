@@ -100,6 +100,7 @@ class Nmr1dManager {
   constructor(sample) {
     this.spectra = {};
     this.sample = sample;
+    this.previousNMR = undefined;
     this.initializeNMROptions();
   }
 
@@ -134,7 +135,6 @@ class Nmr1dManager {
       }
       case 'resetNMR1d': {
         var type = action.name.replace(/[^0-9]/g, '');
-
         type = `${type}d`;
         API.createData(`blackNMR${type}`, null);
         API.createData(`annotationNMR${type}`, null);
@@ -218,7 +218,9 @@ class Nmr1dManager {
         break;
       }
       case 'nmrChanged': {
+        if (this.previousNMR === API.getData('currentNmr')) break;
         if (!API.getData('currentNmr')) break;
+        this.previousNMR = API.getData('currentNmr');
         // Init ranges if does not exist
         this.initCurrentNmrRanges();
         this.updateIntegralOptions();

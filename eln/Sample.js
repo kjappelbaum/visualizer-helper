@@ -106,7 +106,7 @@ Your local changes will be lost.</p>`;
     createVar(sampleVar, 'general');
     createVar(sampleVar, 'molfile');
     createVar(sampleVar, 'firstPeptide');
-    createVar(sampleVar, 'firstNucleotide'); 
+    createVar(sampleVar, 'firstNucleotide');
     createVar(sampleVar, 'mf');
     createVar(sampleVar, 'mw');
     createVar(sampleVar, 'em');
