@@ -4,8 +4,8 @@ import IDB from 'src/util/IDBKeyValue';
 
 import ExpandableMolecule from './ExpandableMolecule';
 import MF from './MF';
+import elnPlugin from './libs/elnPlugin';
 
-const DataObject = Datas.DataObject;
 const idb = new IDB('external-samples');
 
 const defaultOptions = {
@@ -15,17 +15,24 @@ const defaultOptions = {
 class Sample {
   constructor(sample, options) {
     // make sure we don't copy attachment metadata
-    const s = sample.$content ? {
-      $content: {
-        general: sample.$content.general,
-        identifier: sample.$content.identifier,
-        stock: sample.$content.stock
+    const s = sample.$content
+      ? {
+        $content: {
+          general: sample.$content.general,
+          identifier: sample.$content.identifier,
+          stock: sample.$content.stock
+        }
       }
-    } : {
-      $content: {
-        general: {}
-      }
-    };
+      : {
+        $content: {
+          general: {},
+          spectra: {
+            nmr: [],
+            mass: [],
+            ir: []
+          }
+        }
+      };
 
     this.sample = JSON.parse(JSON.stringify(s));
     if (this.sample.$content.general.molfile) {
@@ -49,7 +56,14 @@ class Sample {
     API.setVariable('mf', sampleVar, ['$content', 'general', 'mf']);
     API.setVariable('mw', sampleVar, ['$content', 'general', 'mw']);
     API.setVariable('em', sampleVar, ['$content', 'general', 'em']);
-    API.setVariable('description', sampleVar, ['$content', 'general', 'description']);
+    API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
+    API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
+    API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
+    API.setVariable('description', sampleVar, [
+      '$content',
+      'general',
+      'description'
+    ]);
     API.setVariable('iupac', sampleVar, ['$content', 'general', 'iupac']);
 
     this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
@@ -79,7 +93,7 @@ class Sample {
       }
 
       const contentString = JSON.stringify(this.sample.$content);
-      if ((contentString !== this.contentString) && this.options.trackId) {
+      if (contentString !== this.contentString && this.options.trackId) {
         this.contentString = JSON.stringify(this.sample.$content);
         idb.set(this.options.trackId, this.sample.resurrect());
       }
@@ -101,7 +115,10 @@ class Sample {
           this.options.trackId = false;
         }
       }
-      sample = await API.createData(this.options.varName, sample || this.sample);
+      sample = await API.createData(
+        this.options.varName,
+        sample || this.sample
+      );
       this._loadSample(sample);
       resolve();
     });
@@ -115,7 +132,6 @@ class Sample {
   unbindChange() {
     this.sample.unbindChange(this.onChange);
   }
-
 
   handleDrop(name) {
     if (!name) {
@@ -135,15 +151,20 @@ class Sample {
 
     // Dropped data can be an array
     // Expecting format as from drag and drop module
+    // we store the data in the view
     var droppedDatas = API.getData(name);
     droppedDatas = droppedDatas.file || droppedDatas.str;
-    var prom = Promise.resolve();
-    for (let i = 0; i < droppedDatas.length; i++) {
-      prom = prom.then(() => {
-        var data = DataObject.resurrect(droppedDatas[i]);
-        return this.roc.attach(types[name], this.sample, data);
-      });
+
+    for (let data of droppedDatas) {
+      elnPlugin.process(
+        types[name],
+        this.sample.$content,
+        data,
+        {},
+        { keepContent: true }
+      );
     }
+    this.sample.triggerChange();
   }
 
   handleAction(action) {
