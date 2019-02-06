@@ -1,4 +1,3 @@
-import Datas from 'src/main/datas';
 import API from 'src/util/api';
 import IDB from 'src/util/IDBKeyValue';
 
