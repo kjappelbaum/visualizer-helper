@@ -37,7 +37,9 @@ function formatPeaks(value) {
 }
 
 function formatExactMass(value) {
-  if (!value.accurate || !value.accurate.mf) return '';
+  if (!value.accurate || !value.accurate.mf || !String(value.accurate.mf)) {
+    return '';
+  }
 
   let accurate = value.accurate;
   let mfInfo = new MolecularFormula.MF(

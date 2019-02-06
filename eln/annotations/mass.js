@@ -1,5 +1,9 @@
 function toAnnotations(peaks, options = {}) {
-  var { fillColor = 'green', strokeColor = 'red' } = options;
+  var {
+    fillColor = 'green',
+    strokeColor = 'red',
+    yPosition = undefined
+  } = options;
 
   if (!peaks) return [];
   let shouldRefresh = false;
@@ -29,7 +33,7 @@ function toAnnotations(peaks, options = {}) {
         color: 'red',
         position: {
           x: peak.mass,
-          y: peak.intensity,
+          y: yPosition === undefined ? peak.intensity : yPosition,
           dy: '-22px'
         }
       }
@@ -37,12 +41,12 @@ function toAnnotations(peaks, options = {}) {
     annotation.position = [
       {
         x: peak.mass - 1,
-        y: peak.intensity,
+        y: yPosition === undefined ? peak.intensity : yPosition,
         dy: '-20px'
       },
       {
         x: peak.mass + 1,
-        y: peak.intensity,
+        y: yPosition === undefined ? peak.intensity : yPosition,
         dy: '-10px'
       }
     ];
