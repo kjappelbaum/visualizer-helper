@@ -241,6 +241,7 @@ Your local changes will be lost.</p>`;
         droppedUV: 'uv',
         droppedIV: 'iv',
         droppedMS: 'mass',
+        droppedChrom: 'chromatogram',
         droppedXray: 'xray',
         droppedOverview: 'image',
         droppedImage: 'image',

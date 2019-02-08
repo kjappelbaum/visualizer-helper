@@ -141,7 +141,14 @@ class Sample {
     var types = {
       droppedNmr: 'nmr',
       droppedIR: 'ir',
-      droppedMS: 'mass'
+      droppedUV: 'uv',
+      droppedIV: 'iv',
+      droppedMS: 'mass',
+      droppedChrom: 'chromatogram',
+      droppedXray: 'xray',
+      droppedOverview: 'image',
+      droppedImage: 'image',
+      droppedGenbank: 'genbank'
     };
 
     if (!types[name]) {
