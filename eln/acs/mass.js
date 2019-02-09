@@ -30,7 +30,11 @@ function formatPeaks(value) {
 
   let peaks = [];
   for (let peak of value.peak) {
-    peaks.push(`${peak.mass} (${Math.round(peak.intensity)})`);
+    let value = peak.mass;
+    if (peak.intensity) {
+      value += ` (${Math.round(peak.intensity)})`;
+    }
+    peaks.push(value);
   }
 
   return `${experiment.join(' ')} ${peaks.join(', ')}`;
