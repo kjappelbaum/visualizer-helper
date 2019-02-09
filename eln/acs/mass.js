@@ -29,10 +29,15 @@ function formatPeaks(value) {
   experiment.push('m/z:');
 
   let peaks = [];
+  let maxIntensity = 0;
+  value.peak.forEach((peak) => {
+    if (peak.intensity > maxIntensity) maxIntensity = peak.intensity;
+  });
+  let factor = 100 / maxIntensity;
   for (let peak of value.peak) {
     let value = peak.mass;
-    if (peak.intensity) {
-      value += ` (${Math.round(peak.intensity)})`;
+    if (peak.intensity && maxIntensity) {
+      value += ` (${Math.round(peak.intensity * factor)})`;
     }
     peaks.push(value);
   }
