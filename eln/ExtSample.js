@@ -24,7 +24,9 @@ class Sample {
       }
       : {
         $content: {
-          general: {},
+          general: {
+            mf: ''
+          },
           spectra: {
             nmr: [],
             mass: [],
