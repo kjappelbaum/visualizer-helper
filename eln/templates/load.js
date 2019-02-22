@@ -40,7 +40,7 @@ module.exports = async function loadTemplates(categories, options = {}) {
   });
 
   // could be improved to remember the last selected format
-  await API.createData(variableName, templates);
+  if (variableName) await API.createData(variableName, templates);
 
   return templates;
 };
