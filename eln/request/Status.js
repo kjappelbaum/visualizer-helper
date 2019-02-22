@@ -3,7 +3,10 @@ import TypeRenderer from 'src/util/typerenderer';
 // we systematically add the type renderer
 TypeRenderer.addType('requeststatus', {
   toscreen($element, val) {
-    $element.html(Status.getStatusDescription(val));
+    let label = Status.getStatusDescription(val);
+    let color = Status.getStatusColor(val);
+    $element.css('background-color', color);
+    $element.html(label);
   }
 });
 
