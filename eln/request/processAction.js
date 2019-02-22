@@ -1,4 +1,3 @@
-
 import API from 'src/util/api';
 import UI from 'src/util/ui';
 
@@ -22,9 +21,8 @@ async function processAction(actionName, actionValue) {
         let request = API.getData('request');
         var newStatus = await askNewStatus(request);
         await prependStatus(request, newStatus);
+        request.triggerChange();
         API.doAction('refreshRequests');
-        API.createData('status', []);
-        API.doAction('setSelected', []);
       }
       break;
     case 'createForm':
@@ -46,7 +44,6 @@ async function processAction(actionName, actionValue) {
       throw Error(`the action "${actionValue}" is unknown`);
   }
 }
-
 
 async function requestFromScan(scan) {
   var request = await requestManager.getRequest(scan);
@@ -111,7 +108,8 @@ async function askNewStatus(request) {
     currentStatus++;
   }
 
-  let newStatus = await UI.form(`
+  let newStatus = await UI.form(
+    `
         <style>
             #status {
                 zoom: 1.5;
@@ -122,14 +120,19 @@ async function askNewStatus(request) {
             <p>&nbsp;</p>
             <form>
                 <select name="status">
-                    ${statusArray.map((item, i) =>
-    `<option value="${i}" ${(i === currentStatus) ? 'selected' : ''}>${item.description}</option>`
+                    ${statusArray.map(
+    (item, i) =>
+      `<option value="${i}" ${
+        i === currentStatus ? 'selected' : ''
+      }>${item.description}</option>`
   )}
                 </select>
                 <input type="submit" value="Submit"/>
             </form>
         </div>
-    `, {});
+    `,
+    {}
+  );
   return statusArray[newStatus.status].code;
 }
 
@@ -141,7 +144,6 @@ async function prependStatus(request, newStatus) {
   await roc.update(request);
 }
 
-
 async function createForm() {
   var groups = (await roc.getGroupMembership()).map((g) => g.name);
   var possibleGroups = ['mine'].concat(groups);
@@ -149,7 +151,9 @@ async function createForm() {
   if (possibleGroups.indexOf(defaultGroup) === -1) {
     defaultGroup = 'all';
   }
-  var possibleStatus = ['any'].concat(Status.getStatusArray().map((s) => s.description));
+  var possibleStatus = ['any'].concat(
+    Status.getStatusArray().map((s) => s.description)
+  );
   var schema = {
     type: 'object',
     properties: {
@@ -169,6 +173,5 @@ async function createForm() {
   };
   API.createData('formSchema', schema);
 }
-
 
 export default processAction;
