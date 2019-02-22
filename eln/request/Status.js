@@ -12,9 +12,11 @@ const Status = {};
 export default Status;
 
 const status = {
-  10: { description: 'Pending', color: '#FFDC00' },
-  20: { description: 'Processing', color: '#0074D9' },
-  30: { description: 'Finished', color: '#01FF70' },
+  10: { description: 'Created', color: '#f1f4dc' },
+  20: { description: 'Pending', color: '#FFDC00' },
+  30: { description: 'Acquiring', color: '#a8d5ff' },
+  40: { description: 'Processing', color: '#0074D9' },
+  50: { description: 'Finished', color: '#01FF70' },
   80: { description: 'Error', color: '#FF4136' },
   90: { description: 'Cancelled', color: '#AAAAAA' }
 };
@@ -22,13 +24,11 @@ const status = {
 Status.status = status;
 
 Status.getStatusArray = function getStatusArray() {
-  var statusArray = Object.keys(status).map(
-    (key) => ({
-      code: key,
-      description: status[key].description,
-      color: status[key].color
-    })
-  );
+  var statusArray = Object.keys(status).map((key) => ({
+    code: key,
+    description: status[key].description,
+    color: status[key].color
+  }));
   return statusArray;
 };
 
