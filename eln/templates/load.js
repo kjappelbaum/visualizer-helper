@@ -22,6 +22,9 @@ module.exports = async function loadTemplates(categories, options = {}) {
       .then(async (result) => {
         if (result.status === 200) {
           templates = await fetchAndLink(`${roc.url}`, categories);
+          if (!templates || templates.length === 0) {
+            templates = await fetchAndLink(undefined, categories);
+          }
         } else {
           templates = await fetchAndLink(undefined, categories);
         }
