@@ -82,10 +82,12 @@ class ExpandableMolecule {
     entry.timestamp = Date.now();
     entry.idCode = this.idCode;
     entry.molfile = this.molfile;
-    entry.id = this.sample.$id
+    if(this.sample.$id) {
+      entry.id = this.sample.$id
       .resurrect()
       .filter((a) => a)
-      .join(' ');
+      .join(' ');  
+    }
     // we sort by timestamp
     history = history.filter((entry) => entry.idCode !== 'd@');
     history.sort((a, b) => b.timestamp - a.timestamp);
