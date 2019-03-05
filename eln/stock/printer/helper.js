@@ -18,7 +18,7 @@ module.exports = {
 
 
     for (let j = 0; j < types.length; j++) {
-      API.createData(`${types[j]}Formats`, varFormats[j]);
+      await API.createData(`${types[j]}Formats`, varFormats[j]);
     }
   },
 
