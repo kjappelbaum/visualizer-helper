@@ -200,6 +200,23 @@ define([
       return res.body;
     }
 
+    async getUserPrefs() {
+      await this.__ready;
+      const res = await superagent
+        .get(`${this.databaseUrl}/user/_me`)
+        .withCredentials();
+      return res.body;
+    }
+
+    async setUserPrefs(prefs) {
+      await this.__ready;
+      const res = await superagent
+        .post(`${this.databaseUrl}/user/_me`)
+        .withCredentials()
+        .send(prefs);
+      return res.body;
+    }
+
     async getUserInfo() {
       await this.__ready;
       const res = await superagent

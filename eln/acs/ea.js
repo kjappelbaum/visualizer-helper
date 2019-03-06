@@ -10,6 +10,10 @@ export default function toHtml(value, options = {}) {
   let mfObject = new MolecularFormula.MF(String(options.mf));
   mfObject.canonize();
   let ea = mfObject.getEA();
+  if (Array.isArray(value)) {
+    value = findBest(value, ea);
+  }
+
   for (let element of elements) {
     let field = element.toLowerCase();
     if (value[field]) {
@@ -27,4 +31,23 @@ export default function toHtml(value, options = {}) {
   result += found.join('; ');
   result += '.';
   return result;
+}
+
+function findBest(eas, theoretical) {
+  let bestError = Number.MAX_VALUE;
+  let bestEA;
+  for (var ea of eas) {
+    let error = 0;
+    for (let th of theoretical) {
+      let key = th.element.toLowerCase();
+      if (ea[key]) {
+        error += Math.abs(ea[key] - th.ratio);
+      }
+    }
+    if (error < bestError) {
+      bestError = error;
+      bestEA = ea;
+    }
+  }
+  return bestEA;
 }
