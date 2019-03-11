@@ -1,9 +1,14 @@
 function toHTML(value, options = {}) {
+  const { parenthesis = false, ascending = false } = options;
   value = JSON.parse(JSON.stringify(value));
   if (value && value.peak) {
-    value.peak.sort((a, b) => a.wavelength - b.wavelength);
+    if (ascending) {
+      value.peak.sort((a, b) => a.wavelength - b.wavelength);
+    } else {
+      value.peak.sort((a, b) => b.wavelength - a.wavelength);
+    }
   }
-  if (options.parenthesis) return format2(value);
+  if (parenthesis) return format2(value);
   return format1(value);
 }
 
