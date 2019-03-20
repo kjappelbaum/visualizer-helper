@@ -2,27 +2,11 @@ define([
   'src/util/api',
   './yamlParser',
   'src/util/ui',
-  'src/util/versioning'
-], function (API, yamlParser, UI, Versioning) {
+  './getViewInfo'
+], function (API, yamlParser, UI, getViewInfo) {
   let tipsURL = 'https://docs.cheminfo.org/tips/';
   let pagesURL = 'https://docs.cheminfo.org/pages/';
   let minDelayBetweenTips = 4 * 3600 * 1000;
-
-  async function getViewInfo() {
-    if (
-      !Versioning.lastLoaded ||
-      !Versioning.lastLoaded.view ||
-      !Versioning.lastLoaded.view.url
-    ) {
-      return {};
-    }
-    let viewURL = Versioning.lastLoaded.view.url;
-    let recordURL = viewURL.replace(/\/view.json.*/, '');
-    let response = await fetch(recordURL, { credentials: 'include' });
-    let info = await response.json();
-    info.rev = Number(info._rev.replace(/-.*/, ''));
-    return info;
-  }
 
   async function showTips() {
     let info = await getViewInfo();
