@@ -10,7 +10,9 @@ define([
   'src/util/couchdbAttachments',
   'src/util/mimeTypes',
   'src/util/IDBKeyValue',
-  'eventEmitter'
+  'eventEmitter',
+  './UserViewPrefs',
+  './UserAnalysisResults'
 ], function (
   Datas,
   API,
@@ -23,7 +25,9 @@ define([
   CDB,
   mimeTypes,
   IDB,
-  EventEmitter
+  EventEmitter,
+  UserViewPrefs,
+  UserAnalysisResults
 ) {
   const DataObject = Datas.DataObject;
   const eventEmitters = {};
@@ -192,6 +196,9 @@ define([
         .href();
       this.trackIgnore = new Map();
       this.__ready = Promise.resolve();
+
+      this.UserViewPrefs = new UserViewPrefs(this);
+      this.UserAnalysisResults = new UserAnalysisResults(this);
     }
 
     async getUser() {
@@ -200,14 +207,29 @@ define([
       return res.body;
     }
 
-    async getUserPrefs() {
+    /**
+     * Retrieve current logged in user preferences
+     * @param {*} defaultPrefs
+     */
+    async getUserPrefs(defaultPrefs = {}) {
       await this.__ready;
-      const res = await superagent
-        .get(`${this.databaseUrl}/user/_me`)
-        .withCredentials();
+      let res;
+      try {
+        res = await superagent
+          .get(`${this.databaseUrl}/user/_me`)
+          .withCredentials();
+      } catch (e) {
+        this.setUserPrefs(defaultPrefs);
+        return defaultPrefs;
+      }
+
       return res.body;
     }
 
+    /**
+     * Set user personal preferences. The key of the object send are joined on the server side
+     * @param {*} prefs - the prefereces to save as an object
+     */
     async setUserPrefs(prefs) {
       await this.__ready;
       const res = await superagent
