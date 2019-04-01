@@ -3,17 +3,14 @@ import MolecularFormula from './libs/MolecularFormula';
 function explodeSequences(sample) {
   var sequencePeptidic = getFirstPeptide(sample);
 
-  if (sequencePeptidic) {
-    sequencePeptidic.setValue(
-      MolecularFormula.Peptide.sequenceToMF(String(sequencePeptidic))
+  if (sequencePeptidic && sequencePeptidic.sequence) {
+    sequencePeptidic.sequence = MolecularFormula.Peptide.sequenceToMF(
+      String(sequencePeptidic.sequence)
     );
   }
+
   var sequenceNucleic = getFirstNucleotide(sample);
-  if (
-    sequenceNucleic &&
-    sequenceNucleic.sequence &&
-    String(sequenceNucleic.sequence) // could be removed with new MolecularFormula library
-  ) {
+  if (sequenceNucleic && sequenceNucleic.sequence) {
     sequenceNucleic.sequence = MolecularFormula.Nucleotide.sequenceToMF(
       String(sequenceNucleic.sequence)
     );
@@ -53,8 +50,7 @@ function getFirstPeptide(sample) {
     'peptidic',
     '0',
     'seq',
-    '0',
-    'sequence'
+    '0'
   ]);
 }
 
@@ -71,5 +67,7 @@ function getFirstNucleotide(sample) {
 
 module.exports = {
   calculateMFFromSequence,
-  explodeSequences
+  explodeSequences,
+  getFirstNucleotide,
+  getFirstPeptide
 };
