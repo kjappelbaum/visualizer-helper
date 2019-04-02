@@ -28,7 +28,7 @@ const STATUS = [
 
 function getColor(statusCode) {
   for (let status of STATUS) {
-    if (status.code === statusCode) {
+    if (Number(status.code) === Number(statusCode)) {
       return status.color;
     }
   }
@@ -83,7 +83,7 @@ function updateStatus(status) {
 
 function getLabel(statusCode) {
   for (let status of STATUS) {
-    if (status.code === statusCode) {
+    if (Number(status.code) === Number(statusCode)) {
       return status.label;
     }
   }
