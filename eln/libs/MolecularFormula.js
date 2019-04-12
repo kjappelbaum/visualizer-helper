@@ -1,3 +1,3 @@
 export {
   default
-} from 'https://www.lactame.com//lib/molecular-formula/0.17.3/molecular-formula.js';
+} from 'https://www.lactame.com//lib/molecular-formula/0.17.4/molecular-formula.js';
