@@ -48,15 +48,24 @@
  *   </table>
  */
 
-
-define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Module) {
+define(['jquery', 'src/util/api', 'modules/modulefactory'], function (
+  $,
+  API,
+  Module
+) {
   function AdvancedForm(divID, options = {}) {
     // we will find automatically the variableName
-    var moduleId = $(`#${divID}`).closest('[data-module-id]').attr('data-module-id');
-    var module = Module.getModules().find((m) => `${m.getId()}` === `${moduleId}`);
+    var moduleId = $(`#${divID}`)
+      .closest('[data-module-id]')
+      .attr('data-module-id');
+    var module = Module.getModules().find(
+      (m) => `${m.getId()}` === `${moduleId}`
+    );
     var ips = module.vars_in().filter((v) => v.rel === 'form');
     if (ips.length === 0) {
-      throw new Error('The twig module does not have variable in of type "form"');
+      throw new Error(
+        'The twig module does not have variable in of type "form"'
+      );
     }
     var variableName = ips[0].name;
     var data;
@@ -64,18 +73,28 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
     if (options.debug) console.log('variableName:', variableName);
 
     var variable = API.getVar(variableName);
-    variable.listen({ getId() {
-      return moduleId + variableName;
-    } }, function (newData) {
-      newData.currentPromise.then(() => {
-        if (!data) {
-          if (options.debug) console.log('The variable', variableName, 'does not exist yet. We will load it.');
-          data = API.getData(variableName);
-          updateTwig();
+    variable.listen(
+      {
+        getId() {
+          return moduleId + variableName;
         }
-      });
-    });
-
+      },
+      function (newData) {
+        newData.currentPromise.then(() => {
+          if (!data) {
+            if (options.debug) {
+              console.log(
+                'The variable',
+                variableName,
+                'does not exist yet. We will load it.'
+              );
+            }
+            data = API.getData(variableName);
+            updateTwig();
+          }
+        });
+      }
+    );
 
     // we will initialise the form
     var dom = $(document.getElementById(divID));
@@ -85,12 +104,10 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
                 <td><span class="form-button removeRow" /></td>
             `);
 
-
     if (!data && API.getData(variableName)) {
       data = API.getData(variableName);
       updateTwig();
     }
-
 
     // Add the style
     dom.parent().prepend(
@@ -104,11 +121,10 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
             </style>`
     );
 
-
     function handleDataRepeat(index, row) {
       row = $(row);
       var jpath = getJpath(row);
-      var variable = (data) ? data.getChildSync(jpath) : '';
+      var variable = data ? data.getChildSync(jpath) : '';
       var table = row.closest('table');
       var length = 0;
       var empty = false;
@@ -148,25 +164,26 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
       }
     }
 
-
     // rename the attributes 'name' or 'name-empty' of one specific row based on the jpath
     function renameRow(row, jpath, rowIndex, empty) {
       row = $(row);
-      row.children('td:not(:has(table))').find('[data-field]').each(function (index, element) {
-        element = $(element);
-        var name = jpath.join('.');
-        if (name) name += '.';
-        name += rowIndex;
-        var attr = element.attr('data-field');
-        if (attr) name += `.${attr}`;
-        if (empty) {
-          element.attr('name-empty', name);
-        } else {
-          element.attr('name', name);
-        }
-      });
+      row
+        .children('td:not(:has(table))')
+        .find('[data-field]')
+        .each(function (index, element) {
+          element = $(element);
+          var name = jpath.join('.');
+          if (name) name += '.';
+          name += rowIndex;
+          var attr = element.attr('data-field');
+          if (attr) name += `.${attr}`;
+          if (empty) {
+            element.attr('name-empty', name);
+          } else {
+            element.attr('name', name);
+          }
+        });
     }
-
 
     // get the jpath from one element based on the attributes 'data-repeat' and 'data-index'
     // the jpath is returned as an array
@@ -177,8 +194,10 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
           jpath.unshift($(element).attr('data-index'));
         }
         var repeatName = $(element).attr('data-repeat');
-        if (repeatName) jpath.unshift(repeatName);
-        element = $(element).parent().closest('[data-repeat]');
+        if (repeatName) jpath.unshift(...repeatName.split('.'));
+        element = $(element)
+          .parent()
+          .closest('[data-repeat]');
       }
       return jpath;
     }
@@ -193,15 +212,17 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
       rows.each(function (rowIndex, row) {
         var replace = `${base}.${rowIndex}`;
         for (var attr of ['name', 'name-empty']) {
-          $(row).find(`[${attr}]`).each(
-            // eslint-disable-next-line no-loop-func
-            function (index, element) {
-              element = $(element);
-              var name = element.attr(attr);
-              name = name.replace(search, replace);
-              element.attr(attr, name);
-            }
-          );
+          $(row)
+            .find(`[${attr}]`)
+            .each(
+              // eslint-disable-next-line no-loop-func
+              function (index, element) {
+                element = $(element);
+                var name = element.attr(attr);
+                name = name.replace(search, replace);
+                element.attr(attr, name);
+              }
+            );
         }
       });
     }
@@ -217,29 +238,36 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
       names.sort();
       return {
         base: names[0].replace(/(.*)\.([0-9]+).*/, '$1'),
-        index: names[0].replace(/(.*)\.([0-9]+).*/, '$2'),
+        index: names[0].replace(/(.*)\.([0-9]+).*/, '$2')
       };
     }
 
     if (options.debug) {
-      document.getElementById(divID).addEventListener('mouseover', function (event) {
-        var target = $(event.target);
-        if (target.attr('name')) {
-          console.log('Name', target.attr('name'));
-        }
-      });
-      document.getElementById(divID).addEventListener('mouseover', function (event) {
-        var target = $(event.target);
-        if (target.attr('name-empty')) {
-          console.log('Empty', target.attr('name'));
-        }
-      });
+      document
+        .getElementById(divID)
+        .addEventListener('mouseover', function (event) {
+          var target = $(event.target);
+          if (target.attr('name')) {
+            console.log('Name', target.attr('name'));
+          }
+        });
+      document
+        .getElementById(divID)
+        .addEventListener('mouseover', function (event) {
+          var target = $(event.target);
+          if (target.attr('name-empty')) {
+            console.log('Empty', target.attr('name'));
+          }
+        });
     }
 
     function changeInputFct(event) {
       var target = $(event.target);
       if (target.attr('name-empty')) {
-        var empties = target.closest('tr').children('td:not(:has(table))').find('[name-empty]');
+        var empties = target
+          .closest('tr')
+          .children('td:not(:has(table))')
+          .find('[name-empty]');
         empties.each((index, element) => {
           $(element).attr('name', $(element).attr('name-empty'));
           $(element).removeAttr('name-empty');
@@ -259,7 +287,10 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
         case 'addRow':
           // if we try to add a row we should check if
           // there is already an empty one
-          var empties = table.children('tr').children('td:not(:has(table))').find('[name-empty]');
+          var empties = table
+            .children('tr')
+            .children('td:not(:has(table))')
+            .find('[name-empty]');
           if (empties.length > 0) {
             empties[0].focus();
             return;
@@ -309,5 +340,4 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function ($, API, Mo
     });
   }
   return AdvancedForm;
-}
-);
+});
