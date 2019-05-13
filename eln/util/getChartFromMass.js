@@ -15,7 +15,10 @@ export async function getChartFromMass(experiment, options = {}) {
     let name =
       options.name || String(experiment.jcamp.filename).match(/([^/]+)\..+/)[1];
     if (!experiment.jcamp.data) return undefined;
-    let data = (await experiment.getChild(['jcamp', 'data'])).get();
+
+    let data = experiment.jcamp.content
+      ? experiment.jcamp.content
+      : (await experiment.getChild(['jcamp', 'data'])).get();
     let jcamp = String(data);
 
     let result = convert(jcamp, { xy: true });
@@ -32,7 +35,9 @@ export async function getChartFromMass(experiment, options = {}) {
   } else if (experiment.text) {
     let name =
       options.name || String(experiment.text.filename).match(/([^/]+)\..+/)[1];
-    let data = (await experiment.getChild(['text', 'data'])).get();
+    let data = experiment.text.content
+      ? experiment.text.content
+      : (await experiment.getChild(['text', 'data'])).get();
     let text = String(data);
     let points = parseXY(String(text), {
       arrayType: 'xxyy',
