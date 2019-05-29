@@ -34,25 +34,25 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
     switch (printFormat.type) {
       case 'sample': {
         const result = JSON.parse(JSON.stringify(data));
-        if (data.$content) {
-          result.entry = data.$content;
-          if (data._id) {
-            result.uuidShort = data._id.substring(0, 12);
+        if (result.$content) {
+          result.entry = result.$content;
+          if (result._id) {
+            result.uuidShort = result._id.substring(0, 12);
             result.b64Short = Util.hexToBase64(result.uuidShort);
           }
-          if (data.$id) {
-            result.id = data.$id;
+          if (result.$id) {
+            result.id = result.$id;
           }
-          if (data.$content.general) {
-            if (data.$content.general.description) {
-              result.line1 = data.$content.general.description.substring(0, 60);
-              result.line2 = data.$content.general.description.substring(60, 120);
+          if (result.$content.general) {
+            if (result.$content.general.description) {
+              result.line1 = result.$content.general.description.substring(0, 60);
+              result.line2 = result.$content.general.description.substring(60, 120);
             } else {
               result.line1 = '';
               result.line2 = '';
             }
-            if (data.$content.general.molfile) {
-              result.molfile = String(data.$content.general.molfile);
+            if (result.$content.general.molfile) {
+              result.molfile = result.$content.general.molfile;
             }
           }
         }
