@@ -22,7 +22,7 @@ function calculateMFFromSequence(sample) {
   var sequencePeptidic = getFirstPeptide(sample);
   if (sequencePeptidic) {
     let sequence = MolecularFormula.Peptide.sequenceToMF(
-      String(sequencePeptidic)
+      String(sequencePeptidic.sequence)
     );
     sample.setChildSync(['$content', 'general', 'mf'], sequence);
   }
