@@ -11,7 +11,8 @@ define([
       strokeWidth = 2,
       labelFontFamily = 'Verdana',
       labelSize = 8,
-      verticalShiftForTerminalAnnotations = 20
+      verticalShiftForTerminalAnnotations = 20,
+      showLabels = true
     } = options;
 
     var residues = [];
@@ -232,6 +233,7 @@ define([
     }
 
     function drawLabel(result, x, y) {
+      if (!showLabels) return;
       var label = result.type;
       var similarity = Math.round(result.similarity);
       var charge = result.charge > 0 ? `+${result.charge}` : result.charge;

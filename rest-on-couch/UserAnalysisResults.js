@@ -1,4 +1,4 @@
-define(['../util/getViewInfo'], function (getViewInfo) {
+define(['../util/getViewInfo', 'src/util/api'], function (getViewInfo, API) {
   class UserAnalysisResults {
     constructor(roc, sampleID) {
       this.roc = roc;
@@ -8,6 +8,11 @@ define(['../util/getViewInfo'], function (getViewInfo) {
 
     setSampleID(sampleID) {
       this.sampleID = sampleID;
+    }
+
+    async refresh() {
+      let analysisResults = await this.getRecords();
+      API.createData('analysisResults', analysisResults);
     }
 
     /**
