@@ -1,4 +1,8 @@
-define(['../util/getViewInfo', 'src/util/api'], function (getViewInfo, API) {
+define([
+  '../util/getViewInfo',
+  'src/util/api',
+  'src/util/couchdbAttachments'
+], function (getViewInfo, API, CDB) {
   class UserAnalysisResults {
     constructor(roc, sampleID) {
       this.roc = roc;
@@ -13,6 +17,10 @@ define(['../util/getViewInfo', 'src/util/api'], function (getViewInfo, API) {
     async refresh() {
       let analysisResults = await this.getRecords();
       API.createData('analysisResults', analysisResults);
+    }
+
+    async getByUUID(uuid) {
+      this.roc.
     }
 
     /**
@@ -44,20 +52,37 @@ define(['../util/getViewInfo', 'src/util/api'], function (getViewInfo, API) {
       return entries;
     }
 
-    async set(key, value) {
+    delete(entry) {
+      return this.roc.delete(entry);
+    }
+
+    async set(key, meta, result) {
       this.viewID = this.viewID || (await getViewInfo())._id;
-      let record = (await this.getRecords(key))[0];
-      if (record) {
-        record.$content = value;
-        return this.roc.update(record);
+      let entry = (await this.getRecords(key))[0];
+      if (entry) {
+        entry.$content = meta;
+        await this.roc.update(entry);
       } else {
-        return this.roc.create({
+        entry = await this.roc.create({
           $id: ['userAnalysisResults', this.viewID, this.sampleID, key],
-          $content: value,
+          $content: meta,
           $kind: 'userAnalysisResults'
         });
       }
+
+      if (result) {
+        let attachments = [
+          {
+            filename: 'result.json',
+            data: JSON.stringify(result),
+            contentType: 'application/json'
+          }
+        ];
+        await this.roc.addAttachment(entry, attachments);
+      }
+      return entry;
     }
   }
+
   return UserAnalysisResults;
 });
