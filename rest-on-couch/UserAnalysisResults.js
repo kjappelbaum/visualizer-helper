@@ -52,7 +52,15 @@ define([
       return this.roc.delete(entry);
     }
 
-    async set(key, meta, result) {
+    /**
+     * Result is stored in an attachment called result.json
+     * @param {*} entry
+     */
+    loadResult(entry) {
+      return this.roc.getAttachment(entry, 'result.json');
+    }
+
+    async save(key, meta, result) {
       this.viewID = this.viewID || (await getViewInfo())._id;
       let entry = (await this.getRecords(key))[0];
       if (entry) {
