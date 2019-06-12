@@ -15,36 +15,46 @@ define([
     }
 
     async refresh() {
-      let analysisResults = await this.getRecords();
+      let analysisResults = await this.loadResults();
       API.createData('analysisResults', analysisResults);
+      let analysisTemplates = await this.loadTemplates();
+      API.createData('analysisTemplates', analysisTemplates);
+    }
+
+    async loadTemplates(key) {
+      return this.loadResults(key, { sampleID: '' });
     }
 
     /**
      * Retrieve all the analytical results for a sample in a view
      * @param {string} key
      */
-    async getRecords(key) {
+    async loadResults(key, options = {}) {
+      const { sampleID = this.sampleID } = options;
       this.viewID = this.viewID || (await getViewInfo())._id;
       var user = await this.roc.getUser();
       if (!user || !user.username) return undefined;
-      let options = key
+      let queryOptions = key
         ? {
           key: [
             user.username,
-            ['userAnalysisResults', this.viewID, this.sampleID, key]
+            ['userAnalysisResults', this.viewID, sampleID, key]
           ]
         }
         : {
           startkey: [
             user.username,
-            ['userAnalysisResults', this.viewID, this.sampleID, '\u0000']
+            ['userAnalysisResults', this.viewID, sampleID, '\u0000']
           ],
           endkey: [
             user.username,
-            ['userAnalysisResults', this.viewID, this.sampleID, '\uffff']
+            ['userAnalysisResults', this.viewID, sampleID, '\uffff']
           ]
         };
-      var entries = await this.roc.view('entryByOwnerAndId', options);
+      var entries = await this.roc.view('entryByOwnerAndId', queryOptions);
+      if (sampleID) {
+        return entries.filter((entry) => entry.$id[2].match(/^[0-9a-f]{32}$/i));
+      }
       return entries;
     }
 
@@ -60,20 +70,24 @@ define([
       return this.roc.getAttachment(entry, 'result.json');
     }
 
-    async save(key, meta, result) {
+    async saveTemplate(key, meta, result) {
+      this.save(key, meta, result, { sampleID: '' });
+    }
+
+    async save(key, meta, result, options = {}) {
+      const { sampleID = this.sampleID } = options;
       this.viewID = this.viewID || (await getViewInfo())._id;
-      let entry = (await this.getRecords(key))[0];
+      let entry = (await this.loadResults(key))[0];
       if (entry) {
         entry.$content = meta;
         await this.roc.update(entry);
       } else {
         entry = await this.roc.create({
-          $id: ['userAnalysisResults', this.viewID, this.sampleID, key],
+          $id: ['userAnalysisResults', this.viewID, sampleID, key],
           $content: meta,
           $kind: 'userAnalysisResults'
         });
       }
-
       if (result) {
         let attachments = [
           {
