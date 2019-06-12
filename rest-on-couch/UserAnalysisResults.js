@@ -19,10 +19,6 @@ define([
       API.createData('analysisResults', analysisResults);
     }
 
-    async getByUUID(uuid) {
-      this.roc.
-    }
-
     /**
      * Retrieve all the analytical results for a sample in a view
      * @param {string} key
