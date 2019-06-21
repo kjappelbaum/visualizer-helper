@@ -41,10 +41,11 @@ async function jcampInfo(value) {
       (datum) => `
                     <tr>
                         <td><b>${datum.label}</b></td>
-                        <td><pre>${datum.value.replace(
-    /[\r\n]+$/,
-    ''
-  )}</pre></td>
+                        <td><pre>${
+  datum.value.replace
+    ? datum.value.replace(/[\r\n]+$/, '')
+    : datum.value
+}</pre></td>
                     </tr>
                 `
     )
