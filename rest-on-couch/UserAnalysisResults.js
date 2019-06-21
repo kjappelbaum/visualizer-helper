@@ -71,7 +71,7 @@ define([
     }
 
     async saveTemplate(key, meta, result) {
-      this.save(key, meta, result, { sampleID: '' });
+      return this.save(key, meta, result, { sampleID: '' });
     }
 
     async save(key, meta, result, options = {}) {
