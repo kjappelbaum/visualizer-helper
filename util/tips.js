@@ -25,6 +25,7 @@ define([
 
   function processTipsToc(yaml, info) {
     let toc = yamlParser.parse(yaml);
+    if (!toc.tips) return;
     let userPrefs = JSON.parse(
       window.localStorage.getItem('tipsPreferences') ||
         '{"lastTip":0, "views":{}}'
