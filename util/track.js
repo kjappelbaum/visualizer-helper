@@ -32,7 +32,7 @@ define(['jquery', 'src/util/api', 'src/util/versioning'], function (
 
       result.resetValue = () => {
         Object.keys(_defaultValue).forEach((key) => {
-          result[key] = _defaultValue[key];
+          result[key] = JSON.parse(JSON.stringify(_defaultValue[key]));
         });
         result.triggerChange();
       };
