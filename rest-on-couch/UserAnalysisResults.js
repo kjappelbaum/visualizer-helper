@@ -77,7 +77,7 @@ define([
     async save(key, meta, result, options = {}) {
       const { sampleID = this.sampleID } = options;
       this.viewID = this.viewID || (await getViewInfo())._id;
-      let entry = (await this.loadResults(key))[0];
+      let entry = (await this.loadResults(key, { sampleID }))[0];
       if (entry) {
         entry.$content = meta;
         await this.roc.update(entry);
