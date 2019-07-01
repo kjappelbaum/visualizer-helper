@@ -3,6 +3,7 @@ We retrieve some exercises for structural analysis
  */
 
 import UI from 'src/util/ui';
+import OCL from 'openchemlib/openchemlib-full';
 
 import MolecularFormula from '../eln/libs/MolecularFormula';
 
@@ -21,18 +22,31 @@ let html = `
             display: block;
         }
         #allGroups tbody {
-            height: 300px;
+            height: 600px;
             overflow-y: auto;
         }
+        #allGroups td {
+            vertical-align: top;
+        }
+        #allGroups tr:nth-child(even) {
+            background: #DDD;
+        }
+        #allGroups tr:nth-child(odd) {
+            background: #EEE;
+        }
         #allGroups thead th:nth-child(1), #allGroups tbody td:nth-child(1) {
-            width: 70px;
+            width: 90px;
         }
         #allGroups thead th:nth-child(2), #allGroups tbody td:nth-child(2) {
-            width: 250px;
+            width: 200px;
             text-overflow:ellipsis;
         }
         #allGroups thead th:nth-child(3), #allGroups tbody td:nth-child(3) {
-            width: 50px;
+            width: 80px;
+            text-overflow:ellipsis;
+        }
+        #allGroups thead th:nth-child(4), #allGroups tbody td:nth-child(4) {
+            width: 250px;
             text-overflow:ellipsis;
         }
     </style>
@@ -43,6 +57,7 @@ let html = `
                 <th>Symbol</th>
                 <th>Name</th>
                 <th>mf</th>
+                <th>Structure</th>
             </tr>
         </thead>
         <tbody>
@@ -55,6 +70,23 @@ let html = `
                     <td>${group.mfHtml}<span style='display:none'>${
   group.mf
 }</span></td>
+                    <td><span  style="zoom: 0.8">
+                        ${
+  group.ocl && group.ocl.value.length > 2
+    ? OCL.Molecule.fromIDCode(
+      group.ocl.value,
+      group.ocl.coordinates
+    ).toSVG(200, 150, undefined, {
+      autoCrop: true,
+      autoCropMargin: 5,
+      suppressChiralText: true,
+      suppressCIPParity: true,
+      suppressESR: true,
+      noStereoProblem: true
+    })
+    : ''
+}
+                    </span></td>
                 </tr>
             `
     )
@@ -79,8 +111,8 @@ let html = `
 
 module.exports = function showMfGroupsList() {
   UI.dialog(html, {
-    width: 500,
-    height: 400,
+    width: 700,
+    height: 700,
     title: 'List of known groups'
   });
 };
