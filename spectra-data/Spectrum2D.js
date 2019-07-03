@@ -4,27 +4,34 @@ import { Conrec } from './conrec';
 
 export class Spectrum2D {
   constructor(minMax) {
-    this.currentLevelPositive = 3;
-    this.currentLevelNegative = 3;
-    const ys = getRange(minMax.minY, minMax.maxY, minMax.z.length);
+    this.currentLevelPositive = 10;
+    this.currentLevelNegative = 10;
     const xs = getRange(minMax.minX, minMax.maxX, minMax.z[0].length);
+    const ys = getRange(minMax.minY, minMax.maxY, minMax.z.length);
     this.conrec = new Conrec(minMax.z, { xs, ys, swapAxes: false });
     this.median = minMax.noise;
+    console.log({ median: this.median });
     this.minMax = minMax;
   }
 
-  wheelPositive(value) {
+  wheel(value) {
     const sign = Math.sign(value);
     if (
-      (this.currentLevelPositive === 0 && sign === -1) ||
-      (this.currentLevelPositive > 20 && sign === 1)
+      (this.currentLevelPositive > 0 && sign === -1) ||
+      (this.currentLevelPositive < 21 && sign === 1)
     ) {
-      return;
+      this.currentLevelPositive += sign;
     }
-    this.currentLevelPositive += sign;
+    if (
+      (this.currentLevelNegative > 0 && sign === -1) ||
+      (this.currentLevelNegative < 21 && sign === 1)
+    ) {
+      this.currentLevelNegative += sign;
+    }
+    console.log(this.currentLevelNegative, this.currentLevelPositive);
   }
 
-  wheelNegative(value) {
+  shiftWheel(value) {
     const sign = Math.sign(value);
     if (
       (this.currentLevelNegative === 0 && sign === -1) ||
@@ -58,11 +65,9 @@ export class Spectrum2D {
       Math.abs(this.minMax.maxZ),
       Math.abs(this.minMax.minZ)
     );
-    let range;
+    let range = getRange(this.median * 3 * Math.pow(2, zoomLevel), max, 10, 2);
     if (negative) {
-      range = getRange(-max, -this.median * 3 * Math.pow(2, zoomLevel), 10, 2);
-    } else {
-      range = getRange(this.median * 3 * Math.pow(2, zoomLevel), max, 10, 2);
+      range = range.map((value) => -value);
     }
 
     const contours = this.conrec.drawContour({
@@ -89,17 +94,17 @@ export async function fromJcamp(jcamp) {
 
 function getRange(min, max, length, exp) {
   if (exp) {
-    var factors = [];
+    let factors = [];
     factors[0] = 0;
     for (let i = 1; i <= length; i++) {
       factors[i] = factors[i - 1] + (exp - 1) / Math.pow(exp, i);
     }
-    const lastFactor = factors[length - 1];
-
+    const lastFactor = factors[length];
     var result = new Array(length);
     for (let i = 0; i < length; i++) {
       result[i] = (max - min) * (1 - factors[i + 1] / lastFactor) + min;
     }
+    console.log({ min, max, result });
     return result;
   } else {
     const step = (max - min) / (length - 1);

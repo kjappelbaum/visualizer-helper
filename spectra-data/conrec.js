@@ -1,4 +1,3 @@
-'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -302,7 +301,7 @@ class BasicContourDrawer {
     for (var i = 0; i < levels.length; i++) {
       this.contour[i] = {
         zValue: levels[i],
-        lines: [],
+        lines: []
       };
     }
     this.swapAxes = swapAxes;
@@ -671,7 +670,7 @@ class ShapeContourDrawer {
 
 const defaultOptions = {
   nbLevels: 10,
-  timeout: 0,
+  timeout: 0
 };
 
 /**
@@ -743,7 +742,7 @@ class Conrec {
 
     const conrec = new ConrecLib(
       contourDrawer.drawContour.bind(contourDrawer),
-      options.timeout,
+      options.timeout
     );
     conrec.contour(
       this.matrix,
@@ -754,7 +753,7 @@ class Conrec {
       this.xs,
       this.ys,
       levels.length,
-      levels,
+      levels
     );
     return contourDrawer.getContour();
   }
@@ -787,7 +786,7 @@ function minMax(matrix) {
   }
   return {
     min,
-    max,
+    max
   };
 }
 
