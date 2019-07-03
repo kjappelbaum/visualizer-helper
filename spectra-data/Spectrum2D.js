@@ -103,7 +103,7 @@ function getRange(min, max, length, exp) {
     return result;
   } else {
     const step = (max - min) / (length - 1);
-    return range(min, max + step, step);
+    return range(min, max + step / 2, step);
   }
 }
 
