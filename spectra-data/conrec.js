@@ -1,3 +1,7 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
 // https://github.com/jasondavies/conrec.js
 
 /**
@@ -293,18 +297,23 @@ class ConrecLib {
 }
 
 class BasicContourDrawer {
-  constructor(levels) {
+  constructor(levels, swapAxes) {
     this.contour = new Array(levels.length);
     for (var i = 0; i < levels.length; i++) {
       this.contour[i] = {
         zValue: levels[i],
-        lines: []
+        lines: [],
       };
     }
+    this.swapAxes = swapAxes;
   }
 
   drawContour(x1, y1, x2, y2, z, k) {
-    this.contour[k].lines.push(x1, y1, x2, y2);
+    if (!this.swapAxes) {
+      this.contour[k].lines.push(y1, x1, y2, x2);
+    } else {
+      this.contour[k].lines.push(x1, y1, x2, y2);
+    }
   }
 
   getContour() {
@@ -621,15 +630,20 @@ function reverseList(list) {
 // Based on the code from https://github.com/jasondavies/conrec.js
 
 class ShapeContourDrawer {
-  constructor(levels) {
+  constructor(levels, swapAxes) {
     this.contours = new Array(levels.length);
     for (var i = 0; i < levels.length; i++) {
       this.contours[i] = new ContourBuilder(levels[i]);
     }
+    this.swapAxes = swapAxes;
   }
 
   drawContour(x1, y1, x2, y2, z, k) {
-    this.contours[k].addSegment({ x: x1, y: y1 }, { x: x2, y: y2 });
+    if (!this.swapAxes) {
+      this.contours[k].addSegment({ x: y1, y: x1 }, { x: y2, y: x2 });
+    } else {
+      this.contours[k].addSegment({ x: x1, y: y1 }, { x: x2, y: y2 });
+    }
   }
 
   getContour() {
@@ -657,7 +671,7 @@ class ShapeContourDrawer {
 
 const defaultOptions = {
   nbLevels: 10,
-  timeout: 0
+  timeout: 0,
 };
 
 /**
@@ -666,15 +680,30 @@ const defaultOptions = {
  * @param {number[][]} matrix
  * @param {number[]} [options.xs]
  * @param {number[]} [options.ys]
+ * @param {boolean} [options.swapAxes]
  */
 class Conrec {
   constructor(matrix, options = {}) {
+    const { swapAxes = false } = options;
     this.matrix = matrix;
-    this.xLength = matrix.length;
-    this.yLength = matrix[0].length;
-    this.xs = options.xs ? options.xs : range(0, this.xLength, 1);
-    this.ys = options.ys ? options.ys : range(0, this.yLength, 1);
-    this.levels = new Map();
+    this.rows = matrix.length;
+    this.columns = matrix[0].length;
+
+    const optionsHasXs = options.xs !== undefined;
+    const optionsHasYs = options.ys !== undefined;
+    if (swapAxes) {
+      // We swap axes, which means xs are in the rows direction. This is the normal
+      // way for the conrec library.
+      this.xs = optionsHasXs ? options.xs : range(0, this.rows, 1);
+      this.ys = optionsHasYs ? options.ys : range(0, this.columns, 1);
+    } else {
+      // We do not swap axes, so if the user provided xs or ys, we must swap the
+      // internal values so the algorithm can still work.
+      this.xs = optionsHasYs ? options.ys : range(0, this.rows, 1);
+      this.ys = optionsHasXs ? options.xs : range(0, this.columns, 1);
+    }
+
+    this.swapAxes = swapAxes;
     this.hasMinMax = false;
   }
 
@@ -702,9 +731,9 @@ class Conrec {
     let contourDrawer = options.contourDrawer || 'basic';
     if (typeof contourDrawer === 'string') {
       if (contourDrawer === 'basic') {
-        contourDrawer = new BasicContourDrawer(levels);
+        contourDrawer = new BasicContourDrawer(levels, this.swapAxes);
       } else if (contourDrawer === 'shape') {
-        contourDrawer = new ShapeContourDrawer(levels);
+        contourDrawer = new ShapeContourDrawer(levels, this.swapAxes);
       } else {
         throw new Error(`unknown contour drawer: ${contourDrawer}`);
       }
@@ -714,18 +743,18 @@ class Conrec {
 
     const conrec = new ConrecLib(
       contourDrawer.drawContour.bind(contourDrawer),
-      options.timeout
+      options.timeout,
     );
     conrec.contour(
       this.matrix,
       0,
-      this.xLength - 1,
+      this.rows - 1,
       0,
-      this.yLength - 1,
+      this.columns - 1,
       this.xs,
       this.ys,
       levels.length,
-      levels
+      levels,
     );
     return contourDrawer.getContour();
   }
@@ -758,8 +787,8 @@ function minMax(matrix) {
   }
   return {
     min,
-    max
+    max,
   };
 }
 
-module.exports = Conrec;
+exports.Conrec = Conrec;

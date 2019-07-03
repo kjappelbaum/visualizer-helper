@@ -1,14 +1,14 @@
 import { convert } from '../eln/libs/jcampconverter';
 
-import Conrec from './conrec';
+import { Conrec } from './conrec';
 
 export class Spectrum2D {
   constructor(minMax) {
     this.currentLevelPositive = 3;
     this.currentLevelNegative = 3;
-    const xs = getRange(minMax.minY, minMax.maxY, minMax.z.length);
-    const ys = getRange(minMax.minX, minMax.maxX, minMax.z[0].length);
-    this.conrec = new Conrec(minMax.z, { xs, ys });
+    const ys = getRange(minMax.minY, minMax.maxY, minMax.z.length);
+    const xs = getRange(minMax.minX, minMax.maxX, minMax.z[0].length);
+    this.conrec = new Conrec(minMax.z, { xs, ys, swapAxes: false });
     this.median = minMax.noise;
     this.minMax = minMax;
   }
@@ -38,7 +38,6 @@ export class Spectrum2D {
   createContours() {
     let zoomPositive = this.currentLevelPositive / 2 + 1;
     let zoomNegative = this.currentLevelNegative / 2 + 1;
-    console.log({ zoomNegative, zoomPositive });
     const chart = {
       data: [
         {
@@ -71,10 +70,10 @@ export class Spectrum2D {
       timeout: 1000
     });
     return {
-      minX: this.minMax.minY,
-      maxX: this.minMax.maxY,
-      minY: this.minMax.minX,
-      maxY: this.minMax.maxX,
+      minX: this.minMax.minX,
+      maxX: this.minMax.maxX,
+      minY: this.minMax.minY,
+      maxY: this.minMax.maxY,
       segments: contours
     };
   }
