@@ -51,22 +51,6 @@ module.exports = function (roc, prefix) {
     };
   }
 
-  async function updateInternalStructureByCreate(docId, newOclid) {
-    let doc = await roc.document(docId);
-    // update $id and structure with salt
-    let newDoc = Object.assign({}, doc);
-    updateInternalDocumentWithNewStructure(newDoc, newOclid);
-    delete newDoc._id;
-    newDoc.$id = await getNextSampleWithSaltID(
-      newOclid,
-      doc.$content.general.saltCode
-    );
-    newDoc = await roc.create(newDoc);
-    await roc.delete(doc._id);
-    // doc.$deleted = true;
-    // await roc.update(doc);
-  }
-
   async function updateInternalStructureByUpdate(docId, newOclid) {
     let doc = await roc.document(docId);
     updateInternalDocumentWithNewStructure(doc, newOclid);
@@ -83,20 +67,12 @@ module.exports = function (roc, prefix) {
     const newDups = await getDups(newOclid);
 
     if (newDups.length > 0) {
-      // warn user
-      // Create new entry for each old one
-      const confirmed = await UI.confirm(`
-                The same ACI number cannot be reused because the new structure already exists as ${
-  newDups[0].value[0]
-}.
-                The entries will be updated using this ACI number.<br/><br/>
-                This operation will update ${oldDups.length} entries.<br>
-                Do you want to proceed?
-            `);
-      if (!confirmed) return;
-      for (let dup of oldDups) {
-        await updateInternalStructureByCreate(dup.id, newOclid);
-      }
+      await UI.confirm(`
+        The same ACI number cannot be reused because the new structure already
+        exists as ${newDups[0].value[0]}.
+        Therefore it is not possible to update this structure.<br>
+        If you really need to do this, please contact us at support@zakodium.com
+      `);
     } else if (oldDups.length > 0) {
       // warn user
       const confirmed = await UI.confirm(`
