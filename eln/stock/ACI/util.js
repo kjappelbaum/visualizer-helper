@@ -33,9 +33,7 @@ module.exports = function (roc, prefix) {
     };
   }
 
-  async function updateInternalDocumentWithNewStructure(doc, newOcl) {
-    // init some variables
-    const newOclid = String(newOcl.idCode || newOcl.value);
+  async function updateInternalDocumentWithNewStructure(doc, newOclid) {
     const general = doc.$content.general;
 
     // structure
@@ -53,15 +51,14 @@ module.exports = function (roc, prefix) {
     };
   }
 
-  async function updateInternalStructureByCreate(docId, newOcl) {
+  async function updateInternalStructureByCreate(docId, newOclid) {
     let doc = await roc.document(docId);
-    const oclid = newOcl.idCode || newOcl.value;
     // update $id and structure with salt
     let newDoc = Object.assign({}, doc);
-    updateInternalDocumentWithNewStructure(newDoc, newOcl);
+    updateInternalDocumentWithNewStructure(newDoc, newOclid);
     delete newDoc._id;
     newDoc.$id = await getNextSampleWithSaltID(
-      oclid,
+      newOclid,
       doc.$content.general.saltCode
     );
     newDoc = await roc.create(newDoc);
@@ -70,15 +67,16 @@ module.exports = function (roc, prefix) {
     // await roc.update(doc);
   }
 
-  async function updateInternalStructureByUpdate(docId, newOcl) {
+  async function updateInternalStructureByUpdate(docId, newOclid) {
     let doc = await roc.document(docId);
-    updateInternalDocumentWithNewStructure(doc, newOcl);
+    updateInternalDocumentWithNewStructure(doc, newOclid);
     await roc.update(doc);
   }
 
   async function updateInternalStructure(oldOclid, newOcl) {
-    const newOclid = newOcl.idCode || newOcl.value;
-    if (String(newOclid) === String(oldOclid)) {
+    oldOclid = String(oldOclid);
+    const newOclid = String(newOcl.idCode || newOcl.value);
+    if (newOclid === oldOclid) {
       throw new Error('new and old structures are identical');
     }
     const oldDups = await getDups(oldOclid);
@@ -97,7 +95,7 @@ module.exports = function (roc, prefix) {
             `);
       if (!confirmed) return;
       for (let dup of oldDups) {
-        await updateInternalStructureByCreate(dup.id, newOcl);
+        await updateInternalStructureByCreate(dup.id, newOclid);
       }
     } else if (oldDups.length > 0) {
       // warn user
@@ -108,7 +106,7 @@ module.exports = function (roc, prefix) {
             `);
       if (!confirmed) return;
       for (let dup of oldDups) {
-        await updateInternalStructureByUpdate(dup.id, newOcl);
+        await updateInternalStructureByUpdate(dup.id, newOclid);
       }
 
       // update all old entries with the new structure
