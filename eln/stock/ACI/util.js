@@ -33,7 +33,9 @@ module.exports = function (roc, prefix) {
     };
   }
 
-  async function updateInternalDocumentWithNewStructure(doc, newOclid) {
+  async function updateInternalDocumentWithNewStructure(doc, newOcl) {
+    // init some variables
+    const newOclid = String(newOcl.idCode || newOcl.value);
     const general = doc.$content.general;
 
     // structure
@@ -51,16 +53,32 @@ module.exports = function (roc, prefix) {
     };
   }
 
-  async function updateInternalStructureByUpdate(docId, newOclid) {
+  async function updateInternalStructureByCreate(docId, newOcl) {
     let doc = await roc.document(docId);
-    updateInternalDocumentWithNewStructure(doc, newOclid);
+    const oclid = newOcl.idCode || newOcl.value;
+    // update $id and structure with salt
+    let newDoc = Object.assign({}, doc);
+    updateInternalDocumentWithNewStructure(newDoc, newOcl);
+    delete newDoc._id;
+    newDoc.$id = await getNextSampleWithSaltID(
+      oclid,
+      doc.$content.general.saltCode
+    );
+    newDoc = await roc.create(newDoc);
+    await roc.delete(doc._id);
+    // doc.$deleted = true;
+    // await roc.update(doc);
+  }
+
+  async function updateInternalStructureByUpdate(docId, newOcl) {
+    let doc = await roc.document(docId);
+    updateInternalDocumentWithNewStructure(doc, newOcl);
     await roc.update(doc);
   }
 
   async function updateInternalStructure(oldOclid, newOcl) {
-    oldOclid = String(oldOclid);
-    const newOclid = String(newOcl.idCode || newOcl.value);
-    if (newOclid === oldOclid) {
+    const newOclid = newOcl.idCode || newOcl.value;
+    if (String(newOclid) === String(oldOclid)) {
       throw new Error('new and old structures are identical');
     }
     const oldDups = await getDups(oldOclid);
@@ -82,7 +100,7 @@ module.exports = function (roc, prefix) {
             `);
       if (!confirmed) return;
       for (let dup of oldDups) {
-        await updateInternalStructureByUpdate(dup.id, newOclid);
+        await updateInternalStructureByUpdate(dup.id, newOcl);
       }
 
       // update all old entries with the new structure
