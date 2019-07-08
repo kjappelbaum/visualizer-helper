@@ -36,6 +36,7 @@ module.exports = function (roc, prefix) {
   async function updateInternalDocumentWithNewStructure(doc, newOcl) {
     // init some variables
     const newOclid = String(newOcl.idCode || newOcl.value);
+    const newOclCoordinates = newOcl.coordinates && String(newOcl.coordinates);
     const general = doc.$content.general;
 
     // structure
@@ -47,27 +48,10 @@ module.exports = function (roc, prefix) {
     general.mw = baseMf.relativeWeight;
     general.molfile = freeBaseMolecule.toMolfileV3();
     general.ocl = {
-      value: freeBaseOcl.idCode,
-      coordinates: freeBaseOcl.coordinates,
+      value: newOclid,
+      coordinates: newOclCoordinates || freeBaseOcl.coordinates,
       index: freeBaseMolecule.getIndex()
     };
-  }
-
-  async function updateInternalStructureByCreate(docId, newOcl) {
-    let doc = await roc.document(docId);
-    const oclid = newOcl.idCode || newOcl.value;
-    // update $id and structure with salt
-    let newDoc = Object.assign({}, doc);
-    updateInternalDocumentWithNewStructure(newDoc, newOcl);
-    delete newDoc._id;
-    newDoc.$id = await getNextSampleWithSaltID(
-      oclid,
-      doc.$content.general.saltCode
-    );
-    newDoc = await roc.create(newDoc);
-    await roc.delete(doc._id);
-    // doc.$deleted = true;
-    // await roc.update(doc);
   }
 
   async function updateInternalStructureByUpdate(docId, newOcl) {
