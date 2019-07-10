@@ -7,7 +7,6 @@ export class ZonesManager {
   }
 
   processAction(action) {
-    console.log('Process action', action);
     if (!action.value.event.altKey) return;
     let track;
     if (action.value && action.value.data) {
