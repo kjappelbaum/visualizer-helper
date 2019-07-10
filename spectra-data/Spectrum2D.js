@@ -104,7 +104,6 @@ function getRange(min, max, length, exp) {
     for (let i = 0; i < length; i++) {
       result[i] = (max - min) * (1 - factors[i + 1] / lastFactor) + min;
     }
-    console.log({ min, max, result });
     return result;
   } else {
     const step = (max - min) / (length - 1);

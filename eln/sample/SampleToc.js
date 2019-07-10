@@ -34,10 +34,16 @@ class SampleToc {
     this.options = Object.assign({}, defaultOptions, options);
   }
 
+  setFilter(filter) {
+    this.filter = filter;
+    this.refresh();
+  }
+
   /**
    * Retrieve the sample_toc and put the result in `sampleToc` variable
    */
   refresh(options = {}) {
+    console.log('Refresh sampleToc');
     let { group, sort, filter, viewName } = Object.assign(
       {},
       this.options,
@@ -51,21 +57,26 @@ class SampleToc {
     } else if (group !== 'all') {
       groups = group;
     }
-    return this.roc.query(viewName, {
-      groups,
-      mine,
-      sort,
-      filter,
-      varName: this.options.varName
-    });
+
+    return this.roc
+      .query(viewName, {
+        groups,
+        mine,
+        sort,
+        filter,
+        varName: this.options.varName
+      })
+      .then((entries) => {
+        if (this.options.callback) {
+          entries.forEach(this.options.callback);
+        }
+      });
   }
 
   /**
    * Retrieve the allowed groups for the logged in user and create 'groupForm'
    * variable and 'groupFormSchema' (for onde module). It will keep in a cookie
    * the last selected group. Calling this method should reload automatically
-   * the TOC
-   * @param {*} roc
    * @param {object} [options={}]
    * @param {string} [varName='groupForm'] contains the name of the variable containing the form value
    * @param {string} [schemaVarName='groupFormSchema'] contains the name of the variable containing the form schema
