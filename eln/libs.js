@@ -6,3 +6,4 @@ export { default as MolecularFormula } from './libs/MolecularFormula';
 export { default as convertToJcamp } from './libs/convertToJcamp';
 export { parseXY } from './libs/parseXY';
 export { convert } from './libs/jcampconverter';
+export { SpectraProcessor } from './libs/SpectraProcessor';
