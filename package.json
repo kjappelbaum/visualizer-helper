@@ -21,6 +21,8 @@
   "homepage": "https://github.com/cheminfo-js/visualizer-helper#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-jest": "^22.4.3",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-plugin-transform-es2015-modules-amd-if-required": "^1.0.4",
     "babel-preset-es2017": "^6.16.0",
     "eslint": "^4.19.1",
@@ -30,9 +32,5 @@
     "eslint-plugin-no-only-tests": "^1.1.0",
     "jest": "^21.2.1"
   },
-  "dependencies": {
-    "babel-jest": "^22.4.3",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-    "spectra-processor": "0.0.2"
-  }
+  "dependencies": {}
 }
