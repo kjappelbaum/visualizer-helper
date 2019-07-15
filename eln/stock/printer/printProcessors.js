@@ -1,14 +1,11 @@
 define([
   'src/main/datas',
-  'src/util/api',
   'src/util/ui',
   'browserified/twig/twig',
   'canvg',
-  'src/util/typerenderer',
-  'jquery',
   '../../libs/Image',
   '../../libs/OCLE'
-], function (Datas, API, UI, twig, canvg, typerenderer, $, IJS, OCL) {
+], function (Datas, UI, twig, canvg, IJS, OCL) {
   OCL = OCL.default;
   IJS = IJS.default;
   const DataObject = Datas.DataObject;
