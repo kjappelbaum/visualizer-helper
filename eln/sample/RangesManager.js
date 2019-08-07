@@ -34,7 +34,15 @@ export class RangesManager {
       return;
     }
     let annotations = [];
+    let updateHighlight = false;
     for (let range of this.ranges) {
+      if (!range._highlight) {
+        updateHighlight = true;
+        Object.defineProperty(range, '_highlight', {
+          enumerable: false,
+          value: Math.random()
+        });
+      }
       if (range.to) {
         let annotation = {
           position: [{ x: range.from, y: '15px' }, { x: range.to, y: '20px' }],
@@ -59,6 +67,9 @@ export class RangesManager {
           ];
         }
         annotations.push(annotation);
+      }
+      if (updateHighlight) {
+        API.getData('ranges').triggerChange();
       }
     }
     if (track && this.currentRange && !this.currentRange.to) {
