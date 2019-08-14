@@ -25,7 +25,8 @@ class Sample {
       : {
         $content: {
           general: {
-            mf: ''
+            mf: '',
+            molfile: ''
           },
           spectra: {
             nmr: [],
@@ -39,6 +40,8 @@ class Sample {
     if (this.sample.$content.general.molfile) {
       // Let the mf be calculated from the molfile
       delete this.sample.$content.general.mf;
+    } else {
+      this.sample.$content.general.molfile = ''; // can not be edited otherwise
     }
     this.options = Object.assign({}, defaultOptions, options);
     Object.assign(this.sample, this.options.sample);
