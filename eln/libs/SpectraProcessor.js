@@ -1,6 +1,6 @@
 export {
   SpectraProcessor
-} from 'https://www.lactame.com/lib/spectra-processor/0.0.4/spectra-processor.js';
+} from 'https://www.lactame.com/lib/spectra-processor/0.2.0/spectra-processor.js';
 
 /*
 export {
