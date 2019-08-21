@@ -222,12 +222,10 @@ class SpectraDataSet {
     for (let tocEntry of tocSelected) {
       promises.push(
         this.roc.document(tocEntry.id).then((sample) => {
-          if (sample.$content.spectra && sample.$content.spectra.ir) {
-            let spectra = sample.$content.spectra.ir;
-            for (let spectrum of spectra) {
-              if (spectrum.jcamp && spectrum.jcamp.filename) {
-                this.addSpectrumToSelected(spectrum, tocEntry, selectedSpectra);
-              }
+          let spectra = this.spectraConfig.getSpectra(sample);
+          for (let spectrum of spectra) {
+            if (spectrum.jcamp && spectrum.jcamp.filename) {
+              this.addSpectrumToSelected(spectrum, tocEntry, selectedSpectra);
             }
           }
         })
