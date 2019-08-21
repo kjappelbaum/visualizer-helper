@@ -81,6 +81,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function (
       },
       function (newData) {
         newData.currentPromise.then(() => {
+          if (options.debug) console.log('receive newData');
           if (!data) {
             if (options.debug) {
               console.log(
@@ -98,6 +99,9 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function (
 
     // we will initialise the form
     var dom = $(document.getElementById(divID));
+    if (options.debug) {
+      console.log('Initialize the form');
+    }
     // Add the buttons ADD / REMOVE
     dom.find('[data-repeat]').prepend(`
                 <td><span class="form-button addRow" /></td>
@@ -152,6 +156,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function (
 
     // need to replicate rows based on the external variable
     function updateTwig() {
+      if (options.debug) console.log('Update twig');
       do {
         var elements = dom.find('[data-repeat]:not([data-index])');
         elements.each(handleDataRepeat);
