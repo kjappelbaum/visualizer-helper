@@ -212,7 +212,7 @@ class SpectraDataSet {
     let spectra = this.spectraConfig.getSpectra(data);
     API.createData('spectra', spectra);
   }
-
+ 
   addSpectrum(tocEntry, spectrum) {
     let selectedSpectra = API.getData('selectedSpectra');
     this.addSpectrumToSelected(spectrum, tocEntry, selectedSpectra);
