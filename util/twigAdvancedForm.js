@@ -53,8 +53,12 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function (
   API,
   Module
 ) {
+  console.log('START');
+
   function AdvancedForm(divID, options = {}) {
     // we will find automatically the variableName
+    if (options.debug) console.log('CREATE ADVANCED FORM');
+
     var moduleId = $(`#${divID}`)
       .closest('[data-module-id]')
       .attr('data-module-id');
@@ -81,6 +85,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function (
       },
       function (newData) {
         newData.currentPromise.then(() => {
+          if (options.debug) console.log('receive newData', newData);
           if (!data) {
             if (options.debug) {
               console.log(
@@ -98,11 +103,20 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function (
 
     // we will initialise the form
     var dom = $(document.getElementById(divID));
+    if (options.debug) {
+      console.log('Initialize the form');
+    }
     // Add the buttons ADD / REMOVE
-    dom.find('[data-repeat]').prepend(`
-                <td><span class="form-button addRow" /></td>
-                <td><span class="form-button removeRow" /></td>
-            `);
+    let rows = dom.find('[data-repeat]:not([class="form-button addRow"])');
+    if (rows) {
+      rows = rows.filter(function (index) {
+        return !this.innerHTML.includes('form-button addRow');
+      });
+      rows.prepend(`
+                  <td><span class="form-button addRow" /></td>
+                  <td><span class="form-button removeRow" /></td>
+              `);
+    }
 
     if (!data && API.getData(variableName)) {
       data = API.getData(variableName);
@@ -152,6 +166,8 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function (
 
     // need to replicate rows based on the external variable
     function updateTwig() {
+      if (options.debug) console.log('Update twig');
+
       do {
         var elements = dom.find('[data-repeat]:not([data-index])');
         elements.each(handleDataRepeat);
@@ -339,5 +355,6 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function (
       }
     });
   }
+
   return AdvancedForm;
 });

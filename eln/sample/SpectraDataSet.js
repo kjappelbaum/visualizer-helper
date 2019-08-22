@@ -205,7 +205,6 @@ class SpectraDataSet {
   async clickedSample(uuid) {
     let data = await this.roc.document(uuid, { varName: 'linkedSample' });
     let spectra = this.spectraConfig.getSpectra(data);
-    // let spectra = data.$content.spectra.ir;
     API.createData('spectra', spectra);
   }
 
@@ -223,12 +222,10 @@ class SpectraDataSet {
     for (let tocEntry of tocSelected) {
       promises.push(
         this.roc.document(tocEntry.id).then((sample) => {
-          if (sample.$content.spectra && sample.$content.spectra.ir) {
-            let spectra = sample.$content.spectra.ir;
-            for (let spectrum of spectra) {
-              if (spectrum.jcamp && spectrum.jcamp.filename) {
-                this.addSpectrumToSelected(spectrum, tocEntry, selectedSpectra);
-              }
+          let spectra = this.spectraConfig.getSpectra(sample);
+          for (let spectrum of spectra) {
+            if (spectrum.jcamp && spectrum.jcamp.filename) {
+              this.addSpectrumToSelected(spectrum, tocEntry, selectedSpectra);
             }
           }
         })
