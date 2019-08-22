@@ -120,7 +120,7 @@ class Sample {
         this.options.varName,
         sample || this.sample
       );
-      
+
       if (sample.$content.general.molfile) {
         // Let the mf be calculated from the molfile
         delete sample.$content.general.mf;

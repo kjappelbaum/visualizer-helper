@@ -202,7 +202,12 @@ class SpectraDataSet {
     }
   }
 
-  async clickedSample(uuid) {
+  async clickedSample(samples) {
+    if (samples.length !== 1) {
+      API.createData('spectra', []);
+      return;
+    }
+    let uuid = String(samples[0].id);
     let data = await this.roc.document(uuid, { varName: 'linkedSample' });
     let spectra = this.spectraConfig.getSpectra(data);
     API.createData('spectra', spectra);

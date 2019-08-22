@@ -109,7 +109,7 @@ define(['jquery', 'src/util/api', 'modules/modulefactory'], function (
     // Add the buttons ADD / REMOVE
     let rows = dom.find('[data-repeat]:not([class="form-button addRow"])');
     if (rows) {
-      rows = rows.filter(function (index) {
+      rows = rows.filter(function () {
         return !this.innerHTML.includes('form-button addRow');
       });
       rows.prepend(`
