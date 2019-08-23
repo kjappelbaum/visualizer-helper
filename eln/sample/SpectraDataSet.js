@@ -103,10 +103,11 @@ const SpectraConfigs = {
 };
 
 class SpectraDataSet {
-  constructor(roc, sampleToc) {
+  constructor(roc, sampleToc, options = {}) {
     this.roc = roc;
     this.sampleToc = sampleToc;
     this.spectraConfig = undefined;
+    this.defaultAttributes = options.defaultAttributes || {};
   }
 
   getChartPrefs() {
@@ -212,7 +213,7 @@ class SpectraDataSet {
     let spectra = this.spectraConfig.getSpectra(data);
     API.createData('spectra', spectra);
   }
- 
+
   addSpectrum(tocEntry, spectrum) {
     let selectedSpectra = API.getData('selectedSpectra');
     this.addSpectrumToSelected(spectrum, tocEntry, selectedSpectra);
@@ -249,7 +250,11 @@ class SpectraDataSet {
       spectrum.sampleID = sampleID;
       spectrum.id = spectrumID;
       spectrum.display = true;
-      spectrum.pcaModel = false;
+      for (let key in this.defaultAttributes) {
+        spectrum[key] = this.defaultAttributes[key];
+      }
+
+      spectrum.deconvolutionReference = false;
       spectrum.sampleCode = tocEntry.key.slice(1).join('_');
       spectrum.toc = tocEntry;
       spectrum.category = spectrum.sampleCode;
