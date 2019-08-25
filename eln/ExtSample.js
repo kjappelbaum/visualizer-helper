@@ -16,25 +16,25 @@ class Sample {
     // make sure we don't copy attachment metadata
     const s = sample.$content
       ? {
-        $content: {
-          general: sample.$content.general,
-          identifier: sample.$content.identifier,
-          stock: sample.$content.stock
-        }
-      }
-      : {
-        $content: {
-          general: {
-            mf: '',
-            molfile: ''
-          },
-          spectra: {
-            nmr: [],
-            mass: [],
-            ir: []
+          $content: {
+            general: sample.$content.general,
+            identifier: sample.$content.identifier,
+            stock: sample.$content.stock
           }
         }
-      };
+      : {
+          $content: {
+            general: {
+              mf: '',
+              molfile: ''
+            },
+            spectra: {
+              nmr: [],
+              mass: [],
+              ir: []
+            }
+          }
+        };
 
     this.sample = JSON.parse(JSON.stringify(s));
 
@@ -71,7 +71,7 @@ class Sample {
     this.mf = new MF(this.sample);
     this.mf.fromMF();
 
-    this.onChange = (event) => {
+    this.onChange = event => {
       var jpathStr = event.jpath.join('.');
 
       if (jpathStr.replace(/\.\d+\..*/, '') === '$content.spectra.nmr') {
@@ -104,7 +104,7 @@ class Sample {
   }
 
   async _init() {
-    this._initialized = new Promise(async (resolve) => {
+    this._initialized = new Promise(async resolve => {
       var sample;
       if (this.options.trackId) {
         try {
@@ -184,6 +184,24 @@ class Sample {
 
   handleAction(action) {
     if (!action) return;
+    switch (action.name) {
+      case 'unattach':
+        {
+          let value = action.value;
+          if (value && value.__parent) {
+            for (let i = 0; i < value.__parent.length; i++) {
+              let row = value.__parent[i];
+              if (row === value) {
+                value.__parent.splice(i, 1);
+                value.__parent.triggerChange();
+                return;
+              }
+            }
+          }
+        }
+        break;
+      default:
+    }
     if (this.expandableMolecule) {
       this.expandableMolecule.handleAction(action);
     }
