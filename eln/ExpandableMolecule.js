@@ -83,7 +83,7 @@ class ExpandableMolecule {
     entry.idCode = this.idCode;
     entry.molfile = this.molfile;
     if (this.sample.$id) {
-      entry.id = Object.resurrect(this.sample.$id)
+      entry.id = DataObject.resurrect(this.sample.$id)
         .filter((a) => a)
         .join(' ');
     }
