@@ -16,25 +16,27 @@ class Sample {
     // make sure we don't copy attachment metadata
     const s = sample.$content
       ? {
-          $content: {
-            general: sample.$content.general,
-            identifier: sample.$content.identifier,
-            stock: sample.$content.stock
+        $content: {
+          general: sample.$content.general,
+          identifier: sample.$content.identifier,
+          stock: sample.$content.stock
+        }
+      }
+      : {
+        $content: {
+          general: {
+            title: '',
+            description: '',
+            mf: '',
+            molfile: ''
+          },
+          spectra: {
+            nmr: [],
+            mass: [],
+            ir: []
           }
         }
-      : {
-          $content: {
-            general: {
-              mf: '',
-              molfile: ''
-            },
-            spectra: {
-              nmr: [],
-              mass: [],
-              ir: []
-            }
-          }
-        };
+      };
 
     this.sample = JSON.parse(JSON.stringify(s));
 
@@ -71,7 +73,7 @@ class Sample {
     this.mf = new MF(this.sample);
     this.mf.fromMF();
 
-    this.onChange = event => {
+    this.onChange = (event) => {
       var jpathStr = event.jpath.join('.');
 
       if (jpathStr.replace(/\.\d+\..*/, '') === '$content.spectra.nmr') {
@@ -104,7 +106,7 @@ class Sample {
   }
 
   async _init() {
-    this._initialized = new Promise(async resolve => {
+    this._initialized = new Promise(async (resolve) => {
       var sample;
       if (this.options.trackId) {
         try {
