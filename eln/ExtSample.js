@@ -67,6 +67,7 @@ class Sample {
       'general',
       'description'
     ]);
+    API.setVariable('title', sampleVar, ['$content', 'general', 'title']);
     API.setVariable('iupac', sampleVar, ['$content', 'general', 'iupac']);
 
     this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
