@@ -84,6 +84,7 @@ class SampleToc {
    * @param {string} [schemaVarName='groupFormSchema'] contains the name of the variable containing the form schema
    * @param {string} [cookieName='eln-default-sample-group''] cookie name containing the last selected group
    * @param {string} [filter] filter applied on first refresh
+   * @param {string} [refreshOnLoad=true] refresh least after initialization
    * @return {string} the form to select group}
    */
   async initializeGroupForm(options = {}) {
@@ -91,7 +92,8 @@ class SampleToc {
       schemaVarName = 'groupFormSchema',
       varName = 'groupForm',
       cookieName = 'eln-default-sample-group',
-      filter
+      filter,
+      refreshOnLoad = true
     } = options;
 
     let groups = (await this.roc.getGroupMembership()).map((g) => g.name);
@@ -123,7 +125,7 @@ class SampleToc {
       if (evt.jpath[0] === varName) {
         localStorage.setItem(cookieName, groupForm.group);
         this.options.group = String(groupForm.group);
-        this.refresh();
+        if (refreshOnLoad) this.refresh();
       }
     });
 
