@@ -41,6 +41,7 @@ class SampleToc {
 
   /**
    * Retrieve the sample_toc and put the result in `sampleToc` variable
+   * 
    */
   refresh(options = {}) {
     console.log('Refresh sampleToc');
@@ -81,13 +82,15 @@ class SampleToc {
    * @param {string} [varName='groupForm'] contains the name of the variable containing the form value
    * @param {string} [schemaVarName='groupFormSchema'] contains the name of the variable containing the form schema
    * @param {string} [cookieName='eln-default-sample-group''] cookie name containing the last selected group
+   * @param {string} [filter] filter applied on first refresh
    * @return {string} the form to select group}
    */
   async initializeGroupForm(options = {}) {
     const {
       schemaVarName = 'groupFormSchema',
       varName = 'groupForm',
-      cookieName = 'eln-default-sample-group'
+      cookieName = 'eln-default-sample-group',
+      filter
     } = options;
 
     let groups = (await this.roc.getGroupMembership()).map((g) => g.name);
@@ -112,7 +115,7 @@ class SampleToc {
     let groupForm = await API.createData(varName, { group: defaultGroup });
 
     this.options.group = groupForm.group;
-    await this.refresh();
+    await this.refresh(filter);
 
     let mainData = Versioning.getData();
     mainData.onChange((evt) => {
