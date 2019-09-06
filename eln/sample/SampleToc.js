@@ -41,7 +41,7 @@ class SampleToc {
 
   /**
    * Retrieve the sample_toc and put the result in `sampleToc` variable
-   * 
+   *
    */
   refresh(options = {}) {
     console.log('Refresh sampleToc');
@@ -71,6 +71,7 @@ class SampleToc {
         if (this.options.callback) {
           entries.forEach(this.options.callback);
         }
+        return entries;
       });
   }
 
