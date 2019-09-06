@@ -118,14 +118,14 @@ class SampleToc {
     let groupForm = await API.createData(varName, { group: defaultGroup });
 
     this.options.group = groupForm.group;
-    await this.refresh(filter);
-
+    if (refreshOnLoad) {
+      await this.refresh(filter);
+    }
     let mainData = Versioning.getData();
     mainData.onChange((evt) => {
       if (evt.jpath[0] === varName) {
         localStorage.setItem(cookieName, groupForm.group);
         this.options.group = String(groupForm.group);
-        if (refreshOnLoad) this.refresh();
       }
     });
 
