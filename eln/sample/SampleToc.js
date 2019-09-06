@@ -35,7 +35,7 @@ class SampleToc {
   }
 
   setFilter(filter) {
-    this.filter = filter;
+    this.options.filter = filter;
     this.refresh();
   }
 
