@@ -33,6 +33,34 @@ const SpectraConfigs = {
       ]
     }
   },
+  Raman: {
+    tocFilter: (entry) => entry.value.nbRaman,
+    tocCallback: (entry) => {
+      entry.value.nbSpectra = entry.value.nbRaman;
+    },
+    getSpectra: (sample) => {
+      if (
+        sample &&
+        sample.$content &&
+        sample.$content.spectra &&
+        Array.isArray(sample.$content.spectra.nbRaman)
+      ) {
+        let spectra = sample.$content.spectra.raman;
+        return spectra;
+      } else {
+        return [];
+      }
+    },
+    chartPrefs: {
+      xLabel: 'Wavelength [cm-1]',
+      displayXAxis: [
+        'display',
+        'flip',
+        'main',
+        'sec'
+      ]
+    }
+  },
   '1H NMR': {
     tocFilter: (entry) => entry.value.nb1h,
     tocCallback: (entry) => {
