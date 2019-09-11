@@ -7,7 +7,7 @@ let defaultOptions = {
   group: 'all',
   varName: 'sampleToc',
   viewName: 'sample_toc',
-  filter: (entry) => entry.value.hidden === false,
+  filter: (entry) => !entry.value.hidden,
   sort: (a, b) => {
     if (a.value.modificationDate > b.value.modificationDate) {
       return -1;
