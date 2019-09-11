@@ -36,7 +36,7 @@ class SampleToc {
 
   setFilter(filter) {
     this.options.filter = filter;
-    this.refresh();
+    return this.refresh();
   }
 
   /**
