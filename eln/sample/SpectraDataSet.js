@@ -6,7 +6,7 @@ import Color from 'src/util/color';
 
 const SpectraConfigs = {
   IR: {
-    tocFilter: (entry) => entry.value.nbIR,
+    tocFilter: (entry) => entry.value.nbIR && ! entry.value.hidden,
     tocCallback: (entry) => {
       entry.value.nbSpectra = entry.value.nbIR;
     },
@@ -34,7 +34,7 @@ const SpectraConfigs = {
     }
   },
   Raman: {
-    tocFilter: (entry) => entry.value.nbRaman,
+    tocFilter: (entry) => entry.value.nbRaman && ! entry.value.hidden,
     tocCallback: (entry) => {
       entry.value.nbSpectra = entry.value.nbRaman;
     },
@@ -62,7 +62,7 @@ const SpectraConfigs = {
     }
   },
   '1H NMR': {
-    tocFilter: (entry) => entry.value.nb1h,
+    tocFilter: (entry) => entry.value.nb1h && ! entry.value.hidden,
     tocCallback: (entry) => {
       entry.value.nbSpectra = entry.value.nb1h;
     },
@@ -101,7 +101,7 @@ const SpectraConfigs = {
     }
   },
   Chromatography: {
-    tocFilter: (entry) => entry.value.mbChrom,
+    tocFilter: (entry) => entry.value.mbChrom && ! entry.value.hidden,
     tocCallback: (entry) => {
       entry.value.nbSpectra = entry.value.mbChrom;
     },
