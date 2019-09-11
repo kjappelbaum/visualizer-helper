@@ -338,6 +338,7 @@ Your local changes will be lost.</p>`;
       };
 
       for (let droppedData of droppedDatas) {
+        if (!droppedData.filename.includes('.')) droppedData.filename += '.txt';
         let extension = droppedData.filename.replace(/.*\./, '').toLowerCase();
         if (extension === 'txt' || extension === 'csv' || extension === 'tsv') {
           let info = jcampTypes[type];

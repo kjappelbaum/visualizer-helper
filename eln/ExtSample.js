@@ -172,12 +172,12 @@ class Sample {
     // we store the data in the view
     var droppedDatas = API.getData(name);
     droppedDatas = droppedDatas.file || droppedDatas.str;
-
-    for (let data of droppedDatas) {
+    for (let droppedData of droppedDatas) {
+      if (!droppedData.filename.includes('.')) droppedData.filename += '.txt';
       elnPlugin.process(
         types[name],
         this.sample.$content,
-        data,
+        droppedData,
         {},
         { keepContent: true }
       );
