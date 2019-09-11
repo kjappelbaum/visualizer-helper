@@ -127,6 +127,7 @@ class SampleToc {
       if (evt.jpath[0] === varName) {
         localStorage.setItem(cookieName, groupForm.group);
         this.options.group = String(groupForm.group);
+        this.refresh();
       }
     });
 
