@@ -19,7 +19,7 @@ let defaultOptions = {
   }
 };
 
-class SampleToc {
+class Toc {
   /**
    * Create an object managing the Toc
    * @param {object} [options={}]
@@ -41,11 +41,11 @@ class SampleToc {
   }
 
   /**
-   * Retrieve the sample_toc and put the result in `sampleToc` variable
+   * Retrieve the toc and put the result in the specified variable
    *
    */
   refresh(options = {}) {
-    console.log('Refresh sampleToc');
+    console.log('Refresh toc');
     let { group, sort, filter, viewName } = Object.assign(
       {},
       this.options,
@@ -135,4 +135,4 @@ class SampleToc {
   }
 }
 
-module.exports = SampleToc;
+module.exports = Toc;
