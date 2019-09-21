@@ -216,6 +216,7 @@ class SpectraDataSet {
         let selectedSpectra = API.getData('selectedSpectra');
         selectedSpectra.forEach((spectrum) => spectrum.color = '');
         recolor(selectedSpectra);
+        selectedSpectra.triggerChange();
         break;
       }
       case 'showSpectra':
