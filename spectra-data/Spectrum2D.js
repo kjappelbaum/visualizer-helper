@@ -10,7 +10,6 @@ export class Spectrum2D {
     const ys = getRange(minMax.minY, minMax.maxY, minMax.z.length);
     this.conrec = new Conrec(minMax.z, { xs, ys, swapAxes: false });
     this.median = minMax.noise;
-    console.log({ median: this.median });
     this.minMax = minMax;
   }
 
@@ -28,7 +27,6 @@ export class Spectrum2D {
     ) {
       this.currentLevelNegative += sign;
     }
-    console.log(this.currentLevelNegative, this.currentLevelPositive);
   }
 
   shiftWheel(value) {

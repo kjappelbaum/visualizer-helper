@@ -201,12 +201,19 @@ class SpectraDataSet {
   }
 
   async processAction(action) {
+    console.log({ action });
     switch (action.name) {
       case 'clickedSample':
         this.clickedSample(action.value);
         break;
       case 'refresh':
         this.refresh();
+        break;
+      case 'hideSpectra':
+        this.hideSpectra();
+        break;
+      case 'showSpectra':
+        this.showSpectra();
         break;
       case 'clearSelectedSamples':
         {
@@ -240,6 +247,26 @@ class SpectraDataSet {
     let data = await this.roc.document(uuid, { varName: 'linkedSample' });
     let spectra = this.spectraConfig.getSpectra(data);
     API.createData('spectra', spectra);
+  }
+
+  showSpectra() {
+    let selectedSpectra = API.getData('selectedSpectra');
+    let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
+    for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
+      let spectrum = selectedSpectra.filter((spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id))[0];
+      spectrum.display = true;
+    }
+    API.getData('selectedSpectra').triggerChange();
+  }
+
+  hideSpectra() {
+    let selectedSpectra = API.getData('selectedSpectra');
+    let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
+    for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
+      let spectrum = selectedSpectra.filter((spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id))[0];
+      spectrum.display = false;
+    }
+    API.getData('selectedSpectra').triggerChange();
   }
 
   addSpectrum(tocEntry, spectrum) {

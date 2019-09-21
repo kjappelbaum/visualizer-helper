@@ -1,4 +1,3 @@
-
 Object.defineProperty(exports, '__esModule', { value: true });
 
 // https://github.com/jasondavies/conrec.js
@@ -128,7 +127,7 @@ class ConrecLib {
     var m1;
     var m2;
     var m3;
-    var case_value;
+    var caseValue;
     var dmin;
     var dmax;
     var x1 = 0.0;
@@ -217,14 +216,14 @@ class ConrecLib {
               for (m = 1; m <= 4; m++) {
                 m1 = m;
                 m2 = 0;
-                if (m != 4) {
+                if (m !== 4) {
                   m3 = m + 1;
                 } else {
                   m3 = 1;
                 }
-                case_value = castab[sh[m1] + 1][sh[m2] + 1][sh[m3] + 1];
-                if (case_value != 0) {
-                  switch (case_value) {
+                caseValue = castab[sh[m1] + 1][sh[m2] + 1][sh[m3] + 1];
+                if (caseValue !== 0) {
+                  switch (caseValue) {
                     case 1: // Line between vertices 1 and 2
                       x1 = xh[m1];
                       y1 = yh[m1];

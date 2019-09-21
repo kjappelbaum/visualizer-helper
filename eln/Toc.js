@@ -45,7 +45,6 @@ class Toc {
    *
    */
   refresh(options = {}) {
-    console.log('Refresh toc');
     let { group, sort, filter, viewName } = Object.assign(
       {},
       this.options,

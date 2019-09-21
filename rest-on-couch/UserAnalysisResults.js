@@ -2,7 +2,7 @@ define([
   '../util/getViewInfo',
   'src/util/api',
   'src/util/couchdbAttachments'
-], function (getViewInfo, API, CDB) {
+], function (getViewInfo, API) {
   class UserAnalysisResults {
     constructor(roc, sampleID) {
       this.roc = roc;
