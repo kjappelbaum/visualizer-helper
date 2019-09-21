@@ -212,6 +212,12 @@ class SpectraDataSet {
       case 'hideSpectra':
         this.hideSpectra();
         break;
+      case 'forceRecolor': {
+        let selectedSpectra = API.getData('selectedSpectra');
+        selectedSpectra.forEach((spectrum) => spectrum.color = '');
+        recolor(selectedSpectra);
+        break;
+      }
       case 'showSpectra':
         this.showSpectra();
         break;
