@@ -306,7 +306,7 @@ class SpectraDataSet {
 
   addSpectrumToSelected(spectrum, tocEntry, selectedSpectra) {
     if (spectrum.jcamp) {
-      let spectrumID = String(tocEntry.id + spectrum.jcamp.filename);
+      let spectrumID = String(`${tocEntry.value.reference} / ${spectrum.jcamp.filename.replace(/.*\/(.*)\..*/, '$1')}`);
       let sampleID = String(tocEntry.id);
       if (selectedSpectra.filter((spectrum) => String(spectrum.id) === spectrumID).length > 0) return;
       spectrum.sampleID = sampleID;
