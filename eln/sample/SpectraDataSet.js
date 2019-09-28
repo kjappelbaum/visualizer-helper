@@ -195,6 +195,7 @@ class SpectraDataSet {
   }
 
   refresh() {
+    if (!this.sampleToc) return;
     this.sampleToc.options.filter = this.spectraConfig.tocFilter;
     this.sampleToc.options.callback = this.spectraConfig.tocCallback;
     this.sampleToc.refresh();
