@@ -21,6 +21,10 @@ let html = `
 #distances td {
   vertical-align: top;
 }
+#distances i {
+  color: darkred;
+  font-size: 0.8em;
+}
 #distances tr:nth-child(even) {
   background: #ddd;
 }
@@ -155,7 +159,7 @@ let html = `
     </tr>
  
     <tr>
-      <td>intersection<br><i>Requires normalization</i></td>
+      <td nowrap>intersection<br><i>Requires normalization</i></td>
       <td style="color:darkgreen;">✔</td>
       <td style="color:darkred;">✘</td>
       <td>
