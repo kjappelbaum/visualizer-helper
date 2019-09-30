@@ -153,6 +153,15 @@ let html = `
         />
       </td>
     </tr>
+ 
+    <tr>
+      <td>intersection<br><i>Requires normalization</i></td>
+      <td style="color:darkgreen;">✔</td>
+      <td style="color:darkred;">✘</td>
+      <td>
+      <img src="https://tex.cheminfo.org/?tex=d(p,q)=1-\sum\limits_{i=1}^{n}min(p_i,q_i)">
+      </td>
+    </tr>
 
     <tr>
       <td>jaccard</td>
