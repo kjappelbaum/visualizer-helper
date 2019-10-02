@@ -339,7 +339,7 @@ Your local changes will be lost.</p>`;
           yUnit: 'Relative'
         },
         cyclicVoltammetry: {
-          type: 'Cylic voltammetry',
+          type: 'Cyclic voltammetry',
           xUnit: 'I [mA]',
           yUnit: 'Ewe [V]'
         }
