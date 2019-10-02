@@ -244,6 +244,7 @@ Your local changes will be lost.</p>`;
         droppedMS: 'mass',
         droppedRaman: 'raman',
         droppedChrom: 'chromatogram',
+        droppedCV: 'cyclicVoltammetry',
         droppedXray: 'xray',
         droppedOverview: 'image',
         droppedImage: 'image',
