@@ -49,6 +49,11 @@ jpaths.thermogravimetricAnalysis = [
   'spectra',
   'thermogravimetricAnalysis'
 ];
+jpaths.cyclicVoltammetry = [
+  '$content',
+  'spectra',
+  'cyclicVoltammetry'
+];
 jpaths.elementalAnalysis = ['$content', 'spectra', 'elementalAnalysis'];
 jpaths.differentialScanningCalorimetry = [
   '$content',
