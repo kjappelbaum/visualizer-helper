@@ -336,6 +336,11 @@ Your local changes will be lost.</p>`;
           type: 'MASS SPECTRUM',
           xUnit: 'm/z [Da]',
           yUnit: 'Relative'
+        },
+        cyclicVoltammetry: {
+          type: 'Cylic voltammetry',
+          xUnit: 'I [mA]',
+          yUnit: 'Ewe [V]'
         }
       };
 
