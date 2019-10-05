@@ -213,6 +213,9 @@ class SpectraDataSet {
       case 'hideSpectra':
         this.hideSpectra();
         break;
+      case 'showOnlySpectra':
+          this.showOnlySpectra();
+          break;
       case 'forceRecolor': {
         let selectedSpectra = API.getData('selectedSpectra');
         selectedSpectra.forEach((spectrum) => spectrum.color = '');
@@ -259,6 +262,19 @@ class SpectraDataSet {
 
   showSpectra() {
     let selectedSpectra = API.getData('selectedSpectra');
+    let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
+    for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
+      let spectrum = selectedSpectra.filter((spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id))[0];
+      spectrum.display = true;
+    }
+    API.getData('selectedSpectra').triggerChange();
+  }
+
+  showOnlySpectra() {
+    let selectedSpectra = API.getData('selectedSpectra');
+    for (let spectrum of selectedSpectra) {
+      spectrum.display = false;
+    }
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
       let spectrum = selectedSpectra.filter((spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id))[0];
