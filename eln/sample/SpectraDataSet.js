@@ -213,9 +213,12 @@ class SpectraDataSet {
       case 'hideSpectra':
         this.hideSpectra();
         break;
+      case 'hideAllSpectra':
+        this.hideAllSpectra();
+        break;
       case 'showOnlySpectra':
-          this.showOnlySpectra();
-          break;
+        this.showOnlySpectra();
+        break;
       case 'forceRecolor': {
         let selectedSpectra = API.getData('selectedSpectra');
         selectedSpectra.forEach((spectrum) => spectrum.color = '');
@@ -225,6 +228,9 @@ class SpectraDataSet {
       }
       case 'showSpectra':
         this.showSpectra();
+        break;
+      case 'showAllSpectra':
+        this.showAllSpectra();
         break;
       case 'clearSelectedSamples':
         {
@@ -258,6 +264,22 @@ class SpectraDataSet {
     let data = await this.roc.document(uuid, { varName: 'linkedSample' });
     let spectra = this.spectraConfig.getSpectra(data);
     API.createData('spectra', spectra);
+  }
+
+  showAllSpectra() {
+    let selectedSpectra = API.getData('selectedSpectra');
+    for (let spectrum of selectedSpectra) {
+      spectrum.display = true;
+    }
+    API.getData('selectedSpectra').triggerChange();
+  }
+
+  hideAllSpectra() {
+    let selectedSpectra = API.getData('selectedSpectra');
+    for (let spectrum of selectedSpectra) {
+      spectrum.display = false;
+    }
+    API.getData('selectedSpectra').triggerChange();
   }
 
   showSpectra() {
