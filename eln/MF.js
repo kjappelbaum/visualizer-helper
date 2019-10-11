@@ -18,9 +18,11 @@ class MF {
       if (mf) {
         try {
           let mfInfo = new MolecularFormula.MF(mf).getInfo();
+          this.setCanonizedMF(mfInfo.mf);
           this.previousEMMF = mfInfo.monoisotopicMass;
         } catch (e) {
           // eslint-disable-next-line no-console
+          this.setCanonizedMF('');
           console.log('Could not parse MF: ', mf);
         }
       }
@@ -39,6 +41,10 @@ class MF {
       options
     );
     return new MolecularFormula.IsotopicDistribution(this.getMF(), options);
+  }
+
+  setCanonizedMF(mf) {
+    API.createData('canonizedMF', mf);
   }
 
   getIsotopicDistribution(options) {
@@ -95,6 +101,10 @@ class MF {
     this.sample.setChildSync(['$content', 'general', 'mf'], mf);
   }
 
+  setMF(mf) {
+    this.sample.setChildSync(['$content', 'general', 'mf'], mf);
+  }
+
   setMW(mw) {
     this.sample.setChildSync(['$content', 'general', 'mw'], mw);
   }
@@ -109,12 +119,13 @@ class MF {
         this.previousEMMF = 0;
         this.setMW(0);
         this.setEM(0);
+        this.setCanonizedMF('');
         return;
       }
       var mfInfo = new MolecularFormula.MF(this.getMF()).getInfo();
-
       if (this.previousEMMF !== mfInfo.monoisotopicMass) {
         this.previousEMMF = mfInfo.monoisotopicMass;
+        this.setCanonizedMF(mfInfo.mf);
         this.setMW(mfInfo.mass);
         this.setEM(mfInfo.monoisotopicMass);
       }
@@ -123,6 +134,7 @@ class MF {
       console.log('MF error', e); // disable
       this.setMW(0);
       this.setEM(0);
+      this.setCanonizedMF('');
     }
   }
 
