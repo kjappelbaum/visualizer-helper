@@ -41,7 +41,11 @@ export class Spectrum2D {
   }
 
   createContours(options = {}) {
-    const { timeout } = options;
+    const {
+      timeout = 1000,
+      nbPositiveLevels = 10,
+      nbNegativeLevels = 10
+    } = options;
     let zoomPositive = this.currentLevelPositive / 2 + 1;
     let zoomNegative = this.currentLevelNegative / 2 + 1;
     const chart = {
@@ -50,14 +54,16 @@ export class Spectrum2D {
           type: 'contour',
           contourLines: this.getContours(zoomPositive, {
             negative: false,
-            timeout
+            timeout,
+            nbLevels: nbPositiveLevels
           })
         },
         {
           type: 'contour',
           contourLines: this.getContours(zoomNegative, {
             negative: true,
-            timeout
+            timeout,
+            nbLevels: nbNegativeLevels
           })
         }
       ]
@@ -66,12 +72,17 @@ export class Spectrum2D {
   }
 
   getContours(zoomLevel, options = {}) {
-    const { negative = false, timeout = 1000 } = options;
+    const { negative = false, timeout = 1000, nbLevels = 10 } = options;
     const max = Math.max(
       Math.abs(this.minMax.maxZ),
       Math.abs(this.minMax.minZ)
     );
-    let range = getRange(this.median * 3 * Math.pow(2, zoomLevel), max, 10, 2);
+    let range = getRange(
+      this.median * 3 * Math.pow(2, zoomLevel),
+      max,
+      nbLevels,
+      2
+    );
     if (negative) {
       range = range.map((value) => -value);
     }
