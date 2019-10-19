@@ -8,7 +8,13 @@ export class RangesManager {
   }
 
   processAction(action) {
-    if (!action.value.event.altKey) return;
+    if (
+      !action.value.event.altKey ||
+      action.value.event.shiftKey ||
+      action.value.event.ctrlKey
+    ) {
+      return;
+    }
     let track;
     if (action.value && action.value.data) {
       let firstChart = Object.keys(action.value.data)[0];
