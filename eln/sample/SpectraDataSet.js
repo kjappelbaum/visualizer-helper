@@ -24,6 +24,12 @@ const SpectraConfigs = {
       }
     },
     chartPrefs: {
+      yLabel: 'Absorbance',
+      displayYAxis: [
+        'display',
+        'main',
+        'sec'
+      ],
       xLabel: 'Wavelength [cm-1]',
       displayXAxis: [
         'display',
@@ -52,6 +58,12 @@ const SpectraConfigs = {
       }
     },
     chartPrefs: {
+      yLabel: 'Absorbance',
+      displayYAxis: [
+        'display',
+        'main',
+        'sec'
+      ],
       xLabel: 'Wavelength [cm-1]',
       displayXAxis: [
         'display',
@@ -91,6 +103,11 @@ const SpectraConfigs = {
       }
     },
     chartPrefs: {
+      yLabel: 'Intensity',
+      displayYAxis: [
+        'main',
+        'sec'
+      ],
       xLabel: 'δ [ppm]',
       displayXAxis: [
         'display',
@@ -119,6 +136,11 @@ const SpectraConfigs = {
       }
     },
     chartPrefs: {
+      yLabel: 'Intensity',
+      displayYAxis: [
+        'main',
+        'sec'
+      ],
       xLabel: 'Time [s]',
       displayXAxis: [
         'display',
