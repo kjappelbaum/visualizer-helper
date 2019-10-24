@@ -115,6 +115,51 @@ const SpectraConfigs = {
         'main',
         'sec'
       ]
+    },
+  
+  },
+  '13C NMR': {
+    tocFilter: (entry) => entry.value.nb13c && !entry.value.hidden,
+    tocCallback: (entry) => {
+      entry.value.nbSpectra = entry.value.nb1h;
+    },
+    getSpectra: (sample) => {
+      if (
+        sample &&
+        sample.$content &&
+        sample.$content.spectra &&
+        Array.isArray(sample.$content.spectra.nmr)
+      ) {
+        let spectra = sample.$content.spectra.nmr;
+        spectra = spectra.filter(
+          (spectrum) => spectrum.dimension === 1 && spectrum.nucleus[0] === '13C'
+        );
+        spectra.forEach((spectrum) => {
+          let info = [];
+          if (spectrum.nucleus) info.push(spectrum.nucleus[0]);
+          if (spectrum.experiment) info.push(spectrum.experiment);
+          if (spectrum.solvent) info.push(spectrum.solvent);
+          if (spectrum.frequency) info.push(spectrum.frequency.toFixed(0));
+          spectrum.info = info.join(', ');
+        });
+        return spectra;
+      } else {
+        return [];
+      }
+    },
+    chartPrefs: {
+      yLabel: 'Intensity',
+      displayYAxis: [
+        'main',
+        'sec'
+      ],
+      xLabel: 'δ [ppm]',
+      displayXAxis: [
+        'display',
+        'flip',
+        'main',
+        'sec'
+      ]
     }
   },
   Chromatography: {
