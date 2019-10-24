@@ -49,7 +49,7 @@ const SpectraConfigs = {
         sample &&
         sample.$content &&
         sample.$content.spectra &&
-        Array.isArray(sample.$content.spectra.nbRaman)
+        Array.isArray(sample.$content.spectra.raman)
       ) {
         let spectra = sample.$content.spectra.raman;
         return spectra;
