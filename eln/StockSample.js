@@ -4,7 +4,7 @@ import ExpandableMolecule from './ExpandableMolecule';
 import MF from './MF';
 
 const defaultOptions = {
-  varName: 'sample'
+  varName: 'sample',
 };
 
 class Sample {
@@ -12,8 +12,8 @@ class Sample {
     // make sure we don't copy attachment metadata
     this.sample = sample || {
       $content: {
-        general: {}
-      }
+        general: {},
+      },
     };
 
     this.options = Object.assign({}, defaultOptions, options);
@@ -31,7 +31,11 @@ class Sample {
     API.setVariable('mf', sampleVar, ['$content', 'general', 'mf']);
     API.setVariable('mw', sampleVar, ['$content', 'general', 'mw']);
     API.setVariable('em', sampleVar, ['$content', 'general', 'em']);
-    API.setVariable('description', sampleVar, ['$content', 'general', 'description']);
+    API.setVariable('description', sampleVar, [
+      '$content',
+      'general',
+      'description',
+    ]);
     API.setVariable('iupac', sampleVar, ['$content', 'general', 'iupac']);
 
     this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
@@ -95,13 +99,34 @@ class Sample {
     // This part will handle the mf and mw
     this.expandableMolecule.setMolfile(general.molfile);
 
-    this.sample.setChildSync(['$content', 'general', 'description'], general.description);
-    this.sample.setChildSync(['$content', 'general', 'name'], general.name);
-    this.sample.setChildSync(['$content', 'identifier', 'cas'], identifier.cas);
-    this.sample.setChildSync(['$content', 'stock', 'catalogNumber'], stock.catalogNumber);
-    this.sample.setChildSync(['$content', 'stock', 'quantity'], stock.quantity);
-    this.sample.setChildSync(['$content', 'general', 'purity'], stock.purity);
-    this.sample.setChildSync(['$content', 'stock', 'supplier'], stock.supplier);
+    if (general) {
+      this.sample.setChildSync(
+        ['$content', 'general', 'description'],
+        general.description
+      );
+      this.sample.setChildSync(['$content', 'general', 'name'], general.name);
+    }
+    if (identifier) {
+      this.sample.setChildSync(
+        ['$content', 'identifier', 'cas'],
+        identifier.cas
+      );
+    }
+    if (stock) {
+      this.sample.setChildSync(
+        ['$content', 'stock', 'catalogNumber'],
+        stock.catalogNumber
+      );
+      this.sample.setChildSync(
+        ['$content', 'stock', 'quantity'],
+        stock.quantity
+      );
+      this.sample.setChildSync(['$content', 'general', 'purity'], stock.purity);
+      this.sample.setChildSync(
+        ['$content', 'stock', 'supplier'],
+        stock.supplier
+      );
+    }
   }
 }
 
