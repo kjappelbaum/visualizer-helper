@@ -203,8 +203,7 @@ define([
 
     async getUser() {
       await this.__ready;
-      const res = await superagent.get(this.sessionUrl).withCredentials();
-      return res.body;
+      return (await fetch(this.sessionUrl, { credentials: 'include' })).json();
     }
 
     /**
@@ -213,17 +212,12 @@ define([
      */
     async getUserPrefs(defaultPrefs = {}) {
       await this.__ready;
-      let res;
       try {
-        res = await superagent
-          .get(`${this.databaseUrl}/user/_me`)
-          .withCredentials();
+        return (await fetch(`${this.databaseUrl}/user/_me`, { credentials: 'include' })).json();
       } catch (e) {
         this.setUserPrefs(defaultPrefs);
         return defaultPrefs;
       }
-
-      return res.body;
     }
 
     /**
@@ -241,10 +235,7 @@ define([
 
     async getUserInfo() {
       await this.__ready;
-      const res = await superagent
-        .get(`${this.databaseUrl}/userInfo/_me`)
-        .withCredentials();
-      return res.body;
+      return (await fetch(`${this.databaseUrl}/userInfo/_me`, { credentials: 'include' })).json();
     }
 
     async view(viewName, options) {
@@ -313,9 +304,7 @@ define([
               for (var i = 0; i < res.body.length; i++) {
                 res.body[i].anonymousRead = {
                   type: 'boolean',
-                  url: `${this.entryUrl}/${
-                    res.body[i].id
-                  }/_rights/read?asAnonymous=true`
+                  url: `${this.entryUrl}/${res.body[i].id}/_rights/read?asAnonymous=true`
                 };
                 res.body[i].userWrite = {
                   type: 'boolean',
