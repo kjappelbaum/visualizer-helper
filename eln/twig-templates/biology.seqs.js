@@ -4,6 +4,19 @@
 module.exports = `
 
 <style>
+    #biologyForm .addRow {
+        color: green;
+        font-weight: bold;
+        font-size: 12px;
+        padding: .3em .5em;
+    }
+    #biologyForm .removeRow {
+        color: red;
+        font-weight: bold;
+        font-size: 12px;
+        padding: .3em .5em;
+    }
+
     #biologyForm input[type=number] {
         width: 50px;
     }
