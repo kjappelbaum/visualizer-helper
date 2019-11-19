@@ -116,7 +116,7 @@ const SpectraConfigs = {
         'sec'
       ]
     },
-  
+
   },
   '13C NMR': {
     tocFilter: (entry) => entry.value.nb13c && !entry.value.hidden,
