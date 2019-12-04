@@ -149,7 +149,7 @@ const SpectraConfigs = {
       yLabel: 'Intensity',
       displayYAxis: ['main', 'sec'],
       xLabel: 'Time [s]',
-      displayXAxis: ['display', 'flip', 'main', 'sec']
+      displayXAxis: ['display', 'main', 'sec']
     }
   }
 };
