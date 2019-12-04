@@ -6,11 +6,11 @@ import Color from 'src/util/color';
 
 const SpectraConfigs = {
   IR: {
-    tocFilter: entry => entry.value.nbIR && !entry.value.hidden,
-    tocCallback: entry => {
+    tocFilter: (entry) => entry.value.nbIR && !entry.value.hidden,
+    tocCallback: (entry) => {
       entry.value.nbSpectra = entry.value.nbIR;
     },
-    getSpectra: sample => {
+    getSpectra: (sample) => {
       if (
         sample &&
         sample.$content &&
@@ -31,11 +31,11 @@ const SpectraConfigs = {
     }
   },
   Raman: {
-    tocFilter: entry => entry.value.nbRaman && !entry.value.hidden,
-    tocCallback: entry => {
+    tocFilter: (entry) => entry.value.nbRaman && !entry.value.hidden,
+    tocCallback: (entry) => {
       entry.value.nbSpectra = entry.value.nbRaman;
     },
-    getSpectra: sample => {
+    getSpectra: (sample) => {
       if (
         sample &&
         sample.$content &&
@@ -56,11 +56,11 @@ const SpectraConfigs = {
     }
   },
   '1H NMR': {
-    tocFilter: entry => entry.value.nb1h && !entry.value.hidden,
-    tocCallback: entry => {
+    tocFilter: (entry) => entry.value.nb1h && !entry.value.hidden,
+    tocCallback: (entry) => {
       entry.value.nbSpectra = entry.value.nb1h;
     },
-    getSpectra: sample => {
+    getSpectra: (sample) => {
       if (
         sample &&
         sample.$content &&
@@ -69,9 +69,9 @@ const SpectraConfigs = {
       ) {
         let spectra = sample.$content.spectra.nmr;
         spectra = spectra.filter(
-          spectrum => spectrum.dimension === 1 && spectrum.nucleus[0] === '1H'
+          (spectrum) => spectrum.dimension === 1 && spectrum.nucleus[0] === '1H'
         );
-        spectra.forEach(spectrum => {
+        spectra.forEach((spectrum) => {
           let info = [];
           if (spectrum.nucleus) info.push(spectrum.nucleus[0]);
           if (spectrum.experiment) info.push(spectrum.experiment);
@@ -92,11 +92,11 @@ const SpectraConfigs = {
     }
   },
   '13C NMR': {
-    tocFilter: entry => entry.value.nb13c && !entry.value.hidden,
-    tocCallback: entry => {
+    tocFilter: (entry) => entry.value.nb13c && !entry.value.hidden,
+    tocCallback: (entry) => {
       entry.value.nbSpectra = entry.value.nb1h;
     },
-    getSpectra: sample => {
+    getSpectra: (sample) => {
       if (
         sample &&
         sample.$content &&
@@ -105,9 +105,9 @@ const SpectraConfigs = {
       ) {
         let spectra = sample.$content.spectra.nmr;
         spectra = spectra.filter(
-          spectrum => spectrum.dimension === 1 && spectrum.nucleus[0] === '13C'
+          (spectrum) => spectrum.dimension === 1 && spectrum.nucleus[0] === '13C'
         );
-        spectra.forEach(spectrum => {
+        spectra.forEach((spectrum) => {
           let info = [];
           if (spectrum.nucleus) info.push(spectrum.nucleus[0]);
           if (spectrum.experiment) info.push(spectrum.experiment);
@@ -128,11 +128,11 @@ const SpectraConfigs = {
     }
   },
   Chromatography: {
-    tocFilter: entry => entry.value.nbChrom && !entry.value.hidden,
-    tocCallback: entry => {
+    tocFilter: (entry) => entry.value.nbChrom && !entry.value.hidden,
+    tocCallback: (entry) => {
       entry.value.nbSpectra = entry.value.nbChrom;
     },
-    getSpectra: sample => {
+    getSpectra: (sample) => {
       if (
         sample &&
         sample.$content &&
@@ -207,9 +207,12 @@ class SpectraDataSet {
     await this.refresh();
 
     let mainData = Versioning.getData();
-    mainData.onChange(evt => {
+    mainData.onChange((evt) => {
       if (evt.jpath[0] === varName) {
         localStorage.setItem(cookieName, analysisKind.analysis);
+        const selectedSpectra = API.getData('selectedSpectra');
+        selectedSpectra.length = 0;
+        selectedSpectra.triggerChange();
         this.spectraConfig = SpectraConfigs[String(analysisKind.analysis)];
         this.refresh();
       }
@@ -245,7 +248,7 @@ class SpectraDataSet {
         break;
       case 'forceRecolor': {
         let selectedSpectra = API.getData('selectedSpectra');
-        selectedSpectra.forEach(spectrum => (spectrum.color = ''));
+        selectedSpectra.forEach((spectrum) => (spectrum.color = ''));
         recolor(selectedSpectra);
         selectedSpectra.triggerChange();
         break;
@@ -311,7 +314,7 @@ class SpectraDataSet {
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
       let spectrum = selectedSpectra.filter(
-        spectrum => String(spectrum.id) === String(currentlySelectedSpectrum.id)
+        (spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id)
       )[0];
       spectrum.display = true;
     }
@@ -326,7 +329,7 @@ class SpectraDataSet {
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
       let spectrum = selectedSpectra.filter(
-        spectrum => String(spectrum.id) === String(currentlySelectedSpectrum.id)
+        (spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id)
       )[0];
       spectrum.display = true;
     }
@@ -338,7 +341,7 @@ class SpectraDataSet {
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
       let spectrum = selectedSpectra.filter(
-        spectrum => String(spectrum.id) === String(currentlySelectedSpectrum.id)
+        (spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id)
       )[0];
       spectrum.display = false;
     }
@@ -358,7 +361,7 @@ class SpectraDataSet {
     let promises = [];
     for (let tocEntry of tocSelected) {
       promises.push(
-        this.roc.document(tocEntry.id).then(sample => {
+        this.roc.document(tocEntry.id).then((sample) => {
           let spectra = this.spectraConfig.getSpectra(sample);
           for (let spectrum of spectra) {
             if (spectrum.jcamp && spectrum.jcamp.filename) {
@@ -383,7 +386,7 @@ class SpectraDataSet {
       );
       let sampleID = String(tocEntry.id);
       if (
-        selectedSpectra.filter(spectrum => String(spectrum.id) === spectrumID)
+        selectedSpectra.filter((spectrum) => String(spectrum.id) === spectrumID)
           .length > 0
       ) {
         return;
