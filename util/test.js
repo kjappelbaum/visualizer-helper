@@ -1,20 +1,17 @@
 let globalResolve;
 
-doAll();
+async function doAll()
 
-async function doAll() {
-  const promise = () => {
-    new Promise((resolve, reject) => {
-      globalResolve = resolve;
-    });
-  };
+const promise = new Promise((resolve, reject) => {
+  globalResolve = resolve;
+});
 
-  console.log('Waiting');
+console.log('Waiting');
 
-  await promise();
+promise.then(() => {
   console.log('DONE');
+});
 
-  console.log('Still waiting');
+console.log('Still waiting');
 
-  globalResolve();
-}
+globalResolve();

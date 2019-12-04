@@ -6,11 +6,11 @@ import Color from 'src/util/color';
 
 const SpectraConfigs = {
   IR: {
-    tocFilter: (entry) => entry.value.nbIR && !entry.value.hidden,
-    tocCallback: (entry) => {
+    tocFilter: entry => entry.value.nbIR && !entry.value.hidden,
+    tocCallback: entry => {
       entry.value.nbSpectra = entry.value.nbIR;
     },
-    getSpectra: (sample) => {
+    getSpectra: sample => {
       if (
         sample &&
         sample.$content &&
@@ -25,26 +25,17 @@ const SpectraConfigs = {
     },
     chartPrefs: {
       yLabel: 'Absorbance',
-      displayYAxis: [
-        'display',
-        'main',
-        'sec'
-      ],
+      displayYAxis: ['display', 'main', 'sec'],
       xLabel: 'Wavelength [cm-1]',
-      displayXAxis: [
-        'display',
-        'flip',
-        'main',
-        'sec'
-      ]
+      displayXAxis: ['display', 'flip', 'main', 'sec']
     }
   },
   Raman: {
-    tocFilter: (entry) => entry.value.nbRaman && !entry.value.hidden,
-    tocCallback: (entry) => {
+    tocFilter: entry => entry.value.nbRaman && !entry.value.hidden,
+    tocCallback: entry => {
       entry.value.nbSpectra = entry.value.nbRaman;
     },
-    getSpectra: (sample) => {
+    getSpectra: sample => {
       if (
         sample &&
         sample.$content &&
@@ -59,26 +50,17 @@ const SpectraConfigs = {
     },
     chartPrefs: {
       yLabel: 'Absorbance',
-      displayYAxis: [
-        'display',
-        'main',
-        'sec'
-      ],
+      displayYAxis: ['display', 'main', 'sec'],
       xLabel: 'Wavelength [cm-1]',
-      displayXAxis: [
-        'display',
-        'flip',
-        'main',
-        'sec'
-      ]
+      displayXAxis: ['display', 'flip', 'main', 'sec']
     }
   },
   '1H NMR': {
-    tocFilter: (entry) => entry.value.nb1h && !entry.value.hidden,
-    tocCallback: (entry) => {
+    tocFilter: entry => entry.value.nb1h && !entry.value.hidden,
+    tocCallback: entry => {
       entry.value.nbSpectra = entry.value.nb1h;
     },
-    getSpectra: (sample) => {
+    getSpectra: sample => {
       if (
         sample &&
         sample.$content &&
@@ -87,9 +69,9 @@ const SpectraConfigs = {
       ) {
         let spectra = sample.$content.spectra.nmr;
         spectra = spectra.filter(
-          (spectrum) => spectrum.dimension === 1 && spectrum.nucleus[0] === '1H'
+          spectrum => spectrum.dimension === 1 && spectrum.nucleus[0] === '1H'
         );
-        spectra.forEach((spectrum) => {
+        spectra.forEach(spectrum => {
           let info = [];
           if (spectrum.nucleus) info.push(spectrum.nucleus[0]);
           if (spectrum.experiment) info.push(spectrum.experiment);
@@ -104,26 +86,17 @@ const SpectraConfigs = {
     },
     chartPrefs: {
       yLabel: 'Intensity',
-      displayYAxis: [
-        'main',
-        'sec'
-      ],
+      displayYAxis: ['main', 'sec'],
       xLabel: 'δ [ppm]',
-      displayXAxis: [
-        'display',
-        'flip',
-        'main',
-        'sec'
-      ]
-    },
-
+      displayXAxis: ['display', 'flip', 'main', 'sec']
+    }
   },
   '13C NMR': {
-    tocFilter: (entry) => entry.value.nb13c && !entry.value.hidden,
-    tocCallback: (entry) => {
+    tocFilter: entry => entry.value.nb13c && !entry.value.hidden,
+    tocCallback: entry => {
       entry.value.nbSpectra = entry.value.nb1h;
     },
-    getSpectra: (sample) => {
+    getSpectra: sample => {
       if (
         sample &&
         sample.$content &&
@@ -132,9 +105,9 @@ const SpectraConfigs = {
       ) {
         let spectra = sample.$content.spectra.nmr;
         spectra = spectra.filter(
-          (spectrum) => spectrum.dimension === 1 && spectrum.nucleus[0] === '13C'
+          spectrum => spectrum.dimension === 1 && spectrum.nucleus[0] === '13C'
         );
-        spectra.forEach((spectrum) => {
+        spectra.forEach(spectrum => {
           let info = [];
           if (spectrum.nucleus) info.push(spectrum.nucleus[0]);
           if (spectrum.experiment) info.push(spectrum.experiment);
@@ -149,25 +122,17 @@ const SpectraConfigs = {
     },
     chartPrefs: {
       yLabel: 'Intensity',
-      displayYAxis: [
-        'main',
-        'sec'
-      ],
+      displayYAxis: ['main', 'sec'],
       xLabel: 'δ [ppm]',
-      displayXAxis: [
-        'display',
-        'flip',
-        'main',
-        'sec'
-      ]
+      displayXAxis: ['display', 'flip', 'main', 'sec']
     }
   },
   Chromatography: {
-    tocFilter: (entry) => entry.value.mbChrom && !entry.value.hidden,
-    tocCallback: (entry) => {
-      entry.value.nbSpectra = entry.value.mbChrom;
+    tocFilter: entry => entry.value.nbChrom && !entry.value.hidden,
+    tocCallback: entry => {
+      entry.value.nbSpectra = entry.value.nbChrom;
     },
-    getSpectra: (sample) => {
+    getSpectra: sample => {
       if (
         sample &&
         sample.$content &&
@@ -182,17 +147,9 @@ const SpectraConfigs = {
     },
     chartPrefs: {
       yLabel: 'Intensity',
-      displayYAxis: [
-        'main',
-        'sec'
-      ],
+      displayYAxis: ['main', 'sec'],
       xLabel: 'Time [s]',
-      displayXAxis: [
-        'display',
-        'flip',
-        'main',
-        'sec'
-      ]
+      displayXAxis: ['display', 'flip', 'main', 'sec']
     }
   }
 };
@@ -250,7 +207,7 @@ class SpectraDataSet {
     await this.refresh();
 
     let mainData = Versioning.getData();
-    mainData.onChange((evt) => {
+    mainData.onChange(evt => {
       if (evt.jpath[0] === varName) {
         localStorage.setItem(cookieName, analysisKind.analysis);
         this.spectraConfig = SpectraConfigs[String(analysisKind.analysis)];
@@ -288,7 +245,7 @@ class SpectraDataSet {
         break;
       case 'forceRecolor': {
         let selectedSpectra = API.getData('selectedSpectra');
-        selectedSpectra.forEach((spectrum) => spectrum.color = '');
+        selectedSpectra.forEach(spectrum => (spectrum.color = ''));
         recolor(selectedSpectra);
         selectedSpectra.triggerChange();
         break;
@@ -353,7 +310,9 @@ class SpectraDataSet {
     let selectedSpectra = API.getData('selectedSpectra');
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
-      let spectrum = selectedSpectra.filter((spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id))[0];
+      let spectrum = selectedSpectra.filter(
+        spectrum => String(spectrum.id) === String(currentlySelectedSpectrum.id)
+      )[0];
       spectrum.display = true;
     }
     API.getData('selectedSpectra').triggerChange();
@@ -366,7 +325,9 @@ class SpectraDataSet {
     }
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
-      let spectrum = selectedSpectra.filter((spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id))[0];
+      let spectrum = selectedSpectra.filter(
+        spectrum => String(spectrum.id) === String(currentlySelectedSpectrum.id)
+      )[0];
       spectrum.display = true;
     }
     API.getData('selectedSpectra').triggerChange();
@@ -376,7 +337,9 @@ class SpectraDataSet {
     let selectedSpectra = API.getData('selectedSpectra');
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
-      let spectrum = selectedSpectra.filter((spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id))[0];
+      let spectrum = selectedSpectra.filter(
+        spectrum => String(spectrum.id) === String(currentlySelectedSpectrum.id)
+      )[0];
       spectrum.display = false;
     }
     API.getData('selectedSpectra').triggerChange();
@@ -395,7 +358,7 @@ class SpectraDataSet {
     let promises = [];
     for (let tocEntry of tocSelected) {
       promises.push(
-        this.roc.document(tocEntry.id).then((sample) => {
+        this.roc.document(tocEntry.id).then(sample => {
           let spectra = this.spectraConfig.getSpectra(sample);
           for (let spectrum of spectra) {
             if (spectrum.jcamp && spectrum.jcamp.filename) {
@@ -412,9 +375,19 @@ class SpectraDataSet {
 
   addSpectrumToSelected(spectrum, tocEntry, selectedSpectra) {
     if (spectrum.jcamp) {
-      let spectrumID = String(`${tocEntry.value.reference} / ${spectrum.jcamp.filename.replace(/.*\/(.*)\..*/, '$1')}`);
+      let spectrumID = String(
+        `${tocEntry.value.reference} / ${spectrum.jcamp.filename.replace(
+          /.*\/(.*)\..*/,
+          '$1'
+        )}`
+      );
       let sampleID = String(tocEntry.id);
-      if (selectedSpectra.filter((spectrum) => String(spectrum.id) === spectrumID).length > 0) return;
+      if (
+        selectedSpectra.filter(spectrum => String(spectrum.id) === spectrumID)
+          .length > 0
+      ) {
+        return;
+      }
       spectrum.sampleID = sampleID;
       spectrum.id = spectrumID;
       spectrum.display = true;
@@ -465,6 +438,5 @@ function recolor(selectedSpectra) {
     }
   }
 }
-
 
 module.exports = SpectraDataSet;
