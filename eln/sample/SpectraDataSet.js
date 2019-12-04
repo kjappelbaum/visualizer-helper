@@ -128,9 +128,9 @@ const SpectraConfigs = {
     }
   },
   Chromatography: {
-    tocFilter: (entry) => entry.value.nbChrom && !entry.value.hidden,
+    tocFilter: (entry) => entry.value.nbChromatogram && !entry.value.hidden,
     tocCallback: (entry) => {
-      entry.value.nbSpectra = entry.value.nbChrom;
+      entry.value.nbSpectra = entry.value.nbChromatogram;
     },
     getSpectra: (sample) => {
       if (
