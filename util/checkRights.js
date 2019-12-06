@@ -1,12 +1,14 @@
-
 /**
 Checks if one of the usernames is part of the rights list
  A right may be a regular expression.
 
  */
 
-
-module.exports = function checkRights(usernames, rights = '', defaultValue = false) {
+module.exports = function checkRights(
+  usernames,
+  rights = '',
+  defaultValue = false
+) {
   if (!rights) return defaultValue;
   if (!usernames) return false;
   if (!Array.isArray(usernames)) usernames = [usernames];
@@ -20,6 +22,7 @@ module.exports = function checkRights(usernames, rights = '', defaultValue = fal
     }
 
     for (let username of usernames) {
+      if (!username) continue;
       if (isRegExp) {
         if (username.match(regexp)) return true;
       } else {
