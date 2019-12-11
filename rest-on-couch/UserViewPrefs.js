@@ -6,7 +6,7 @@ define(['../util/getViewInfo'], function (getViewInfo) {
     /**
      * Retrieves user preferences related to the current view
      * @param {*} prefID
-     * @return preferences
+     * @return {object} preferences
      */
     async get(prefID) {
       let record = await this.getRecord(prefID);
@@ -18,9 +18,11 @@ define(['../util/getViewInfo'], function (getViewInfo) {
       if (!prefID) prefID = (await getViewInfo())._id;
       var user = await this.roc.getUser();
       if (!user || !user.username) return undefined;
-      var firstEntry = (await this.roc.view('entryByOwnerAndId', {
-        key: [user.username, ['userViewPrefs', prefID]]
-      }))[0];
+      var firstEntry = (
+        await this.roc.view('entryByOwnerAndId', {
+          key: [user.username, ['userViewPrefs', prefID]]
+        })
+      )[0];
       return firstEntry;
     }
 
