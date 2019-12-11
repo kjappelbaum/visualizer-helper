@@ -5,38 +5,38 @@ import getViewInfo from './getViewInfo';
 
 // ModulePrefsManager is created in the init script
 // Any module may have a gear in the settings allowing to change preferences
-// If roc is defined we save in roc otherwise with save in local storage
+// the system will either store in Roc or localStorge depending what is available
 
 export class ModulePrefsManager {
-  constructor(modulePrefs = [], options = {}) {
-    this.modulePrefs = modulePrefs;
-    this.roc = options.roc;
-
-    let waitingInitialized = new Promise((resolveWaiting) => {
-      this.resolveWaiting = resolveWaiting;
-    }).then(() => {
-      console.log('Initialized');
-    });
+  constructor(options = {}) {
+    let promises = [];
+    if (options.hasRoc) {
+      let waitingRoc = new Promise((resolveRoc) => {
+        this.resolveRoc = resolveRoc;
+      }).then(() => {
+        console.log('Roc initialized');
+      });
+      promises.push(waitingRoc);
+    }
 
     let waitingView = getViewInfo().then((result) => {
       this.viewID = result._id;
-      console.log('Got view: viewID', this.viewID);
     });
+    promises.push(waitingView);
 
-    let promiseAll = Promise.all([waitingInitialized, waitingView]).then(() => {
-      console.log('Finished waiting');
+    let promiseAll = Promise.all(promises).then(() => {
       this.waiting = () => true;
     });
     this.waiting = () => promiseAll;
   }
 
-  initialized() {
-    this.resolveWaiting();
+  setRoc(roc) {
+    this.roc = roc;
+    this.resolveRoc();
   }
 
   async updateSlickGridPrefs(moduleID) {
     await this.waiting();
-    console.log('finish waiting updateSlickGridPrefs');
     const objectStructure = API.getModule(moduleID).data.resurrect()[0];
 
     const cols = JSON.parse(
@@ -93,7 +93,6 @@ export class ModulePrefsManager {
     cols.forEach((item) => {
       item.formatter = 'typerenderer';
     });
-    console.log({ moduleID, cols });
     API.updateModulePreferences(moduleID, {
       cols: JSON.parse(JSON.stringify(cols))
     });
@@ -103,35 +102,81 @@ export class ModulePrefsManager {
 
   async reloadModulePrefs(moduleID) {
     await this.waiting();
-    console.log('finish waiting reloadModulePrefs');
-    if (!this.roc) {
-      let prefs = JSON.parse(
-        localStorage.getItem('viewModulePreferences') || '{}'
-      );
-      if (!prefs[this.viewID]) return;
-      if (moduleID && !prefs[this.viewID][moduleID]) return;
-      if (moduleID) {
-        console.log('Reloading prefs', prefs[this.viewID][moduleID]);
+    if (this.roc) {
+      this.reloadModulePrefsFromRoc(moduleID);
+    } else {
+      this.reloadModulePrefsFromLocalStorage(moduleID);
+    }
+  }
+
+  async reloadModulePrefsFromLocalStorage(moduleID) {
+    let prefs = JSON.parse(
+      localStorage.getItem('viewModulePreferences') || '{}'
+    );
+    if (!prefs[this.viewID]) return;
+    if (moduleID && !prefs[this.viewID][moduleID]) return;
+    if (moduleID) {
+      API.updateModulePreferences(moduleID, prefs[this.viewID][moduleID]);
+    } else {
+      for (moduleID in prefs[this.viewID]) {
         API.updateModulePreferences(moduleID, prefs[this.viewID][moduleID]);
-      } else {
-        for (moduleID in prefs[this.viewID]) {
-          API.updateModulePreferences(moduleID, prefs[this.viewID][moduleID]);
-        }
+      }
+    }
+  }
+
+  async getRecord() {
+    var user = await this.roc.getUser();
+    if (!user || !user.username) return undefined;
+    return (
+      await this.roc.view('entryByOwnerAndId', {
+        key: [user.username, ['userModulePrefs', this.viewID]]
+      })
+    )[0];
+  }
+
+  async reloadModulePrefsFromRoc(moduleID) {
+    const record = await this.getRecord();
+    if (!record) return;
+    if (moduleID) {
+      API.updateModulePreferences(moduleID, record.$content[moduleID]);
+    } else {
+      for (moduleID in record.$content[moduleID]) {
+        API.updateModulePreferences(moduleID, record.$content[moduleID]);
       }
     }
   }
 
   async saveModulePrefs(moduleID, modulePrefs) {
     await this.waiting();
-    console.log('finish waiting saveModulePrefs');
-    if (!this.roc) {
-      let prefs = JSON.parse(
-        localStorage.getItem('viewModulePreferences') || '{}'
-      );
-      if (!prefs[this.viewID]) prefs[this.viewID] = {};
-      prefs[this.viewID][moduleID] = modulePrefs;
-      console.log({ prefs });
-      localStorage.setItem('viewModulePreferences', JSON.stringify(prefs));
+    if (this.roc) {
+      this.saveModulePrefsToRoc(moduleID, modulePrefs);
+    } else {
+      this.saveModulePrefsToLocalStorage(moduleID, modulePrefs);
+    }
+  }
+
+  async saveModulePrefsToLocalStorage(moduleID, modulePrefs) {
+    let prefs = JSON.parse(
+      localStorage.getItem('viewModulePreferences') || '{}'
+    );
+    if (!prefs[this.viewID]) prefs[this.viewID] = {};
+    prefs[this.viewID][moduleID] = modulePrefs;
+    localStorage.setItem('viewModulePreferences', JSON.stringify(prefs));
+  }
+
+  async saveModulePrefsToRoc(moduleID, modulePrefs) {
+    let record = await this.getRecord();
+    if (record) {
+      record.$content[moduleID] = modulePrefs;
+      return this.roc.update(record);
+    } else {
+      let content = {};
+      content[moduleID] = modulePrefs;
+      return this.roc.create({
+        $id: ['userModulePrefs', this.viewID],
+        $content: content,
+        $kind: 'userModulePrefs'
+      });
     }
   }
 }
