@@ -19,6 +19,12 @@ async function jcampInfo(value) {
             #allParameters { 
                 width: 100%;
             }
+            #allParameters .limited{ 
+                max-width: 150px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
             #allParameters pre {
                 margin: 0;
             }
@@ -27,8 +33,6 @@ async function jcampInfo(value) {
             }
             #allParameters tbody {
                 display: block;
-            }
-            #allParameters tbody {
                 height: 500px;
                 overflow-y: auto;
             }
@@ -40,7 +44,7 @@ async function jcampInfo(value) {
     .map(
       (datum) => `
                     <tr>
-                        <td><b>${datum.label}</b></td>
+                        <td class="limited"><b>${datum.label}</b></td>
                         <td><pre>${
   datum.value.replace
     ? datum.value.replace(/[\r\n]+$/, '')
