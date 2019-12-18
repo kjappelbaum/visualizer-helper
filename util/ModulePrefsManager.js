@@ -11,7 +11,7 @@ export class ModulePrefsManager {
   constructor(options = {}) {
     let promises = [];
     if (options.hasRoc) {
-      let waitingRoc = new Promise((resolveRoc) => {
+      let waitingRoc = new Promise(resolveRoc => {
         this.resolveRoc = resolveRoc;
       }).then(() => {
         console.log('Roc initialized');
@@ -19,7 +19,7 @@ export class ModulePrefsManager {
       promises.push(waitingRoc);
     }
 
-    let waitingView = getViewInfo().then((result) => {
+    let waitingView = getViewInfo().then(result => {
       this.viewID = result._id;
     });
     promises.push(waitingView);
@@ -42,12 +42,13 @@ export class ModulePrefsManager {
     const cols = JSON.parse(
       JSON.stringify(API.getModulePreferences(moduleID).cols)
     );
-    cols.forEach((item) => {
+    cols.forEach(item => {
       if (!item.id) item.id = Math.random();
     });
 
     await UI.editTable(cols, {
       remove: true,
+      reorder: true,
       dialog: {
         title: 'Configure the columns of the module'
       },
@@ -90,7 +91,7 @@ export class ModulePrefsManager {
       ]
     });
 
-    cols.forEach((item) => {
+    cols.forEach(item => {
       item.formatter = 'typerenderer';
     });
     API.updateModulePreferences(moduleID, {
