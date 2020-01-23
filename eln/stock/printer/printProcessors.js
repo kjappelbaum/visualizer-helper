@@ -117,9 +117,10 @@ define([
     const dotsH = Math.floor((height / 25.4) * dpi);
     text = text.replace(
       /\^XZ[\r\n]+$/,
-      `^FO0,0
-      ^GB${dotsW},${dotsH},5^FS\r\n
-      ^XZ`
+      `
+^FO0,0
+^GB${dotsW},${dotsH},5^FS\r\n
+^XZ\r\n`
     );
     return text;
   }
