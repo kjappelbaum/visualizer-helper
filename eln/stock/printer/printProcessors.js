@@ -4,8 +4,8 @@ define([
   'browserified/twig/twig',
   'canvg',
   '../../libs/Image',
-  '../../libs/OCLE'
-], function (Datas, UI, twig, canvg, IJS, OCL) {
+  '../../libs/OCLE',
+], function(Datas, UI, twig, canvg, IJS, OCL) {
   OCL = OCL.default;
   IJS = IJS.default;
   const DataObject = Datas.DataObject;
@@ -18,7 +18,7 @@ define([
     lookup[chars.charCodeAt(i)] = i;
   }
   return {
-    twig: async function (printFormat, data, options) {
+    twig: async function(printFormat, data, options) {
       if (printFormat.customFields && printFormat.customFields.length) {
         if (options.creation) {
           printFormat.customFields.forEach((field) => {
@@ -33,10 +33,17 @@ define([
         throw new Error('twig processor expect twig property in format');
       }
       var template = twig.twig({
-        data: DataObject.resurrect(printFormat.twig)
+        data: DataObject.resurrect(printFormat.twig),
       });
       // Render molfile if exists
       var text = template.render(DataObject.resurrect(data));
+      if (
+        data.debug &&
+        printFormat.dimensions.height &&
+        printFormat.dimensions.width
+      ) {
+        text = enhanceDebug(printFormat, text);
+      }
       if (
         data.molfile &&
         printFormat.molfileOptions &&
@@ -52,9 +59,8 @@ define([
         return Promise.resolve(text);
       }
     },
-    getMolImage
+    getMolImage,
   };
-
 
   function checkIfMolfile(data) {
     if (data.molfile && data.molfile.split(/[\r\n]+/).length > 5) {
@@ -71,12 +77,12 @@ define([
     const molfileOptions = Object.assign({}, printFormat.molfileOptions, {
       width,
       height,
-      renderingScale
+      renderingScale,
     });
     let image = await getMolImage(data.molfile, molfileOptions);
     image = image.invert(); // Why do we need to invert here but not when encoding in BMP?
     const hexa = await dataToHexa(image.data);
-    const totalBytes = image.width * image.height / 8;
+    const totalBytes = (image.width * image.height) / 8;
     const bytesPerRow = image.width / 8;
     text = text.replace(
       /\^XZ[\r\n]+$/,
@@ -87,7 +93,8 @@ define([
   }
 
   async function enhanceCognitiveFormat(printFormat, text, data) {
-    if (!checkIfMolfile(data)) return concatenate(Uint8Array, encoder.encode(text));
+    if (!checkIfMolfile(data))
+      return concatenate(Uint8Array, encoder.encode(text));
     const encoder = new TextEncoder();
     text = text.replace(/END\s*$/, '');
     text += `GRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat
@@ -102,24 +109,44 @@ define([
     );
   }
 
+  function enhanceDebug(printFormat, text) {
+    // convert milimiters to dots
+    const dpi = printFormat.dpi || 300;
+    const { width, height } = printFormat.dimensions;
+    const dotsW = Math.floor((width / 25.4) * dpi);
+    const dotsH = Math.floor((height / 25.4) * dpi);
+    text = text.replace(
+      /\^XZ[\r\n]+$/,
+      `^FO0,0
+      ^GB${dotsW},${dotsH},5^FS\r\n
+      ^XZ`
+    );
+    return text;
+  }
+
   async function getMolImage(molfile, options = {}) {
     const defaultMolOptions = {
-      width: 100
+      width: 100,
     };
     const renderingScale = options.renderingScale || 1;
     options = Object.assign({}, defaultMolOptions, options);
     if (!options.height) options.height = options.width;
     const mol = OCL.Molecule.fromMolfile(molfile);
-    const svgString = mol.toSVG(options.width / renderingScale, options.height / renderingScale, '', {
-      noImplicitAtomLabelColors: true,
-      suppressChiralText: true,
-      suppressESR: true,
-      suppressCIPParity: true,
-      noStereoProblem: true,
-      fontWeight: 'bold',
-      strokeWidth: 1.5,
-      factorTextSize: 1.4,
-    });
+    const svgString = mol.toSVG(
+      options.width / renderingScale,
+      options.height / renderingScale,
+      '',
+      {
+        noImplicitAtomLabelColors: true,
+        suppressChiralText: true,
+        suppressESR: true,
+        suppressCIPParity: true,
+        noStereoProblem: true,
+        fontWeight: 'bold',
+        strokeWidth: 1.5,
+        factorTextSize: 1.4,
+      }
+    );
     const canvas = document.createElement('canvas');
     canvas.height = options.height;
     canvas.width = options.width;
@@ -190,7 +217,7 @@ define([
 
   function dataToHexa(arr) {
     return Array.prototype.map
-      .call(arr, function (n) {
+      .call(arr, function(n) {
         let hex = n.toString(16);
         if (hex.length === 1) hex = `0${hex}`;
         return hex;
