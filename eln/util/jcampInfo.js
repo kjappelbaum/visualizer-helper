@@ -1,6 +1,6 @@
-import UI from 'src/util/ui';
+import UI from "src/util/ui";
 
-import { convert } from '../libs/jcampconverter';
+import { convert } from "../libs/jcampconverter";
 
 async function jcampInfo(value) {
   let jcamp = await DataObject.check(value.jcamp.data, true).get(true);
@@ -10,9 +10,18 @@ async function jcampInfo(value) {
     keepRecordsRegExp: /.*/
   });
 
-  let data = Object.keys(parsed.info).map((key) => {
-    return { label: key, value: parsed.info[key] };
-  });
+  let data = [];
+
+  for (let key of Object.keys(parsed.info)) {
+    let value = parsed.info[key];
+    if (Array.isArray(value)) {
+      for (let i = 0; i < value.length; i++) {
+        data.push({ label: key + "." + (i + 1), value: value[i] });
+      }
+    } else {
+      data.push({ label: key, value });
+    }
+  }
 
   let html = `
         <style>
@@ -41,19 +50,19 @@ async function jcampInfo(value) {
         <table id='allParameters'>
             <tbody>
                 ${data
-    .map(
-      (datum) => `
+                  .map(
+                    datum => `
                     <tr>
                         <td class="limited"><b>${datum.label}</b></td>
                         <td><pre>${
-  datum.value.replace
-    ? datum.value.replace(/[\r\n]+$/, '')
-    : datum.value
-}</pre></td>
+                          datum.value.replace
+                            ? datum.value.replace(/[\r\n]+$/, "")
+                            : datum.value
+                        }</pre></td>
                     </tr>
                 `
-    )
-    .join('\n')}
+                  )
+                  .join("\n")}
             </tbody>
         </table>
         <script>
@@ -78,7 +87,7 @@ async function jcampInfo(value) {
   UI.dialog(html, {
     width: 800,
     height: 600,
-    title: 'List of parameters'
+    title: "List of parameters"
   });
 }
 
