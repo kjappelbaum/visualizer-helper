@@ -17,7 +17,7 @@ const DataObject = Datas.DataObject;
 var defaultOptions = {
   varName: 'sample',
   track: false,
-  bindChange: true
+  bindChange: true,
 };
 
 class Sample {
@@ -30,7 +30,7 @@ class Sample {
         url: couchDB.url,
         database: couchDB.database,
         processor: elnPlugin,
-        kind: couchDB.kind
+        kind: couchDB.kind,
       });
       API.cache('roc', roc);
     }
@@ -46,7 +46,7 @@ class Sample {
     if (!this.uuid) {
       UI.showNotification(
         'Cannot create an editable sample without an uuid',
-        'error'
+        'error',
       );
       return;
     }
@@ -62,6 +62,17 @@ class Sample {
 
   waitSampleLoaded() {
     return this.sample;
+  }
+
+  async getTocView() {
+    let uuid = DataObject.resurrect(this.sample._id);
+    let result = await this.roc.query('sample_toc', {
+      key: this.sample.$id.resurrect().join(' '),
+      filter: (entry) => {
+        return entry.id === uuid;
+      },
+    });
+    return result[0];
   }
 
   _checkServerChanges() {
@@ -152,7 +163,7 @@ Your local changes will be lost.</p>`;
         case '$content.general.molfile':
           this.mf.fromMolfile();
           this.nmr1dManager.handleAction({
-            name: 'clearAllAssignments'
+            name: 'clearAllAssignments',
           });
           break;
         case '$content.general.mf':
@@ -211,7 +222,7 @@ Your local changes will be lost.</p>`;
         default:
           UI.showNotification(
             'For overview only the following formats are allowed: png, jpg and svg.',
-            'error'
+            'error',
           );
           return undefined;
       }
@@ -248,7 +259,7 @@ Your local changes will be lost.</p>`;
         droppedXray: 'xray',
         droppedOverview: 'image',
         droppedImage: 'image',
-        droppedGenbank: 'genbank'
+        droppedGenbank: 'genbank',
       };
       if (!types[variableName]) {
         throw new Error('Unexpected variable name');
@@ -271,7 +282,7 @@ Your local changes will be lost.</p>`;
             'Differential Scanning Calorimetry (txt)',
           xray: 'Xray (cif, pdb)',
           image: 'Images (jpg, png or tiff)',
-          other: 'Other'
+          other: 'Other',
         },
         {
           noConfirmation: true,
@@ -279,10 +290,10 @@ Your local changes will be lost.</p>`;
             {
               id: 'description',
               name: 'description',
-              field: 'description'
-            }
-          ]
-        }
+              field: 'description',
+            },
+          ],
+        },
       );
       if (!type) return;
     }
@@ -302,17 +313,17 @@ Your local changes will be lost.</p>`;
         nmr: {
           type: 'NMR SPECTRUM',
           xUnit: 'Delta [ppm]',
-          yUnit: 'Relative'
+          yUnit: 'Relative',
         },
         ir: {
           type: 'IR SPECTRUM',
           xUnit: 'wavelength [cm-1]',
-          yUnit: ['Transmittance (%)', 'Absorbance']
+          yUnit: ['Transmittance (%)', 'Absorbance'],
         },
         raman: {
           type: 'RAMAN SPECTRUM',
           xUnit: 'wavelength [cm-1]',
-          yUnit: 'Absorbance'
+          yUnit: 'Absorbance',
         },
         iv: {
           type: 'IV SPECTRUM',
@@ -324,25 +335,25 @@ Your local changes will be lost.</p>`;
             'Potential vs SCE [V]',
             'Potential vs NHE [V]',
             'Potential vs SSCE [V]',
-            'Potential vs Hg/Hg2SO4/K2SO4 [V]'
+            'Potential vs Hg/Hg2SO4/K2SO4 [V]',
           ],
-          yUnit: ['Current [mA]', 'Current [µA]']
+          yUnit: ['Current [mA]', 'Current [µA]'],
         },
         uv: {
           type: 'UV SPECTRUM',
           xUnit: 'wavelength [nm]',
-          yUnit: 'Absorbance'
+          yUnit: 'Absorbance',
         },
         mass: {
           type: 'MASS SPECTRUM',
           xUnit: 'm/z [Da]',
-          yUnit: 'Relative'
+          yUnit: 'Relative',
         },
         cyclicVoltammetry: {
           type: 'Cyclic voltammetry',
           xUnit: 'I [mA]',
-          yUnit: 'Ewe [V]'
-        }
+          yUnit: 'Ewe [V]',
+        },
       };
 
       for (let droppedData of droppedDatas) {
@@ -367,40 +378,36 @@ Your local changes will be lost.</p>`;
                   <tr>
                     <th>Kind</th>
                     <td><input type="text" readonly name="type" value="${
-  info.type
-}"></td>
+                      info.type
+                    }"></td>
                   </tr>
                   <tr>
                     <th>Filename (ending with .jdx)</th>
                     <td><input type="text" pattern=".*\\.jdx$" name="filename" size=40 value="${
-  info.filename
-}"></td>
+                      info.filename
+                    }"></td>
                   </tr>
                   <tr>
                     <th>xUnit (horizon axis)</th>
                     ${
-  info.xUnit instanceof Array
-    ? `<td><select name="xUnit">${info.xUnit.map(
-      (xUnit) =>
-        `<option value="${xUnit}">${xUnit}</option>`
-    )}</select></td>`
-    : `<td><input type="text" readonly name="xUnit" value="${
-      info.xUnit
-    }"></td>`
-}
+                      info.xUnit instanceof Array
+                        ? `<td><select name="xUnit">${info.xUnit.map(
+                            (xUnit) =>
+                              `<option value="${xUnit}">${xUnit}</option>`,
+                          )}</select></td>`
+                        : `<td><input type="text" readonly name="xUnit" value="${info.xUnit}"></td>`
+                    }
                   </tr>
                   <tr>
                   <th>yUnit (vectical axis)</th>
                   ${
-  info.yUnit instanceof Array
-    ? `<td><select name="yUnit">${info.yUnit.map(
-      (yUnit) =>
-        `<option value="${yUnit}">${yUnit}</option>`
-    )}</select></td>`
-    : `<td><input type="text" readonly name="yUnit" value="${
-      info.yUnit
-    }"></td>`
-}
+                    info.yUnit instanceof Array
+                      ? `<td><select name="yUnit">${info.yUnit.map(
+                          (yUnit) =>
+                            `<option value="${yUnit}">${yUnit}</option>`,
+                        )}</select></td>`
+                      : `<td><input type="text" readonly name="yUnit" value="${info.yUnit}"></td>`
+                  }
                 </tr>
                   </table>
                     <input type="submit" value="Submit"/>
@@ -410,9 +417,9 @@ Your local changes will be lost.</p>`;
               {},
               {
                 dialog: {
-                  width: 600
-                }
-              }
+                  width: 600,
+                },
+              },
             );
             if (!meta) return;
 
@@ -425,7 +432,7 @@ Your local changes will be lost.</p>`;
               droppedData.encoding = 'text';
             }
             droppedData.content = convertToJcamp(content, {
-              meta
+              meta,
             });
           } else {
             // eslint-disable-next-line no-console
@@ -466,12 +473,12 @@ Your local changes will be lost.</p>`;
         if (advancedOptions1H) {
           API.createData(
             'nmr1hOndeTemplate',
-            API.cache('nmr1hOndeTemplates').full
+            API.cache('nmr1hOndeTemplates').full,
           );
         } else {
           API.createData(
             'nmr1hOndeTemplate',
-            API.cache('nmr1hOndeTemplates').short
+            API.cache('nmr1hOndeTemplates').short,
           );
         }
         break;
@@ -496,7 +503,7 @@ Your local changes will be lost.</p>`;
       }
       case 'refresh': {
         const ok = await UI.confirm(
-          'Are you sure you want to refresh? This will discard your local modifications.'
+          'Are you sure you want to refresh? This will discard your local modifications.',
         );
         if (!ok) return;
         this.unbindChange();
@@ -555,7 +562,7 @@ function updateSample(sample) {
     }
     sample.setChildSync(
       ['$content', 'biology', 'peptidic', 0, 'seq', 0, 'sequence'],
-      sample.$content.general.sequence
+      sample.$content.general.sequence,
     );
     sample.$content.general.sequence = undefined;
   }
