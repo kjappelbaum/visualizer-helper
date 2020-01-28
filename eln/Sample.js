@@ -65,11 +65,10 @@ class Sample {
   }
 
   async getToc() {
-    let uuid = DataObject.resurrect(this.sample._id);
     let result = await this.roc.query('sample_toc', {
-      key: this.sample.$id.resurrect().join(' '),
+      key: DataObject.resurrect(this.sample.$id).join(' '),
       filter: (entry) => {
-        return entry.id === uuid;
+        return entry.id === this.uuid;
       },
     });
     return result[0];
