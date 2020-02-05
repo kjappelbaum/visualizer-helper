@@ -35,7 +35,7 @@ function formatPeaks(value) {
   });
   let factor = 100 / maxIntensity;
   for (let peak of value.peak) {
-    let value = peak.mass;
+    let value = peak.mass.toFixed(0);
     if (peak.intensity && maxIntensity) {
       value += ` (${Math.round(peak.intensity * factor)})`;
     }
@@ -52,10 +52,10 @@ function formatExactMass(value) {
 
   let accurate = value.accurate;
   let mfInfo = new MolecularFormula.MF(
-    `${accurate.mf}(${accurate.modification})`
+    `${accurate.mf}(${accurate.modification})`,
   ).getInfo();
   let modificationInfo = new MolecularFormula.MF(
-    String(accurate.modification)
+    String(accurate.modification),
   ).getInfo();
 
   let result = [];
@@ -69,7 +69,7 @@ function formatExactMass(value) {
   result.push(experiment.join(' '));
 
   var modificationMF = new MolecularFormula.MF(
-    modificationInfo.mf.replace(/\(.*/, '')
+    modificationInfo.mf.replace(/\(.*/, ''),
   ).toHtml();
   if (modificationMF) {
     result.push(`[M + ${modificationMF}]${getCharge(modificationInfo.charge)}`);
