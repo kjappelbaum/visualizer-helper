@@ -20,6 +20,8 @@ function getCharge(charge) {
 function formatPeaks(value) {
   if (!value.peak || !value.peak.length > 0) return '';
 
+  value = DataObject.resurrect(value);
+
   let experiment = [];
   experiment.push('MS');
   let inParenthesis = [];
