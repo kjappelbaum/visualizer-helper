@@ -10,7 +10,7 @@ const noop = () => {
 const defaultOptions = {
   onMolfileChanged: noop,
   calculateDiastereotopicID: false,
-  maxDiastereotopicCalculationTime: 3000
+  maxDiastereotopicCalculationTime: 3000,
 };
 
 class ExpandableMolecule {
@@ -18,7 +18,7 @@ class ExpandableMolecule {
     this.options = Object.assign({}, defaultOptions, options);
     this.sample = sample;
     this.molfile = String(
-      this.sample.getChildSync(['$content', 'general', 'molfile']) || ''
+      this.sample.getChildSync(['$content', 'general', 'molfile']) || '',
     );
     this.idCode = OCLE.Molecule.fromMolfile(this.molfile).getIDCode();
     this.expandedHydrogens = false;
@@ -27,8 +27,9 @@ class ExpandableMolecule {
     this.maxDiastereotopicCalculationTime = this.options.maxDiastereotopicCalculationTime;
 
     this.onChange = (event) => {
-      // us this really a modification ? or a loop event ...
+      // is this really a modification ? or a loop event ...
       // need to compare former oclID with new oclID
+
       var newMolecule = OCLE.Molecule.fromMolfile(`${event.target}`);
 
       var oclID = newMolecule.getIDCodeAndCoordinates();
@@ -37,12 +38,12 @@ class ExpandableMolecule {
         this.molfile = `${event.target}`;
         this.sample.setChildSync(
           ['$content', 'general', 'molfile'],
-          this.molfile
+          this.molfile,
         );
         this.sample.setChildSync(['$content', 'general', 'ocl'], {
           value: oclID.idCode,
           coordinates: oclID.coordinates,
-          index: newMolecule.getIndex()
+          index: newMolecule.getIndex(),
         });
       }
       this.options.onMolfileChanged(this);
@@ -98,7 +99,7 @@ class ExpandableMolecule {
     this.jsmeEditionMode = !this.jsmeEditionMode;
     this.expandedHydrogens = false;
     let options = {
-      prefs: []
+      prefs: [],
     };
 
     if (this.jsmeEditionMode) {
@@ -136,7 +137,7 @@ class ExpandableMolecule {
         // eslint-disable-next-line no-console
         console.log(
           'The diastereotopic calculation is expected to last more than 3s. No way to assign molecule.',
-          this.maxDiastereotopicCalculationTime
+          this.maxDiastereotopicCalculationTime,
         );
         calculateDiastereotopicID = false;
       }
@@ -144,13 +145,13 @@ class ExpandableMolecule {
     if (this.expandedHydrogens) {
       molecule.addImplicitHydrogens();
       let viewMolfileExpandedH = molecule.toVisualizerMolfile({
-        diastereotopic: calculateDiastereotopicID
+        diastereotopic: calculateDiastereotopicID,
       });
       API.createData('viewMolfileExpandedH', viewMolfileExpandedH);
     } else {
       let viewMolfile = molecule.toVisualizerMolfile({
         heavyAtomHydrogen: true,
-        diastereotopic: calculateDiastereotopicID
+        diastereotopic: calculateDiastereotopicID,
       });
       API.createData('viewMolfile', viewMolfile);
     }
@@ -169,28 +170,28 @@ class ExpandableMolecule {
       returnRow: true,
       dialog: {
         width: 600,
-        height: 800
+        height: 800,
       },
       columns: [
         {
           id: 'id',
           name: 'Reference',
           jpath: ['id'],
-          maxWidth: 100
+          maxWidth: 100,
         },
         {
           id: 'molfile',
           name: 'Structure',
           jpath: ['molfile'],
           rendererOptions: {
-            forceType: 'mol2d'
-          }
-        }
+            forceType: 'mol2d',
+          },
+        },
       ],
       idField: 'uuid',
       slick: {
-        rowHeight: 140
-      }
+        rowHeight: 140,
+      },
     });
     if (molecule) {
       this.setMolfile(String(molecule.molfile));

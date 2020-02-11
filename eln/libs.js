@@ -1,4 +1,5 @@
 export { default as OCLE } from './libs/OCLE';
+export { OCLUtils, OCL } from './libs/OCLUtils';
 export { default as SD } from './libs/SD';
 export { default as elnPlugin } from './libs/elnPlugin';
 export { default as Image } from './libs/Image';
