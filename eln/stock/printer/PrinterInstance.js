@@ -1,8 +1,9 @@
-define(['src/util/util', './printServerFactory', './printProcessors'], function (
-  Util,
-  printServerFactory,
-  processors
-) {
+define([
+  'src/util/util',
+  './printServerFactory',
+  './printProcessors',
+  '../../libs/MolecularFormula',
+], function(Util, printServerFactory, processors, MolecularFormula) {
   class Printer {
     constructor(printer, printServer, opts) {
       this.url = String(printServer.url);
@@ -26,7 +27,7 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
       null,
       printFormat,
       data,
-      options
+      options,
     );
   }
 
@@ -44,9 +45,22 @@ define(['src/util/util', './printServerFactory', './printProcessors'], function 
             result.id = result.$id;
           }
           if (result.$content.general) {
+            if (result.$content.general.mf) {
+              const mf = new MolecularFormula.default.MF(
+                result.$content.general.mf + '',
+              );
+              result.mfCanonic = mf.toMF();
+              console.log(result.mfCanonic);
+            }
             if (result.$content.general.description) {
-              result.line1 = result.$content.general.description.substring(0, 60);
-              result.line2 = result.$content.general.description.substring(60, 120);
+              result.line1 = result.$content.general.description.substring(
+                0,
+                60,
+              );
+              result.line2 = result.$content.general.description.substring(
+                60,
+                120,
+              );
             } else {
               result.line1 = '';
               result.line2 = '';

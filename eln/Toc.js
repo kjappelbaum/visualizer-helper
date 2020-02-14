@@ -16,7 +16,7 @@ let defaultOptions = {
     } else {
       return 0;
     }
-  }
+  },
 };
 
 class Toc {
@@ -48,7 +48,7 @@ class Toc {
     let { group, sort, filter, viewName } = Object.assign(
       {},
       this.options,
-      options
+      options,
     );
     let mine = 0;
     let groups = '';
@@ -58,14 +58,14 @@ class Toc {
     } else if (group !== 'all') {
       groups = group;
     }
-
+    console.log('refresh', { groups, mine, filter });
     return this.roc
       .query(viewName, {
         groups,
         mine,
         sort,
         filter,
-        varName: this.options.varName
+        varName: this.options.varName,
       })
       .then((entries) => {
         if (this.options.callback) {
@@ -93,7 +93,7 @@ class Toc {
       varName = 'groupForm',
       cookieName = 'eln-default-sample-group',
       filter,
-      autoRefresh = true
+      autoRefresh = true,
     } = options;
 
     let groups = (await this.roc.getGroupMembership()).map((g) => g.name);
@@ -109,9 +109,9 @@ class Toc {
           type: 'string',
           enum: possibleGroups,
           default: defaultGroup,
-          required: true
-        }
-      }
+          required: true,
+        },
+      },
     };
     API.createData(schemaVarName, schema);
 
