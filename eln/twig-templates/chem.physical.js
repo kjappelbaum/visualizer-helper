@@ -16,7 +16,7 @@ module.exports = `
     
 <table>
     <tr>
-        <th>bp (°C)</th>
+        <th>bp [°C]</th>
         <td>
             <table>
                 <tr>
@@ -47,7 +47,7 @@ module.exports = `
 
 <table>
     <tr>
-        <th>mp (°C)</th>
+        <th>mp [°C]</th>
         <td>
             <table>
                 <tr>
@@ -81,7 +81,7 @@ module.exports = `
                     <th></th><th></th>
                     <th>Low</th>
                     <th>High</th>
-                    <th>Temp (°C)</th>
+                    <th>Temp [°C]</th>
                     <th>DOI</th>
                 </tr>
                 <tr data-repeat='density'>
@@ -112,7 +112,7 @@ module.exports = `
                     <th></th><th></th>
                     <th>Low</th>
                     <th>High</th>
-                    <th>Temp (°C)</th>
+                    <th>Temp [°C]</th>
                     <th>DOI</th>
                 </tr>
                 <tr data-repeat='nd'>
@@ -143,7 +143,7 @@ module.exports = `
                     <th></th><th></th>
                     <th>Low</th>
                     <th>High</th>
-                    <th>Temp (°C)</th>
+                    <th>Temp [°C]</th>
                     <th>𝝺 (nm)</th>
                     <th>[] (g/100mL)</th>
                     <th>Solvent</th>
@@ -251,7 +251,7 @@ module.exports = `
                 <tr>
                     <th></th><th></th>
                     <th>Probe</th>
-                    <th>Temp (°C)</th>
+                    <th>Temp [°C]</th>
                     <th>Surface [m<sup>2</sup>/g]</th>
                 </tr>
                 <tr data-repeat='specificSurfaceArea'>
@@ -282,7 +282,7 @@ module.exports = `
                 <tr>
                     <th></th><th></th>
                     <th>Probe</th>
-                    <th>Temp (°C)</th>
+                    <th>Temp [°C]</th>
                     <th>Volume [cm<sup>3</sup>/g]</th>
                 </tr>
                 <tr data-repeat='specificPoreVolume'>
