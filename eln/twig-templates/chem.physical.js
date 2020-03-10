@@ -1,7 +1,6 @@
 // you may use the following page to test:
 // http://www.cheminfo.org/?viewURL=https%3A%2F%2Fcouch.cheminfo.org%2Fcheminfo-public%2Fb9728349aa850f575f594496a2a38233%2Fview.json&loadversion=true&fillsearch=Twig+dynamic+form+experiments
 
-
 module.exports = `
 
 <style>
@@ -244,6 +243,67 @@ module.exports = `
     </tr>
 </table>
 
+<table>
+    <tr>
+        <th>Specific surface area</th>
+        <td>
+            <table>
+                <tr>
+                    <th></th><th></th>
+                    <th>Probe</th>
+                    <th>Temp (°C)</th>
+                    <th>Surface [m<sup>2</sup>/g]</th>
+                </tr>
+                <tr data-repeat='specificSurfaceArea'>
+                    <td>
+                        <select data-field='probe'>
+                            <option value=""></option>
+                            <option value="N2">N2</option>
+                            <option value="Ar">Ar</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type='number' data-field='temperature'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='value'>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th>Specific pore volume</th>
+        <td>
+            <table>
+                <tr>
+                    <th></th><th></th>
+                    <th>Probe</th>
+                    <th>Temp (°C)</th>
+                    <th>Volume [cm<sup>3</sup>/g]</th>
+                </tr>
+                <tr data-repeat='specificPoreVolume'>
+                    <td>
+                        <select data-field='probe'>
+                            <option value=""></option>
+                            <option value="N2">N2</option>
+                            <option value="Ar">Ar</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type='number' data-field='temperature'>
+                    </td>
+                    <td>
+                        <input type='number' data-field='value'>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 
 </div>
 
