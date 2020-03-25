@@ -1,6 +1,8 @@
 // this class is not really related to a sampleToc but can be used for any TOC
 
 import API from 'src/util/api';
+import UI from 'src/util/ui';
+import _ from 'lodash';
 import Versioning from 'src/util/versioning';
 import Color from 'src/util/color';
 
@@ -27,8 +29,8 @@ const SpectraConfigs = {
       yLabel: 'Absorbance',
       displayYAxis: ['display', 'main', 'sec'],
       xLabel: 'Wavelength [cm-1]',
-      displayXAxis: ['display', 'flip', 'main', 'sec']
-    }
+      displayXAxis: ['display', 'flip', 'main', 'sec'],
+    },
   },
   Raman: {
     tocFilter: (entry) => entry.value.nbRaman && !entry.value.hidden,
@@ -52,8 +54,8 @@ const SpectraConfigs = {
       yLabel: 'Absorbance',
       displayYAxis: ['display', 'main', 'sec'],
       xLabel: 'Wavelength [cm-1]',
-      displayXAxis: ['display', 'flip', 'main', 'sec']
-    }
+      displayXAxis: ['display', 'flip', 'main', 'sec'],
+    },
   },
   '1H NMR': {
     tocFilter: (entry) => entry.value.nb1h && !entry.value.hidden,
@@ -69,7 +71,8 @@ const SpectraConfigs = {
       ) {
         let spectra = sample.$content.spectra.nmr;
         spectra = spectra.filter(
-          (spectrum) => spectrum.dimension === 1 && spectrum.nucleus[0] === '1H'
+          (spectrum) =>
+            spectrum.dimension === 1 && spectrum.nucleus[0] === '1H',
         );
         spectra.forEach((spectrum) => {
           let info = [];
@@ -88,8 +91,8 @@ const SpectraConfigs = {
       yLabel: 'Intensity',
       displayYAxis: ['main', 'sec'],
       xLabel: 'δ [ppm]',
-      displayXAxis: ['display', 'flip', 'main', 'sec']
-    }
+      displayXAxis: ['display', 'flip', 'main', 'sec'],
+    },
   },
   '13C NMR': {
     tocFilter: (entry) => entry.value.nb13c && !entry.value.hidden,
@@ -105,7 +108,8 @@ const SpectraConfigs = {
       ) {
         let spectra = sample.$content.spectra.nmr;
         spectra = spectra.filter(
-          (spectrum) => spectrum.dimension === 1 && spectrum.nucleus[0] === '13C'
+          (spectrum) =>
+            spectrum.dimension === 1 && spectrum.nucleus[0] === '13C',
         );
         spectra.forEach((spectrum) => {
           let info = [];
@@ -124,8 +128,8 @@ const SpectraConfigs = {
       yLabel: 'Intensity',
       displayYAxis: ['main', 'sec'],
       xLabel: 'δ [ppm]',
-      displayXAxis: ['display', 'flip', 'main', 'sec']
-    }
+      displayXAxis: ['display', 'flip', 'main', 'sec'],
+    },
   },
   Chromatography: {
     tocFilter: (entry) => entry.value.nbChromatogram && !entry.value.hidden,
@@ -149,9 +153,9 @@ const SpectraConfigs = {
       yLabel: 'Intensity',
       displayYAxis: ['main', 'sec'],
       xLabel: 'Time [s]',
-      displayXAxis: ['display', 'main', 'sec']
-    }
-  }
+      displayXAxis: ['display', 'main', 'sec'],
+    },
+  },
 };
 
 class SpectraDataSet {
@@ -176,7 +180,7 @@ class SpectraDataSet {
     const {
       schemaVarName = 'analysisKindSchema',
       varName = 'analysisKind',
-      cookieName = 'eln-default-analysis-kind'
+      cookieName = 'eln-default-analysis-kind',
     } = options;
 
     var possibleAnalysis = Object.keys(SpectraConfigs);
@@ -191,15 +195,15 @@ class SpectraDataSet {
           type: 'string',
           enum: possibleAnalysis,
           default: defaultAnalysis,
-          required: true
-        }
-      }
+          required: true,
+        },
+      },
     };
 
     API.createData(schemaVarName, schema);
 
     let analysisKind = await API.createData(varName, {
-      analysis: defaultAnalysis
+      analysis: defaultAnalysis,
     });
 
     this.spectraConfig = SpectraConfigs[defaultAnalysis];
@@ -247,11 +251,32 @@ class SpectraDataSet {
         this.showOnlySpectra();
         break;
       case 'forceRecolor': {
-        let selectedSpectra = API.getData('selectedSpectra');
+        const selectedSpectra = API.getData('selectedSpectra');
         selectedSpectra.forEach((spectrum) => (spectrum.color = ''));
         recolor(selectedSpectra);
         selectedSpectra.triggerChange();
         break;
+      }
+      case 'selectCategory': {
+        const selectedSpectra = API.getData('selectedSpectra');
+        let firstSpectrum = DataObject.resurrect(selectedSpectra[0]);
+
+        let path = [];
+        if (firstSpectrum.toc && firstSpectrum.toc.value) {
+          firstSpectrum = firstSpectrum.toc.value;
+          path = ['toc', 'value'];
+        }
+
+        let jpath = await UI.selectJpath(firstSpectrum, undefined, {
+          height: 500,
+        });
+        if (!jpath) return;
+        const getJpath = _.property([...path, ...jpath]);
+
+        for (let spectrum of selectedSpectra) {
+          spectrum.category = getJpath(spectrum);
+        }
+        selectedSpectra.triggerChange();
       }
       case 'showSpectra':
         this.showSpectra();
@@ -275,7 +300,7 @@ class SpectraDataSet {
       case 'addSpectrum':
         await this.addSpectrum(
           API.getData('tocClicked').resurrect(),
-          action.value.resurrect()
+          action.value.resurrect(),
         );
         break;
       default:
@@ -314,7 +339,8 @@ class SpectraDataSet {
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
       let spectrum = selectedSpectra.filter(
-        (spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id)
+        (spectrum) =>
+          String(spectrum.id) === String(currentlySelectedSpectrum.id),
       )[0];
       spectrum.display = true;
     }
@@ -323,13 +349,15 @@ class SpectraDataSet {
 
   showOnlySpectra() {
     let selectedSpectra = API.getData('selectedSpectra');
+    if (!Array.isArray(selectedSpectra)) return;
     for (let spectrum of selectedSpectra) {
       spectrum.display = false;
     }
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
       let spectrum = selectedSpectra.filter(
-        (spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id)
+        (spectrum) =>
+          String(spectrum.id) === String(currentlySelectedSpectrum.id),
       )[0];
       spectrum.display = true;
     }
@@ -341,7 +369,8 @@ class SpectraDataSet {
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
       let spectrum = selectedSpectra.filter(
-        (spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id)
+        (spectrum) =>
+          String(spectrum.id) === String(currentlySelectedSpectrum.id),
       )[0];
       spectrum.display = false;
     }
@@ -368,7 +397,7 @@ class SpectraDataSet {
               this.addSpectrumToSelected(spectrum, tocEntry, selectedSpectra);
             }
           }
-        })
+        }),
       );
     }
     await Promise.all(promises);
@@ -381,8 +410,8 @@ class SpectraDataSet {
       let spectrumID = String(
         `${tocEntry.value.reference} / ${spectrum.jcamp.filename.replace(
           /.*\/(.*)\..*/,
-          '$1'
-        )}`
+          '$1',
+        )}`,
       );
       let sampleID = String(tocEntry.id);
       if (
@@ -426,7 +455,7 @@ function recolor(selectedSpectra) {
 
   let nbColors = Math.max(
     8,
-    1 << Math.ceil(Math.log2(Object.keys(categoryColors).length))
+    1 << Math.ceil(Math.log2(Object.keys(categoryColors).length)),
   );
   const colors = Color.getDistinctColorsAsString(nbColors);
   let i = existingColors;
