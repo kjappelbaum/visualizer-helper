@@ -53,8 +53,11 @@ function calculateMFFromSequence(sample) {
 }
 
 function translateNucleic(sample) {
-  const biology = sample.getChildSync(['$content', 'biology']);
-  const sequenceNucleic = biology.nucleic;
+  const sequenceNucleic = sample.getChildSync([
+    '$content',
+    'biology',
+    'nucleic',
+  ]);
   const sequencePeptidic = [];
   for (let nucleic of sequenceNucleic) {
     const peptidic = [];
@@ -67,8 +70,7 @@ function translateNucleic(sample) {
       }
     }
   }
-  biology.peptidic = sequencePeptidic;
-  sample.setChildSync(['$content', 'biology'], biology);
+  sample.setChildSync(['$content', 'biology', 'peptidic'], sequencePeptidic);
 }
 
 function getFirstPeptide(sample) {
