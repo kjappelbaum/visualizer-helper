@@ -41,8 +41,9 @@ module.exports = `
                                 <option value='Peptide'>Peptide</option>
                                 <option value='Protein'>Protein</option>
                                 <option value='Antibody'>Antibody</option>
-                                <option value='Monoclonal antibody'>Monoclonal antibody</option>
-                            </select>
+                                <option value='Antibody light chain'>Antibody light chain</option>
+                                <option value='Antibody heavy chain'>Antibody heavy chain</option>
+                               </select>
                             
                             <br>
                             <div style='display: flex'>
