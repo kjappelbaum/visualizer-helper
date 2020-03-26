@@ -476,6 +476,15 @@ Your local changes will be lost.</p>`;
       case 'calculateMFFromSequence':
         Sequence.calculateMFFromSequence(this.sample);
         break;
+      case 'calculateMFFromPeptidic':
+        Sequence.calculateMFFromPeptidic(this.sample);
+        break;
+      case 'calculateMFFromNucleic':
+        Sequence.calculateMFFromNucleic(this.sample);
+        break;
+      case 'translateNucleic':
+        Sequence.translateNucleic(this.sample);
+        break;
       case 'createOptions':
         var advancedOptions1H = API.cache('nmr1hAdvancedOptions');
         if (advancedOptions1H) {
