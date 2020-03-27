@@ -107,7 +107,7 @@ function getSequencesInformation(sample) {
             sequence: { moleculeType: 'Full antibody' },
             mf,
             mfInfo,
-            iep: MolecularFormula.Peptide.calculateIEP(mf),
+            //iep: MolecularFormula.Peptide.calculateIEP(mf),
           });
         }
       }
