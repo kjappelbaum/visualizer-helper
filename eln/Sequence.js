@@ -239,12 +239,16 @@ const sequencesInformationTwigTemplate = `<style>
         <th>IEP</th>
     </tr>
     {% for key, peptidic in sequencesInfo.peptidic %}
+      {% if peptidic.iep %}
         <tr>
-            <td>{{key+1}}</td>
-            <td>{{peptidic.sequence.name}}</td>
-            <td>{{peptidic.sequence.moleculeType}}</td>
-            <td>{{peptidic.iep|number_format(2)}}</td>
+          <td>{{key+1}}</td>
+          <td>{{peptidic.sequence.name}}</td>
+          <td>{{peptidic.sequence.moleculeType}}</td>
+          <td>
+            {{peptidic.iep|number_format(2)}}
+          </td>
         </tr>
+      {% endif %}
     {% endfor %}
 </table>
 {% endif %}
