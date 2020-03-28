@@ -54,6 +54,7 @@ class Sample {
       .document(this.uuid, this.options)
       .then(async (sample) => {
         this.sample = sample;
+        this.updateOtherAttachments();
         this._loadInstanceInVisualizer();
       });
 
@@ -163,10 +164,11 @@ Your local changes will be lost.</p>`;
     this._initializeObjects();
 
     this.onChange = (event) => {
-      var jpathStr = event.jpath.join('.');
+      let jpathStr = event.jpath.join('.');
       if (jpathStr.match(/\$content.spectra.nmr.[0-9]+.range/)) {
         this.nmr1dManager.rangesHasChanged();
       }
+
       switch (jpathStr) {
         case '$content.general.molfile':
           this.mf.fromMolfile();
@@ -182,12 +184,20 @@ Your local changes will be lost.</p>`;
           break;
         case '$content.general.sequence':
           throw new Error('Trying to change old sequence, this is a bug');
+
         default:
           break; // ignore
       }
     };
 
     this.bindChange();
+  }
+
+  updateOtherAttachments() {
+    let otherAttachments = this.sample.attachmentList.filter(
+      (entry) => !entry.name.includes('/'),
+    );
+    API.createData('otherAttachments', otherAttachments);
   }
 
   _initializeObjects() {
@@ -268,6 +278,7 @@ Your local changes will be lost.</p>`;
         droppedOverview: 'image',
         droppedImage: 'image',
         droppedGenbank: 'genbank',
+        droppedOther: 'other',
       };
       if (!types[variableName]) {
         throw new Error('Unexpected variable name');
@@ -465,6 +476,7 @@ Your local changes will be lost.</p>`;
     }
     if (type === 'other') {
       await this.roc.addAttachment(this.sample, droppedDatas);
+      this.updateOtherAttachments();
     } else {
       await this.attachFiles(droppedDatas, type, options);
     }
@@ -516,6 +528,7 @@ Your local changes will be lost.</p>`;
       case 'deleteAttachment':
         var attachment = action.value.name;
         await this.roc.deleteAttachment(this.sample, attachment);
+        this.updateOtherAttachments();
         break;
       case 'deleteNmr': // Deprecated. Use unattach. Leave this for backward compatibility
       case 'unattach':
