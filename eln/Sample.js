@@ -318,7 +318,7 @@ Your local changes will be lost.</p>`;
       * use convert-to-jcamp
     */
     if (options.autoJcamp) {
-      var jcampTypes = {
+      const jcampTypes = {
         nmr: {
           type: 'NMR SPECTRUM',
           xUnit: 'Delta [ppm]',
@@ -380,8 +380,11 @@ Your local changes will be lost.</p>`;
         let extension = droppedData.filename.replace(/.*\./, '').toLowerCase();
         if (extension === 'txt' || extension === 'csv' || extension === 'tsv') {
           let info = jcampTypes[type];
-          info.filename = `${droppedData.filename.replace(/\.[^.]*$/, '')}.jdx`;
           if (info) {
+            info.filename = `${droppedData.filename.replace(
+              /\.[^.]*$/,
+              '',
+            )}.jdx`;
             // we will ask for meta information
             let meta = await UI.form(
               `
