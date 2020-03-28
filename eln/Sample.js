@@ -284,10 +284,11 @@ Your local changes will be lost.</p>`;
           iv: 'IV (csv, tsv, txt, jcamp, pdf)',
           chromatogram:
             'Chromatogram LC, GC, LC/MS, GC/MS (csv, tsv, txt, jcamp, pdf, netcdf, xml)',
-          thermogravimetricAnalysis: 'Thermogravimetric Analysis (txt, jcamp)',
-          cyclicVoltammetry: 'Cyclic voltammetry (txt, jcamp, pdf)',
+          thermogravimetricAnalysis:
+            'Thermogravimetric Analysis (csv, tsv, txt, jcamp)',
+          cyclicVoltammetry: 'Cyclic voltammetry (csv, tsv, txt, jcamp, pdf)',
           differentialScanningCalorimetry:
-            'Differential Scanning Calorimetry (txt, jcamp)',
+            'Differential Scanning Calorimetry (csv, tsv, txt, jcamp)',
           xray: 'Xray (cif, pdb)',
           image: 'Images (jpg, png or tiff)',
           other: 'Other',
@@ -359,6 +360,16 @@ Your local changes will be lost.</p>`;
         },
         cyclicVoltammetry: {
           type: 'Cyclic voltammetry',
+          xUnit: 'I [mA]',
+          yUnit: 'Ewe [V]',
+        },
+        thermogravimetricAnalysis: {
+          type: 'Thermogravimetric analysis',
+          xUnit: 'Temperature [°C]',
+          yUnit: 'Weight [mg]',
+        },
+        differentialScanningCalorimetry: {
+          type: 'Differentical scanning calorimetry',
           xUnit: 'I [mA]',
           yUnit: 'Ewe [V]',
         },
