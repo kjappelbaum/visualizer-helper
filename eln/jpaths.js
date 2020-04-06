@@ -26,6 +26,7 @@ jpaths.description = ['$content', 'general', 'description'];
 jpaths.title = ['$content', 'general', 'title'];
 jpaths.name = ['$content', 'general', 'name'];
 jpaths.keyword = ['$content', 'general', 'keyword'];
+jpaths.meta = ['$content', 'general', 'meta'];
 jpaths.physical = ['$content', 'physical'];
 jpaths.bp = ['$content', 'physical', 'bp'];
 jpaths.nd = ['$content', 'physical', 'nd'];
@@ -47,18 +48,14 @@ jpaths.biology = ['$content', 'biology'];
 jpaths.thermogravimetricAnalysis = [
   '$content',
   'spectra',
-  'thermogravimetricAnalysis'
+  'thermogravimetricAnalysis',
 ];
-jpaths.cyclicVoltammetry = [
-  '$content',
-  'spectra',
-  'cyclicVoltammetry'
-];
+jpaths.cyclicVoltammetry = ['$content', 'spectra', 'cyclicVoltammetry'];
 jpaths.elementalAnalysis = ['$content', 'spectra', 'elementalAnalysis'];
 jpaths.differentialScanningCalorimetry = [
   '$content',
   'spectra',
-  'differentialScanningCalorimetry'
+  'differentialScanningCalorimetry',
 ];
 jpaths.xray = ['$content', 'spectra', 'xray'];
 
