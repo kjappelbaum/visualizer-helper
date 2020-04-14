@@ -133,6 +133,7 @@ Your local changes will be lost.</p>`;
     createVar(sampleVar, 'title');
     createVar(sampleVar, 'description');
     createVar(sampleVar, 'keyword');
+    createVar(sampleVar, 'meta');
     createVar(sampleVar, 'name');
     createVar(sampleVar, 'physical');
     createVar(sampleVar, 'bp');
@@ -585,9 +586,7 @@ function updateSample(sample) {
   if (!sample.$content.general) {
     sample.$content.general = {};
   }
-  if (!sample.$content.general.meta) {
-    sample.$content.general.meta = {};
-  }
+
   /** This is the old place we used to put the sequence.
    * By default we expect it is a peptidic sequence
    */
