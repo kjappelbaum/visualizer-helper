@@ -412,36 +412,36 @@ Your local changes will be lost.</p>`;
                   <tr>
                     <th>Kind</th>
                     <td><input type="text" readonly name="type" value="${
-                      info.type
-                    }"></td>
+  info.type
+}"></td>
                   </tr>
                   <tr>
                     <th>Filename (ending with .jdx)</th>
                     <td><input type="text" pattern=".*\\.jdx$" name="filename" size=40 value="${
-                      info.filename
-                    }"></td>
+  info.filename
+}"></td>
                   </tr>
                   <tr>
                     <th>xUnit (horizon axis)</th>
                     ${
-                      info.xUnit instanceof Array
-                        ? `<td><select name="xUnit">${info.xUnit.map(
-                            (xUnit) =>
-                              `<option value="${xUnit}">${xUnit}</option>`,
-                          )}</select></td>`
-                        : `<td><input type="text" readonly name="xUnit" value="${info.xUnit}"></td>`
-                    }
+  info.xUnit instanceof Array
+    ? `<td><select name="xUnit">${info.xUnit.map(
+      (xUnit) =>
+        `<option value="${xUnit}">${xUnit}</option>`,
+    )}</select></td>`
+    : `<td><input type="text" readonly name="xUnit" value="${info.xUnit}"></td>`
+}
                   </tr>
                   <tr>
                   <th>yUnit (vectical axis)</th>
                   ${
-                    info.yUnit instanceof Array
-                      ? `<td><select name="yUnit">${info.yUnit.map(
-                          (yUnit) =>
-                            `<option value="${yUnit}">${yUnit}</option>`,
-                        )}</select></td>`
-                      : `<td><input type="text" readonly name="yUnit" value="${info.yUnit}"></td>`
-                  }
+  info.yUnit instanceof Array
+    ? `<td><select name="yUnit">${info.yUnit.map(
+      (yUnit) =>
+        `<option value="${yUnit}">${yUnit}</option>`,
+    )}</select></td>`
+    : `<td><input type="text" readonly name="yUnit" value="${info.yUnit}"></td>`
+}
                 </tr>
                   </table>
                     <input type="submit" value="Submit"/>

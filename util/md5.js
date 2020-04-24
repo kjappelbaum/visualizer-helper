@@ -155,8 +155,9 @@ let hexChar = '0123456789abcdef'.split('');
 function rhex(n) {
   let s = '',
     j = 0;
-  for (; j < 4; j++)
+  for (; j < 4; j++) {
     s += hexChar[(n >> (j * 8 + 4)) & 0x0f] + hexChar[(n >> (j * 8)) & 0x0f];
+  }
   return s;
 }
 

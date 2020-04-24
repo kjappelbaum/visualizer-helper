@@ -11,7 +11,7 @@ module.exports = {
  * @param {string} v
  * @param {string} w
  * @param {object} options { indel, scoringMatrix }
- * @returns {object} alignment { score, vAligned, wAligned }
+ * @return {object} alignment { score, vAligned, wAligned }
  */
 function run(v, w, options = {}) {
   let S = options.scoringMatrix || data.scoringMatrix({ v, w });
@@ -93,12 +93,12 @@ function run(v, w, options = {}) {
       i--;
       j--;
     } else if (j > 0 && B[i][j] === '-') {
-      vAligned = '-' + vAligned;
+      vAligned = `-${vAligned}`;
       wAligned = w[j - 1] + wAligned;
       j--;
     } else {
       vAligned = v[i - 1] + vAligned;
-      wAligned = '-' + wAligned;
+      wAligned = `-${wAligned}`;
       i--;
     }
   }

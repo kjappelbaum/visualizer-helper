@@ -8,7 +8,7 @@ import elnPlugin from './libs/elnPlugin';
 const idb = new IDB('external-samples');
 
 const defaultOptions = {
-  varName: 'sample'
+  varName: 'sample',
 };
 
 class Sample {
@@ -16,27 +16,27 @@ class Sample {
     // make sure we don't copy attachment metadata
     const s = sample.$content
       ? {
-        $content: {
-          general: sample.$content.general,
-          identifier: sample.$content.identifier,
-          stock: sample.$content.stock
-        }
-      }
-      : {
-        $content: {
-          general: {
-            title: '',
-            description: '',
-            mf: '',
-            molfile: ''
+          $content: {
+            general: sample.$content.general,
+            identifier: sample.$content.identifier,
+            stock: sample.$content.stock,
           },
-          spectra: {
-            nmr: [],
-            mass: [],
-            ir: []
-          }
         }
-      };
+      : {
+          $content: {
+            general: {
+              title: '',
+              description: '',
+              mf: '',
+              molfile: '',
+            },
+            spectra: {
+              nmr: [],
+              mass: [],
+              ir: [],
+            },
+          },
+        };
 
     this.sample = JSON.parse(JSON.stringify(s));
 
@@ -65,7 +65,7 @@ class Sample {
     API.setVariable('description', sampleVar, [
       '$content',
       'general',
-      'description'
+      'description',
     ]);
     API.setVariable('title', sampleVar, ['$content', 'general', 'title']);
     API.setVariable('iupac', sampleVar, ['$content', 'general', 'iupac']);
@@ -121,7 +121,7 @@ class Sample {
       }
       sample = await API.createData(
         this.options.varName,
-        sample || this.sample
+        sample || this.sample,
       );
 
       if (sample.$content.general.molfile) {
@@ -160,7 +160,7 @@ class Sample {
       droppedXray: 'xray',
       droppedOverview: 'image',
       droppedImage: 'image',
-      droppedGenbank: 'genbank'
+      droppedGenbank: 'genbank',
     };
 
     if (!types[name]) {
@@ -179,7 +179,7 @@ class Sample {
         this.sample.$content,
         droppedData,
         {},
-        { keepContent: true }
+        { keepContent: true },
       );
     }
     this.sample.triggerChange();

@@ -1,13 +1,16 @@
 define([
   '../util/getViewInfo',
   'src/util/api',
-  'src/util/couchdbAttachments'
+  'src/util/couchdbAttachments',
 ], function (getViewInfo, API) {
   class UserAnalysisResults {
     constructor(roc, sampleID) {
       this.roc = roc;
       this.sampleID = sampleID;
       this.viewID = undefined;
+      getViewInfo().then((result) => {
+        this.viewID = result._id;
+      });
     }
 
     setSampleID(sampleID) {
@@ -22,6 +25,10 @@ define([
     }
 
     async loadTemplates(key) {
+      if (!this.roc) {
+        this.viewID = this.viewID || (await getViewInfo())._id;
+        return loadTemplatesFromLocalStorage(this.viewID);
+      }
       return this.loadResults(key, { sampleID: '' });
     }
 
@@ -30,27 +37,31 @@ define([
      * @param {string} key
      */
     async loadResults(key, options = {}) {
+      if (!this.roc) {
+        console.log('Can not retrieve results, not connected to roc');
+        return;
+      }
       const { sampleID = this.sampleID } = options;
       this.viewID = this.viewID || (await getViewInfo())._id;
       var user = await this.roc.getUser();
       if (!user || !user.username) return undefined;
       let queryOptions = key
         ? {
-          key: [
-            user.username,
-            ['userAnalysisResults', this.viewID, sampleID, key]
-          ]
-        }
+            key: [
+              user.username,
+              ['userAnalysisResults', this.viewID, sampleID, key],
+            ],
+          }
         : {
-          startkey: [
-            user.username,
-            ['userAnalysisResults', this.viewID, sampleID, '\u0000']
-          ],
-          endkey: [
-            user.username,
-            ['userAnalysisResults', this.viewID, sampleID, '\uffff']
-          ]
-        };
+            startkey: [
+              user.username,
+              ['userAnalysisResults', this.viewID, sampleID, '\u0000'],
+            ],
+            endkey: [
+              user.username,
+              ['userAnalysisResults', this.viewID, sampleID, '\uffff'],
+            ],
+          };
       var entries = await this.roc.view('entryByOwnerAndId', queryOptions);
       if (sampleID) {
         return entries.filter((entry) => entry.$id[2].match(/^[0-9a-f]{32}$/i));
@@ -66,12 +77,19 @@ define([
      * Result is stored in an attachment called result.json
      * @param {*} entry
      */
-    loadResult(entry) {
+    async loadResult(entry) {
+      if (!this.roc) {
+        return loadTemplateFromLocalStorage(this.viewID, String(entry._id));
+      }
       return this.roc.getAttachment(entry, 'result.json');
     }
 
     async saveTemplate(key, meta, result) {
-      return this.save(key, meta, result, { sampleID: '' });
+      if (!this.roc) {
+        return saveTemplateToLocalStorage(this.viewID, key, result);
+      } else {
+        return this.save(key, meta, result, { sampleID: '' });
+      }
     }
 
     async save(key, meta, result, options = {}) {
@@ -85,7 +103,7 @@ define([
         entry = await this.roc.create({
           $id: ['userAnalysisResults', this.viewID, sampleID, key],
           $content: meta,
-          $kind: 'userAnalysisResults'
+          $kind: 'userAnalysisResults',
         });
       }
       if (result) {
@@ -93,8 +111,8 @@ define([
           {
             filename: 'result.json',
             data: JSON.stringify(result),
-            contentType: 'application/json'
-          }
+            contentType: 'application/json',
+          },
         ];
         await this.roc.addAttachment(entry, attachments);
       }
@@ -104,3 +122,31 @@ define([
 
   return UserAnalysisResults;
 });
+
+function loadTemplatesFromLocalStorage(viewID) {
+  return JSON.parse(localStorage.getItem(`templates-${viewID}`)) || [];
+}
+
+function loadTemplateFromLocalStorage(viewID, name) {
+  let templates = loadTemplatesFromLocalStorage(viewID);
+  for (let template of templates) {
+    if (template._id === name) {
+      return template.data;
+    }
+  }
+  return {};
+}
+
+function saveTemplateToLocalStorage(viewID, name, data) {
+  let templates = loadTemplatesFromLocalStorage(viewID);
+  let template = templates.filter((entry) => entry._id === String(name))[0];
+  if (!template) {
+    template = {
+      _id: name,
+      $id: [undefined, undefined, undefined, name],
+    };
+    templates.push(template);
+  }
+  template.data = data;
+  localStorage.setItem(`templates-${viewID}`, JSON.stringify(templates));
+}

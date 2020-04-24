@@ -3,7 +3,7 @@ define([
   './printServerFactory',
   './printProcessors',
   '../../libs/MolecularFormula',
-], function(Util, printServerFactory, processors, MolecularFormula) {
+], function (Util, printServerFactory, processors, MolecularFormula) {
   class Printer {
     constructor(printer, printServer, opts) {
       this.url = String(printServer.url);
@@ -47,7 +47,7 @@ define([
           if (result.$content.general) {
             if (result.$content.general.mf) {
               const mf = new MolecularFormula.default.MF(
-                result.$content.general.mf + '',
+                `${result.$content.general.mf}`,
               );
               result.mfCanonic = mf.toMF();
               console.log(result.mfCanonic);

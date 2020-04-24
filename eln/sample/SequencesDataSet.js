@@ -5,6 +5,7 @@ import UI from 'src/util/ui';
 import _ from 'lodash';
 import Versioning from 'src/util/versioning';
 import Color from 'src/util/color';
+
 import md5 from '../../util/md5';
 
 const SequencesConfigs = {

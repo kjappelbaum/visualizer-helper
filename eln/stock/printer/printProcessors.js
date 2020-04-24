@@ -5,7 +5,7 @@ define([
   'canvg',
   '../../libs/Image',
   '../../libs/OCLE',
-], function(Datas, UI, twig, canvg, IJS, OCL) {
+], function (Datas, UI, twig, canvg, IJS, OCL) {
   OCL = OCL.default;
   IJS = IJS.default;
   const DataObject = Datas.DataObject;
@@ -18,7 +18,7 @@ define([
     lookup[chars.charCodeAt(i)] = i;
   }
   return {
-    twig: async function(printFormat, data, options) {
+    twig: async function (printFormat, data, options) {
       if (printFormat.customFields && printFormat.customFields.length) {
         if (options.creation) {
           printFormat.customFields.forEach((field) => {
@@ -93,8 +93,9 @@ define([
   }
 
   async function enhanceCognitiveFormat(printFormat, text, data) {
-    if (!checkIfMolfile(data))
+    if (!checkIfMolfile(data)) {
       return concatenate(Uint8Array, encoder.encode(text));
+    }
     const encoder = new TextEncoder();
     text = text.replace(/END\s*$/, '');
     text += `GRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat
@@ -218,7 +219,7 @@ define([
 
   function dataToHexa(arr) {
     return Array.prototype.map
-      .call(arr, function(n) {
+      .call(arr, function (n) {
         let hex = n.toString(16);
         if (hex.length === 1) hex = `0${hex}`;
         return hex;

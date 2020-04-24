@@ -1,5 +1,6 @@
-import MolecularFormula from './libs/MolecularFormula';
 import translateDNA from '../biology/translateDNA';
+
+import MolecularFormula from './libs/MolecularFormula';
 
 function explodeSequences(sample) {
   var sequencePeptidic = getFirstPeptide(sample);
@@ -107,7 +108,7 @@ function getSequencesInformation(sample) {
             sequence: { moleculeType: 'Full antibody' },
             mf,
             mfInfo,
-            //iep: MolecularFormula.Peptide.calculateIEP(mf),
+            // iep: MolecularFormula.Peptide.calculateIEP(mf),
           });
         }
       }

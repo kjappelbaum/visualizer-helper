@@ -1090,7 +1090,7 @@ module.exports = {
  *
  * @param {string} v
  * @param {string} w
- * @returns {array} table
+ * @return {Array} table
  */
 function createTable(v, w) {
   let n = v.length;
@@ -1110,7 +1110,7 @@ function createTable(v, w) {
  * @param {number} n
  * @param {number} match
  * @param {number} penalization
- * @returns {array} matrix
+ * @return {Array} matrix
  */
 function identityMatrix(n, match, penalization) {
   match = match || 1;
@@ -1131,7 +1131,7 @@ function identityMatrix(n, match, penalization) {
  * @param {string} v
  * @param {string} w
  * @param {object} scores rules
- * @returns {array} matrix
+ * @return {Array} matrix
  */
 function similarityMatrix(v, w, scores) {
   scores = scores || {};
@@ -1157,7 +1157,7 @@ function similarityMatrix(v, w, scores) {
  * - https://www.ncbi.nlm.nih.gov/Class/FieldGuide/BLOSUM62.txt
  * - https://www.ncbi.nlm.nih.gov/IEB/ToolBox/C_DOC/lxr/source/data/PAM250
  * @param {object} options { v, w, name, scores }
- * @returns {object} dictionary of dictionaries
+ * @return {object} dictionary of dictionaries
  */
 function scoringMatrix(options) {
   let v = options.v;
@@ -1185,7 +1185,7 @@ function scoringMatrix(options) {
 /**
  * Find the unique set of characters in a string
  * @param {string} text
- * @returns {array} vocab
+ * @return {Array} vocab
  */
 function vocabulary(text) {
   let dictionary = text.split('').reduce((p, c) => {
