@@ -12,7 +12,7 @@ const DataObject = Datas.DataObject;
 var defaultOptions = {
   varName: 'sample',
   track: false,
-  bindChange: true
+  bindChange: true,
 };
 
 class BioReaction {
@@ -25,7 +25,7 @@ class BioReaction {
         url: couchDB.url,
         database: couchDB.database,
         processor: elnPlugin,
-        kind: couchDB.kind
+        kind: couchDB.kind,
       });
       API.cache('roc', roc);
     }
@@ -41,7 +41,7 @@ class BioReaction {
     if (!this.uuid) {
       UI.showNotification(
         'Cannot create an editable sample without an uuid',
-        'error'
+        'error',
       );
       return;
     }
@@ -107,7 +107,7 @@ class BioReaction {
         default:
           UI.showNotification(
             'For overview only the following formats are allowed: png, jpg and svg.',
-            'error'
+            'error',
           );
           return undefined;
       }
@@ -131,7 +131,7 @@ class BioReaction {
         droppedXray: 'xray',
         droppedOverview: 'image',
         droppedImage: 'image',
-        droppedGenbank: 'genbank'
+        droppedGenbank: 'genbank',
       };
       if (!types[name]) {
         throw new Error('Unexpected variable name');
@@ -142,7 +142,7 @@ class BioReaction {
         {
           xray: 'Xray (cif, pdb)',
           image: 'Images (jpg, png or tiff)',
-          other: 'Other'
+          other: 'Other',
         },
         {
           noConfirmation: true,
@@ -150,10 +150,10 @@ class BioReaction {
             {
               id: 'description',
               name: 'description',
-              field: 'description'
-            }
-          ]
-        }
+              field: 'description',
+            },
+          ],
+        },
       );
       if (!type) return;
     }
@@ -196,7 +196,7 @@ class BioReaction {
       }
       case 'refresh': {
         const ok = await UI.confirm(
-          'Are you sure you want to refresh? This will discard your local modifications.'
+          'Are you sure you want to refresh? This will discard your local modifications.',
         );
         if (!ok) return;
         this.unbindChange();
