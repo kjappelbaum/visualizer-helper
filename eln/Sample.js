@@ -114,9 +114,7 @@ Your local changes will be lost.</p>`;
     }, 60 * 1000);
   }
 
-  async _loadInstanceInVisualizer() {
-    updateSample(this.sample);
-
+  createVariables() {
     var sampleVar = API.getVar(this.options.varName);
     createVar(sampleVar, 'sampleCode');
     createVar(sampleVar, 'batchCode');
@@ -161,6 +159,12 @@ Your local changes will be lost.</p>`;
     createVar(sampleVar, 'nucleic');
     createVar(sampleVar, 'peptidic');
     createVar(sampleVar, 'biology');
+  }
+
+  async _loadInstanceInVisualizer() {
+    updateSample(this.sample);
+
+    this.createVariables();
 
     this._initializeObjects();
 
@@ -275,6 +279,8 @@ Your local changes will be lost.</p>`;
         droppedRaman: 'raman',
         droppedChrom: 'chromatogram',
         droppedCV: 'cyclicVoltammetry',
+        droppedTGA: 'thermogravimetricAnalysis',
+        droppedDSC: 'differentialScanningCalorimetry',
         droppedXray: 'xray',
         droppedOverview: 'image',
         droppedImage: 'image',
@@ -412,36 +418,36 @@ Your local changes will be lost.</p>`;
                   <tr>
                     <th>Kind</th>
                     <td><input type="text" readonly name="type" value="${
-  info.type
-}"></td>
+                      info.type
+                    }"></td>
                   </tr>
                   <tr>
                     <th>Filename (ending with .jdx)</th>
                     <td><input type="text" pattern=".*\\.jdx$" name="filename" size=40 value="${
-  info.filename
-}"></td>
+                      info.filename
+                    }"></td>
                   </tr>
                   <tr>
                     <th>xUnit (horizon axis)</th>
                     ${
-  info.xUnit instanceof Array
-    ? `<td><select name="xUnit">${info.xUnit.map(
-      (xUnit) =>
-        `<option value="${xUnit}">${xUnit}</option>`,
-    )}</select></td>`
-    : `<td><input type="text" readonly name="xUnit" value="${info.xUnit}"></td>`
-}
+                      info.xUnit instanceof Array
+                        ? `<td><select name="xUnit">${info.xUnit.map(
+                            (xUnit) =>
+                              `<option value="${xUnit}">${xUnit}</option>`,
+                          )}</select></td>`
+                        : `<td><input type="text" readonly name="xUnit" value="${info.xUnit}"></td>`
+                    }
                   </tr>
                   <tr>
                   <th>yUnit (vectical axis)</th>
                   ${
-  info.yUnit instanceof Array
-    ? `<td><select name="yUnit">${info.yUnit.map(
-      (yUnit) =>
-        `<option value="${yUnit}">${yUnit}</option>`,
-    )}</select></td>`
-    : `<td><input type="text" readonly name="yUnit" value="${info.yUnit}"></td>`
-}
+                    info.yUnit instanceof Array
+                      ? `<td><select name="yUnit">${info.yUnit.map(
+                          (yUnit) =>
+                            `<option value="${yUnit}">${yUnit}</option>`,
+                        )}</select></td>`
+                      : `<td><input type="text" readonly name="yUnit" value="${info.yUnit}"></td>`
+                  }
                 </tr>
                   </table>
                     <input type="submit" value="Submit"/>
@@ -526,6 +532,8 @@ Your local changes will be lost.</p>`;
           );
         }
         break;
+      case 'recreateVariables':
+        this.createVariables();
       case 'deleteAttachment':
         var attachment = action.value.name;
         await this.roc.deleteAttachment(this.sample, attachment);
