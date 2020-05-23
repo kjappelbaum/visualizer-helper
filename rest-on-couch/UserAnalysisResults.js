@@ -47,21 +47,21 @@ define([
       if (!user || !user.username) return undefined;
       let queryOptions = key
         ? {
-            key: [
-              user.username,
-              ['userAnalysisResults', this.viewID, sampleID, key],
-            ],
-          }
+          key: [
+            user.username,
+            ['userAnalysisResults', this.viewID, sampleID, key],
+          ],
+        }
         : {
-            startkey: [
-              user.username,
-              ['userAnalysisResults', this.viewID, sampleID, '\u0000'],
-            ],
-            endkey: [
-              user.username,
-              ['userAnalysisResults', this.viewID, sampleID, '\uffff'],
-            ],
-          };
+          startkey: [
+            user.username,
+            ['userAnalysisResults', this.viewID, sampleID, '\u0000'],
+          ],
+          endkey: [
+            user.username,
+            ['userAnalysisResults', this.viewID, sampleID, '\uffff'],
+          ],
+        };
       var entries = await this.roc.view('entryByOwnerAndId', queryOptions);
       if (sampleID) {
         return entries.filter((entry) => entry.$id[2].match(/^[0-9a-f]{32}$/i));
@@ -89,6 +89,14 @@ define([
         return saveTemplateToLocalStorage(this.viewID, key, result);
       } else {
         return this.save(key, meta, result, { sampleID: '' });
+      }
+    }
+
+    async deleteTemplate(entry) {
+      if (!this.roc) {
+        return deleteTemplateFromLocalStorage(this.viewID, entry._id);
+      } else {
+        return this.delete(entry);
       }
     }
 
@@ -135,6 +143,12 @@ function loadTemplateFromLocalStorage(viewID, name) {
     }
   }
   return {};
+}
+
+function deleteTemplateFromLocalStorage(viewID, key) {
+  let templates = loadTemplatesFromLocalStorage(viewID);
+  let currentTemplates = templates.filter((entry) => entry._id !== String(key));
+  localStorage.setItem(`templates-${viewID}`, JSON.stringify(currentTemplates));
 }
 
 function saveTemplateToLocalStorage(viewID, name, data) {
