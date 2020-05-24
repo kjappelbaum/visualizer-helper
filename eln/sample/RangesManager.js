@@ -124,6 +124,18 @@ export class RangesManager {
     this.ranges.triggerChange();
     this.updateAnnotations();
   }
+
+  addRanges(ranges) {
+    for (let range of ranges) {
+      checkFromTo(range);
+      if (!range.label) {
+        this.manager.setLabel(range);
+      }
+      this.ranges.push(range);
+    }
+    this.ranges.triggerChange();
+    this.updateAnnotations();
+  }
 }
 
 function checkFromTo(range) {
