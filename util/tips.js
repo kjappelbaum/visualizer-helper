@@ -2,14 +2,14 @@ define([
   'src/util/api',
   './yamlParser',
   'src/util/ui',
-  './getViewInfo'
+  './getViewInfo',
 ], function (API, yamlParser, UI, getViewInfo) {
   let tipsURL = 'https://docs.cheminfo.org/tips/';
   let pagesURL = 'https://docs.cheminfo.org/pages/';
   let minDelayBetweenTips = 4 * 3600 * 1000;
 
-  async function showTips() {
-    let info = await getViewInfo();
+  async function showTips(info) {
+    if (!info) info = await getViewInfo();
     if (!info._id) return;
 
     //  info._id='15c9a2dcd55c963fdedf2c18a1471b03';
@@ -28,7 +28,7 @@ define([
     if (!toc.tips) return;
     let userPrefs = JSON.parse(
       window.localStorage.getItem('tipsPreferences') ||
-        '{"lastTip":0, "views":{}}'
+        '{"lastTip":0, "views":{}}',
     );
     if ((Date.now() - userPrefs.lastTip || 0) < minDelayBetweenTips) return;
     if (!userPrefs.views[info._id]) {
@@ -53,7 +53,7 @@ define([
             <iframe frameBorder="0" width="100%" height="100%" 
             src="${tipsURL}${info._id}/${tips[0].name}">
         `,
-        { width: 800, height: 600, title: 'Did you know ?' }
+        { width: 800, height: 600, title: 'Did you know ?' },
       );
     }
   }
@@ -81,7 +81,7 @@ define([
             <iframe frameBorder="0" width="100%" height="100%" 
             src="${pagesURL + info._id}">
         `,
-        { width: 900, height: 700, title: 'Information about the page' }
+        { width: 900, height: 700, title: 'Information about the page' },
       );
     });
 
@@ -101,16 +101,16 @@ define([
                 <iframe frameBorder="0" width="100%" height="100%" 
                 src="${pagesURL + info._id}">
             `,
-            { width: 900, height: 700, title: 'Information about the page' }
+            { width: 900, height: 700, title: 'Information about the page' },
           );
         }
       },
-      false
+      false,
     );
   }
 
   return {
     showTips,
-    addPageHelp
+    addPageHelp,
   };
 });
