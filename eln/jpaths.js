@@ -45,6 +45,8 @@ jpaths.nucleic = ['$content', 'biology', 'nucleic'];
 jpaths.peptidic = ['$content', 'biology', 'peptidic'];
 jpaths.chromatogram = ['$content', 'spectra', 'chromatogram'];
 jpaths.biology = ['$content', 'biology'];
+jpaths.xrd = ['$content', 'spectra', 'xrd'];
+jpaths.xps = ['$content', 'spectra', 'xps'];
 jpaths.thermogravimetricAnalysis = [
   '$content',
   'spectra',

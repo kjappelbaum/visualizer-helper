@@ -150,6 +150,8 @@ Your local changes will be lost.</p>`;
     createVar(sampleVar, 'xray');
     createVar(sampleVar, 'chromatogram');
     createVar(sampleVar, 'thermogravimetricAnalysis');
+    createVar(sampleVar, 'xrd');
+    createVar(sampleVar, 'xps');
     createVar(sampleVar, 'cyclicVoltammetry');
     createVar(sampleVar, 'elementalAnalysis');
     createVar(sampleVar, 'differentialScanningCalorimetry');
@@ -304,6 +306,8 @@ Your local changes will be lost.</p>`;
             'Chromatogram LC, GC, LC/MS, GC/MS (csv, tsv, txt, jcamp, pdf, netcdf, xml)',
           thermogravimetricAnalysis:
             'Thermogravimetric Analysis (csv, tsv, txt, jcamp)',
+          xrd: 'XRD Analysis (csv, tsv, txt, jcamp)',
+          xps: 'XPS (csv, tsv, txt, jcamp)',
           cyclicVoltammetry: 'Cyclic voltammetry (csv, tsv, txt, jcamp, pdf)',
           differentialScanningCalorimetry:
             'Differential Scanning Calorimetry (csv, tsv, txt, jcamp)',
