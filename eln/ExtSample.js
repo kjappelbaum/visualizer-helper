@@ -35,6 +35,7 @@ class Sample {
               mass: [],
               ir: [],
             },
+            image: [],
           },
         };
 
@@ -42,7 +43,6 @@ class Sample {
 
     this.options = Object.assign({}, defaultOptions, options);
     Object.assign(this.sample, this.options.sample);
-    console.log('this', { sample: this.sample });
     this._init();
   }
 
@@ -69,6 +69,7 @@ class Sample {
     ]);
     API.setVariable('title', sampleVar, ['$content', 'general', 'title']);
     API.setVariable('iupac', sampleVar, ['$content', 'general', 'iupac']);
+    API.setVariable('image', sampleVar, ['$content', 'image']);
 
     this.expandableMolecule = new ExpandableMolecule(this.sample, this.options);
     this.mf = new MF(this.sample);
