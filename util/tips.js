@@ -60,7 +60,8 @@ define([
 
   async function addPageHelp(options = {}) {
     const { iconSize = 'fa-3x' } = options;
-    let info = await getViewInfo();
+    let info =
+      options._id === undefined ? await getViewInfo() : { _id: options._id };
     if (!info._id) return;
 
     await fetch(`${pagesURL + info._id}/index.html`, { method: 'HEAD' })
