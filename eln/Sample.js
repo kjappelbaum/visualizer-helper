@@ -263,16 +263,18 @@ Your local changes will be lost.</p>`;
    * @param {object} options
    * @param {string} [options.customMetadata]
    * @param {boolean} [options.autoJcamp] - converts automatically tsv, txt and csv to jcamp
+   * @param {boolean} [options.converters] - call back to convert some files
    */
   async handleDrop(variableName, askType, options = {}) {
-    var type;
+    let { converters, autoJcamp } = options;
+    let type;
     if (!variableName) {
       throw new Error('handleDrop expects a variable name');
     }
     variableName = String(variableName);
     if (!askType) {
       // maps name of variable to type of data
-      var types = {
+      const types = {
         droppedNmr: 'nmr',
         droppedIR: 'ir',
         droppedUV: 'uv',
@@ -284,6 +286,8 @@ Your local changes will be lost.</p>`;
         droppedTGA: 'thermogravimetricAnalysis',
         droppedDSC: 'differentialScanningCalorimetry',
         droppedXray: 'xray',
+        droppedXRD: 'xrd',
+        droppedXPS: 'xps',
         droppedOverview: 'image',
         droppedImage: 'image',
         droppedGenbank: 'genbank',
@@ -333,13 +337,32 @@ Your local changes will be lost.</p>`;
     // Expecting format as from drag and drop module
     var droppedDatas = API.getData(variableName);
     droppedDatas = droppedDatas.file || droppedDatas.str;
+    if (converters) {
+      for (let droppedData of droppedDatas) {
+        if (!droppedData.filename.includes('.')) droppedData.filename += '.txt';
+        let extension = droppedData.filename.replace(/.*\./, '').toLowerCase();
+        if (converters[extension]) {
+          autoJcamp = false;
+          droppedData.filename = droppedData.filename.replace(
+            '.' + extension,
+            '.jdx',
+          );
+          droppedData.mimetype = 'chemical/x-jcamp-dx';
+          droppedData.contentType = 'chemical/x-jcamp-dx';
+          droppedData.encoding = 'utf8';
+          droppedData.content = await converters[extension](
+            droppedData.content,
+          );
+        }
+      }
+    }
 
     /*
       Possible autoconvertion of text file to jcamp
       * if filename ends with TXT, TSV or CSV
       * use convert-to-jcamp
     */
-    if (options.autoJcamp) {
+    if (autoJcamp) {
       const jcampTypes = {
         nmr: {
           type: 'NMR SPECTRUM',
