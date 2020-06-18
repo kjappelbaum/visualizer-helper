@@ -32,6 +32,31 @@ const SpectraConfigs = {
       displayXAxis: ['display', 'flip', 'main', 'sec'],
     },
   },
+  Mass: {
+    tocFilter: (entry) => entry.value.nbMass && !entry.value.hidden,
+    tocCallback: (entry) => {
+      entry.value.nbSpectra = entry.value.nbMass;
+    },
+    getSpectra: (sample) => {
+      if (
+        sample &&
+        sample.$content &&
+        sample.$content.spectra &&
+        Array.isArray(sample.$content.spectra.mass)
+      ) {
+        let spectra = sample.$content.spectra.mass;
+        return spectra;
+      } else {
+        return [];
+      }
+    },
+    chartPrefs: {
+      yLabel: 'Intensity',
+      displayYAxis: ['display', 'main', 'sec'],
+      xLabel: 'm/z',
+      displayXAxis: ['display', 'main', 'sec'],
+    },
+  },
   Raman: {
     tocFilter: (entry) => entry.value.nbRaman && !entry.value.hidden,
     tocCallback: (entry) => {
