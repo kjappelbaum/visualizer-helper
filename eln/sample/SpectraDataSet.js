@@ -242,6 +242,12 @@ class SpectraDataSet {
         const selectedSpectra = API.getData('selectedSpectra');
         selectedSpectra.length = 0;
         selectedSpectra.triggerChange();
+        const preferences = API.getData('preferences');
+        if (preferences && preferences.normalization) {
+          preferences.normalization.from = undefined;
+          preferences.normalization.to = undefined;
+          preferences.triggerChange();
+        }
         this.spectraConfig = SpectraConfigs[String(analysisKind.analysis)];
         this.refresh();
       }
