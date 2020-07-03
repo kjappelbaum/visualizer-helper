@@ -247,6 +247,10 @@ class SpectraDataSet {
           preferences.normalization.from = '';
           preferences.normalization.to = '';
           preferences.triggerChange();
+          setTimeout(() => {
+            preferences.normalization.from = undefined;
+            preferences.normalization.to = undefined;
+          }, 0);
         }
         this.spectraConfig = SpectraConfigs[String(analysisKind.analysis)];
         this.refresh();
