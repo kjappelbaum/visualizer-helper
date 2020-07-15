@@ -263,10 +263,11 @@ Your local changes will be lost.</p>`;
    * @param {object} options
    * @param {string} [options.customMetadata]
    * @param {boolean} [options.autoJcamp] - converts automatically tsv, txt and csv to jcamp
-   * @param {boolean} [options.converters] - call back to convert some files
+   * @param {boolean} [options.converters] - callback to convert some files based on their kind (extension)
+   * @param {boolean} [options.autoKind] - callback to determine automatically kind
    */
   async handleDrop(variableName, askType, options = {}) {
-    let { converters, autoJcamp } = options;
+    let { converters, autoJcamp, autoKind } = options;
     let type;
     if (!variableName) {
       throw new Error('handleDrop expects a variable name');
@@ -340,8 +341,14 @@ Your local changes will be lost.</p>`;
     if (converters) {
       for (let droppedData of droppedDatas) {
         if (!droppedData.filename.includes('.')) droppedData.filename += '.txt';
-        let extension = droppedData.filename.replace(/.*\./, '').toLowerCase();
-        if (converters[extension]) {
+        const extension = droppedData.filename
+          .replace(/.*\./, '')
+          .toLowerCase();
+        let kind = extension;
+        if (autoKind) {
+          kind = autoKind(droppedData.content) || kind;
+        }
+        if (converters[kind]) {
           autoJcamp = false;
           droppedData.filename = droppedData.filename.replace(
             '.' + extension,
@@ -350,9 +357,7 @@ Your local changes will be lost.</p>`;
           droppedData.mimetype = 'chemical/x-jcamp-dx';
           droppedData.contentType = 'chemical/x-jcamp-dx';
           droppedData.encoding = 'utf8';
-          droppedData.content = await converters[extension](
-            droppedData.content,
-          );
+          droppedData.content = await converters[kind](droppedData.content);
         }
       }
     }
