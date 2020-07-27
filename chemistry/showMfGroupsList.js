@@ -7,13 +7,24 @@ import OCL from 'openchemlib/openchemlib-full';
 
 import MolecularFormula from '../eln/libs/MolecularFormula';
 
-const MF = MolecularFormula.MF;
-const groups = JSON.parse(JSON.stringify(MolecularFormula.Groups));
+module.exports = function showMfGroupsList(CustomMolecularFormula) {
+  console.log({ CustomMolecularFormula });
+  const html = getHtml(CustomMolecularFormula);
+  UI.dialog(html, {
+    width: 700,
+    height: 700,
+    title: 'List of known groups',
+  });
+};
 
-groups.forEach((group) => {
-  group.mfHtml = new MF(String(group.mf)).toHtml();
-});
-let html = `
+function getHtml(CustomMolecularFormula = MolecularFormula) {
+  const MF = CustomMolecularFormula.MF;
+  const groups = JSON.parse(JSON.stringify(CustomMolecularFormula.Groups));
+  console.log(groups);
+  groups.forEach((group) => {
+    group.mfHtml = new MF(String(group.mf)).toHtml();
+  });
+  let html = `
     <style>
         #allGroups {
             width: 100%;
@@ -62,35 +73,35 @@ let html = `
         </thead>
         <tbody>
             ${groups
-    .map(
-      (group) => `
+              .map(
+                (group) => `
                 <tr>
                     <td>${group.symbol}</td>
                     <td>${group.name}</td>
                     <td>${group.mfHtml}<span style='display:none'>${
-  group.mf
-}</span></td>
+                  group.mf
+                }</span></td>
                     <td><span  style="zoom: 0.8">
                         ${
-  group.ocl && group.ocl.value.length > 2
-    ? OCL.Molecule.fromIDCode(
-      group.ocl.value,
-      group.ocl.coordinates
-    ).toSVG(200, 150, undefined, {
-      autoCrop: true,
-      autoCropMargin: 5,
-      suppressChiralText: true,
-      suppressCIPParity: true,
-      suppressESR: true,
-      noStereoProblem: true
-    })
-    : ''
-}
+                          group.ocl && group.ocl.value.length > 2
+                            ? OCL.Molecule.fromIDCode(
+                                group.ocl.value,
+                                group.ocl.coordinates,
+                              ).toSVG(200, 150, undefined, {
+                                autoCrop: true,
+                                autoCropMargin: 5,
+                                suppressChiralText: true,
+                                suppressCIPParity: true,
+                                suppressESR: true,
+                                noStereoProblem: true,
+                              })
+                            : ''
+                        }
                     </span></td>
                 </tr>
-            `
-    )
-    .join('\n')}
+            `,
+              )
+              .join('\n')}
         </tbody>
     </table>
     <script>
@@ -108,11 +119,5 @@ let html = `
         }
     </script>
 `;
-
-module.exports = function showMfGroupsList() {
-  UI.dialog(html, {
-    width: 700,
-    height: 700,
-    title: 'List of known groups'
-  });
-};
+  return html;
+}
