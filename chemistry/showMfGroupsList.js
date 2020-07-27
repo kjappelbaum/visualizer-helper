@@ -82,21 +82,25 @@ function getHtml(CustomMolecularFormula = MolecularFormula) {
                   group.mf
                 }</span></td>
                     <td><span  style="zoom: 0.8">
-                        ${
-                          group.ocl && group.ocl.value.length > 2
-                            ? OCL.Molecule.fromIDCode(
-                                group.ocl.value,
-                                group.ocl.coordinates,
-                              ).toSVG(200, 150, undefined, {
-                                autoCrop: true,
-                                autoCropMargin: 5,
-                                suppressChiralText: true,
-                                suppressCIPParity: true,
-                                suppressESR: true,
-                                noStereoProblem: true,
-                              })
-                            : ''
-                        }
+                    ${
+                      group.ocl && group.ocl.value.length > 2
+                        ? "<img src='data:image/svg+xml;base64," +
+                          btoa(
+                            OCL.Molecule.fromIDCode(
+                              group.ocl.value,
+                              group.ocl.coordinates,
+                            ).toSVG(200, 150, undefined, {
+                              autoCrop: true,
+                              autoCropMargin: 5,
+                              suppressChiralText: true,
+                              suppressCIPParity: true,
+                              suppressESR: true,
+                              noStereoProblem: true,
+                            }),
+                          ) +
+                          "'>"
+                        : ''
+                    }
                     </span></td>
                 </tr>
             `,
