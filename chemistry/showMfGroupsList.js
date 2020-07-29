@@ -11,7 +11,7 @@ module.exports = function showMfGroupsList(CustomMolecularFormula) {
   console.log({ CustomMolecularFormula });
   const html = getHtml(CustomMolecularFormula);
   UI.dialog(html, {
-    width: 700,
+    width: 880,
     height: 700,
     title: 'List of known groups',
   });
@@ -26,9 +26,7 @@ function getHtml(CustomMolecularFormula = MolecularFormula) {
   });
   let html = `
     <style>
-        #allGroups {
-            width: 100%;
-        }
+      
         #allGroups thead, #allGroups tbody {
             display: block;
         }
@@ -50,16 +48,29 @@ function getHtml(CustomMolecularFormula = MolecularFormula) {
         }
         #allGroups thead th:nth-child(2), #allGroups tbody td:nth-child(2) {
             width: 200px;
+            max-width: 200px;
             text-overflow:ellipsis;
         }
         #allGroups thead th:nth-child(3), #allGroups tbody td:nth-child(3) {
-            width: 80px;
+            width: 100px;
+            max-width: 100px;
             text-overflow:ellipsis;
         }
         #allGroups thead th:nth-child(4), #allGroups tbody td:nth-child(4) {
-            width: 250px;
+            width: 100px;
+            max-width: 100px;
             text-overflow:ellipsis;
         }
+        #allGroups thead th:nth-child(5), #allGroups tbody td:nth-child(5) {
+          width: 70px;
+          max-width: 70px;
+          text-overflow:ellipsis;
+        }
+        #allGroups thead th:nth-child(6), #allGroups tbody td:nth-child(6) {
+          width: 250px;
+          text-overflow:ellipsis;
+        }
+      
     </style>
     Filter the list: <input type='text' oninput='filter(this)'>
     <table id='allGroups'>
@@ -68,6 +79,8 @@ function getHtml(CustomMolecularFormula = MolecularFormula) {
                 <th>Symbol</th>
                 <th>Name</th>
                 <th>mf</th>
+                <th>Kind</th>
+                <th>One letter</th>
                 <th>Structure</th>
             </tr>
         </thead>
@@ -81,6 +94,8 @@ function getHtml(CustomMolecularFormula = MolecularFormula) {
                     <td>${group.mfHtml}<span style='display:none'>${
                   group.mf
                 }</span></td>
+                <td>${group.kind}</td>
+                <td>${group.oneLetter ? group.oneLetter : ''}</td>
                     <td><span  style="zoom: 0.8">
                     ${
                       group.ocl && group.ocl.value.length > 2
@@ -89,7 +104,7 @@ function getHtml(CustomMolecularFormula = MolecularFormula) {
                             OCL.Molecule.fromIDCode(
                               group.ocl.value,
                               group.ocl.coordinates,
-                            ).toSVG(200, 150, undefined, {
+                            ).toSVG(250, 200, undefined, {
                               autoCrop: true,
                               autoCropMargin: 5,
                               suppressChiralText: true,
