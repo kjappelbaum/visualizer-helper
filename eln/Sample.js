@@ -346,7 +346,7 @@ Your local changes will be lost.</p>`;
           .toLowerCase();
         let kind = extension;
         if (autoKind) {
-          kind = autoKind(droppedData.content) || kind;
+          kind = autoKind(droppedData) || kind;
         }
         if (converters[kind]) {
           autoJcamp = false;
