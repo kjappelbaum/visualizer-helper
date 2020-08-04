@@ -369,5 +369,26 @@ var salts = {
     mf: 'HO4Cl',
     mw: 100.45694,
     name: 'Perchlorate'
+  },
+  WA: {
+    code: 'WA',
+    idCode: 'fI@D',
+    mf: 'H2O',
+    mw: 18.015286,
+    name: 'Water',
+  },
+  BB: {
+    code: 'BB',
+    idCode: 'daxB@@QnR[VZi`@',
+    mw: 118.088208,
+    mf: 'C4H6O4',
+    name: 'Succinate',
+  },
+  FD: {
+    code: 'FD',
+    idCode: 'daxLHHS@BJdFdNdLddlbuT@@',
+    mw: 150.076888,
+    mf: 'CHF3O3S',
+    name: 'Triflate',
   }
 };
