@@ -31,14 +31,12 @@ function getChildrenSVG(children) {
   for (let element of children) {
     let attributes = [];
     appendAttributes(element.attributes, attributes);
-    console.log(attributes);
     attributes = attributes.join(' ');
     if (element.children.length > 0) {
       content += `<${element.kind} ${attributes}>${getChildrenSVG(
         element.children,
       )}</${element.kind}>`;
     } else if (element.innerHTML) {
-      console.log(element.innerHTML);
       content += `<${element.kind} ${attributes}>${element.innerHTML}</${element.kind}>`;
     } else {
       content += `<${element.kind} ${attributes} />`;
