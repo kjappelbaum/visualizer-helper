@@ -29,14 +29,10 @@ class SVGCreator {
 function getChildrenSVG(children) {
   let content = '';
   for (let element of children) {
-    let attributes = Object.keys(element.attributes)
-      .map(
-        (key) =>
-          `${key.replace(/([A-Z])/g, (match) => '-' + match.toLowerCase())}="${
-            element.attributes[key]
-          }"`,
-      )
-      .join(' ');
+    let attributes = [];
+    appendAttributes(element.attributes, attributes);
+    console.log(attributes);
+    attributes = attributes.join(' ');
     if (element.children.length > 0) {
       content += `<${element.kind} ${attributes}>${getChildrenSVG(
         element.children,
@@ -84,6 +80,21 @@ function add(children, kind, attributes = {}) {
   let element = new Element(kind, '', attributes);
   children.push(element);
   return element;
+}
+
+// attributes may contain objects to organize the properties
+function appendAttributes(newAttributes, attributes) {
+  for (let key in newAttributes) {
+    if (typeof newAttributes[key] === 'object') {
+      appendAttributes(newAttributes[key], attributes);
+    } else {
+      let newKey = key.replace(
+        /([A-Z])/g,
+        (match) => '-' + match.toLowerCase(),
+      );
+      attributes.push(newKey + '="' + newAttributes[key] + '"');
+    }
+  }
 }
 
 module.exports = SVGCreator;
