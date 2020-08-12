@@ -1,5 +1,5 @@
 class SVGCreator {
-  constructor(height, width) {
+  constructor(width, height) {
     this.height = height;
     this.width = width;
     this.children = [];
