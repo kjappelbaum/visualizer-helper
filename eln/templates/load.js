@@ -6,7 +6,7 @@ import API from 'src/util/api';
  * (string) [options.variableName='templates']
  */
 
-module.exports = async function loadTemplates(categories, options = {}) {
+module.exports = async function load(categories, options = {}) {
   const { variableName = 'templates' } = options;
   if (typeof categories === 'string') {
     categories = [categories];
@@ -23,17 +23,17 @@ module.exports = async function loadTemplates(categories, options = {}) {
         if (result.status === 200) {
           templates = await fetchAndLink(`${roc.url}`, categories);
           if (!templates || templates.length === 0) {
-            templates = await fetchAndLink(undefined, categories);
+            templates = await fetchPublicAndLink(categories);
           }
         } else {
-          templates = await fetchAndLink(undefined, categories);
+          templates = await fetchPublicAndLink(categories);
         }
       })
       .catch(async () => {
-        templates = await fetchAndLink(undefined, categories);
+        templates = await fetchPublicAndLink(categories);
       });
   } else {
-    templates = await fetchAndLink(undefined, categories);
+    templates = await fetchPublicAndLink(categories);
   }
 
   templates.sort((a, b) => {
@@ -48,19 +48,46 @@ module.exports = async function loadTemplates(categories, options = {}) {
   return templates;
 };
 
+// https://www.cheminfo.org/couch/templates-public/_design/customApp/_view/template?reduce=false&startkey=%5B%22admin@cheminfo.org%22%2C%22org.cheminfo%22%5D&endkey=%5B%22admin@cheminfo.org%22%2C%22org.cheminfo.default%22%5D
+async function fetchPublicAndLink(categories) {
+  var templates = [];
+  for (let category of categories) {
+    let startkey = escape(JSON.stringify(['admin@cheminfo.org', category]));
+    let endkey = escape(
+      JSON.stringify(['admin@cheminfo.org', `${category}\uFFFF`]),
+    );
+
+    let baseUrl = require.s.contexts._.config.baseUrl;
+
+    // if there are //.. it does not work
+    let url = `${baseUrl}../../templates-public/_design/customApp/_view/template?reduce=false&startkey=${startkey}&endkey=${endkey}`;
+
+    let response = await fetch(url);
+    let results = (await response.json()).rows;
+    results.forEach((result) => {
+      result.document = {
+        type: 'object',
+        url: `${baseUrl}../../templates-public/${result.id}`,
+      };
+    });
+    templates.push(...results);
+  }
+  return templates;
+}
+
 async function fetchAndLink(url = 'https://mydb.cheminfo.org', categories) {
   var templates = [];
   for (let category of categories) {
     let startkey = category;
     let endkey = `${category}\uFFFF`;
     let response = await fetch(
-      `${url}/db/templates/_query/template?startkey=${startkey}&endkey=${endkey}`
+      `${url}/db/templates/_query/template?startkey=${startkey}&endkey=${endkey}`,
     );
     let results = await response.json();
     results.forEach((result) => {
       result.document = {
         type: 'object',
-        url: `${url}/db/templates/entry/${result.id}`
+        url: `${url}/db/templates/entry/${result.id}`,
       };
     });
     templates.push(...results);

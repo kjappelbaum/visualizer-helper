@@ -12,7 +12,7 @@ module.exports = async function loadTwig(category, options = {}) {
       '0',
       'document',
       '$content',
-      'twig'
+      'twig',
     ]);
     if (variableName) API.createData(variableName, twigTemplate);
     return twigTemplate;
