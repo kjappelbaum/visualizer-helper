@@ -4,8 +4,10 @@ define([
   'src/util/ui',
   './getViewInfo',
 ], function (API, yamlParser, UI, getViewInfo) {
-  let tipsURL = 'https://docs.cheminfo.org/tips/';
-  let pagesURL = 'https://docs.cheminfo.org/pages/';
+  let baseUrl = require.s.contexts._.config.baseUrl;
+
+  let tipsURL = baseUrl + '../../docs/tips/';
+  let pagesURL = baseUrl + '../../docs/pages/';
   let minDelayBetweenTips = 4 * 3600 * 1000;
 
   async function showTips(info) {
