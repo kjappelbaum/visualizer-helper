@@ -1,4 +1,4 @@
-import * as OCLUtils from 'https://www.lactame.com/lib/openchemlib-utils/0.2.1/openchemlib-utils.js';
+import * as OCLUtils from '../../../../../../../../lib/openchemlib-utils/0.2.1/openchemlib-utils';
 import OCL from 'openchemlib/openchemlib-core';
 
 OCLUtils.initOCL(OCL);
