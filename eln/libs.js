@@ -8,5 +8,5 @@ export { default as convertToJcamp } from './libs/convertToJcamp';
 // export { parseXY } from './libs/parseXY';
 export { convert } from './libs/jcampconverter';
 
-//export { parseXY as test1 } from './libs/test1';
-export { parseXY as test2 } from './libs/test2';
+export { parseXY as test1 } from './libs/test1';
+//export { parseXY as test2 } from './libs/test2';
