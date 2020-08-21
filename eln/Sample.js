@@ -504,9 +504,16 @@ Your local changes will be lost.</p>`;
             droppedData.mimetype = 'chemical/x-jcamp-dx';
             droppedData.contentType = 'chemical/x-jcamp-dx';
             let content = droppedData.content;
-            if (droppedData.encoding === 'base64') {
-              content = atob(droppedData.content);
-              droppedData.encoding = 'text';
+            switch (droppedData.encoding) {
+              case 'base64':
+                content = atob(droppedData.content);
+                droppedData.encoding = 'text';
+                break;
+              case 'buffer':
+                const decoder = new TextDecoder();
+                content = decoder.decode(droppedData.content);
+                droppedData.encoding = 'text';
+                break;
             }
             droppedData.content = convertToJcamp(content, {
               meta,
