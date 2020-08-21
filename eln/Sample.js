@@ -423,6 +423,11 @@ Your local changes will be lost.</p>`;
           xUnit: 'I [mA]',
           yUnit: 'Ewe [V]',
         },
+        xrd: {
+          type: 'X-ray powder diffraction',
+          xUnit: '2ϴ [°]',
+          yUnit: 'counts',
+        },
       };
 
       for (let droppedData of droppedDatas) {
