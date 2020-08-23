@@ -7,6 +7,7 @@ const jpaths = {};
 
 // general
 jpaths.image = ['$content', 'image'];
+jpaths.video = ['$content', 'video'];
 jpaths.attachments = ['attachmentList'];
 
 // For samples

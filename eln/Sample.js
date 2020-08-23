@@ -156,6 +156,7 @@ Your local changes will be lost.</p>`;
     createVar(sampleVar, 'elementalAnalysis');
     createVar(sampleVar, 'differentialScanningCalorimetry');
     createVar(sampleVar, 'image');
+    createVar(sampleVar, 'video');
     createVar(sampleVar, 'sampleCode');
     createVar(sampleVar, 'attachments');
     createVar(sampleVar, 'nucleic');
@@ -291,6 +292,7 @@ Your local changes will be lost.</p>`;
         droppedXPS: 'xps',
         droppedOverview: 'image',
         droppedImage: 'image',
+        droppedVideo: 'video',
         droppedGenbank: 'genbank',
         droppedOther: 'other',
       };
@@ -318,6 +320,7 @@ Your local changes will be lost.</p>`;
             'Differential Scanning Calorimetry (csv, tsv, txt, jcamp)',
           xray: 'Xray (cif, pdb)',
           image: 'Images (jpg, png or tiff)',
+          video: 'Videos (mp4, m4a, avi, wav)',
           other: 'Other',
         },
         {
