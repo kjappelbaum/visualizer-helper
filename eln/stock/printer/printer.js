@@ -3,7 +3,7 @@ define([
   './PrinterInstance',
   './printProcessors',
   './printServerFactory',
-  '../../../rest-on-couch/Roc'
+  '../../../rest-on-couch/Roc',
 ], function (API, Printer, processors, printServerFactory, Roc) {
   const SECOND = 1000;
   const MINUTE = 60 * SECOND;
@@ -31,27 +31,27 @@ define([
         printers = await printerRoc.view('entryByKind', {
           key: 'printer',
           varName: 'labelPrinters',
-          sort: (a, b) => b.$modificationDate - a.$modificationDate
+          sort: (a, b) => b.$modificationDate - a.$modificationDate,
         });
         printFormats = await formatsRoc.view('entryByKind', {
           key: 'printFormat',
           varName: 'labelPrintFormats',
-          sort: (a, b) => b.$modificationDate - a.$modificationDate
+          sort: (a, b) => b.$modificationDate - a.$modificationDate,
         });
 
         printServers = await printServerRoc.view('printServerByMacAddress', {
           varName: 'printServers',
-          sort: (a, b) => b.$modificationDate - a.$modificationDate
+          sort: (a, b) => b.$modificationDate - a.$modificationDate,
         });
         onlineServers = printServers.filter(
           (ps) =>
             ps.$content.isOnline !== false &&
-            Date.now() - ps.$modificationDate < LIMIT
+            Date.now() - ps.$modificationDate < LIMIT,
         );
         onlinePrinters = printers.filter((p) =>
           onlineServers.find(
-            (ps) => ps.$content.macAddress === p.$content.macAddress
-          )
+            (ps) => ps.$content.macAddress === p.$content.macAddress,
+          ),
         );
 
         await Promise.all(
@@ -72,7 +72,7 @@ define([
               .then(() => {
                 ps.triggerChange();
               });
-          })
+          }),
         );
 
         API.createData('allIds', Array.from(allIds));
@@ -99,7 +99,7 @@ define([
         const printServer = printServers.find(
           (ps) =>
             String(ps.$content.macAddress) ===
-            String(printer.$content.macAddress)
+            String(printer.$content.macAddress),
         );
         const p = new Printer(printer.$content, printServer.$content, opts);
         await p.print(printFormat.$content, data);
@@ -132,19 +132,23 @@ define([
         await formatsRoc.delete(format);
       },
 
+      async deletePrintServer(printServer) {
+        await printServerRoc.delete(printServer);
+      },
+
       // get online printers that can print a given format
       async getPrinters(format) {
         if (!format) return onlinePrinters;
         format = await formatsRoc.get(format);
         const onlineMacAdresses = onlinePrinters.map(
-          (ps) => ps.$content.macAddress
+          (ps) => ps.$content.macAddress,
         );
         return printers
           .filter((p) => onlineMacAdresses.includes(p.$content.macAddress))
           .filter((p) => {
             return (
               format.$content.models.filter(
-                (m) => String(m.name) === String(p.$content.model)
+                (m) => String(m.name) === String(p.$content.model),
               ).length > 0
             );
           });
@@ -155,16 +159,16 @@ define([
           var formats = printFormats.filter((f) => {
             return onlinePrinters.some((printer) =>
               f.$content.models.some(
-                (m) => String(m.name) === String(printer.$content.model)
-              )
+                (m) => String(m.name) === String(printer.$content.model),
+              ),
             );
           });
         } else {
           printer = await printerRoc.get(printer);
           formats = printFormats.filter((f) =>
             f.$content.models.some(
-              (m) => String(m.name) === String(printer.$content.model)
-            )
+              (m) => String(m.name) === String(printer.$content.model),
+            ),
           );
         }
         if (type) {
@@ -184,7 +188,7 @@ define([
           s.add(String(format.$content.type));
         }
         return Array.from(s);
-      }
+      },
     };
 
     await exports.refresh();
