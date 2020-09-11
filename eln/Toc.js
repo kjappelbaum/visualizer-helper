@@ -9,9 +9,19 @@ let defaultOptions = {
   viewName: 'sample_toc',
   filter: (entry) => !entry.value.hidden,
   sort: (a, b) => {
-    if (a.value.modified > b.value.modified) {
+    if (a.value.modified && a.value.modified > b.value.modified) {
       return -1;
-    } else if (a.value.modified < b.value.modified) {
+    } else if (
+      a.value.modificationDate &&
+      a.value.modificationDate > b.value.modificationDate
+    ) {
+      return -1;
+    } else if (a.value.modified && a.value.modified < b.value.modified) {
+      return 1;
+    } else if (
+      a.value.modificationDate &&
+      a.value.modificationDate < b.value.modificationDate
+    ) {
       return 1;
     } else {
       return 0;
