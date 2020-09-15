@@ -48,6 +48,7 @@ jpaths.chromatogram = ['$content', 'spectra', 'chromatogram'];
 jpaths.biology = ['$content', 'biology'];
 jpaths.xrd = ['$content', 'spectra', 'xrd'];
 jpaths.xps = ['$content', 'spectra', 'xps'];
+jpaths.isotherm = ['$content', 'spectra', 'isotherm'];
 jpaths.thermogravimetricAnalysis = [
   '$content',
   'spectra',

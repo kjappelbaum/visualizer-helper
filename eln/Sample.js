@@ -315,6 +315,7 @@ Your local changes will be lost.</p>`;
             'Thermogravimetric Analysis (csv, tsv, txt, jcamp)',
           xrd: 'Powerder XRD Analysis (csv, tsv, txt, jcamp)',
           xps: 'XPS (csv, tsv, txt, jcamp)',
+          isotherm: 'Isotherm (csv, tsv, txt, jcamp)',
           cyclicVoltammetry: 'Cyclic voltammetry (csv, tsv, txt, jcamp, pdf)',
           differentialScanningCalorimetry:
             'Differential Scanning Calorimetry (csv, tsv, txt, jcamp)',
