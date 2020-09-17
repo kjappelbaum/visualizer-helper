@@ -44,7 +44,7 @@ export class Spectrum2D {
     const {
       timeout = 1000,
       nbPositiveLevels = 10,
-      nbNegativeLevels = 10
+      nbNegativeLevels = 10,
     } = options;
     let zoomPositive = this.currentLevelPositive / 2 + 1;
     let zoomNegative = this.currentLevelNegative / 2 + 1;
@@ -55,18 +55,18 @@ export class Spectrum2D {
           contourLines: this.getContours(zoomPositive, {
             negative: false,
             timeout,
-            nbLevels: nbPositiveLevels
-          })
+            nbLevels: nbPositiveLevels,
+          }),
         },
         {
           type: 'contour',
           contourLines: this.getContours(zoomNegative, {
             negative: true,
             timeout,
-            nbLevels: nbNegativeLevels
-          })
-        }
-      ]
+            nbLevels: nbNegativeLevels,
+          }),
+        },
+      ],
     };
     return chart;
   }
@@ -75,13 +75,13 @@ export class Spectrum2D {
     const { negative = false, timeout = 1000, nbLevels = 10 } = options;
     const max = Math.max(
       Math.abs(this.minMax.maxZ),
-      Math.abs(this.minMax.minZ)
+      Math.abs(this.minMax.minZ),
     );
     let range = getRange(
       this.median * 3 * Math.pow(2, zoomLevel),
       max,
       nbLevels,
-      2
+      2,
     );
     if (negative) {
       range = range.map((value) => -value);
@@ -89,14 +89,14 @@ export class Spectrum2D {
 
     const contours = this.conrec.drawContour({
       levels: range,
-      timeout: timeout
+      timeout: timeout,
     });
     return {
       minX: this.minMax.minX,
       maxX: this.minMax.maxX,
       minY: this.minMax.minY,
       maxY: this.minMax.maxY,
-      segments: contours
+      segments: contours,
     };
   }
 }
@@ -104,8 +104,7 @@ export class Spectrum2D {
 export async function fromJcamp(jcamp) {
   const parsed = await convert(jcamp, {
     noContour: true,
-    xy: true
-  });
+  }).flatten[0];
   return new Spectrum2D(parsed.minMax);
 }
 

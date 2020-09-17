@@ -18,16 +18,16 @@ export async function getChartFromIR(experiment, options = {}) {
     let data = (await experiment.getChild(['jcamp', 'data'])).get();
     let jcamp = String(data);
 
-    let result = convert(jcamp, { xy: true });
-    let points = result.spectra[0].data[0];
+    let result = convert(jcamp).flatten[0];
+    let points = result.spectra[0].data;
     return {
       data: [
         {
           label: name,
           x: points.x,
-          y: points.y
-        }
-      ]
+          y: points.y,
+        },
+      ],
     };
   } else if (experiment.text) {
     let name =
@@ -36,16 +36,16 @@ export async function getChartFromIR(experiment, options = {}) {
     let text = String(data);
     let points = parseXY(String(text), {
       arrayType: 'xxyy',
-      uniqueX: true
+      uniqueX: true,
     });
     return {
       data: [
         {
           label: name,
           x: points[0],
-          y: points[1]
-        }
-      ]
+          y: points[1],
+        },
+      ],
     };
   } else {
     throw new Error('the file should be a jcamp or text');

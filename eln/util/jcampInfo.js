@@ -7,8 +7,8 @@ async function jcampInfo(value) {
 
   let parsed = convert(String(jcamp), {
     withoutXY: true,
-    keepRecordsRegExp: /.*/
-  });
+    keepRecordsRegExp: /.*/,
+  }).flatten[0];
 
   let data = [];
 
@@ -50,19 +50,19 @@ async function jcampInfo(value) {
         <table id='allParameters'>
             <tbody>
                 ${data
-    .map(
-      (datum) => `
+                  .map(
+                    (datum) => `
                     <tr>
                         <td class="limited"><b>${datum.label}</b></td>
                         <td><pre>${
-  datum.value.replace
-    ? datum.value.replace(/[\r\n]+$/, '')
-    : datum.value
-}</pre></td>
+                          datum.value.replace
+                            ? datum.value.replace(/[\r\n]+$/, '')
+                            : datum.value
+                        }</pre></td>
                     </tr>
-                `
-    )
-    .join('\n')}
+                `,
+                  )
+                  .join('\n')}
             </tbody>
         </table>
         <script>
@@ -87,7 +87,7 @@ async function jcampInfo(value) {
   UI.dialog(html, {
     width: 800,
     height: 600,
-    title: 'List of parameters'
+    title: 'List of parameters',
   });
 }
 
