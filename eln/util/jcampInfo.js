@@ -4,7 +4,6 @@ import { convert } from '../libs/jcampconverter';
 
 async function jcampInfo(value) {
   let jcamp = await DataObject.check(value.jcamp.data, true).get(true);
-
   let parsed = convert(String(jcamp), {
     withoutXY: true,
     keepRecordsRegExp: /.*/,
@@ -12,8 +11,8 @@ async function jcampInfo(value) {
 
   let data = [];
 
-  for (let key of Object.keys(parsed.info)) {
-    let value = parsed.info[key];
+  for (let key of Object.keys(parsed.meta)) {
+    let value = parsed.meta[key];
     if (Array.isArray(value)) {
       for (let i = 0; i < value.length; i++) {
         data.push({ label: `${key}.${i + 1}`, value: value[i] });
