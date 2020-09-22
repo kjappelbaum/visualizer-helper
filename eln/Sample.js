@@ -343,8 +343,12 @@ Your local changes will be lost.</p>`;
     var droppedDatas = API.getData(variableName);
     droppedDatas = droppedDatas.file || droppedDatas.str;
     if (converters) {
+      // a converter may generate many results
+      const newData = [];
       for (let droppedData of droppedDatas) {
-        if (!droppedData.filename.includes('.')) droppedData.filename += '.txt';
+        if (!droppedData.filename.includes('.')) {
+          droppedData.filename += '.txt';
+        }
         const extension = droppedData.filename
           .replace(/.*\./, '')
           .toLowerCase();
@@ -354,6 +358,25 @@ Your local changes will be lost.</p>`;
         }
         if (converters[kind]) {
           autoJcamp = false;
+
+          let converted = await converters[kind](droppedData.content);
+          if (!Array.isArray(converted)) {
+            converted = [converted];
+          }
+
+          for (let i = 1; i < converted.length; i++) {
+            newData.push({
+              filename: droppedData.filename.replace(
+                '.' + extension,
+                '_' + i + '.jdx',
+              ),
+              mimetype: 'chemical/x-jcamp-dx',
+              contentType: 'chemical/x-jcamp-dx',
+              encoding: 'utf8',
+              content: converted[i],
+            });
+          }
+
           droppedData.filename = droppedData.filename.replace(
             '.' + extension,
             '.jdx',
@@ -361,10 +384,13 @@ Your local changes will be lost.</p>`;
           droppedData.mimetype = 'chemical/x-jcamp-dx';
           droppedData.contentType = 'chemical/x-jcamp-dx';
           droppedData.encoding = 'utf8';
-          droppedData.content = await converters[kind](droppedData.content);
+          droppedData.content = converted[0];
         }
       }
+      droppedDatas = droppedDatas.concat(newData);
     }
+
+    console.log({ droppedDatas });
 
     /*
       Possible autoconvertion of text file to jcamp
