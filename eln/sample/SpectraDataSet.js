@@ -88,7 +88,6 @@ const SpectraConfigs = {
       entry.value.nbSpectra = entry.value.nbTGA;
     },
     getSpectra: (sample) => {
-      debugger;
       if (
         sample &&
         sample.$content &&
