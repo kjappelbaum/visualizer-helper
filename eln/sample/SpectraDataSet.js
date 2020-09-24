@@ -82,6 +82,57 @@ const SpectraConfigs = {
       displayXAxis: ['display', 'flip', 'main', 'sec'],
     },
   },
+  TGA: {
+    tocFilter: (entry) => entry.value.nbTGA && !entry.value.hidden,
+    tocCallback: (entry) => {
+      entry.value.nbSpectra = entry.value.nbTGA;
+    },
+    getSpectra: (sample) => {
+      debugger;
+      if (
+        sample &&
+        sample.$content &&
+        sample.$content.spectra.thermogravimetricAnalysis &&
+        Array.isArray(sample.$content.spectra.thermogravimetricAnalysis)
+      ) {
+        let spectra = sample.$content.spectra.thermogravimetricAnalysis;
+        return spectra;
+      } else {
+        return [];
+      }
+    },
+    chartPrefs: {
+      yLabel: 'Weight',
+      displayYAxis: ['display', 'main', 'sec'],
+      xLabel: 'Temperature',
+      displayXAxis: ['display', 'main', 'sec'],
+    },
+  },
+  DSC: {
+    tocFilter: (entry) => entry.value.nbDSC && !entry.value.hidden,
+    tocCallback: (entry) => {
+      entry.value.nbSpectra = entry.value.nbDSC;
+    },
+    getSpectra: (sample) => {
+      if (
+        sample &&
+        sample.$content &&
+        sample.$content.spectra &&
+        Array.isArray(sample.$content.spectra.differentialScanningCalorimetry)
+      ) {
+        let spectra = sample.$content.spectra.differentialScanningCalorimetry;
+        return spectra;
+      } else {
+        return [];
+      }
+    },
+    chartPrefs: {
+      yLabel: 'Heat flow',
+      displayYAxis: ['display', 'main', 'sec'],
+      xLabel: 'Temperature',
+      displayXAxis: ['display', 'main', 'sec'],
+    },
+  },
   '1H NMR': {
     tocFilter: (entry) => entry.value.nb1h && !entry.value.hidden,
     tocCallback: (entry) => {
