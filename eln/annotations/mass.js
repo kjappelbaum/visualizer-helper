@@ -2,16 +2,18 @@ function toAnnotations(peaks, options = {}) {
   var {
     fillColor = 'green',
     strokeColor = 'red',
-    yPosition = undefined
+    yPosition = undefined,
   } = options;
 
   if (!peaks) return [];
   let shouldRefresh = false;
-  let annotations = peaks.map((peak) => {
+
+  const annotations = [];
+  for (const peak of peaks) {
     if (!peak._highlight) {
       Object.defineProperty(peak, '_highlight', {
         enumerable: false,
-        writable: true
+        writable: true,
       });
       peak._highlight = Math.random();
       shouldRefresh = true;
@@ -23,7 +25,7 @@ function toAnnotations(peaks, options = {}) {
       type: 'rect',
       strokeColor: strokeColor,
       strokeWidth: 0,
-      fillColor: fillColor
+      fillColor: fillColor,
     };
     annotation.label = [
       {
@@ -34,24 +36,39 @@ function toAnnotations(peaks, options = {}) {
         position: {
           x: peak.mass,
           y: yPosition === undefined ? peak.intensity : yPosition,
-          dy: '-22px'
-        }
-      }
+          dy: '-22px',
+        },
+      },
     ];
     annotation.position = [
       {
         x: peak.mass - 1,
         y: yPosition === undefined ? peak.intensity : yPosition,
-        dy: '-20px'
+        dy: '-20px',
       },
       {
         x: peak.mass + 1,
         y: yPosition === undefined ? peak.intensity : yPosition,
-        dy: '-10px'
-      }
+        dy: '-10px',
+      },
     ];
-    return annotation;
-  });
+
+    if (peak.assignment) {
+      annotation.label.push({
+        text: peak.assignment,
+        size: '18px',
+        anchor: 'left',
+        color: 'green',
+        position: {
+          x: peak.mass,
+          y: yPosition === undefined ? peak.intensity : yPosition,
+          dy: '2px',
+        },
+      });
+    }
+
+    annotations.push(annotation);
+  }
 
   if (shouldRefresh) {
     peaks.triggerChange();
