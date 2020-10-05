@@ -56,9 +56,9 @@ define([
       queryOptions.mine = false;
 
       const entries = await this.roc.query('userAnalysisToc', queryOptions);
-      if (sampleID) {
+      /* if (sampleID) {
         return entries.filter((entry) => entry.$id[2].match(/^[0-9a-f]{32}$/i));
-      }
+      }*/
       return entries;
     }
 
@@ -126,13 +126,15 @@ define([
 });
 
 function loadTemplatesFromLocalStorage(viewID) {
-  return JSON.parse(localStorage.getItem(`templates-${viewID}`)) || [];
+  return (JSON.parse(localStorage.getItem(`templates-${viewID}`)) || []).filter(
+    (template) => template.value && template.value.name,
+  );
 }
 
 function loadTemplateFromLocalStorage(viewID, name) {
   let templates = loadTemplatesFromLocalStorage(viewID);
   for (let template of templates) {
-    if (template._id === String(name)) {
+    if (template.id === String(name)) {
       return template.data;
     }
   }
@@ -141,9 +143,7 @@ function loadTemplateFromLocalStorage(viewID, name) {
 
 function deleteTemplateFromLocalStorage(viewID, name) {
   let templates = loadTemplatesFromLocalStorage(viewID);
-  let currentTemplates = templates.filter(
-    (entry) => entry._id !== String(name),
-  );
+  let currentTemplates = templates.filter((entry) => entry.id !== String(name));
   localStorage.setItem(`templates-${viewID}`, JSON.stringify(currentTemplates));
 }
 
@@ -152,8 +152,10 @@ function saveTemplateToLocalStorage(viewID, name, data) {
   let template = templates.filter((entry) => entry._id === String(name))[0];
   if (!template) {
     template = {
-      _id: name,
-      $id: [undefined, undefined, undefined, name],
+      id: name,
+      value: {
+        name,
+      },
     };
     templates.push(template);
   }
