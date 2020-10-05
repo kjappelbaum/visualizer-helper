@@ -1,11 +1,10 @@
-
 define(['src/util/ui'], function (UI) {
   function showRecordInfo(record) {
     let html = '';
     html += `<style>
-            #ownerInfo {font-size:2em};
-            #ownerInfo h1 {font-size: 30px};
-            #ownerInfo th {text-align: left};
+            #ownerInfo {font-size:1.5em; }
+            #ownerInfo h1 {font-size: 2em; }
+            #ownerInfo th {text-align: left; }
         </style>`;
     html += '<div id="ownerInfo">';
     if (Array.isArray(record.$id)) {
@@ -32,16 +31,16 @@ define(['src/util/ui'], function (UI) {
                 <td>${new Date(record.$creationDate)}</td>
             </tr>
             <tr>
-                <th>Owner</th>
-                <td>${record.$owners[0]}</td>
-            </tr>
-            <tr>
                 <th>Last modification date</th>
                 <td>${new Date(record.$modificationDate)}</td>
             </tr>
             <tr>
                 <th>Last modified by</th>
                 <td>${record.$lastModification}</td>
+            </tr>
+            <tr>
+                <th>Owner</th>
+                <td>${record.$owners[0]}</td>
             </tr>
              <tr>
                 <th>Other owners</th>
@@ -51,14 +50,12 @@ define(['src/util/ui'], function (UI) {
         </table>`;
     html += '</div>';
 
-
     UI.dialog(html, {
       width: 800,
       height: 600,
-      title: 'Security record information'
+      title: 'Security record information',
     });
   }
 
   return showRecordInfo;
 });
-
