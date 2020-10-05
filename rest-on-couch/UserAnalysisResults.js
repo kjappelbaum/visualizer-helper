@@ -42,27 +42,20 @@ define([
         return;
       }
       const { sampleID = this.sampleID } = options;
+
       this.viewID = this.viewID || (await getViewInfo())._id;
-      var user = await this.roc.getUser();
-      if (!user || !user.username) return undefined;
-      let queryOptions = key
+      // var user = await this.roc.getUser();
+      const queryOptions = key
         ? {
-            key: [
-              user.username,
-              ['userAnalysisResults', this.viewID, sampleID, key],
-            ],
+            key: ['userAnalysisResults', this.viewID, sampleID, key],
           }
         : {
-            startkey: [
-              user.username,
-              ['userAnalysisResults', this.viewID, sampleID, '\u0000'],
-            ],
-            endkey: [
-              user.username,
-              ['userAnalysisResults', this.viewID, sampleID, '\uffff'],
-            ],
+            startkey: ['userAnalysisResults', this.viewID, sampleID, '\u0000'],
+            endkey: ['userAnalysisResults', this.viewID, sampleID, '\uffff'],
           };
-      var entries = await this.roc.view('entryByOwnerAndId', queryOptions);
+      queryOptions.mine = false;
+
+      const entries = await this.roc.query('userAnalysisToc', queryOptions);
       if (sampleID) {
         return entries.filter((entry) => entry.$id[2].match(/^[0-9a-f]{32}$/i));
       }
@@ -78,6 +71,7 @@ define([
      * @param {*} entry
      */
     async loadResult(entry) {
+      entry._id = entry.id;
       if (!this.roc) {
         return loadTemplateFromLocalStorage(this.viewID, String(entry._id));
       }
