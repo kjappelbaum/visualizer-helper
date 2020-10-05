@@ -63,6 +63,7 @@ define([
     }
 
     delete(entry) {
+      entry._id ||= entry.id;
       return this.roc.delete(entry);
     }
 
@@ -71,7 +72,7 @@ define([
      * @param {*} entry
      */
     async loadResult(entry) {
-      entry._id = entry.id;
+      entry._id ||= entry.id;
       if (!this.roc) {
         return loadTemplateFromLocalStorage(this.viewID, String(entry._id));
       }
