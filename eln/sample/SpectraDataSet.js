@@ -378,7 +378,7 @@ class SpectraDataSet {
         break;
       case 'addSelectedSamples':
         if (!API.getData('tocSelected')) {
-          API.showNotification('Please select at least one sample');
+          UI.showNotification('Please select at least one sample');
           return;
         }
         API.loading('loading', 'Loading spectra');
