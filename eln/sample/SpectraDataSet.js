@@ -377,16 +377,22 @@ class SpectraDataSet {
         }
         break;
       case 'addSelectedSamples':
+        API.loading('loading', 'Loading spectra');
         await this.addSelectedSamples(API.getData('tocSelected').resurrect());
+        API.stopLoading('loading');
         break;
       case 'addSample':
+        API.loading('loading', 'Loading spectra');
         await this.addSelectedSamples([action.value.resurrect()]);
+        API.stopLoading('loading');
         break;
       case 'addSpectrum':
+        API.loading('loading', 'Loading spectra');
         await this.addSpectrum(
           API.getData('tocClicked').resurrect(),
           action.value.resurrect(),
         );
+        API.stopLoading('loading');
         break;
       default:
     }
@@ -492,6 +498,7 @@ class SpectraDataSet {
 
   addSpectrumToSelected(spectrum, tocEntry, selectedSpectra) {
     if (spectrum.jcamp) {
+      API.loading('loading', 'Loading: ' + spectrum.jcamp.filename);
       let spectrumID = String(
         `${tocEntry.value.reference} / ${spectrum.jcamp.filename.replace(
           /.*\/(.*)\..*/,
