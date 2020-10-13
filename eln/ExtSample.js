@@ -34,6 +34,7 @@ class Sample {
               nmr: [],
               mass: [],
               ir: [],
+              chromatogram: [],
             },
             image: [],
           },
@@ -62,6 +63,7 @@ class Sample {
     API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
     API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
     API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
+    API.setVariable('chromatogram', sampleVar, ['$content', 'spectra', 'chromatogram']);
     API.setVariable('description', sampleVar, [
       '$content',
       'general',
