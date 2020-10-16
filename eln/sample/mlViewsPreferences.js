@@ -39,7 +39,7 @@ export const style = `
 </style>`;
 
 export const dataNormalization = `
-{% if memoryInfo.keepOriginal %}
+{% if keepOriginal %}
     <h1>Data normalization</h1>
     <table>
         <tr>
@@ -104,7 +104,7 @@ export const spectraDisplay = `
 <h1>Spectra display preferences</h1>
 
 <table>
-    {% if memoryInfo.keepOriginal %}
+    {% if keepOriginal %}
         <tr>
             <th>Display:</th>
             <td>
