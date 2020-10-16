@@ -31,14 +31,17 @@ define(['src/util/api'], function (API) {
     } else {
       spectraProcessor.setNormalization(preferences.normalization);
 
-      // code for rescaling
-      let scaleOptions = JSON.parse(JSON.stringify(preferences.scale));
-      scaleOptions.range = API.getData('ranges')
-        .resurrect()
-        .filter((range) => range.label === scaleOptions.range)[0];
-      scaleOptions.ids = ids;
+      if (preferences.scale) {
+        let scaleOptions = JSON.parse(JSON.stringify(preferences.scale));
+        scaleOptions.range = API.getData('ranges')
+          .resurrect()
+          .filter((range) => range.label === scaleOptions.range)[0];
+        scaleOptions.ids = ids;
 
-      API.createData('chart', spectraProcessor.getScaledChart(scaleOptions));
+        API.createData('chart', spectraProcessor.getScaledChart(scaleOptions));
+      } else {
+        API.createData('chart', spectraProcessor.getNormalizedChart({ ids }));
+      }
     }
 
     let chartPrefs = spectraDataSet.getChartPrefs();
