@@ -269,7 +269,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -652,7 +652,7 @@
           }
         ]
       },
-      "zindex": 5,
+      "zindex": 4,
       "css": [
         {
           "fontSize": [
@@ -930,7 +930,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/edition/onde/",
@@ -1198,7 +1198,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -1525,7 +1525,7 @@
           "jpath": []
         }
       ],
-      "zindex": 7,
+      "zindex": 6,
       "toolbar": {
         "custom": [
           [
@@ -1874,7 +1874,7 @@
         }
       ],
       "title": "Process all the actions",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/display/template-twig/",
@@ -2120,7 +2120,7 @@
         }
       ],
       "title": "",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -2213,17 +2213,6 @@
                 "formatter": "typerenderer",
                 "width": 300,
                 "hideColumn": []
-              },
-              {
-                "name": "A",
-                "jpath": [
-                  "ranges",
-                  "A",
-                  "integration"
-                ],
-                "formatter": "typerenderer",
-                "width": 100,
-                "rendererOptions": "toPrecision:6"
               },
               {
                 "name": "☑️",
@@ -2500,7 +2489,7 @@
           "name": "hoverRow"
         }
       ],
-      "zindex": 7,
+      "zindex": 6,
       "toolbar": {
         "custom": [
           [
@@ -2892,7 +2881,7 @@
         }
       ],
       "title": "Monitor modifications of spectraInDataset",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/science/spectra/spectra_displayer/",
@@ -3066,7 +3055,7 @@
                       ]
                     },
                     {
-                      "variable": "autocorrelationChart",
+                      "variable": "correlationChart",
                       "axis": "0",
                       "adaptTo": "none",
                       "plotcolor": [
@@ -3135,15 +3124,15 @@
         },
         "Preferences": {
           "position": {
-            "left": 76,
-            "top": 33
+            "left": 176,
+            "top": 0
           },
           "size": {
-            "width": 40,
-            "height": 40
+            "width": 46,
+            "height": 33
           },
           "zIndex": 0,
-          "display": false,
+          "display": true,
           "title": "Create new range by pressing ALT and then click at the beginning and the end of the range.",
           "bgColor": [
             255,
@@ -3290,7 +3279,7 @@
         },
         {
           "rel": "chart",
-          "name": "autocorrelationChart"
+          "name": "correlationChart"
         }
       ],
       "actions_in": [
@@ -3360,7 +3349,7 @@
         }
       ],
       "title": "Create new range by pressing ALT and then click at the beginning and the end of the range.",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/display/template-twig/",
@@ -3636,8 +3625,8 @@
           ]
         }
       ],
-      "title": "",
-      "zindex": 2
+      "title": "Preferences",
+      "zindex": 1
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -3901,7 +3890,7 @@
         }
       ],
       "title": "Recreate the data and charts based on the preferences",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -4292,7 +4281,7 @@
         }
       ],
       "title": "List of ranges",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -4556,7 +4545,7 @@
         }
       ],
       "title": "",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -4919,7 +4908,7 @@
         }
       ],
       "title": "Load / Save protocols",
-      "zindex": 5
+      "zindex": 4
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -5235,7 +5224,7 @@
         }
       ],
       "title": "Load and save preferences",
-      "zindex": 5
+      "zindex": 4
     },
     {
       "url": "modules/types/edition/quill_editor/",
@@ -5486,7 +5475,7 @@
       ],
       "title": "Free description",
       "richtext": "",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/edition/object_editor/",
@@ -5557,7 +5546,7 @@
           },
           "size": {
             "width": 63,
-            "height": 23
+            "height": 34
           },
           "zIndex": 0,
           "display": true,
@@ -5741,7 +5730,7 @@
         }
       ],
       "title": "",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -5765,7 +5754,7 @@
                 ]
               ],
               "script": [
-                "let value=this.action.value;\n\nswitch (this.action.name) {\n    case 'trackClicked': {\n        if (value.event.altKey && value.event.shiftKey) {\n\n            let key=Object.keys(value.data)[0];\n            let index=value.data[key].indexClosest;\n            let preferences=API.getData('preferences');\n            preferences.setChildSync(['display','autocorrelationIndex'],Number(index));\n        }\n        break;\n    }\n    case 'trackMove': {\n        let displayPreferences = API.getData('preferences').display.resurrect();\n        const trackMove = this.action.value.data.chart;\n        if (! trackMove || ! displayPreferences.trackingInfo || displayPreferences.original==='true') {\n            API.createData('trackAnnotations', []);\n            return;\n        }\n        const spectraProcessor=API.cache('spectraProcessor');\n        const annotations=spectraProcessor.getTrackAnnotation(trackMove.indexBefore)\n        API.createData('trackAnnotations', annotations)\n        break;\n    }\n    case 'SetTarget':\n        const preferences=API.getData('preferences');\n        preferences.scale.relative=true;\n        preferences.scale.targetID=this.action.value.id;\n        preferences.triggerChange();\n    //    API.getData('spectraInDataset').triggerChange()\n        break;\n    case 'downloadNormalizedMatrix':\n        const spectraProcessor = API.cache('spectraProcessor');\n        let tsv=spectraProcessor.getNormalizedTSV();\n        let fileSaver=await API.require('file-saver');\n        var blob = new Blob([tsv], {type: \"text/tab-separated-values;charset=utf-8\"});\n        fileSaver( blob, \"data.tsv\");\n        break;\n    default:\n}\n"
+                "let value=this.action.value;\n\nswitch (this.action.name) {\n    case 'trackClicked': {\n        if (value.event.altKey && value.event.shiftKey) {\n\n            let key=Object.keys(value.data)[0];\n            let index=value.data[key].indexClosest;\n            let preferences=API.getData('preferences');\n            preferences.setChildSync(['display','correlationIndex'],Number(index));\n        }\n        break;\n    }\n    case 'trackMove': {\n        let displayPreferences = API.getData('preferences').display.resurrect();\n        const trackMove = this.action.value.data.chart;\n        if (! trackMove || ! displayPreferences.trackingInfo || displayPreferences.original==='true') {\n            API.createData('trackAnnotations', []);\n            return;\n        }\n        const spectraProcessor=API.cache('spectraProcessor');\n        const annotations=spectraProcessor.getTrackAnnotation(trackMove.indexBefore)\n        API.createData('trackAnnotations', annotations)\n        break;\n    }\n    case 'SetTarget':\n        const preferences=API.getData('preferences');\n        preferences.scale.relative=true;\n        preferences.scale.targetID=this.action.value.id;\n        preferences.triggerChange();\n    //    API.getData('spectraInDataset').triggerChange()\n        break;\n    case 'downloadNormalizedMatrix':\n        const spectraProcessor = API.cache('spectraProcessor');\n        let tsv=spectraProcessor.getNormalizedTSV();\n        let fileSaver=await API.require('file-saver');\n        var blob = new Blob([tsv], {type: \"text/tab-separated-values;charset=utf-8\"});\n        fileSaver( blob, \"data.tsv\");\n        break;\n    default:\n}\n"
               ]
             }
           ],
@@ -6012,7 +6001,7 @@
         }
       ],
       "title": "Deal with other actions",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/display/template-twig/",
@@ -6532,7 +6521,7 @@
         }
       ],
       "title": "Manage the actions to deal with ranges",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -6798,7 +6787,8 @@
           ]
         }
       ],
-      "title": ""
+      "title": "",
+      "zindex": 1
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -7159,7 +7149,7 @@
         }
       ],
       "title": "List of calculations",
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/edition/object_editor/",
@@ -7413,7 +7403,8 @@
           ]
         }
       ],
-      "title": ""
+      "title": "",
+      "zindex": 1
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -7439,7 +7430,7 @@
                 ]
               ],
               "script": [
-                "const twigPreferences=`\n${Prefs.style}\n\n\n<div id='extendedForm'>\n    <form>\n    \n    ${Prefs.dataNormalization}\n\n    <h1>Scale / Relative</h1>\n    <table>\n        <tr>\n            <th>Method:</th>\n            <td>\n                <select name=\"scale.method\">\n                    <option value=\"\">None</option>\n                    <option value=\"max\">Same max value</option>\n                    <option value=\"min\">Same min value</option>\n                    <option value=\"minMax\">Same min / max value</option>\n                    <option value=\"range\">Same integral</option>\n                </select>\n            </td>\n        </tr>\n        <tr>\n            <th>Range:</th>\n            <td>\n                <select name=\"scale.range\">\n                    <option name=\"\">Full spectrum</option>\n                    {% for range in ranges %}\n                        <option name=\"{{range.label}}\">{{range.label}}</option>\n                    {% endfor %}\n                </select>\n            </td>\n        </tr>\n        <tr>\n            <th>Relative:</th>\n            <td>\n                <input type=\"checkbox\" name=\"scale.relative\">\n            </td>\n        </tr>\n    </table>\n    \n    ${Prefs.spectraDisplay}\n\n<!--\n    <center>\n         Auto-refresh <input type=\"checkbox\" name=\"display.autorefresh\" checked> \n        or <input type=\"submit\" value=\"Update data and chart\">\n    </center>\n-->\n    </form>\n</div>\n\n\n<script>\n    require(['vh/util/twigAdvancedForm'], function(AF) {\n        AF('extendedForm', {debug:false});\n    });\n</script>\n`\n\n\n\n\n\n\nAPI.createData('twigPreferences', twigPreferences);\n"
+                "const twigPreferences=`\n${Prefs.style}\n\n\n<div id='extendedForm'>\n    <form>\n    \n    ${Prefs.dataNormalization}\n\n    <h1>Scale / Relative</h1>\n    <table>\n        <tr>\n            <th>Method:</th>\n            <td>\n                <select name=\"scale.method\">\n                    <option value=\"\">None</option>\n                    <option value=\"max\">Same max value</option>\n                    <option value=\"min\">Same min value</option>\n                    <option value=\"minMax\">Same min / max value</option>\n                    <option value=\"range\">Same integral</option>\n                </select>\n            </td>\n        </tr>\n        <tr>\n            <th>Range:</th>\n            <td>\n                <select name=\"scale.range\">\n                    <option name=\"\">Full spectrum</option>\n                    {% for range in ranges %}\n                        <option name=\"{{range.label}}\">{{range.label}}</option>\n                    {% endfor %}\n                </select>\n            </td>\n        </tr>\n        <tr>\n            <th>Relative:</th>\n            <td>\n                <input type=\"checkbox\" name=\"scale.relative\">\n            </td>\n        </tr>\n    </table>\n    \n  \n\n<!--\n    <center>\n         Auto-refresh <input type=\"checkbox\" name=\"display.autorefresh\" checked> \n        or <input type=\"submit\" value=\"Update data and chart\">\n    </center>\n-->\n    </form>\n</div>\n\n\n<script>\n    require(['vh/util/twigAdvancedForm'], function(AF) {\n        AF('extendedForm', {debug:false});\n    });\n</script>\n`\n\nAPI.createData('twigPreferences', twigPreferences);\n\n\nAPI.createData('displayTwigPreferences', Prefs.displayTwigPreferences);\n\n"
               ]
             }
           ],
@@ -7673,278 +7664,8 @@
           ]
         }
       ],
-      "title": ""
-    },
-    {
-      "url": "modules/types/client_interaction/code_editor/",
-      "configuration": {
-        "sections": {},
-        "groups": {
-          "group": [
-            {
-              "mode": [
-                "html"
-              ],
-              "outputType": [
-                null
-              ],
-              "btnvalue": [
-                "Send script"
-              ],
-              "iseditable": [
-                [
-                  "editable"
-                ]
-              ],
-              "hasButton": [
-                [
-                  "button"
-                ]
-              ],
-              "variable": [
-                []
-              ],
-              "storeOnChange": [
-                [
-                  "store"
-                ]
-              ],
-              "debouncing": [
-                0
-              ],
-              "script": [
-                "<div>\n    <input type='radio' name='display.selection' value='all'>All\n    <input type='radio' name='display.selection' value='selected'>Selected\n    <input type='radio' name='display.selection' value='none'>None\n\n    {% if keepOriginal %}\n        <input type='radio' name='display.original' value='true'> Original data\n        <input type='radio' name='display.original' value='false'> Normalized data\n    {% else %}\n        <input type='hidden' name='display.original' value='false'>\n    {% endif %}\n    \n            <input type=\"checkbox\" name=\"display.boxplot\" checked>Box-plot\n            <span onclick=\"toggle(this);\">▶</span>\n            <div style=\"display: none\">\n                <b>Box plot preferences:</b><br>\n                Q2 stroke width: <input type=\"number\" step=\"any\" style=\"width:50px\" name=\"display.boxplotOptions.q2StrokeWidth\"> - color: <input type=\"color\" name=\"display.boxplotOptions.q2StrokeColor\"><br>\n                Q1/Q3 fill opacity: <input type=\"number\" step=\"any\" style=\"width:50px\" name=\"display.boxplotOptions.q13FillOpacity\"> - color: <input type=\"color\" name=\"display.boxplotOptions.q13FillColor\"><br>\n                min/max fill opacity: <input type=\"number\" step=\"any\" style=\"width:50px\" name=\"display.boxplotOptions.minMaxFillOpacity\"> - color: <input type=\"color\" name=\"display.boxplotOptions.minMaxFillColor\"><br>\n            </div>  \n        </td>\n    </tr>\n    <tr>\n        <th>\n            Display tracking info:\n        </th>\n        <td>\n            <input type=\"checkbox\" name=\"display.trackingInfo\">\n        </td>\n    </tr>\n    <tr>\n        <th>\n            Autocorrelation point index:\n        </th>\n        <td>\n            <input type=\"number\" name=\"display.autocorrelationIndex\">\n        </td>\n    </tr>\n\n<script>\n    function toggle(element) {\n        let nextStyle=element.nextElementSibling.style\n        if (nextStyle.display===\"none\") {\n            nextStyle.display = \"block\";\n            element.innerHTML='▼';\n        } else {\n            nextStyle.display = \"none\";\n            element.innerHTML='▶';\n        }\n    }\n</script>\n</div>"
-              ]
-            }
-          ],
-          "ace": [
-            {
-              "useSoftTabs": [
-                [
-                  "yes"
-                ]
-              ],
-              "tabSize": [
-                4
-              ]
-            }
-          ]
-        }
-      },
-      "layers": {
-        "Default layer": {
-          "position": {
-            "left": 0,
-            "top": 0
-          },
-          "size": {
-            "width": 20,
-            "height": 20
-          },
-          "zIndex": 0,
-          "display": false,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Default layer"
-        },
-        "Preferences": {
-          "position": {
-            "left": 139,
-            "top": 30
-          },
-          "size": {
-            "width": 58,
-            "height": 43
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Preferences"
-        },
-        "SaveLoadResults Admin": {
-          "position": {
-            "left": 0,
-            "top": 0
-          },
-          "size": {
-            "width": 20,
-            "height": 20
-          },
-          "zIndex": 0,
-          "display": false,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "SaveLoadResults Admin"
-        },
-        "Load and Process": {
-          "position": {
-            "left": 0,
-            "top": 0
-          },
-          "size": {
-            "width": 20,
-            "height": 20
-          },
-          "zIndex": 0,
-          "display": false,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Load and Process"
-        },
-        "Range admin": {
-          "position": {
-            "left": 0,
-            "top": 0
-          },
-          "size": {
-            "width": 20,
-            "height": 20
-          },
-          "zIndex": 0,
-          "display": false,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Range admin"
-        },
-        "Ranges selection": {
-          "position": {
-            "left": 0,
-            "top": 0
-          },
-          "size": {
-            "width": 20,
-            "height": 20
-          },
-          "zIndex": 0,
-          "display": false,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Ranges selection"
-        },
-        "SelectDataColumns": {
-          "position": {
-            "left": 0,
-            "top": 0
-          },
-          "size": {
-            "width": 20,
-            "height": 20
-          },
-          "zIndex": 0,
-          "display": false,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "SelectDataColumns"
-        }
-      },
-      "id": 26,
-      "vars_in": [
-        {}
-      ],
-      "actions_in": [
-        {}
-      ],
-      "vars_out": [
-        {
-          "event": "onEditorChange",
-          "rel": "data",
-          "jpath": [],
-          "name": "displayTemplate"
-        }
-      ],
-      "actions_out": [
-        {
-          "jpath": []
-        }
-      ],
-      "toolbar": {
-        "custom": [
-          [
-            {
-              "title": "",
-              "icon": "",
-              "action": "",
-              "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
-            }
-          ]
-        ],
-        "common": [
-          {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
-          }
-        ]
-      },
-      "css": [
-        {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
-        }
-      ],
-      "title": ""
+      "title": "",
+      "zindex": 1
     },
     {
       "url": "modules/types/display/template-twig/",
@@ -7979,12 +7700,12 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 109,
-            "top": 33
+            "left": 38,
+            "top": 36
           },
           "size": {
-            "width": 40,
-            "height": 51
+            "width": 69,
+            "height": 3
           },
           "zIndex": 0,
           "display": true,
@@ -7995,18 +7716,18 @@
             255,
             0
           ],
-          "wrapper": true,
+          "wrapper": false,
           "created": true,
           "name": "Default layer"
         },
         "Preferences": {
           "position": {
-            "left": 68,
+            "left": 62,
             "top": 61
           },
           "size": {
-            "width": 52,
-            "height": 26
+            "width": 86,
+            "height": 16
           },
           "zIndex": 0,
           "display": true,
@@ -8132,11 +7853,11 @@
           "name": "Default layer"
         }
       },
-      "id": 27,
+      "id": 26,
       "vars_in": [
         {
           "rel": "tpl",
-          "name": "displayTemplate"
+          "name": "displayTwigPreferences"
         },
         {
           "rel": "form",
@@ -8149,6 +7870,10 @@
         {
           "rel": "value",
           "name": "keepOriginal"
+        },
+        {
+          "rel": "value",
+          "name": "preferences"
         }
       ],
       "actions_in": [
@@ -8220,8 +7945,8 @@
           ]
         }
       ],
-      "title": "",
-      "zindex": 2
+      "title": "Preferences",
+      "zindex": 27
     }
   ],
   "variables": [
@@ -8276,7 +8001,7 @@
         "general": [
           {
             "script": [
-              "const [\n    Roc,\n    loadTwig,\n    UserAnalysisResults,\n    Toc,\n    SpectraDataSet,\n    libs,\n    RangesManager,\n] = await API.require([\n    'vh/rest-on-couch/Roc',\n    'vh/eln/templates/loadTwig',\n    'vh/rest-on-couch/UserAnalysisResults',\n    'vh/eln/Toc',\n    'vh/eln/sample/ml/SpectraDataSet',\n    'vh/eln/libs',\n    'vh/eln/sample/RangesManager',\n]);\n\nconst SpectraProcessor = (await API.require('SpectraProcessor')).SpectraProcessor;\nAPI.cache('spectraProcessor', new SpectraProcessor({}));\n\nif((typeof IframeBridge)!=='undefined') {\n    IframeBridge.onMessage(onMessage);\n    IframeBridge.ready();\n}\n\nasync function onMessage(data) {\n    if(data.type === 'tab.data') {\n        var couchDB = data.message.couchDB;\n        var uuid = data.message.uuid;\n        API.cache('couchDB', couchDB);\n        API.cache('uuid', uuid);\n        var roc = new Roc(couchDB);\n        API.cache('roc', roc);\n         \n        var userAnalysisResults = new UserAnalysisResults(roc, data.message.uuid);\n        API.cache(\"userAnalysisResults\", userAnalysisResults);\n        userAnalysisResults.refresh();\n        API.createData('description', '');\n        \n        \n        \n        const sampleToc = new Toc(roc);\n        sampleToc.initializeGroupForm();\n        API.cache('sampleToc', sampleToc);\n        \n        const spectraDataSet = new SpectraDataSet(roc, sampleToc);\n        spectraDataSet.initializeAnalysis();\n        API.cache('spectraDataSet', spectraDataSet);\n        \n    }\n}\n\nAPI.createData('spectraInDataset',[]);\n\nconst ranges = await API.createData('ranges', []);\nconst calculations = await API.createData('calculations', []);\nconst rangesManager = new RangesManager(ranges, {ensureLabel: true});\nAPI.cache('rangesManager', rangesManager);\n\nAPI.createData('preferences', {\n    data: {keep: true},\n    display: {\n        selection: 'selected',\n        original: false,\n        trackingInfo: false,\n        boxplot: false,\n        boxplotOptions: {\n            q13FillColor : '#000',\n            q13FillOpacity : 0.3,\n            q2StrokeColor : '#000',\n            q2StrokeWidth : 3,\n            minMaxFillColor : '#000',\n            minMaxFillOpacity : 0.15\n        },\n        autorefresh: true\n    },\n    normalization: {numberOfPoints: 1024},\n    scale: {\n        method: \"\",\n        targetID: \"\",\n        range: \"Full spectrum\",\n        relative: false\n    }\n});\nAPI.createData('description', '');\nAPI.createData('code', '');\nAPI.createData('codeReport', '');\nAPI.createData('reportTemplate', '');\n\nloadTwig(['org.cheminfo.sampleToc.chemical.default']);\n\nAPI.require('vh/util/tips').then( Tips => {\n    Tips.showTips();\n    Tips.addPageHelp({iconSize:'fa-4x'});\n});\n"
+              "const [\n    Roc,\n    loadTwig,\n    UserAnalysisResults,\n    Toc,\n    SpectraDataSet,\n    libs,\n    RangesManager,\n] = await API.require([\n    'vh/rest-on-couch/Roc',\n    'vh/eln/templates/loadTwig',\n    'vh/rest-on-couch/UserAnalysisResults',\n    'vh/eln/Toc',\n    'vh/eln/sample/ml/SpectraDataSet',\n    'vh/eln/libs',\n    'vh/eln/sample/RangesManager',\n]);\n\nconst SpectraProcessor = (await API.require('SpectraProcessor')).SpectraProcessor;\nAPI.cache('spectraProcessor', new SpectraProcessor({}));\n\nif((typeof IframeBridge)!=='undefined') {\n    IframeBridge.onMessage(onMessage);\n    IframeBridge.ready();\n}\n\nasync function onMessage(data) {\n    if(data.type === 'tab.data') {\n        var couchDB = data.message.couchDB;\n        var uuid = data.message.uuid;\n        API.cache('couchDB', couchDB);\n        API.cache('uuid', uuid);\n        var roc = new Roc(couchDB);\n        API.cache('roc', roc);\n         \n        var userAnalysisResults = new UserAnalysisResults(roc, data.message.uuid);\n        API.cache(\"userAnalysisResults\", userAnalysisResults);\n        userAnalysisResults.refresh();\n        API.createData('description', '');\n        \n        \n        \n        const sampleToc = new Toc(roc);\n        sampleToc.initializeGroupForm();\n        API.cache('sampleToc', sampleToc);\n        \n        const spectraDataSet = new SpectraDataSet(roc, sampleToc);\n        spectraDataSet.initializeAnalysis();\n        API.cache('spectraDataSet', spectraDataSet);\n        \n    }\n}\n\nAPI.createData('spectraInDataset',[]);\n\nconst ranges = await API.createData('ranges', []);\nconst calculations = await API.createData('calculations', []);\nconst rangesManager = new RangesManager(ranges, {ensureLabel: true});\nAPI.cache('rangesManager', rangesManager);\n\nAPI.createData('preferences', {\n    data: {keep: true},\n    display: {\n        selection: 'selected',\n        original: false,\n        trackingInfo: false,\n       correlationIndex: false,\n        boxplot: false,\n        boxplotOptions: {\n            q13FillColor : '#000',\n            q13FillOpacity : 0.3,\n            q2StrokeColor : '#000',\n            q2StrokeWidth : 3,\n            minMaxFillColor : '#000',\n            minMaxFillOpacity : 0.15\n        },\n        autorefresh: true\n    },\n    normalization: {numberOfPoints: 1024},\n    scale: {\n        method: \"\",\n        targetID: \"\",\n        range: \"Full spectrum\",\n        relative: false\n    }\n});\nAPI.createData('description', '');\nAPI.createData('code', '');\nAPI.createData('codeReport', '');\nAPI.createData('reportTemplate', '');\n\nloadTwig(['org.cheminfo.sampleToc.chemical.default']);\n\nAPI.require('vh/util/tips').then( Tips => {\n    Tips.showTips();\n    Tips.addPageHelp({iconSize:'fa-4x'});\n});\n"
             ]
           }
         ]

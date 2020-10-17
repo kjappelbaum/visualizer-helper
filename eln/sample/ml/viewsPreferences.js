@@ -146,10 +146,10 @@ export const spectraDisplay = `
     </tr>
     <tr>
         <th>
-            Autocorrelation point index:
+            Correlation point index:
         </th>
         <td>
-            <input type="number" name="display.autocorrelationIndex">
+            <input type="number" name="display.correlationIndex">
         </td>
     </tr>
 </table>
@@ -166,4 +166,49 @@ export const spectraDisplay = `
         }
     }
 </script>
+`;
+
+export const displayTwigPreferences = `
+<div>
+    <label>
+        <input type='radio' name='display.selection' value='all'>All
+    </label>
+    <label>
+        <input type='radio' name='display.selection' value='selected'>Selected
+    </label>
+    <label>
+        <input type='radio' name='display.selection' value='none'>None
+    </label>
+    
+    {% if keepOriginal %}
+        — 
+        <label>
+            <input type='radio' name='display.original' value='true'> Original data
+        </label>
+        <label>
+            <input type='radio' name='display.original' value='false'> Normalized data
+        </label>
+    {% else %}
+        <input type='hidden' name='display.original' value='false'>
+    {% endif %}
+    
+     — 
+    <label>
+      <input type="checkbox" name="display.boxplot" checked>Box-plot  
+    </label>
+    <div style="display:none">
+        Q2 stroke width: <input type="number" step="any" style="width:50px" name="display.boxplotOptions.q2StrokeWidth"> - color: <input type="color" name="display.boxplotOptions.q2StrokeColor"><br>
+        Q1/Q3 fill opacity: <input type="number" step="any" style="width:50px" name="display.boxplotOptions.q13FillOpacity"> - color: <input type="color" name="display.boxplotOptions.q13FillColor"><br>
+        min/max fill opacity: <input type="number" step="any" style="width:50px" name="display.boxplotOptions.minMaxFillOpacity"> - color: <input type="color" name="display.boxplotOptions.minMaxFillColor"><br>
+    </div>
+    
+    <label>
+        <input type="checkbox" name="display.trackingInfo">
+        Tracking info
+    </label>
+    
+    — Correlation:
+            <input type="number" name="display.correlationIndex" step="any" value="{{preferences.display.correlationIndex}}" style="width: 50px">
+            
+</div>
 `;

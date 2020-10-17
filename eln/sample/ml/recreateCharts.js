@@ -79,16 +79,16 @@ define(['src/util/api'], function (API) {
 
     if (
       preferences.display.original === 'true' ||
-      preferences.display.autocorrelationIndex === undefined
+      preferences.display.correlationIndex === undefined ||
+      preferences.display.correlationIndex === false
     ) {
-      API.createData('autocorrelationChart', {});
+      API.createData('correlationChart', {});
     } else {
-      console.log(preferences.display.autocorrelationIndex);
-      let autocorrelationChart = spectraProcessor.getAutocorrelationChart(
-        preferences.display.autocorrelationIndex,
+      console.log(preferences.display.correlationIndex);
+      let correlationChart = spectraProcessor.getAutocorrelationChart(
+        preferences.display.correlationIndex,
       );
-      console.log(autocorrelationChart);
-      API.createData('autocorrelationChart', autocorrelationChart);
+      API.createData('correlationChart', correlationChart);
     }
   }
   return recreateCharts;
