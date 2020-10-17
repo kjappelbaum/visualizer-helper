@@ -1,5 +1,5 @@
 define(['src/util/api', 'src/util/ui'], function (API, UI) {
-  async function selectedSpectraModifications() {
+  async function spectraInDatasetModifications() {
     const spectraProcessor = API.cache('spectraProcessor');
     const roc = API.cache('roc');
     const spectraInDataset = API.getData('spectraInDataset');
@@ -75,5 +75,5 @@ define(['src/util/api', 'src/util/ui'], function (API, UI) {
     // force an update of the chart taking into account the autorefresh
     API.doAction('UpdateChart');
   }
-  return selectedSpectraModifications;
+  return spectraInDatasetModifications;
 });
