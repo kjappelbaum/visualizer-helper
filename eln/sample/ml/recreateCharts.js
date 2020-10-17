@@ -21,9 +21,18 @@ define(['src/util/api'], function (API) {
 
     console.log('Update chart');
 
-    let ids = spectraProcessor.spectra
-      .filter((spectrum) => spectrum.meta.display)
-      .map((spectrum) => spectrum.id);
+    let ids = [];
+    switch (preferences.display.selection) {
+      case 'all':
+        ids = spectraProcessor.spectra.map((spectrum) => spectrum.id);
+        break;
+      case 'selected':
+        ids = spectraProcessor.spectra
+          .filter((spectrum) => spectrum.meta.display)
+          .map((spectrum) => spectrum.id);
+        break;
+      default:
+    }
 
     if (preferences.display.original === 'true') {
       let chart = spectraProcessor.getChart({ ids });

@@ -104,6 +104,14 @@ export const spectraDisplay = `
 <h1>Spectra display preferences</h1>
 
 <table>
+    <tr>
+        <th>Spectra:</th>
+        <td>
+            <input type='radio' name='display.selection' value='all'>All
+            <input type='radio' name='display.selection' value='selected'>Selected
+            <input type='radio' name='display.selection' value='none'>None
+        </td>
+    </tr>
     {% if keepOriginal %}
         <tr>
             <th>Display:</th>
