@@ -289,9 +289,9 @@ class SpectraDataSet {
     mainData.onChange((evt) => {
       if (evt.jpath[0] === varName) {
         localStorage.setItem(cookieName, analysisKind.analysis);
-        const selectedSpectra = API.getData('selectedSpectra');
-        selectedSpectra.length = 0;
-        selectedSpectra.triggerChange();
+        const spectraInDataset = API.getData('spectraInDataset');
+        spectraInDataset.length = 0;
+        spectraInDataset.triggerChange();
         const preferences = API.getData('preferences');
         if (preferences && preferences.normalization) {
           preferences.normalization.from = '';
@@ -332,19 +332,19 @@ class SpectraDataSet {
       case 'hideAllSpectra':
         this.hideAllSpectra();
         break;
-      case 'showOnlySpectra':
-        this.showOnlySpectra();
+      case 'selectCurrentSpectraSelection':
+        this.selectCurrentSpectraSelection();
         break;
       case 'forceRecolor': {
-        const selectedSpectra = API.getData('selectedSpectra');
-        selectedSpectra.forEach((spectrum) => (spectrum.color = ''));
-        recolor(selectedSpectra);
-        selectedSpectra.triggerChange();
+        const spectraInDataset = API.getData('spectraInDataset');
+        spectraInDataset.forEach((spectrum) => (spectrum.color = ''));
+        recolor(spectraInDataset);
+        spectraInDataset.triggerChange();
         break;
       }
       case 'selectCategory': {
-        const selectedSpectra = API.getData('selectedSpectra');
-        let firstSpectrum = DataObject.resurrect(selectedSpectra[0]);
+        const spectraInDataset = API.getData('spectraInDataset');
+        let firstSpectrum = DataObject.resurrect(spectraInDataset[0]);
 
         let path = [];
         if (firstSpectrum.toc && firstSpectrum.toc.value) {
@@ -358,22 +358,22 @@ class SpectraDataSet {
         if (!jpath) return;
         const getJpath = _.property([...path, ...jpath]);
 
-        for (let spectrum of selectedSpectra) {
+        for (let spectrum of spectraInDataset) {
           spectrum.category = getJpath(spectrum);
         }
-        selectedSpectra.triggerChange();
+        spectraInDataset.triggerChange();
       }
-      case 'showSpectra':
-        this.showSpectra();
+      case 'addSpectraToSelection':
+        this.addSpectraToSelection();
         break;
-      case 'showAllSpectra':
-        this.showAllSpectra();
+      case 'selectAllSpectra':
+        this.selectAllSpectra();
         break;
       case 'clearSelectedSamples':
         {
-          let selectedSpectra = API.getData('selectedSpectra');
-          selectedSpectra.length = 0;
-          selectedSpectra.triggerChange();
+          let spectraInDataset = API.getData('spectraInDataset');
+          spectraInDataset.length = 0;
+          spectraInDataset.triggerChange();
         }
         break;
       case 'addSelectedSamples':
@@ -413,74 +413,74 @@ class SpectraDataSet {
     API.createData('spectra', spectra);
   }
 
-  showAllSpectra() {
-    let selectedSpectra = API.getData('selectedSpectra');
-    for (let spectrum of selectedSpectra) {
-      spectrum.display = true;
+  selectAllSpectra() {
+    let spectraInDataset = API.getData('spectraInDataset');
+    for (let spectrum of spectraInDataset) {
+      spectrum.selected = true;
     }
-    API.getData('selectedSpectra').triggerChange();
+    API.getData('spectraInDataset').triggerChange();
   }
 
   hideAllSpectra() {
-    let selectedSpectra = API.getData('selectedSpectra');
-    for (let spectrum of selectedSpectra) {
-      spectrum.display = false;
+    let spectraInDataset = API.getData('spectraInDataset');
+    for (let spectrum of spectraInDataset) {
+      spectrum.selected = false;
     }
-    API.getData('selectedSpectra').triggerChange();
+    API.getData('spectraInDataset').triggerChange();
   }
 
-  showSpectra() {
-    let selectedSpectra = API.getData('selectedSpectra');
+  addSpectraToSelection() {
+    let spectraInDataset = API.getData('spectraInDataset');
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
-      let spectrum = selectedSpectra.filter(
+      let spectrum = spectraInDataset.filter(
         (spectrum) =>
           String(spectrum.id) === String(currentlySelectedSpectrum.id),
       )[0];
-      spectrum.display = true;
+      spectrum.selected = true;
     }
-    API.getData('selectedSpectra').triggerChange();
+    API.getData('spectraInDataset').triggerChange();
   }
 
-  showOnlySpectra() {
-    let selectedSpectra = API.getData('selectedSpectra');
-    if (!Array.isArray(selectedSpectra)) return;
-    for (let spectrum of selectedSpectra) {
-      spectrum.display = false;
+  selectCurrentSpectraSelection() {
+    let spectraInDataset = API.getData('spectraInDataset');
+    if (!Array.isArray(spectraInDataset)) return;
+    for (let spectrum of spectraInDataset) {
+      spectrum.selected = false;
     }
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
-      let spectrum = selectedSpectra.filter(
+      let spectrum = spectraInDataset.filter(
         (spectrum) =>
           String(spectrum.id) === String(currentlySelectedSpectrum.id),
       )[0];
-      spectrum.display = true;
+      spectrum.selected = true;
     }
-    API.getData('selectedSpectra').triggerChange();
+    API.getData('spectraInDataset').triggerChange();
   }
 
   hideSpectra() {
-    let selectedSpectra = API.getData('selectedSpectra');
+    let spectraInDataset = API.getData('spectraInDataset');
     let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
     for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
-      let spectrum = selectedSpectra.filter(
+      let spectrum = spectraInDataset.filter(
         (spectrum) =>
           String(spectrum.id) === String(currentlySelectedSpectrum.id),
       )[0];
-      spectrum.display = false;
+      spectrum.selected = false;
     }
-    API.getData('selectedSpectra').triggerChange();
+    API.getData('spectraInDataset').triggerChange();
   }
 
   addSpectrum(tocEntry, spectrum) {
-    let selectedSpectra = API.getData('selectedSpectra');
-    this.addSpectrumToSelected(spectrum, tocEntry, selectedSpectra);
-    recolor(selectedSpectra);
-    selectedSpectra.triggerChange();
+    let spectraInDataset = API.getData('spectraInDataset');
+    this.addSpectrumToSelected(spectrum, tocEntry, spectraInDataset);
+    recolor(spectraInDataset);
+    spectraInDataset.triggerChange();
   }
 
   async addSelectedSamples(tocSelected) {
-    let selectedSpectra = API.getData('selectedSpectra');
+    let spectraInDataset = API.getData('spectraInDataset');
     // count the number of sampleIDs to determine the number of colros
     let promises = [];
     for (let tocEntry of tocSelected) {
@@ -489,18 +489,18 @@ class SpectraDataSet {
           let spectra = this.spectraConfig.getSpectra(sample);
           for (let spectrum of spectra) {
             if (spectrum.jcamp && spectrum.jcamp.filename) {
-              this.addSpectrumToSelected(spectrum, tocEntry, selectedSpectra);
+              this.addSpectrumToSelected(spectrum, tocEntry, spectraInDataset);
             }
           }
         }),
       );
     }
     await Promise.all(promises);
-    recolor(selectedSpectra);
-    selectedSpectra.triggerChange();
+    recolor(spectraInDataset);
+    spectraInDataset.triggerChange();
   }
 
-  addSpectrumToSelected(spectrum, tocEntry, selectedSpectra) {
+  addSpectrumToSelected(spectrum, tocEntry, spectraInDataset) {
     if (spectrum.jcamp) {
       API.loading('loading', 'Loading: ' + spectrum.jcamp.filename);
       let spectrumID = String(
@@ -511,14 +511,15 @@ class SpectraDataSet {
       );
       let sampleID = String(tocEntry.id);
       if (
-        selectedSpectra.filter((spectrum) => String(spectrum.id) === spectrumID)
-          .length > 0
+        spectraInDataset.filter(
+          (spectrum) => String(spectrum.id) === spectrumID,
+        ).length > 0
       ) {
         return;
       }
       spectrum.sampleID = sampleID;
       spectrum.id = spectrumID;
-      spectrum.display = true;
+      spectrum.selected = true;
       for (let key in this.defaultAttributes) {
         spectrum[key] = this.defaultAttributes[key];
       }
@@ -528,16 +529,16 @@ class SpectraDataSet {
       spectrum.toc = tocEntry;
       spectrum.category = spectrum.sampleCode;
       spectrum._highlight = spectrumID;
-      selectedSpectra.push(spectrum);
+      spectraInDataset.push(spectrum);
     }
   }
 }
 
-function recolor(selectedSpectra) {
+function recolor(spectraInDataset) {
   // need to count the categories
   let categoryColors = {};
   let existingColors = 0;
-  for (let spectrum of selectedSpectra) {
+  for (let spectrum of spectraInDataset) {
     let category = String(spectrum.category);
     if (categoryColors[category] === undefined) {
       if (spectrum.color) {
@@ -560,7 +561,7 @@ function recolor(selectedSpectra) {
       categoryColors[key] = colors[i++];
     }
   }
-  for (let spectrum of selectedSpectra) {
+  for (let spectrum of spectraInDataset) {
     if (!spectrum.color) {
       spectrum.color = categoryColors[String(spectrum.category)];
     }

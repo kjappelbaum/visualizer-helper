@@ -2,10 +2,10 @@ define(['src/util/api', 'src/util/ui'], function (API, UI) {
   async function selectedSpectraModifications() {
     const spectraProcessor = API.cache('spectraProcessor');
     const roc = API.cache('roc');
-    const selectedSpectra = API.getData('selectedSpectra');
+    const spectraInDataset = API.getData('spectraInDataset');
     const preferences = JSON.parse(JSON.stringify(API.getData('preferences')));
 
-    let currentIDs = selectedSpectra.map((spectrum) => String(spectrum.id));
+    let currentIDs = spectraInDataset.map((spectrum) => String(spectrum.id));
     spectraProcessor.removeSpectraNotIn(currentIDs);
 
     try {
@@ -16,12 +16,14 @@ define(['src/util/api', 'src/util/ui'], function (API, UI) {
     }
 
     let promises = [];
-    for (let spectrum of selectedSpectra) {
+    for (let spectrum of spectraInDataset) {
       let id = String(spectrum.id);
       if (spectraProcessor.contains(id)) {
         let processorSpectrum = spectraProcessor.getSpectrum(id);
         processorSpectrum.meta.color = DataObject.resurrect(spectrum.color);
-        processorSpectrum.meta.display = DataObject.resurrect(spectrum.display);
+        processorSpectrum.meta.selected = DataObject.resurrect(
+          spectrum.selected,
+        );
         processorSpectrum.meta.category = DataObject.resurrect(
           spectrum.category,
         );
@@ -36,7 +38,7 @@ define(['src/util/api', 'src/util/ui'], function (API, UI) {
               meta: {
                 info: DataObject.resurrect(spectrum.toc),
                 color: DataObject.resurrect(spectrum.color),
-                display: DataObject.resurrect(spectrum.display),
+                selected: DataObject.resurrect(spectrum.selected),
                 category: DataObject.resurrect(spectrum.category),
               },
             });

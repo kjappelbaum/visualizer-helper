@@ -28,7 +28,7 @@ define(['src/util/api'], function (API) {
         break;
       case 'selected':
         ids = spectraProcessor.spectra
-          .filter((spectrum) => spectrum.meta.display)
+          .filter((spectrum) => spectrum.meta.selected)
           .map((spectrum) => spectrum.id);
         break;
       default:
