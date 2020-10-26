@@ -1016,7 +1016,7 @@
                       ]
                     },
                     {
-                      "variable": "correlationChart",
+                      "variable": "autocorrelationChart",
                       "axis": "0",
                       "adaptTo": "none",
                       "plotcolor": [
@@ -1346,7 +1346,7 @@
         },
         {
           "rel": "chart",
-          "name": "correlationChart"
+          "name": "autocorrelationChart"
         }
       ],
       "actions_in": [
@@ -4864,7 +4864,7 @@
                 ]
               ],
               "script": [
-                "const normalized = API.cache('spectraProcessor').getNormalizedData();\n\n\nconsole.log('Calculate PCA');\n\nlet spectraInDataset=API.getData('spectraInDataset');\n\nspectraInDataset.forEach( (entry) => entry.pcaModel=true);\n\nlet data=normalized.matrix;\nlet PCA = ML.PCA;\n\n\nconsole.time('PCA '+data.length+'x'+data[0].length);\n\nlet pca;\n\n// if we use method: 'covarianceMatrix' it is 100 times slower !\n// SVD is the default method\n\ntry {\n    if (true) { // Nipals is slower for 500 x 2000\n        pca = new PCA(data, {scale: true});\n    } else {\n        pca = new PCA(data, {scale: true, method:'NIPALS', nCompNIPALS:10});\n    }\n} catch (error) {\n    UI.showNotification(error, 'error');\n    return;\n}\n\nconsole.timeEnd('PCA '+data.length+'x'+data[0].length);\n\nAPI.cache('pca', pca);\n\nspectraInDataset.triggerChange();\n"
+                "const normalized = API.cache('spectraProcessor').getNormalizedData();\n\n\nconsole.log('Calculate PCA');\n\nlet spectraInDataset=API.getData('spectraInDataset');\n\nselectedSpectra.forEach( (entry) => entry.pcaModel=true);\n\nlet data=normalized.matrix;\nlet PCA = ML.PCA;\n\n\nconsole.time('PCA '+data.length+'x'+data[0].length);\n\nlet pca;\n\n// if we use method: 'covarianceMatrix' it is 100 times slower !\n// SVD is the default method\n\ntry {\n    if (true) { // Nipals is slower for 500 x 2000\n        pca = new PCA(data, {scale: true});\n    } else {\n        pca = new PCA(data, {scale: true, method:'NIPALS', nCompNIPALS:10});\n    }\n} catch (error) {\n    UI.showNotification(error, 'error');\n    return;\n}\n\nconsole.timeEnd('PCA '+data.length+'x'+data[0].length);\n\nAPI.cache('pca', pca);\n\nselectedSpectra.triggerChange();\n"
               ]
             }
           ],
@@ -8239,7 +8239,7 @@
           },
           "size": {
             "width": 53,
-            "height": 49
+            "height": 22
           },
           "zIndex": 0,
           "display": true,
@@ -16294,7 +16294,7 @@
                 ]
               ],
               "script": [
-                "let value=this.action.value;\n\nswitch (this.action.name) {\n    case 'trackClicked': {\n        if (value.event.altKey && value.event.shiftKey) {\n            let key=Object.keys(value.data)[0];\n            let index=value.data[key].indexClosest;\n            let preferences=API.getData('preferences');\n            preferences.setChildSync(['display','correlationIndex'],Number(index));\n        }\n        break;\n    }\n    case 'trackMove': {\n        let displayPreferences = API.getData('preferences').display.resurrect();\n        const trackMove = this.action.value.data.chart;\n        if (! trackMove || ! displayPreferences.trackingInfo || displayPreferences.original==='true') {\n            API.createData('trackAnnotations', []);\n            return;\n        }\n        const spectraProcessor=API.cache('spectraProcessor');\n        const annotations=spectraProcessor.getTrackAnnotation(trackMove.indexBefore)\n        API.createData('trackAnnotations', annotations)\n        break;\n    }\n    case 'downloadNormalizedMatrix':\n        const spectraProcessor = API.cache('spectraProcessor');\n        let tsv=spectraProcessor.getNormalizedText();\n        let fileSaver=await API.require('file-saver');\n        var blob = new Blob([tsv], {type: \"text/tab-separated-values;charset=utf-8\"});\n        fileSaver( blob, \"data.tsv\");\n        break;\n    default:\n}\n"
+                "let value=this.action.value;\n\nswitch (this.action.name) {\n    case 'trackClicked': {\n        if (value.event.altKey && value.event.shiftKey) {\n            let key=Object.keys(value.data)[0];\n            let index=value.data[key].indexClosest;\n            let preferences=API.getData('preferences');\n            preferences.setChildSync(['display','autocorrelationIndex'],Number(index));\n        }\n        break;\n    }\n    case 'trackMove': {\n        let displayPreferences = API.getData('preferences').display.resurrect();\n        const trackMove = this.action.value.data.chart;\n        if (! trackMove || ! displayPreferences.trackingInfo || displayPreferences.original==='true') {\n            API.createData('trackAnnotations', []);\n            return;\n        }\n        const spectraProcessor=API.cache('spectraProcessor');\n        const annotations=spectraProcessor.getTrackAnnotation(trackMove.indexBefore)\n        API.createData('trackAnnotations', annotations)\n        break;\n    }\n    case 'downloadNormalizedMatrix':\n        const spectraProcessor = API.cache('spectraProcessor');\n        let tsv=spectraProcessor.getNormalizedText();\n        let fileSaver=await API.require('file-saver');\n        var blob = new Blob([tsv], {type: \"text/tab-separated-values;charset=utf-8\"});\n        fileSaver( blob, \"data.tsv\");\n        break;\n    default:\n}\n"
               ]
             }
           ],
@@ -18762,7 +18762,7 @@
                 ]
               ],
               "script": [
-                "\nconst spectraInDataset = API.getData('spectraInDataset');\nlet firstSpectrum = DataObject.resurrect(spectraInDataset[0]);\n\nlet path=[];\nif (firstSpectrum.toc && firstSpectrum.toc.value) {\n    firstSpectrum=firstSpectrum.toc.value;\n}\n\nlet jpath = await UI.selectJpath(firstSpectrum, undefined, {\n    height: 500,\n});\nif (! jpath) return;\njpath=[...path,...jpath];\nconst getJpath = _.property(jpath);\n\n\nconsole.log(jpath);\n\nfor (let spectrum of spectraInDataset) {\n    spectrum.category=getJpath(spectrum);\n}\nspectraInDataset.triggerChange();\n\n"
+                "\nconst spectraInDataset = API.getData('spectraInDataset');\nlet firstSpectrum = DataObject.resurrect(spectraInDataset[0]);\n\nlet path=[];\nif (firstSpectrum.toc && firstSpectrum.toc.value) {\n    firstSpectrum=firstSpectrum.toc.value;\n}\n\nlet jpath = await UI.selectJpath(firstSpectrum, undefined, {\n    height: 500,\n});\nif (! jpath) return;\njpath=[...path,...jpath];\nconst getJpath = _.property(jpath);\n\n\nconsole.log(jpath);\n\nfor (let spectrum of spectraInDataset) {\n    spectrum.category=getJpath(spectrum);\n}\nselectedSpectra.triggerChange();\n\n"
               ]
             }
           ],
@@ -19882,7 +19882,7 @@
                 ]
               ],
               "script": [
-                "const twigPreferences=`\n${Prefs.style}\n\n<div id='extendedForm'>\n    <form>\n    \n    ${Prefs.dataNormalization}\n\n    ${Prefs.spectraDisplay}\n<!--\n    <center>\n         Auto-refresh <input type=\"checkbox\" name=\"display.autorefresh\" checked> \n        or <input type=\"submit\" value=\"Update data and chart\">\n    </center>\n-->\n    </form>\n</div>\n\n\n<script>\n    require(['vh/util/twigAdvancedForm'], function(AF) {\n        AF('extendedForm', {debug:false});\n    });\n</script>\n`;\n\n\nAPI.createData('twigPreferences', twigPreferences);\n"
+                "const twigPreferences=`\n\n${Prefs.style}\n\n<div id='extendedForm'>\n    <form>\n    \n    ${Prefs.dataNormalization}\n\n<!--\n    <center>\n         Auto-refresh <input type=\"checkbox\" name=\"display.autorefresh\" checked> \n        or <input type=\"submit\" value=\"Update data and chart\">\n    </center>\n-->\n    </form>\n</div>\n\n\n<script>\n    require(['vh/util/twigAdvancedForm'], function(AF) {\n        AF('extendedForm', {debug:false});\n    });\n</script>\n`;\n\n\nAPI.createData('twigPreferences', twigPreferences);\n\nAPI.createData('displayTwigPreferences', Prefs.displayTwigPreferences);\n\n\n"
               ]
             }
           ],
@@ -20228,6 +20228,776 @@
       ],
       "title": "",
       "zindex": 1
+    },
+    {
+      "url": "modules/types/display/template-twig/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "selectable": [
+                []
+              ],
+              "template": [
+                ""
+              ],
+              "modifyInForm": [
+                [
+                  "yes"
+                ]
+              ],
+              "debouncing": [
+                500
+              ],
+              "formOptions": [
+                [
+                  "keepFormValueIfDataUndefined"
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 38,
+            "top": 36
+          },
+          "size": {
+            "width": 69,
+            "height": 3
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Preferences",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": false,
+          "created": true,
+          "name": "Default layer"
+        },
+        "PCA": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "PCA"
+        },
+        "PCA Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "PCA Admin"
+        },
+        "PCA PC": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "PCA PC"
+        },
+        "Preferences": {
+          "position": {
+            "left": 67,
+            "top": 25
+          },
+          "size": {
+            "width": 65,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Preferences"
+        },
+        "Ellipse": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Ellipse"
+        },
+        "Debug": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Debug"
+        },
+        "Save Load Preferences": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Save Load Preferences"
+        },
+        "Load and Process": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Load and Process"
+        },
+        "PCA Offline": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "PCA Offline"
+        },
+        "PCA Offline Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "PCA Offline Admin"
+        },
+        "SelectCategory": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SelectCategory"
+        }
+      },
+      "id": 49,
+      "vars_in": [
+        {
+          "rel": "tpl",
+          "name": "displayTwigPreferences"
+        },
+        {
+          "rel": "form",
+          "name": "preferences"
+        },
+        {
+          "rel": "value",
+          "name": "ranges"
+        },
+        {
+          "rel": "value",
+          "name": "keepOriginal"
+        },
+        {
+          "rel": "value",
+          "name": "preferences"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "event": "onFormChanged",
+          "rel": "form",
+          "jpath": [],
+          "name": "changedPreferences"
+        },
+        {
+          "event": "onFormSubmitted",
+          "rel": "form",
+          "jpath": [],
+          "name": "UpdateChart"
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "Reload preferences",
+              "icon": "fa-tasks",
+              "action": "selectResultTemplate",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            },
+            {
+              "title": "Save preferences as template",
+              "icon": "fa-save",
+              "action": "saveResultTemplate",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              []
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Preferences",
+      "zindex": 27
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "text"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Send script"
+              ],
+              "iseditable": [
+                [
+                  "editable"
+                ]
+              ],
+              "hasButton": [
+                [
+                  "button"
+                ]
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                []
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                null
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "PCA": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "PCA"
+        },
+        "PCA Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "PCA Admin"
+        },
+        "PCA PC": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "PCA PC"
+        },
+        "Preferences": {
+          "position": {
+            "left": 139,
+            "top": 27
+          },
+          "size": {
+            "width": 48,
+            "height": 42
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Preferences"
+        },
+        "Ellipse": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Ellipse"
+        },
+        "Debug": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Debug"
+        },
+        "Save Load Preferences": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Save Load Preferences"
+        },
+        "Load and Process": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Load and Process"
+        },
+        "PCA Offline": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "PCA Offline"
+        },
+        "PCA Offline Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "PCA Offline Admin"
+        },
+        "SelectCategory": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SelectCategory"
+        }
+      },
+      "id": 50,
+      "vars_in": [
+        {
+          "rel": "data",
+          "name": "twigPreferences"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin",
+              "color": [
+                100,
+                100,
+                100,
+                1
+              ]
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
     }
   ],
   "variables": [
@@ -20239,12 +21009,12 @@
   ],
   "aliases": [
     {
-      "path": "../../github/cheminfo-js/visualizer-helper/0437fa1700f335d90c797b62b7e1a3dffa85e2cf",
-      "alias": "vhxx"
+      "path": "../../github/cheminfo-js/visualizer-helper/5b60d89f57e3084ab266493ac6de95439c368cc4",
+      "alias": "vh"
     },
     {
       "path": "http://localhost:9898/cheminfo-js/visualizer-helper/",
-      "alias": "vh"
+      "alias": "vhxx"
     },
     {
       "path": "../../lib/openchemlib-extended/1.3.1/openchemlib-extended",
@@ -20294,7 +21064,7 @@
         "general": [
           {
             "script": [
-              "if((typeof IframeBridge)==='undefined') {\n    let Grid=await require('src/main/grid');\n    Grid.setInitialLayerName('PCA Offline');\n}\n\n\nconst [\n    Roc,\n    loadTwig,\n    UserAnalysisResults,\n    Toc,\n    SpectraDataSet,\n    libs,\n    RangesManager,\n] = await API.require([\n    'vh/rest-on-couch/Roc',\n    'vh/eln/templates/loadTwig',\n    'vh/rest-on-couch/UserAnalysisResults',\n    'vh/eln/Toc',\n    'vh/eln/sample/ml/SpectraDataSet',\n    'vh/eln/libs',\n    'vh/eln/sample/RangesManager',\n]);\n\nconst SpectraProcessor = (await API.require('SpectraProcessor')).SpectraProcessor;\nAPI.cache('spectraProcessor', new SpectraProcessor({}));\n\nif((typeof IframeBridge)!=='undefined') {\n    IframeBridge.onMessage(onMessage);\n    IframeBridge.ready();\n} else {\n    const spectraDataSet = new SpectraDataSet(undefined, undefined, {\n        defaultAttributes: {\n            pcaModel: false\n        }\n    });\n    spectraDataSet.initializeAnalysis();\n    API.cache('spectraDataSet', spectraDataSet);\n}\n\nasync function onMessage(data) {\n    if(data.type === 'tab.data') {\n        var couchDB = data.message.couchDB;\n        var uuid = data.message.uuid;\n        API.cache('couchDB', couchDB);\n        API.cache('uuid', uuid);\n        var roc = new Roc(couchDB);\n        API.cache('roc', roc);\n         \n        var userAnalysisResults = new UserAnalysisResults(roc, data.message.uuid);\n        API.cache(\"userAnalysisResults\", userAnalysisResults);\n        userAnalysisResults.refresh();\n        API.createData('description', '');\n        \n        const sampleToc = new Toc(roc);\n        sampleToc.initializeGroupForm();\n        API.cache('sampleToc', sampleToc);\n        \n        const spectraDataSet = new SpectraDataSet(roc, sampleToc, {\n            defaultAttributes: {\n                pcaModel: false\n            }\n        });\n        spectraDataSet.initializeAnalysis({autoRefresh:false});\n        API.cache('spectraDataSet', spectraDataSet);\n    }\n}\n\nAPI.createData('spectraInDataset',[]);\n\nconst ranges = await API.createData('ranges', []);\nconst rangesManager = new RangesManager(ranges, {ensureLabel: true});\nAPI.cache('rangesManager', rangesManager);\n\n\nAPI.createData('preferences', {\n    data: {keep: true},\n    display: {\n        selection: 'selected',\n        original: false,\n        trackingInfo: false,\n       correlationIndex: false,\n        boxplot: false,\n        boxplotOptions: {\n            q13FillColor : '#000',\n            q13FillOpacity : 0.3,\n            q2StrokeColor : '#000',\n            q2StrokeWidth : 3,\n            minMaxFillColor : '#000',\n            minMaxFillOpacity : 0.15\n        },\n        autorefresh: true\n    },\n    normalization: {numberOfPoints: 1024},\n    pca: {\n        x:0,\n        y:1,\n        ellipse:true,\n        ellipseCategory:false,\n        sd:2,\n    }\n});\n\nloadTwig(['org.cheminfo.sampleToc.chemical.default']);\n\nAPI.require('vh/util/tips').then( Tips => {\n    Tips.showTips();\n    Tips.addPageHelp({iconSize:'fa-3x'});\n});\n"
+              "if((typeof IframeBridge)==='undefined') {\n    let Grid=await require('src/main/grid');\n    Grid.setInitialLayerName('PCA Offline');\n}\n\n\nconst [\n    Roc,\n    loadTwig,\n    UserAnalysisResults,\n    Toc,\n    SpectraDataSet,\n    libs,\n    RangesManager,\n] = await API.require([\n    'vh/rest-on-couch/Roc',\n    'vh/eln/templates/loadTwig',\n    'vh/rest-on-couch/UserAnalysisResults',\n    'vh/eln/Toc',\n    'vh/eln/sample/ml/SpectraDataSet',\n    'vh/eln/libs',\n    'vh/eln/sample/RangesManager',\n]);\n\nconst SpectraProcessor = (await API.require('SpectraProcessor')).SpectraProcessor;\nAPI.cache('spectraProcessor', new SpectraProcessor({}));\n\nif((typeof IframeBridge)!=='undefined') {\n    IframeBridge.onMessage(onMessage);\n    IframeBridge.ready();\n} else {\n    const spectraDataSet = new SpectraDataSet(undefined, undefined, {\n        defaultAttributes: {\n            pcaModel: false\n        }\n    });\n    spectraDataSet.initializeAnalysis();\n    API.cache('spectraDataSet', spectraDataSet);\n}\n\nasync function onMessage(data) {\n    if(data.type === 'tab.data') {\n        var couchDB = data.message.couchDB;\n        var uuid = data.message.uuid;\n        API.cache('couchDB', couchDB);\n        API.cache('uuid', uuid);\n        var roc = new Roc(couchDB);\n        API.cache('roc', roc);\n         \n        var userAnalysisResults = new UserAnalysisResults(roc, data.message.uuid);\n        API.cache(\"userAnalysisResults\", userAnalysisResults);\n        userAnalysisResults.refresh();\n        API.createData('description', '');\n        \n        const sampleToc = new Toc(roc);\n        sampleToc.initializeGroupForm();\n        API.cache('sampleToc', sampleToc);\n        \n        const spectraDataSet = new SpectraDataSet(roc, sampleToc, {\n            defaultAttributes: {\n                pcaModel: false\n            }\n        });\n        spectraDataSet.initializeAnalysis({autoRefresh:false});\n        API.cache('spectraDataSet', spectraDataSet);\n    }\n}\n\nAPI.createData('spectraInDataset',[]);\n\nconst ranges = await API.createData('ranges', []);\nconst rangesManager = new RangesManager(ranges, {ensureLabel: true});\nAPI.cache('rangesManager', rangesManager);\n\n\nAPI.createData('preferences', {\n    data: {keep: true},\n    display: {\n        selection: 'selected',\n        original: false,\n        trackingInfo: false,\n        boxplot: false,\n        boxplotOptions: {\n            q13FillColor : '#000',\n            q13FillOpacity : 0.3,\n            q2StrokeColor : '#000',\n            q2StrokeWidth : 3,\n            minMaxFillColor : '#000',\n            minMaxFillOpacity : 0.15\n        },\n        autorefresh: true\n    },\n    normalization: {numberOfPoints: 1024},\n    pca: {\n        x:0,\n        y:1,\n        ellipse:true,\n        ellipseCategory:false,\n        sd:2,\n    }\n});\n\nloadTwig(['org.cheminfo.sampleToc.chemical.default']);\n\nAPI.require('vh/util/tips').then( Tips => {\n    Tips.showTips();\n    Tips.addPageHelp({iconSize:'fa-3x'});\n});\n"
             ]
           }
         ]

@@ -169,33 +169,39 @@ export const spectraDisplay = `
 `;
 
 export const displayTwigPreferences = `
-<div>
-    <label>
-        <input type='radio' name='display.selection' value='all'>All
-    </label>
-    <label>
-        <input type='radio' name='display.selection' value='selected'>Selected
-    </label>
-    <label>
-        <input type='radio' name='display.selection' value='none'>None
-    </label>
+<style>
+    #displayPreferences select {
+        background-color: #DDD;
+        font-size: small;
+    }
+</style>
+<div id="displayPreferences">
+    Display:
+    <select name='display.selection'>
+        <option value="">None</option>
+        <option value="selected">Selected</option>
+        <option value="all">All</option>
+    </select>
     
     {% if keepOriginal %}
         — 
-        <label>
-            <input type='radio' name='display.original' value='true'> Original data
-        </label>
-        <label>
-            <input type='radio' name='display.original' value='false'> Normalized data
-        </label>
+        <select name='display.original'>
+            <option value="true">Original</option>
+            <option value="false">Normalized</option>
+        </select>
     {% else %}
         <input type='hidden' name='display.original' value='false'>
     {% endif %}
     
      — 
-    <label>
-      <input type="checkbox" name="display.boxplot" checked>Box-plot  
-    </label>
+    
+    Box-plot:
+    <select name='display.boxplot'>
+        <option value="">None</option>
+        <option value="selected">Selected</option>
+        <option value="all">All</option>
+    </select>
+        
     <div style="display:none">
         Q2 stroke width: <input type="number" step="any" style="width:50px" name="display.boxplotOptions.q2StrokeWidth"> - color: <input type="color" name="display.boxplotOptions.q2StrokeColor"><br>
         Q1/Q3 fill opacity: <input type="number" step="any" style="width:50px" name="display.boxplotOptions.q13FillOpacity"> - color: <input type="color" name="display.boxplotOptions.q13FillColor"><br>
@@ -208,7 +214,12 @@ export const displayTwigPreferences = `
     </label>
     
     — Correlation:
-            <input type="number" name="display.correlationIndex" step="any" value="{{preferences.display.correlationIndex}}" style="width: 50px">
+        <select name='display.correlation'>
+            <option value="">None</option>
+            <option value="selected">Selected</option>
+            <option value="all">All</option>
+        </select>
+        <input type="hidden" name="display.correlationIndex" step="any" value="{{preferences.display.correlationIndex}}" style="width: 50px">
             
 </div>
 `;

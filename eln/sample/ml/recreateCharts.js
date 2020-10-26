@@ -1,4 +1,4 @@
-define(['src/util/api'], function (API) {
+define(['src/util/api', 'src/util/ui'], function (API, UI) {
   async function recreateCharts(variable) {
     if (!API.getData('preferences')) return;
     const preferences = JSON.parse(JSON.stringify(API.getData('preferences')));
@@ -21,15 +21,17 @@ define(['src/util/api'], function (API) {
 
     console.log('Update chart');
 
+    const selectedIDs = spectraProcessor.spectra
+      .filter((spectrum) => spectrum.meta.selected)
+      .map((spectrum) => spectrum.id);
+
     let ids = [];
     switch (preferences.display.selection) {
       case 'all':
         ids = spectraProcessor.spectra.map((spectrum) => spectrum.id);
         break;
       case 'selected':
-        ids = spectraProcessor.spectra
-          .filter((spectrum) => spectrum.meta.selected)
-          .map((spectrum) => spectrum.id);
+        ids = selectedIDs;
         break;
       default:
     }
@@ -65,30 +67,64 @@ define(['src/util/api'], function (API) {
       spectraProcessor.getNormalizationAnnotations(),
     );
 
-    if (
-      preferences.display.original === 'true' ||
-      !preferences.display.boxplot
-    ) {
+    if (!preferences.display.boxplot) {
       API.createData('boxPlotAnnotations', []);
     } else {
-      const boxPlotAnnotations = spectraProcessor.getBoxPlotAnnotations(
-        preferences.display.boxplotOptions,
-      );
-      API.createData('boxPlotAnnotations', boxPlotAnnotations);
+      try {
+        const boxPlotAnnotations = spectraProcessor.getBoxPlotAnnotations({
+          ids:
+            preferences.display.boxplot === 'selected'
+              ? selectedIDs
+              : undefined,
+          boxplot: preferences.display.boxplotOptions,
+        });
+        API.createData('boxPlotAnnotations', boxPlotAnnotations);
+      } catch (e) {
+        UI.showNotification(e.toString(), 'warning');
+      }
     }
 
-    if (
-      preferences.display.original === 'true' ||
-      preferences.display.correlationIndex === undefined ||
-      preferences.display.correlationIndex === false
-    ) {
+    if (!preferences.display.correlation) {
       API.createData('correlationChart', {});
+      API.createData('correlationAnnotations', []);
     } else {
-      console.log(preferences.display.correlationIndex);
-      let correlationChart = spectraProcessor.getAutocorrelationChart(
+      preferences.display.correlationIndex = Number.parseInt(
         preferences.display.correlationIndex,
       );
+      if (!Number.isInteger(preferences.display.correlationIndex)) {
+        preferences.display.correlationIndex = Math.floor(
+          preferences.normalization.numberOfPoints / 2,
+        );
+      }
+
+      let correlationChart = spectraProcessor.getAutocorrelationChart(
+        preferences.display.correlationIndex,
+        {
+          ids:
+            preferences.display.correlation === 'selected'
+              ? selectedIDs
+              : undefined,
+        },
+      );
       API.createData('correlationChart', correlationChart);
+
+      const annotations = [];
+      annotations.push({
+        type: 'line',
+        position: [
+          {
+            x: preferences.display.correlationX,
+            y: '2000px',
+          },
+          {
+            x: preferences.display.correlationX,
+            y: '0px',
+          },
+        ],
+        strokeWidth: '2px',
+        strokeColor: 'yellow',
+      });
+      API.createData('correlationAnnotations', annotations);
     }
   }
   return recreateCharts;
