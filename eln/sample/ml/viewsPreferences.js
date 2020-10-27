@@ -223,3 +223,77 @@ export const displayTwigPreferences = `
             
 </div>
 `;
+
+export const tocOfflineTwig = `
+{% if tocClicked %}
+{%set data=tocClicked %}
+{% endif %}
+{% if tocHovered %}
+{%set data=tocHovered %}
+{% endif %}
+{% if tocSample %}
+{%set data=tocSample %}
+{% endif %}
+{%set value=data.value %}
+<style>
+#toc, #toc tbody  {
+    font-size: 1em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#toc h1 {
+    font-size:1.5em;
+    text-align: left;
+}
+#toc h2 {
+    font-size:1.2em;
+    text-align: center;
+}
+#toc td,  #toc th {
+    vertical-align: top;
+    text-align: left;
+}
+</style>
+
+{% macro showProperties(object) %}
+{% if object is iterable %}
+    <table>
+        {% for key, value in object %}
+        <tr>
+            <th>{{key}}</th>
+            <td>{{ _self.showProperties(value) }}</td>
+        </tr>
+        {% endfor %}  
+    </table>
+{% else %}
+    {% if object is same as (false) %}
+        <span style="color:red">✘</span>︎
+    {% elseif object is same as (true) %}
+         <span style="color:green">✔</span>
+    {% else %}
+        {{object}}
+    {% endif %}
+{% endif %}
+{% endmacro %}
+{% import _self as macros %}
+
+{% if value %}
+<div id='toc'>
+
+<h1>{{value.reference}}</h1>
+<h2>{{value.title}}</h2>
+<div class="molecule">
+    {{rendertype(value.ocl.value,{width:300, height:120, coordinates: value.ocl.coordinates},"oclID")}}
+</div>
+<table>
+    {% if value.misc %}
+        <tr>
+            <th>Meta information:</th>
+            <td>
+                {{ macros.showProperties(value.misc) }}
+            </td>           
+        </tr>
+    {% endif %}
+</table>
+</div>
+{% endif %}
+`;
