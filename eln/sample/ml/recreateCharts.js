@@ -68,17 +68,17 @@ define(['src/util/api', 'src/util/ui'], function (API, UI) {
     );
 
     if (!preferences.display.boxplot) {
-      API.createData('boxPlotAnnotations', []);
+      API.createData('boxPlotChart', []);
     } else {
       try {
-        const boxPlotAnnotations = spectraProcessor.getBoxPlotAnnotations({
+        const boxPlotChart = spectraProcessor.getBoxPlotChart({
           ids:
             preferences.display.boxplot === 'selected'
               ? selectedIDs
               : undefined,
           boxplot: preferences.display.boxplotOptions,
         });
-        API.createData('boxPlotAnnotations', boxPlotAnnotations);
+        API.createData('boxPlotChart', boxPlotChart);
       } catch (e) {
         UI.showNotification(e.toString(), 'warning');
       }

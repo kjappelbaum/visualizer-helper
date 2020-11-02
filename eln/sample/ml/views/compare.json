@@ -35,21 +35,11 @@
         "groups": {
           "group": [
             {
-              "debounce": [
-                100
-              ],
-              "limit": [
-                0
-              ],
-              "initialValue": [
-                ""
-              ],
-              "placeholder": [
-                "Enter filter"
-              ],
-              "fontSize": [
-                20
-              ]
+              "debounce": [100],
+              "limit": [0],
+              "initialValue": [""],
+              "placeholder": ["Enter filter"],
+              "fontSize": [20]
             }
           ]
         }
@@ -67,12 +57,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Search specific entry",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -89,12 +74,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Search specific entry",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -111,12 +91,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Search specific entry",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -133,12 +108,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -155,12 +125,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Search specific entry",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -177,12 +142,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Search specific entry",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -199,12 +159,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Search specific entry",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -217,9 +172,7 @@
           "name": "sampleToc"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "title": "Search specific entry",
       "vars_out": [
         {
@@ -242,31 +195,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              []
-            ]
+            "toolbar": [[]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "zindex": 1
@@ -288,59 +230,28 @@
                   "filterColumns"
                 ]
               ],
-              "copyPaste": [
-                []
-              ],
-              "copyPasteOptions": [
-                [
-                  "newRows"
-                ]
-              ],
-              "autoColumns": [
-                [
-                  "select"
-                ]
-              ],
-              "toolbar": [
-                []
-              ],
-              "colorjpath": [
-                []
-              ],
-              "slick.defaultColumnWidth": [
-                null
-              ],
-              "slick.rowHeight": [
-                null
-              ],
-              "slick.headerRowHeight": [
-                30
-              ],
-              "slick.selectionModel": [
-                "row"
-              ],
-              "idProperty": [
-                ""
-              ],
-              "filterType": [
-                "pref"
-              ],
+              "copyPaste": [[]],
+              "copyPasteOptions": [["newRows"]],
+              "autoColumns": [["select"]],
+              "toolbar": [[]],
+              "colorjpath": [[]],
+              "slick.defaultColumnWidth": [null],
+              "slick.rowHeight": [null],
+              "slick.headerRowHeight": [30],
+              "slick.selectionModel": ["row"],
+              "idProperty": [""],
+              "filterType": ["pref"],
               "filterRow": [
                 "// Documentation: https://github.com/NPellet/visualizer/blob/db85d9cc12c6204e4a3afb69bba6d695f6f8bad5/src/modules/types/edition/slick_grid/view.js#L918-L940"
               ],
-              "customJpaths": [
-                ""
-              ]
+              "customJpaths": [""]
             }
           ],
           "cols": [
             [
               {
                 "name": "Reference",
-                "jpath": [
-                  "value",
-                  "reference"
-                ],
+                "jpath": ["value", "reference"],
                 "editor": "none",
                 "forceType": "",
                 "formatter": "typerenderer",
@@ -353,10 +264,7 @@
               },
               {
                 "name": "Nb spectra",
-                "jpath": [
-                  "value",
-                  "nbSpectra"
-                ],
+                "jpath": ["value", "nbSpectra"],
                 "editor": "none",
                 "forceType": "",
                 "formatter": "typerenderer",
@@ -374,18 +282,8 @@
                 "name": "add",
                 "tooltip": "Add all spectra for this sample",
                 "icon": "fa-plus",
-                "backgroundColor": [
-                  255,
-                  255,
-                  255,
-                  1
-                ],
-                "color": [
-                  0,
-                  0,
-                  0,
-                  1
-                ],
+                "backgroundColor": [255, 255, 255, 1],
+                "color": [0, 0, 0, 1],
                 "action": "addSample",
                 "position": "end",
                 "clickMode": "text",
@@ -400,22 +298,12 @@
               }
             ]
           ],
-          "actionOutButtons": [
-            [
-              {}
-            ]
-          ],
+          "actionOutButtons": [[{}]],
           "data": [
             {
-              "saveInView": [
-                []
-              ],
-              "varname": [
-                ""
-              ],
-              "data": [
-                "[]"
-              ]
+              "saveInView": [[]],
+              "varname": [""],
+              "data": ["[]"]
             }
           ]
         }
@@ -433,12 +321,7 @@
           "zIndex": 0,
           "display": true,
           "title": "List of selected samples",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -455,12 +338,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of selected samples",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -477,12 +355,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of selected samples",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -499,12 +372,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -521,12 +389,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of selected samples",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -543,12 +406,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of selected samples",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -565,12 +423,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of selected samples",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -583,9 +436,7 @@
           "name": "sampleTocFiltered"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "title": "List of selected samples",
       "vars_out": [
         {
@@ -623,44 +474,28 @@
               "icon": "fa-sync",
               "action": "refresh",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             },
             {
               "title": "Add selected",
               "icon": "fa-plus",
               "action": "addSelectedSamples",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              []
-            ]
+            "toolbar": [[]]
           }
         ]
       },
       "zindex": 4,
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ]
     },
@@ -671,43 +506,21 @@
         "groups": {
           "group": [
             {
-              "hasButton": [
-                []
-              ],
-              "button_text": [
-                "Export"
-              ],
-              "debouncing": [
-                0
-              ],
-              "output": [
-                "modified"
-              ],
-              "mode": [
-                "schema"
-              ],
-              "schemaSource": [
-                "variable"
-              ],
-              "schema": [
-                "{}"
-              ],
-              "onchangeFilter": [
-                null
-              ]
+              "hasButton": [[]],
+              "button_text": ["Export"],
+              "debouncing": [0],
+              "output": ["modified"],
+              "mode": ["schema"],
+              "schemaSource": ["variable"],
+              "schema": ["{}"],
+              "onchangeFilter": [null]
             }
           ],
           "data": [
             {
-              "saveInView": [
-                []
-              ],
-              "varname": [
-                ""
-              ],
-              "data": [
-                "{}"
-              ]
+              "saveInView": [[]],
+              "varname": [""],
+              "data": ["{}"]
             }
           ]
         }
@@ -725,12 +538,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -747,12 +555,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -769,12 +572,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -791,12 +589,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -813,12 +606,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -835,12 +623,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -857,12 +640,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -879,9 +657,7 @@
           "name": "groupForm"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "title": "",
       "actions_out": [
         {
@@ -901,33 +677,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "zindex": 1
@@ -939,43 +702,21 @@
         "groups": {
           "group": [
             {
-              "hasButton": [
-                []
-              ],
-              "button_text": [
-                "Export"
-              ],
-              "debouncing": [
-                0
-              ],
-              "output": [
-                "modified"
-              ],
-              "mode": [
-                "schema"
-              ],
-              "schemaSource": [
-                "variable"
-              ],
-              "schema": [
-                "{}"
-              ],
-              "onchangeFilter": [
-                null
-              ]
+              "hasButton": [[]],
+              "button_text": ["Export"],
+              "debouncing": [0],
+              "output": ["modified"],
+              "mode": ["schema"],
+              "schemaSource": ["variable"],
+              "schema": ["{}"],
+              "onchangeFilter": [null]
             }
           ],
           "data": [
             {
-              "saveInView": [
-                []
-              ],
-              "varname": [
-                ""
-              ],
-              "data": [
-                "{}"
-              ]
+              "saveInView": [[]],
+              "varname": [""],
+              "data": ["{}"]
             }
           ]
         }
@@ -993,12 +734,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -1015,12 +751,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -1037,12 +768,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -1059,12 +785,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -1081,12 +802,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -1103,12 +819,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -1125,12 +836,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -1147,9 +853,7 @@
           "name": "analysisKind"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "title": "",
       "actions_out": [
         {
@@ -1169,33 +873,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "zindex": 1
@@ -1216,41 +907,17 @@
                   "editable"
                 ]
               ],
-              "copyPaste": [
-                []
-              ],
-              "copyPasteOptions": [
-                [
-                  "newRows"
-                ]
-              ],
-              "autoColumns": [
-                []
-              ],
-              "toolbar": [
-                []
-              ],
-              "colorjpath": [
-                []
-              ],
-              "slick.defaultColumnWidth": [
-                null
-              ],
-              "slick.rowHeight": [
-                null
-              ],
-              "slick.headerRowHeight": [
-                30
-              ],
-              "slick.selectionModel": [
-                "row"
-              ],
-              "idProperty": [
-                ""
-              ],
-              "filterType": [
-                "pref"
-              ],
+              "copyPaste": [[]],
+              "copyPasteOptions": [["newRows"]],
+              "autoColumns": [[]],
+              "toolbar": [[]],
+              "colorjpath": [[]],
+              "slick.defaultColumnWidth": [null],
+              "slick.rowHeight": [null],
+              "slick.headerRowHeight": [30],
+              "slick.selectionModel": ["row"],
+              "idProperty": [""],
+              "filterType": ["pref"],
               "filterRow": [
                 "// Documentation: https://github.com/NPellet/visualizer/blob/db85d9cc12c6204e4a3afb69bba6d695f6f8bad5/src/modules/types/edition/slick_grid/view.js#L918-L940"
               ],
@@ -1276,9 +943,7 @@
               },
               {
                 "name": "Info",
-                "jpath": [
-                  "info"
-                ],
+                "jpath": ["info"],
                 "editor": "none",
                 "forceType": "",
                 "formatter": "typerenderer",
@@ -1296,18 +961,8 @@
                 "name": "Add",
                 "tooltip": "Add spectrum",
                 "icon": "fa-plus",
-                "backgroundColor": [
-                  255,
-                  255,
-                  255,
-                  1
-                ],
-                "color": [
-                  0,
-                  0,
-                  0,
-                  1
-                ],
+                "backgroundColor": [255, 255, 255, 1],
+                "color": [0, 0, 0, 1],
                 "action": "addSpectrum",
                 "position": "end",
                 "clickMode": "background",
@@ -1322,22 +977,12 @@
               }
             ]
           ],
-          "actionOutButtons": [
-            [
-              {}
-            ]
-          ],
+          "actionOutButtons": [[{}]],
           "data": [
             {
-              "saveInView": [
-                []
-              ],
-              "varname": [
-                ""
-              ],
-              "data": [
-                "[]"
-              ]
+              "saveInView": [[]],
+              "varname": [""],
+              "data": ["[]"]
             }
           ]
         }
@@ -1355,12 +1000,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Available spectra",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1377,12 +1017,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Available spectra",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1399,12 +1034,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Available spectra",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1421,12 +1051,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -1443,12 +1068,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Available spectra",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1465,12 +1085,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Available spectra",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1487,12 +1102,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Available spectra",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1534,31 +1144,20 @@
               "icon": "fa-eraser",
               "action": "addSpectrum",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              []
-            ]
+            "toolbar": [[]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ]
     },
@@ -1569,20 +1168,9 @@
         "groups": {
           "group": [
             {
-              "display": [
-                [
-                  "editor",
-                  "buttons"
-                ]
-              ],
-              "execOnLoad": [
-                []
-              ],
-              "asyncAwait": [
-                [
-                  "top"
-                ]
-              ],
+              "display": [["editor", "buttons"]],
+              "execOnLoad": [[]],
+              "asyncAwait": [["top"]],
               "script": [
                 "console.log(this.action);\nconst roc=API.cache('roc');\n\nconst spectraDataSet=API.cache('spectraDataSet');\n\nswitch (this.action.name) {\n    default:\n        await spectraDataSet.processAction(this.action);\n}\n\n"
               ]
@@ -1625,12 +1213,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Process all the actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1647,12 +1230,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Process all the actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1669,12 +1247,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Process all the actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1691,12 +1264,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Process all the actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -1713,12 +1281,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Process all the actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1735,12 +1298,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Process all the actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1757,21 +1315,14 @@
           "zIndex": 0,
           "display": false,
           "title": "Process all the actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
         }
       },
       "id": 6,
-      "vars_in": [
-        {}
-      ],
+      "vars_in": [{}],
       "actions_in": [
         {
           "rel": "execute",
@@ -1844,33 +1395,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Process all the actions",
@@ -1883,23 +1421,11 @@
         "groups": {
           "group": [
             {
-              "selectable": [
-                []
-              ],
-              "template": [
-                ""
-              ],
-              "modifyInForm": [
-                []
-              ],
-              "debouncing": [
-                0
-              ],
-              "formOptions": [
-                [
-                  "keepFormValueIfDataUndefined"
-                ]
-              ]
+              "selectable": [[]],
+              "template": [""],
+              "modifyInForm": [[]],
+              "debouncing": [0],
+              "formOptions": [["keepFormValueIfDataUndefined"]]
             }
           ]
         }
@@ -1917,12 +1443,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            242,
-            204,
-            1
-          ],
+          "bgColor": [255, 242, 204, 1],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -1939,12 +1460,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1961,12 +1477,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -1983,12 +1494,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -2005,12 +1511,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2027,12 +1528,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            242,
-            204,
-            1
-          ],
+          "bgColor": [255, 242, 204, 1],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -2049,12 +1545,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2071,9 +1562,7 @@
           "name": "tocHovered"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -2092,31 +1581,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              []
-            ]
+            "toolbar": [[]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "",
@@ -2138,45 +1616,17 @@
                   "editable"
                 ]
               ],
-              "copyPaste": [
-                []
-              ],
-              "copyPasteOptions": [
-                [
-                  "newRows"
-                ]
-              ],
-              "autoColumns": [
-                [
-                  "remove"
-                ]
-              ],
-              "toolbar": [
-                []
-              ],
-              "colorjpath": [
-                [
-                  "bgcolor"
-                ]
-              ],
-              "slick.defaultColumnWidth": [
-                null
-              ],
-              "slick.rowHeight": [
-                null
-              ],
-              "slick.headerRowHeight": [
-                30
-              ],
-              "slick.selectionModel": [
-                "row"
-              ],
-              "idProperty": [
-                ""
-              ],
-              "filterType": [
-                "pref"
-              ],
+              "copyPaste": [[]],
+              "copyPasteOptions": [["newRows"]],
+              "autoColumns": [["remove"]],
+              "toolbar": [[]],
+              "colorjpath": [["bgcolor"]],
+              "slick.defaultColumnWidth": [null],
+              "slick.rowHeight": [null],
+              "slick.headerRowHeight": [30],
+              "slick.selectionModel": ["row"],
+              "idProperty": [""],
+              "filterType": ["pref"],
               "filterRow": [
                 "if (this.event==='rowsChanged') {\n    let targetID=String(API.getData('preferences').scale.targetID);\n    for (var i=0; i<this.rows.length; i++) {\n        var row=this.rows[i];\n        row.item.bgcolor = String(row.item.id) === targetID ? '#98F274' : undefined;\n    }\n    rerender();\n}\n"
               ],
@@ -2189,26 +1639,20 @@
             [
               {
                 "name": "Identifier",
-                "jpath": [
-                  "id"
-                ],
+                "jpath": ["id"],
                 "formatter": "typerenderer",
                 "width": 188
               },
               {
                 "name": "Category",
-                "jpath": [
-                  "category"
-                ],
+                "jpath": ["category"],
                 "editor": "string",
                 "formatter": "typerenderer",
                 "width": 170
               },
               {
                 "name": "Info",
-                "jpath": [
-                  "info"
-                ],
+                "jpath": ["info"],
                 "editor": "none",
                 "formatter": "typerenderer",
                 "width": 300,
@@ -2216,9 +1660,7 @@
               },
               {
                 "name": "☑️",
-                "jpath": [
-                  "selected"
-                ],
+                "jpath": ["selected"],
                 "editor": "boolean",
                 "forceType": "boolean",
                 "formatter": "typerenderer",
@@ -2226,9 +1668,7 @@
               },
               {
                 "name": "Color",
-                "jpath": [
-                  "color"
-                ],
+                "jpath": ["color"],
                 "editor": "color",
                 "forceType": "color",
                 "formatter": "typerenderer",
@@ -2245,18 +1685,8 @@
                 "name": "setTarget",
                 "tooltip": "Set target for relative spectra",
                 "icon": "fa-bullseye",
-                "backgroundColor": [
-                  255,
-                  255,
-                  255,
-                  0
-                ],
-                "color": [
-                  0,
-                  0,
-                  0,
-                  1
-                ],
+                "backgroundColor": [255, 255, 255, 0],
+                "color": [0, 0, 0, 1],
                 "action": "SetTarget",
                 "position": "end",
                 "clickMode": "text",
@@ -2271,22 +1701,12 @@
               }
             ]
           ],
-          "actionOutButtons": [
-            [
-              {}
-            ]
-          ],
+          "actionOutButtons": [[{}]],
           "data": [
             {
-              "saveInView": [
-                []
-              ],
-              "varname": [
-                ""
-              ],
-              "data": [
-                "[]"
-              ]
+              "saveInView": [[]],
+              "varname": [""],
+              "data": ["[]"]
             }
           ]
         }
@@ -2304,12 +1724,7 @@
           "zIndex": 0,
           "display": true,
           "title": "List of spectra in dataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2326,12 +1741,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of spectra in dataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2348,12 +1758,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of spectra in dataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2370,12 +1775,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of spectra in dataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -2392,12 +1792,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of spectra in dataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2414,12 +1809,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of spectra in dataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2436,12 +1826,7 @@
           "zIndex": 0,
           "display": true,
           "title": "List of spectra in dataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2469,9 +1854,7 @@
         {
           "event": "onHover",
           "rel": "row",
-          "jpath": [
-            "toc"
-          ],
+          "jpath": ["toc"],
           "name": "tocHovered"
         },
         {
@@ -2498,129 +1881,76 @@
               "icon": "fa-eraser",
               "action": "clearSelectedSamples",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             },
             {
               "title": "Select category",
               "icon": "fa-dot-circle",
               "action": "selectCategory",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             },
             {
               "title": "Download normalized matrix",
               "icon": "fa-download",
               "action": "downloadNormalizedMatrix",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             },
             {
               "title": "Recolor spectra based on category",
               "icon": "fa-palette",
               "action": "forceRecolor",
               "position": "begin",
-              "color": [
-                103,
-                78,
-                167,
-                1
-              ]
+              "color": [103, 78, 167, 1]
             },
             {
               "title": "Select all spectra",
               "icon": "fa-eye",
               "action": "selectAllSpectra",
               "position": "begin",
-              "color": [
-                56,
-                118,
-                29,
-                1
-              ]
+              "color": [56, 118, 29, 1]
             },
             {
               "title": "Append to selected spectra",
               "icon": "fa-plus",
               "action": "addSpectraToSelection",
               "position": "begin",
-              "color": [
-                56,
-                118,
-                29,
-                1
-              ]
+              "color": [56, 118, 29, 1]
             },
             {
               "title": "Select only current spectra",
               "icon": "fa-bullseye",
               "action": "selectCurrentSpectraSelection",
               "position": "begin",
-              "color": [
-                180,
-                95,
-                6,
-                1
-              ]
+              "color": [180, 95, 6, 1]
             },
             {
               "title": "Remove spectra from current selection",
               "icon": "fa-minus",
               "action": "hideSpectra",
               "position": "begin",
-              "color": [
-                153,
-                0,
-                0,
-                1
-              ]
+              "color": [153, 0, 0, 1]
             },
             {
               "title": "Unselect all spectra",
               "icon": "fa-eye-slash",
               "action": "hideAllSpectra",
               "position": "begin",
-              "color": [
-                153,
-                0,
-                0,
-                1
-              ]
+              "color": [153, 0, 0, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Export Data"
-              ]
-            ]
+            "toolbar": [["Export Data"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ]
     },
@@ -2631,30 +1961,15 @@
         "groups": {
           "group": [
             {
-              "display": [
-                [
-                  "editor",
-                  "buttons"
-                ]
-              ],
-              "execOnLoad": [
-                []
-              ],
-              "asyncAwait": [
-                [
-                  "top"
-                ]
-              ],
+              "display": [["editor", "buttons"]],
+              "execOnLoad": [[]],
+              "asyncAwait": [["top"]],
               "script": [
                 "const spectraInDatasetModifications = await API.require('vh/eln/sample/ml/spectraInDatasetModifications');\n\nspectraInDatasetModifications();\n\n"
               ]
             }
           ],
-          "libs": [
-            [
-              {}
-            ]
-          ],
+          "libs": [[{}]],
           "buttons": [
             [
               {
@@ -2680,12 +1995,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Monitor modifications of spectraInDataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2702,12 +2012,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Monitor modifications of spectraInDataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2724,12 +2029,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Monitor modifications of spectraInDataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2746,12 +2046,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Monitor modifications of spectraInDataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -2768,12 +2063,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Monitor modifications of spectraInDataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2790,12 +2080,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Monitor modifications of spectraInDataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2812,12 +2097,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Monitor modifications of spectraInDataset",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -2830,9 +2110,7 @@
           "name": "spectraInDataset"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -2851,33 +2129,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Monitor modifications of spectraInDataset",
@@ -2893,44 +2158,17 @@
               "groups": {
                 "graph": [
                   {
-                    "url": [
-                      ""
-                    ],
-                    "zoom": [
-                      "x"
-                    ],
-                    "wheelAction": [
-                      "zoomYMousePos"
-                    ],
-                    "wheelbaseline": [
-                      0
-                    ],
-                    "fullOut": [
-                      "both"
-                    ],
-                    "legend": [
-                      null
-                    ],
-                    "legendOptions": [
-                      [
-                        "isSerieHideable",
-                        "isSerieSelectable"
-                      ]
-                    ],
-                    "mouseTracking": [
-                      [
-                        "track"
-                      ]
-                    ],
-                    "trackingAxis": [
-                      "x"
-                    ],
-                    "selectScatter": [
-                      []
-                    ],
-                    "independantYZoom": [
-                      []
-                    ]
+                    "url": [""],
+                    "zoom": ["x"],
+                    "wheelAction": ["zoomYMousePos"],
+                    "wheelbaseline": [0],
+                    "fullOut": ["both"],
+                    "legend": [null],
+                    "legendOptions": [["isSerieHideable", "isSerieSelectable"]],
+                    "mouseTracking": [["track"]],
+                    "trackingAxis": ["x"],
+                    "selectScatter": [[]],
+                    "independantYZoom": [[]]
                   }
                 ]
               }
@@ -2942,67 +2180,26 @@
               "groups": {
                 "xAxis": [
                   {
-                    "checkboxes": [
-                      [
-                        "display",
-                        "flip",
-                        "main",
-                        "sec"
-                      ]
-                    ],
-                    "label": [
-                      "Wavelength [cm-1]"
-                    ],
-                    "beforeSpacing": [
-                      "0"
-                    ],
-                    "afterSpacing": [
-                      ""
-                    ],
-                    "min": [
-                      ""
-                    ],
-                    "max": [
-                      ""
-                    ],
-                    "nbTicksPrimary": [
-                      5
-                    ],
-                    "axismodification": [
-                      "none"
-                    ]
+                    "checkboxes": [["display", "flip", "main", "sec"]],
+                    "label": ["Wavelength [cm-1]"],
+                    "beforeSpacing": ["0"],
+                    "afterSpacing": [""],
+                    "min": [""],
+                    "max": [""],
+                    "nbTicksPrimary": [5],
+                    "axismodification": ["none"]
                   }
                 ],
                 "yAxis": [
                   {
-                    "checkboxes": [
-                      [
-                        "display",
-                        "main",
-                        "sec"
-                      ]
-                    ],
-                    "label": [
-                      "Absorbance"
-                    ],
-                    "beforeSpacing": [
-                      "0"
-                    ],
-                    "afterSpacing": [
-                      0
-                    ],
-                    "min": [
-                      ""
-                    ],
-                    "max": [
-                      ""
-                    ],
-                    "nbTicksPrimary": [
-                      5
-                    ],
-                    "fitToAxisOnFromTo": [
-                      []
-                    ]
+                    "checkboxes": [["display", "main", "sec"]],
+                    "label": ["Absorbance"],
+                    "beforeSpacing": ["0"],
+                    "afterSpacing": [0],
+                    "min": [""],
+                    "max": [""],
+                    "nbTicksPrimary": [5],
+                    "fitToAxisOnFromTo": [[]]
                   }
                 ]
               }
@@ -3014,12 +2211,8 @@
               "groups": {
                 "series": [
                   {
-                    "overflow": [
-                      []
-                    ],
-                    "stackVerticalSpacing": [
-                      0
-                    ]
+                    "overflow": [[]],
+                    "stackVerticalSpacing": [0]
                   }
                 ]
               }
@@ -3035,12 +2228,7 @@
                       "variable": "chart",
                       "axis": "0",
                       "adaptTo": "none",
-                      "plotcolor": [
-                        1,
-                        1,
-                        255,
-                        1
-                      ],
+                      "plotcolor": [1, 1, 255, 1],
                       "strokewidth": "1",
                       "strokestyle": "1",
                       "plotcontinuous": "continuous",
@@ -3050,20 +2238,13 @@
                       "markerSize": 2,
                       "normalize": "none",
                       "optimizeSlots": [],
-                      "tracking": [
-                        "yes"
-                      ]
+                      "tracking": ["yes"]
                     },
                     {
                       "variable": "correlationChart",
                       "axis": "0",
                       "adaptTo": "none",
-                      "plotcolor": [
-                        1,
-                        1,
-                        255,
-                        1
-                      ],
+                      "plotcolor": [1, 1, 255, 1],
                       "strokewidth": "1",
                       "strokestyle": "1",
                       "plotcontinuous": "continuous",
@@ -3073,9 +2254,7 @@
                       "markerSize": 2,
                       "normalize": "none",
                       "optimizeSlots": [],
-                      "tracking": [
-                        "yes"
-                      ]
+                      "tracking": ["yes"]
                     }
                   ]
                 ]
@@ -3112,12 +2291,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Create new range by pressing ALT and then click at the beginning and the end of the range.",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3134,12 +2308,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Create new range by pressing ALT and then click at the beginning and the end of the range.",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3156,12 +2325,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Create new range by pressing ALT and then click at the beginning and the end of the range.",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3178,12 +2342,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Create new range by pressing ALT and then click at the beginning and the end of the range.",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -3200,12 +2359,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Create new range by pressing ALT and then click at the beginning and the end of the range.",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3222,12 +2376,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Create new range by pressing ALT and then click at the beginning and the end of the range.",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3244,12 +2393,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Create new range by pressing ALT and then click at the beginning and the end of the range.",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3271,7 +2415,7 @@
         },
         {
           "rel": "annotations",
-          "name": "boxPlotAnnotations"
+          "name": "boxPlotChart"
         },
         {
           "rel": "annotations",
@@ -3318,34 +2462,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Show fullscreen",
-                "Print"
-              ]
-            ]
+            "toolbar": [["Show fullscreen", "Print"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Create new range by pressing ALT and then click at the beginning and the end of the range.",
@@ -3358,25 +2488,11 @@
         "groups": {
           "group": [
             {
-              "selectable": [
-                []
-              ],
-              "template": [
-                ""
-              ],
-              "modifyInForm": [
-                [
-                  "yes"
-                ]
-              ],
-              "debouncing": [
-                500
-              ],
-              "formOptions": [
-                [
-                  "keepFormValueIfDataUndefined"
-                ]
-              ]
+              "selectable": [[]],
+              "template": [""],
+              "modifyInForm": [["yes"]],
+              "debouncing": [500],
+              "formOptions": [["keepFormValueIfDataUndefined"]]
             }
           ]
         }
@@ -3394,12 +2510,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3416,12 +2527,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -3438,12 +2544,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3460,12 +2561,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -3482,12 +2578,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3504,12 +2595,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3526,12 +2612,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3556,9 +2637,7 @@
           "name": "keepOriginal"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -3586,43 +2665,27 @@
               "icon": "fa-tasks",
               "action": "selectResultTemplate",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             },
             {
               "title": "Save preferences as template",
               "icon": "fa-save",
               "action": "saveResultTemplate",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              []
-            ]
+            "toolbar": [[]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Preferences",
@@ -3635,32 +2698,15 @@
         "groups": {
           "group": [
             {
-              "display": [
-                [
-                  "editor",
-                  "buttons"
-                ]
-              ],
-              "execOnLoad": [
-                [
-                  "yes"
-                ]
-              ],
-              "asyncAwait": [
-                [
-                  "top"
-                ]
-              ],
+              "display": [["editor", "buttons"]],
+              "execOnLoad": [["yes"]],
+              "asyncAwait": [["top"]],
               "script": [
                 "console.log('Load and process', this.action, this.variable);\n\nconst recreateCharts = await API.require('vh/eln/sample/ml/recreateCharts');\n\nrecreateCharts(this.variable);\n"
               ]
             }
           ],
-          "libs": [
-            [
-              {}
-            ]
-          ],
+          "libs": [[{}]],
           "buttons": [
             [
               {
@@ -3686,12 +2732,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Recreate the data and charts based on the preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -3708,12 +2749,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Recreate the data and charts based on the preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -3730,12 +2766,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Recreate the data and charts based on the preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -3752,12 +2783,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Recreate the data and charts based on the preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -3774,12 +2800,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Recreate the data and charts based on the preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3796,12 +2817,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Recreate the data and charts based on the preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -3818,12 +2834,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Recreate the data and charts based on the preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -3860,33 +2871,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Recreate the data and charts based on the preferences",
@@ -3911,58 +2909,28 @@
                   "autoEdit"
                 ]
               ],
-              "copyPaste": [
-                []
-              ],
-              "copyPasteOptions": [
-                [
-                  "newRows"
-                ]
-              ],
-              "autoColumns": [
-                [
-                  "remove"
-                ]
-              ],
-              "toolbar": [
-                []
-              ],
-              "colorjpath": [
-                []
-              ],
-              "slick.defaultColumnWidth": [
-                null
-              ],
-              "slick.rowHeight": [
-                null
-              ],
-              "slick.headerRowHeight": [
-                30
-              ],
-              "slick.selectionModel": [
-                "row"
-              ],
-              "idProperty": [
-                ""
-              ],
-              "filterType": [
-                "pref"
-              ],
+              "copyPaste": [[]],
+              "copyPasteOptions": [["newRows"]],
+              "autoColumns": [["remove"]],
+              "toolbar": [[]],
+              "colorjpath": [[]],
+              "slick.defaultColumnWidth": [null],
+              "slick.rowHeight": [null],
+              "slick.headerRowHeight": [30],
+              "slick.selectionModel": ["row"],
+              "idProperty": [""],
+              "filterType": ["pref"],
               "filterRow": [
                 "// Documentation: https://github.com/NPellet/visualizer/blob/46b40ca86345f8fa313563bf9c6ecb80ba323101/src/modules/types/edition/slick_grid/view.js#L1695-L1735"
               ],
-              "customJpaths": [
-                "from,to,label,description"
-              ]
+              "customJpaths": ["from,to,label,description"]
             }
           ],
           "cols": [
             [
               {
                 "name": "Label",
-                "jpath": [
-                  "label"
-                ],
+                "jpath": ["label"],
                 "editor": "string",
                 "forceType": "",
                 "formatter": "typerenderer",
@@ -3975,9 +2943,7 @@
               },
               {
                 "name": "From",
-                "jpath": [
-                  "from"
-                ],
+                "jpath": ["from"],
                 "editor": "number",
                 "forceType": "",
                 "formatter": "typerenderer",
@@ -3990,9 +2956,7 @@
               },
               {
                 "name": "To",
-                "jpath": [
-                  "to"
-                ],
+                "jpath": ["to"],
                 "editor": "number",
                 "forceType": "",
                 "formatter": "typerenderer",
@@ -4005,9 +2969,7 @@
               },
               {
                 "name": "Description",
-                "jpath": [
-                  "description"
-                ],
+                "jpath": ["description"],
                 "editor": "string",
                 "forceType": "",
                 "formatter": "typerenderer",
@@ -4023,18 +2985,8 @@
           "actionCols": [
             [
               {
-                "backgroundColor": [
-                  255,
-                  255,
-                  255,
-                  0
-                ],
-                "color": [
-                  0,
-                  0,
-                  0,
-                  1
-                ],
+                "backgroundColor": [255, 255, 255, 0],
+                "color": [0, 0, 0, 1],
                 "position": "end",
                 "clickMode": "text"
               }
@@ -4047,22 +2999,12 @@
               }
             ]
           ],
-          "actionOutButtons": [
-            [
-              {}
-            ]
-          ],
+          "actionOutButtons": [[{}]],
           "data": [
             {
-              "saveInView": [
-                []
-              ],
-              "varname": [
-                ""
-              ],
-              "data": [
-                "[]"
-              ]
+              "saveInView": [[]],
+              "varname": [""],
+              "data": ["[]"]
             }
           ]
         }
@@ -4080,12 +3022,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -4102,12 +3039,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -4124,12 +3056,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -4146,12 +3073,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -4168,12 +3090,7 @@
           "zIndex": 0,
           "display": true,
           "title": "List of ranges",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -4190,12 +3107,7 @@
           "zIndex": 0,
           "display": true,
           "title": "List of ranges",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -4212,12 +3124,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -4230,9 +3137,7 @@
           "name": "ranges"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "actions_out": [
         {
           "jpath": []
@@ -4251,33 +3156,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Export Data"
-              ]
-            ]
+            "toolbar": [["Export Data"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "List of ranges",
@@ -4290,32 +3182,15 @@
         "groups": {
           "group": [
             {
-              "display": [
-                [
-                  "editor",
-                  "buttons"
-                ]
-              ],
-              "execOnLoad": [
-                [
-                  "yes"
-                ]
-              ],
-              "asyncAwait": [
-                [
-                  "top"
-                ]
-              ],
+              "display": [["editor", "buttons"]],
+              "execOnLoad": [["yes"]],
+              "asyncAwait": [["top"]],
               "script": [
                 "if (! this.button) this.button='default';\n\nvar layers={\n    'default': {\n        layer:'Default layer'\n    },\n    'ranges': {\n        layer:'Ranges selection'\n    },\n}\n\nif (layers[this.button]) {\n    for (var key of Object.keys(layers)) {\n        this.enableButton(key);\n    }\n    API.switchToLayer(layers[this.button].layer);\n    if (layers[this.button].callback) {\n        layers[this.button].callback();\n    }\n    this.disableButton(this.button);\n}\n\n\n"
               ]
             }
           ],
-          "libs": [
-            [
-              {}
-            ]
-          ],
+          "libs": [[{}]],
           "buttons": [
             [
               {
@@ -4347,12 +3222,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -4369,12 +3239,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Preferences"
@@ -4391,12 +3256,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -4413,12 +3273,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Load"
@@ -4435,12 +3290,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Calculations"
@@ -4457,12 +3307,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Calculations"
@@ -4479,24 +3324,15 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
         }
       },
       "id": 14,
-      "vars_in": [
-        {}
-      ],
-      "actions_in": [
-        {}
-      ],
+      "vars_in": [{}],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -4515,33 +3351,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "",
@@ -4564,57 +3387,28 @@
                   "editable"
                 ]
               ],
-              "copyPaste": [
-                []
-              ],
-              "copyPasteOptions": [
-                [
-                  "newRows"
-                ]
-              ],
-              "autoColumns": [
-                []
-              ],
-              "toolbar": [
-                []
-              ],
-              "colorjpath": [
-                []
-              ],
-              "slick.defaultColumnWidth": [
-                null
-              ],
-              "slick.rowHeight": [
-                null
-              ],
-              "slick.headerRowHeight": [
-                30
-              ],
-              "slick.selectionModel": [
-                "row"
-              ],
-              "idProperty": [
-                ""
-              ],
-              "filterType": [
-                "pref"
-              ],
+              "copyPaste": [[]],
+              "copyPasteOptions": [["newRows"]],
+              "autoColumns": [[]],
+              "toolbar": [[]],
+              "colorjpath": [[]],
+              "slick.defaultColumnWidth": [null],
+              "slick.rowHeight": [null],
+              "slick.headerRowHeight": [30],
+              "slick.selectionModel": ["row"],
+              "idProperty": [""],
+              "filterType": ["pref"],
               "filterRow": [
                 "// Documentation: https://github.com/NPellet/visualizer/blob/46b40ca86345f8fa313563bf9c6ecb80ba323101/src/modules/types/edition/slick_grid/view.js#L1695-L1735"
               ],
-              "customJpaths": [
-                ""
-              ]
+              "customJpaths": [""]
             }
           ],
           "cols": [
             [
               {
                 "name": "Label",
-                "jpath": [
-                  "$id",
-                  "3"
-                ],
+                "jpath": ["$id", "3"],
                 "editor": "none",
                 "forceType": "",
                 "formatter": "typerenderer",
@@ -4632,18 +3426,8 @@
                 "name": "🗑",
                 "tooltip": "Delete result",
                 "icon": "fa-trash",
-                "backgroundColor": [
-                  255,
-                  255,
-                  255,
-                  0
-                ],
-                "color": [
-                  0,
-                  0,
-                  0,
-                  1
-                ],
+                "backgroundColor": [255, 255, 255, 0],
+                "color": [0, 0, 0, 1],
                 "action": "deleteResultTemplate",
                 "position": "end",
                 "clickMode": "text",
@@ -4658,22 +3442,12 @@
               }
             ]
           ],
-          "actionOutButtons": [
-            [
-              {}
-            ]
-          ],
+          "actionOutButtons": [[{}]],
           "data": [
             {
-              "saveInView": [
-                []
-              ],
-              "varname": [
-                ""
-              ],
-              "data": [
-                "[]"
-              ]
+              "saveInView": [[]],
+              "varname": [""],
+              "data": ["[]"]
             }
           ]
         }
@@ -4691,12 +3465,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Load / Save protocols",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -4713,12 +3482,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Load / Save protocols",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -4735,12 +3499,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Load / Save protocols",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SaveLoadResults Admin"
@@ -4757,12 +3516,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Load / Save protocols",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -4779,12 +3533,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Load / Save protocols",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -4801,12 +3550,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Load / Save protocols",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -4823,12 +3567,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Load / Save protocols",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -4841,9 +3580,7 @@
           "name": "analysisTemplates"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "actions_out": [
         {
           "event": "onRowActive",
@@ -4868,43 +3605,27 @@
               "icon": "fa-save",
               "action": "saveResultTemplate",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             },
             {
               "title": "Load an example",
               "icon": "fa-dot-circle",
               "action": "loadExample",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              []
-            ]
+            "toolbar": [[]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Load / Save protocols",
@@ -4917,20 +3638,9 @@
         "groups": {
           "group": [
             {
-              "display": [
-                [
-                  "editor",
-                  "buttons"
-                ]
-              ],
-              "execOnLoad": [
-                []
-              ],
-              "asyncAwait": [
-                [
-                  "top"
-                ]
-              ],
+              "display": [["editor", "buttons"]],
+              "execOnLoad": [[]],
+              "asyncAwait": [["top"]],
               "script": [
                 "if (this.button) { // just used for debug\n    this.action={\n        name:this.button\n    }\n}\n\nconst UI=await API.require('src/util/ui');\nlet currentAnalysisResults=API.getData('currentAnalysisResults');\n\nlet userAnalysisResults=API.cache(\"userAnalysisResults\");\n\nswitch (this.action.name) {\n    case 'saveResultTemplate': {\n        let value = (currentAnalysisResults) ? currentAnalysisResults.resurrect().$id[3] : '';\n        let name=await UI.enterValue({\n            label: 'Enter the preference name',\n            buttonLabel: 'Save',\n            value\n        });\n        if (!name) return;\n        let result = await userAnalysisResults.saveTemplate(name, API.getData('preferences').resurrect(), getData());\n        API.doAction('refreshResults');\n        break;\n    }\n    case 'loadExample': {\n        let cdb = new CDB();\n        let data = await cdb.get('upload/example.json');\n        setData(data);\n        break;\n    }\n    case 'refreshResults':\n        console.log('refresh');\n        await userAnalysisResults.refresh();\n        break;\n    case 'saveAsAttachment': {\n        let json = JSON.stringify(getData());\n        console.log(json);\n        let cdb = new CDB();\n        let data = new Blob([json], {type: 'application/json'});\n        cdb.upload({\n            data,\n            name: 'upload/example.json'\n        });\n    }\n    case 'deleteResultTemplate': {\n        let result=await UI.confirm('Are you sure you want to delete this template ?', 'Delete', 'Cancel', {});\n        if (! result) return;\n        await userAnalysisResults.delete(this.action.value);\n        API.doAction('refreshResults');\n        break;\n    }\n    case 'loadResultTemplate': {\n        let result = await userAnalysisResults.loadResult(this.action.value);\n        setData(result);\n        \n        break;\n    }\n    case 'selectResultTemplate':\n        let templates=API.getData('analysisTemplates');\n        if (! templates) {\n            UI.showNotification('Only available when linked to a database','warning');\n            return;\n        }\n        let result = await UI.form(`\n            <div style=\"zoom: 1.5;\">\n                <form>\n                    <p style=\"padding-bottom: 10px\">\n                    Reload one of the previously saved preferences:\n                    </p>\n                    <select name='template'>\n                        ${templates.map( template => {\n                            let key=String(template.$id[3]);\n                            let _id=String(template._id);\n                            return `\n                                <option value=\"${_id}\">${key}</option>\n                            `\n                        })}\n                        \n                    </select>\n                    <input type=\"submit\" value=\"Load preferences\"/>\n                </form>\n            </div>\n        `)\n        \n        if (result.template) {\n            API.doAction('loadResultTemplate', {_id:result.template})\n        }\n        \n        break;\n}\n\nfunction setData(result) {\n        API.createData('description', result.description);\n        API.createData('preferences', result.preferences);\n        \n        let ranges=API.getData('ranges'); // ranges are manage by rangeManager\n        ranges.length=0;\n        result.ranges.forEach( (range) => ranges.push(range));\n        ranges.triggerChange();\n        \n        let calculations=API.getData('calculations');\n        calculations.length=0;\n        result.calculations.forEach( (calculation) => calculations.push(calculation));\n        calculations.triggerChange();\n        \n        window.setTimeout( () => {\n            API.getData('twigPreferences').triggerChange();\n        },100)\n        \n}\n\nfunction getData() {\n    return {\n        ranges: API.getData('ranges').resurrect(),\n        calculations: API.getData('calculations').resurrect(),\n        preferences: API.getData('preferences').resurrect(),\n        description: API.getData('description').resurrect(),\n    }\n}\n"
               ]
@@ -5003,12 +3713,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Load and save preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -5025,12 +3730,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Load and save preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -5047,12 +3747,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Load and save preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SaveLoadResults Admin"
@@ -5069,12 +3764,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Load and save preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -5091,12 +3781,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Load and save preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -5113,12 +3798,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Load and save preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -5135,21 +3815,14 @@
           "zIndex": 0,
           "display": false,
           "title": "Load and save preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
         }
       },
       "id": 16,
-      "vars_in": [
-        {}
-      ],
+      "vars_in": [{}],
       "actions_in": [
         {
           "rel": "execute",
@@ -5194,33 +3867,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Load and save preferences",
@@ -5233,31 +3893,13 @@
         "groups": {
           "group": [
             {
-              "editable": [
-                [
-                  "isEditable"
-                ]
-              ],
-              "toolbarMode": [
-                "minimal"
-              ],
-              "debouncing": [
-                0
-              ],
-              "storeInView": [
-                []
-              ],
-              "modifyVarIn": [
-                [
-                  "yes"
-                ]
-              ],
-              "className": [
-                "quill"
-              ],
-              "css": [
-                ".quill {}"
-              ]
+              "editable": [["isEditable"]],
+              "toolbarMode": ["minimal"],
+              "debouncing": [0],
+              "storeInView": [[]],
+              "modifyVarIn": [["yes"]],
+              "className": ["quill"],
+              "css": [".quill {}"]
             }
           ]
         }
@@ -5275,12 +3917,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -5297,12 +3934,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -5319,12 +3951,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SaveLoadResults Admin"
@@ -5341,12 +3968,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -5363,12 +3985,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Free description",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -5385,12 +4002,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Free description",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -5407,12 +4019,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -5425,9 +4032,7 @@
           "name": "description"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -5446,31 +4051,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              []
-            ]
+            "toolbar": [[]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Free description",
@@ -5484,34 +4078,14 @@
         "groups": {
           "group": [
             {
-              "editable": [
-                "view"
-              ],
-              "expanded": [
-                [
-                  "expand"
-                ]
-              ],
-              "storeObject": [
-                []
-              ],
-              "displayValue": [
-                []
-              ],
-              "searchBox": [
-                [
-                  "search"
-                ]
-              ],
-              "sendButton": [
-                []
-              ],
-              "output": [
-                "new"
-              ],
-              "storedObject": [
-                "{}"
-              ]
+              "editable": ["view"],
+              "expanded": [["expand"]],
+              "storeObject": [[]],
+              "displayValue": [[]],
+              "searchBox": [["search"]],
+              "sendButton": [[]],
+              "output": ["new"],
+              "storedObject": ["{}"]
             }
           ]
         }
@@ -5529,12 +4103,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -5551,12 +4120,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -5573,12 +4137,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SaveLoadResults Admin"
@@ -5595,12 +4154,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -5617,12 +4171,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -5639,12 +4188,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -5661,12 +4205,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -5679,9 +4218,7 @@
           "name": "preferences"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -5700,33 +4237,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "",
@@ -5739,30 +4263,15 @@
         "groups": {
           "group": [
             {
-              "display": [
-                [
-                  "editor",
-                  "buttons"
-                ]
-              ],
-              "execOnLoad": [
-                []
-              ],
-              "asyncAwait": [
-                [
-                  "top"
-                ]
-              ],
+              "display": [["editor", "buttons"]],
+              "execOnLoad": [[]],
+              "asyncAwait": [["top"]],
               "script": [
                 "let value=this.action.value;\n\nswitch (this.action.name) {\n    case 'trackClicked': {\n        if (value.event.altKey && value.event.shiftKey) {\n\n            let key=Object.keys(value.data)[0];\n            let index=value.data[key].indexClosest;\n            let preferences=API.getData('preferences');\n            preferences.setChildSync(['display','correlationIndex'],Number(index));\n        }\n        break;\n    }\n    case 'trackMove': {\n        let displayPreferences = API.getData('preferences').display.resurrect();\n        const trackMove = this.action.value.data.chart;\n        if (! trackMove || ! displayPreferences.trackingInfo || displayPreferences.original==='true') {\n            API.createData('trackAnnotations', []);\n            return;\n        }\n        const spectraProcessor=API.cache('spectraProcessor');\n        const annotations=spectraProcessor.getTrackAnnotation(trackMove.indexBefore)\n        API.createData('trackAnnotations', annotations)\n        break;\n    }\n    case 'SetTarget':\n        const preferences=API.getData('preferences');\n        preferences.scale.relative=true;\n        preferences.scale.targetID=this.action.value.id;\n        preferences.triggerChange();\n    //    API.getData('spectraInDataset').triggerChange()\n        break;\n    case 'downloadNormalizedMatrix':\n        const spectraProcessor = API.cache('spectraProcessor');\n        let tsv=spectraProcessor.getNormalizedTSV();\n        let fileSaver=await API.require('file-saver');\n        var blob = new Blob([tsv], {type: \"text/tab-separated-values;charset=utf-8\"});\n        fileSaver( blob, \"data.tsv\");\n        break;\n    default:\n}\n"
               ]
             }
           ],
-          "libs": [
-            [
-              {}
-            ]
-          ],
+          "libs": [[{}]],
           "buttons": [
             [
               {
@@ -5788,12 +4297,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Deal with other actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -5810,12 +4314,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Deal with other actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -5832,12 +4331,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SaveLoadResults Admin"
@@ -5854,12 +4348,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Deal with other actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -5876,12 +4365,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Deal with other actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -5898,12 +4382,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Deal with other actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -5920,21 +4399,14 @@
           "zIndex": 0,
           "display": false,
           "title": "Deal with other actions",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
         }
       },
       "id": 19,
-      "vars_in": [
-        {}
-      ],
+      "vars_in": [{}],
       "actions_in": [
         {
           "rel": "execute",
@@ -5971,33 +4443,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Deal with other actions",
@@ -6010,23 +4469,13 @@
         "groups": {
           "group": [
             {
-              "selectable": [
-                []
-              ],
+              "selectable": [[]],
               "template": [
                 "<style>\n    #memoryInfo {\n        font-family: monospace;\n    }\n</style>\n<div id=\"memoryInfo\">\n    <b>Memory</b>: \n    Original data:\n    {{rendertype(memoryInfo.original+0.00001,{numeral:'0 b'})}}\n    - Normalized data: {{rendertype(memoryInfo.normalized,{numeral:'0 b'})}}\n    - Max allowed {{rendertype(memoryInfo.maxMemory,{numeral:'0 b'})}}\n    {% if memoryInfo.keepOriginal %}\n        &nbsp;<b style=\"color: green\">Original data present</b>\n    {% else %}\n        &nbsp;<b style=\"color: red\">Missing original data</b>\n    {% endif %}\n    \n</div>\n"
               ],
-              "modifyInForm": [
-                []
-              ],
-              "debouncing": [
-                0
-              ],
-              "formOptions": [
-                [
-                  "keepFormValueIfDataUndefined"
-                ]
-              ]
+              "modifyInForm": [[]],
+              "debouncing": [0],
+              "formOptions": [["keepFormValueIfDataUndefined"]]
             }
           ]
         }
@@ -6044,12 +4493,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -6066,12 +4510,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -6088,12 +4527,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SaveLoadResults Admin"
@@ -6110,12 +4544,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -6132,12 +4561,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -6154,12 +4578,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -6176,12 +4595,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -6194,9 +4608,7 @@
           "name": "memoryInfo"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -6215,31 +4627,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              []
-            ]
+            "toolbar": [[]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "",
@@ -6252,30 +4653,15 @@
         "groups": {
           "group": [
             {
-              "display": [
-                [
-                  "editor",
-                  "buttons"
-                ]
-              ],
-              "execOnLoad": [
-                []
-              ],
-              "asyncAwait": [
-                [
-                  "top"
-                ]
-              ],
+              "display": [["editor", "buttons"]],
+              "execOnLoad": [[]],
+              "asyncAwait": [["top"]],
               "script": [
                 "const rangesManager=API.cache('rangesManager');\n\nif (this.action) {\n    rangesManager.processAction(this.action);\n}\n\nif (this.variable) {\n    switch (this.variable) {\n        case 'ranges': \n            rangesManager.updateAnnotations();\n            break;\n    }\n}\n\n"
               ]
             }
           ],
-          "libs": [
-            [
-              {}
-            ]
-          ],
+          "libs": [[{}]],
           "buttons": [
             [
               {
@@ -6301,12 +4687,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Manage the actions to deal with ranges",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -6323,12 +4704,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Manage the actions to deal with ranges",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -6345,12 +4721,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Manage the actions to deal with ranges",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SaveLoadResults Admin"
@@ -6367,12 +4738,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Manage the actions to deal with ranges",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load and Process"
@@ -6389,12 +4755,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Manage the actions to deal with ranges",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -6411,12 +4772,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Manage the actions to deal with ranges",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -6433,12 +4789,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Manage the actions to deal with ranges",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -6491,33 +4842,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Manage the actions to deal with ranges",
@@ -6530,30 +4868,15 @@
         "groups": {
           "group": [
             {
-              "display": [
-                [
-                  "editor",
-                  "buttons"
-                ]
-              ],
-              "execOnLoad": [
-                []
-              ],
-              "asyncAwait": [
-                [
-                  "top"
-                ]
-              ],
+              "display": [["editor", "buttons"]],
+              "execOnLoad": [[]],
+              "asyncAwait": [["top"]],
               "script": [
                 "const spectraProcessor=API.cache('spectraProcessor');\nconst ranges=API.getData('ranges').resurrect();\nconst calculations=API.getData('calculations').resurrect();\n\nlet scaleOptions=JSON.parse(JSON.stringify(API.getData('preferences').scale));\nscaleOptions.range = API.getData('ranges').resurrect().filter( (range) => range.label === scaleOptions.range)[0];\n\nlet result=spectraProcessor.getScaledData({\n    ...scaleOptions,\n    ranges,\n    calculations\n});\n\nconsole.log(result);\nif (! result.ranges) return;\n\nconst spectraInDataset=API.getData('spectraInDataset');\n\nfor (let i=0; i<result.ranges.length; i++) {\n    let rangeData = result.ranges[i];\n    let calculationData = result.calculations[i];\n    let id = String(result.ids[i]);\n    let spectrum=spectraInDataset.filter( spec => String(spec.id)===id )[0];\n    spectrum.ranges=rangeData;\n    spectrum.calculations=calculationData;\n}\nspectraInDataset.triggerChange();\n\nlet calculationKeys=Object.keys(spectraInDataset[0].calculations);\nlet rangeKeys=Object.keys(spectraInDataset[0].ranges);\n\n\nlet columnPreferences={\n     \"cols\": \n            [\n              {\n                \"name\": \"Identifier\",\n                \"jpath\": [\n                  \"id\"\n                ],\n                \"formatter\": \"typerenderer\",\n                \"width\": 188,\n              },\n              {\n                \"name\": \"Category\",\n                \"jpath\": [\n                  \"category\"\n                ],\n                \"editor\": \"string\",\n                \"formatter\": \"typerenderer\",\n                \"width\": 170,\n              },\n              {\n                \"name\": \"Info\",\n                \"jpath\": [\n                  \"info\"\n                ],\n                \"editor\": \"none\",\n                \"formatter\": \"typerenderer\",\n                \"width\": 300,\n                \"hideColumn\": []\n              },\n            ]\n          \n}\n\n\nfor (let key of rangeKeys) {\n    columnPreferences.cols.push(\n        {\n            \"name\": key,\n            \"jpath\": [\n              \"ranges\", key, \"integration\"\n            ],\n            \"formatter\": \"typerenderer\",\n            \"width\": 100,\n            \"rendererOptions\": \"toPrecision:6\",\n        }\n    );\n}\n\nfor (let key of calculationKeys) {\n    columnPreferences.cols.push(\n        {\n            \"name\": key,\n            \"jpath\": [\n              \"calculations\", key\n            ],\n            \"formatter\": \"typerenderer\",\n            \"width\": 100,\n            \"rendererOptions\": \"toPrecision:6\",\n        }\n    );\n}\n\ncolumnPreferences.cols.push(\n    {\n        \"name\": \"☑️\",\n        \"jpath\": [\n          \"selected\"\n        ],\n        \"editor\": \"boolean\",\n        \"forceType\": \"boolean\",\n        \"formatter\": \"typerenderer\",\n        \"width\": 32,\n    },\n    {\n        \"name\": \"Color\",\n        \"jpath\": [\n          \"color\"\n        ],\n        \"editor\": \"color\",\n        \"forceType\": \"color\",\n        \"formatter\": \"typerenderer\",\n        \"width\": 40,\n        \"minWidth\": 40,\n        \"maxWidth\": 40,\n        \"hideColumn\": []\n    }\n)\n\nAPI.doAction('SetColumnPreferences', columnPreferences);\n"
               ]
             }
           ],
-          "libs": [
-            [
-              {}
-            ]
-          ],
+          "libs": [[{}]],
           "buttons": [
             [
               {
@@ -6579,12 +4902,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -6601,12 +4919,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -6623,12 +4936,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SaveLoadResults Admin"
@@ -6645,12 +4953,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load and Process"
@@ -6667,12 +4970,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Range admin"
@@ -6689,12 +4987,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Ranges selection"
@@ -6711,12 +5004,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SelectDataColumns"
@@ -6737,9 +5025,7 @@
           "name": "preferences"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -6758,33 +5044,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "",
@@ -6809,58 +5082,28 @@
                   "autoEdit"
                 ]
               ],
-              "copyPaste": [
-                []
-              ],
-              "copyPasteOptions": [
-                [
-                  "newRows"
-                ]
-              ],
-              "autoColumns": [
-                [
-                  "remove"
-                ]
-              ],
-              "toolbar": [
-                []
-              ],
-              "colorjpath": [
-                []
-              ],
-              "slick.defaultColumnWidth": [
-                null
-              ],
-              "slick.rowHeight": [
-                null
-              ],
-              "slick.headerRowHeight": [
-                30
-              ],
-              "slick.selectionModel": [
-                "row"
-              ],
-              "idProperty": [
-                ""
-              ],
-              "filterType": [
-                "pref"
-              ],
+              "copyPaste": [[]],
+              "copyPasteOptions": [["newRows"]],
+              "autoColumns": [["remove"]],
+              "toolbar": [[]],
+              "colorjpath": [[]],
+              "slick.defaultColumnWidth": [null],
+              "slick.rowHeight": [null],
+              "slick.headerRowHeight": [30],
+              "slick.selectionModel": ["row"],
+              "idProperty": [""],
+              "filterType": ["pref"],
               "filterRow": [
                 "// Documentation: https://github.com/NPellet/visualizer/blob/46b40ca86345f8fa313563bf9c6ecb80ba323101/src/modules/types/edition/slick_grid/view.js#L1695-L1735"
               ],
-              "customJpaths": [
-                "label,formula"
-              ]
+              "customJpaths": ["label,formula"]
             }
           ],
           "cols": [
             [
               {
                 "name": "Label",
-                "jpath": [
-                  "label"
-                ],
+                "jpath": ["label"],
                 "editor": "string",
                 "forceType": "",
                 "formatter": "typerenderer",
@@ -6873,9 +5116,7 @@
               },
               {
                 "name": "Formula",
-                "jpath": [
-                  "formula"
-                ],
+                "jpath": ["formula"],
                 "editor": "string",
                 "forceType": "",
                 "formatter": "typerenderer",
@@ -6891,18 +5132,8 @@
           "actionCols": [
             [
               {
-                "backgroundColor": [
-                  255,
-                  255,
-                  255,
-                  0
-                ],
-                "color": [
-                  0,
-                  0,
-                  0,
-                  1
-                ],
+                "backgroundColor": [255, 255, 255, 0],
+                "color": [0, 0, 0, 1],
                 "position": "end",
                 "clickMode": "text"
               }
@@ -6915,22 +5146,12 @@
               }
             ]
           ],
-          "actionOutButtons": [
-            [
-              {}
-            ]
-          ],
+          "actionOutButtons": [[{}]],
           "data": [
             {
-              "saveInView": [
-                []
-              ],
-              "varname": [
-                ""
-              ],
-              "data": [
-                "[]"
-              ]
+              "saveInView": [[]],
+              "varname": [""],
+              "data": ["[]"]
             }
           ]
         }
@@ -6948,12 +5169,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of calculations",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -6970,12 +5186,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of calculations",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -6992,12 +5203,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -7014,12 +5220,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -7036,12 +5237,7 @@
           "zIndex": 0,
           "display": true,
           "title": "List of calculations",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -7058,12 +5254,7 @@
           "zIndex": 0,
           "display": true,
           "title": "List of calculations",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Calculations"
@@ -7080,12 +5271,7 @@
           "zIndex": 0,
           "display": false,
           "title": "List of calculations",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -7098,9 +5284,7 @@
           "name": "calculations"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "actions_out": [
         {
           "jpath": []
@@ -7119,33 +5303,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Export Data"
-              ]
-            ]
+            "toolbar": [["Export Data"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "List of calculations",
@@ -7158,34 +5329,14 @@
         "groups": {
           "group": [
             {
-              "editable": [
-                "view"
-              ],
-              "expanded": [
-                [
-                  "expand"
-                ]
-              ],
-              "storeObject": [
-                []
-              ],
-              "displayValue": [
-                []
-              ],
-              "searchBox": [
-                [
-                  "search"
-                ]
-              ],
-              "sendButton": [
-                []
-              ],
-              "output": [
-                "new"
-              ],
-              "storedObject": [
-                "{}"
-              ]
+              "editable": ["view"],
+              "expanded": [["expand"]],
+              "storeObject": [[]],
+              "displayValue": [[]],
+              "searchBox": [["search"]],
+              "sendButton": [[]],
+              "output": ["new"],
+              "storedObject": ["{}"]
             }
           ]
         }
@@ -7203,12 +5354,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -7225,12 +5371,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -7247,12 +5388,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SaveLoadResults Admin"
@@ -7269,12 +5405,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load and Process"
@@ -7291,12 +5422,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Range admin"
@@ -7313,12 +5439,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Ranges selection"
@@ -7335,12 +5456,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SelectDataColumns"
@@ -7353,9 +5469,7 @@
           "name": "preferences"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -7374,33 +5488,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "",
@@ -7413,22 +5514,9 @@
         "groups": {
           "group": [
             {
-              "display": [
-                [
-                  "editor",
-                  "buttons"
-                ]
-              ],
-              "execOnLoad": [
-                [
-                  "yes"
-                ]
-              ],
-              "asyncAwait": [
-                [
-                  "top"
-                ]
-              ],
+              "display": [["editor", "buttons"]],
+              "execOnLoad": [["yes"]],
+              "asyncAwait": [["top"]],
               "script": [
                 "const twigPreferences=`\n${Prefs.style}\n\n\n<div id='extendedForm'>\n    <form>\n    \n    ${Prefs.dataNormalization}\n\n    <h1>Scale / Relative</h1>\n    <table>\n        <tr>\n            <th>Method:</th>\n            <td>\n                <select name=\"scale.method\">\n                    <option value=\"\">None</option>\n                    <option value=\"max\">Same max value</option>\n                    <option value=\"min\">Same min value</option>\n                    <option value=\"minMax\">Same min / max value</option>\n                    <option value=\"range\">Same integral</option>\n                </select>\n            </td>\n        </tr>\n        <tr>\n            <th>Range:</th>\n            <td>\n                <select name=\"scale.range\">\n                    <option name=\"\">Full spectrum</option>\n                    {% for range in ranges %}\n                        <option name=\"{{range.label}}\">{{range.label}}</option>\n                    {% endfor %}\n                </select>\n            </td>\n        </tr>\n        <tr>\n            <th>Relative:</th>\n            <td>\n                <input type=\"checkbox\" name=\"scale.relative\">\n            </td>\n        </tr>\n    </table>\n    \n  \n\n<!--\n    <center>\n         Auto-refresh <input type=\"checkbox\" name=\"display.autorefresh\" checked> \n        or <input type=\"submit\" value=\"Update data and chart\">\n    </center>\n-->\n    </form>\n</div>\n\n\n<script>\n    require(['vh/util/twigAdvancedForm'], function(AF) {\n        AF('extendedForm', {debug:false});\n    });\n</script>\n`\n\nAPI.createData('twigPreferences', twigPreferences);\n\n\nAPI.createData('displayTwigPreferences', Prefs.displayTwigPreferences);\n\n"
               ]
@@ -7467,12 +5555,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -7489,12 +5572,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -7511,12 +5589,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SaveLoadResults Admin"
@@ -7533,12 +5606,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load and Process"
@@ -7555,12 +5623,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Range admin"
@@ -7577,12 +5640,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Ranges selection"
@@ -7599,24 +5657,15 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "SelectDataColumns"
         }
       },
       "id": 25,
-      "vars_in": [
-        {}
-      ],
-      "actions_in": [
-        {}
-      ],
+      "vars_in": [{}],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -7635,33 +5684,20 @@
               "icon": "",
               "action": "",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
+            "toolbar": [["Open Preferences"]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "",
@@ -7674,25 +5710,11 @@
         "groups": {
           "group": [
             {
-              "selectable": [
-                []
-              ],
-              "template": [
-                ""
-              ],
-              "modifyInForm": [
-                [
-                  "yes"
-                ]
-              ],
-              "debouncing": [
-                500
-              ],
-              "formOptions": [
-                [
-                  "keepFormValueIfDataUndefined"
-                ]
-              ]
+              "selectable": [[]],
+              "template": [""],
+              "modifyInForm": [["yes"]],
+              "debouncing": [500],
+              "formOptions": [["keepFormValueIfDataUndefined"]]
             }
           ]
         }
@@ -7710,12 +5732,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": false,
           "created": true,
           "name": "Default layer"
@@ -7732,12 +5749,7 @@
           "zIndex": 0,
           "display": true,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Preferences"
@@ -7754,12 +5766,7 @@
           "zIndex": 0,
           "display": true,
           "title": "Preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -7776,12 +5783,7 @@
           "zIndex": 0,
           "display": false,
           "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Load"
@@ -7798,12 +5800,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -7820,12 +5817,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -7842,12 +5834,7 @@
           "zIndex": 0,
           "display": false,
           "title": "Preferences",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
+          "bgColor": [255, 255, 255, 0],
           "wrapper": true,
           "created": true,
           "name": "Default layer"
@@ -7876,9 +5863,7 @@
           "name": "preferences"
         }
       ],
-      "actions_in": [
-        {}
-      ],
+      "actions_in": [{}],
       "vars_out": [
         {
           "jpath": []
@@ -7906,43 +5891,27 @@
               "icon": "fa-tasks",
               "action": "selectResultTemplate",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             },
             {
               "title": "Save preferences as template",
               "icon": "fa-save",
               "action": "saveResultTemplate",
               "position": "begin",
-              "color": [
-                100,
-                100,
-                100,
-                1
-              ]
+              "color": [100, 100, 100, 1]
             }
           ]
         ],
         "common": [
           {
-            "toolbar": [
-              []
-            ]
+            "toolbar": [[]]
           }
         ]
       },
       "css": [
         {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
+          "fontSize": [""],
+          "fontFamily": [""]
         }
       ],
       "title": "Preferences",
@@ -7951,9 +5920,7 @@
   ],
   "variables": [
     {
-      "jpath": [
-        ""
-      ]
+      "jpath": [""]
     }
   ],
   "aliases": [
@@ -7983,12 +5950,8 @@
       "groups": {
         "action": [
           {
-            "name": [
-              null
-            ],
-            "script": [
-              null
-            ]
+            "name": [null],
+            "script": [null]
           }
         ]
       }
@@ -8015,11 +5978,7 @@
           {
             "sections": {},
             "groups": {
-              "modules": [
-                [
-                  {}
-                ]
-              ]
+              "modules": [[{}]]
             }
           }
         ],
@@ -8027,11 +5986,7 @@
           {
             "sections": {},
             "groups": {
-              "filters": [
-                [
-                  {}
-                ]
-              ]
+              "filters": [[{}]]
             }
           }
         ],
@@ -8041,19 +5996,11 @@
             "groups": {
               "filter": [
                 {
-                  "name": [
-                    null
-                  ],
-                  "script": [
-                    null
-                  ]
+                  "name": [null],
+                  "script": [null]
                 }
               ],
-              "libs": [
-                [
-                  {}
-                ]
-              ]
+              "libs": [[{}]]
             }
           }
         ]
@@ -8065,11 +6012,7 @@
     {
       "sections": {},
       "groups": {
-        "action": [
-          [
-            {}
-          ]
-        ]
+        "action": [[{}]]
       }
     }
   ]
