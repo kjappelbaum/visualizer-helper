@@ -384,11 +384,12 @@ var salts = {
     mf: 'C4H6O4',
     name: 'Succinate',
   },
-  BC: {
-    code: 'BC',
+  BD: {
+    code: 'BD',
     idCode: 'eMDARV@',
     mw: 46.025427,
     mf: 'CH2O2',
+    name: 'Formate',
   },
   FD: {
     code: 'FD',
