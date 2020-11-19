@@ -36,23 +36,31 @@ define(['src/util/api', 'src/util/ui'], function (API, UI) {
       default:
     }
 
-    if (preferences.display.original === 'true') {
-      let chart = spectraProcessor.getChart({ ids });
-      API.createData('chart', chart);
-    } else {
-      spectraProcessor.setNormalization(preferences.normalization);
-
-      if (preferences.scale) {
-        let scaleOptions = JSON.parse(JSON.stringify(preferences.scale));
-        scaleOptions.range = API.getData('ranges')
-          .resurrect()
-          .filter((range) => range.label === scaleOptions.range)[0];
-        scaleOptions.ids = ids;
-
-        API.createData('chart', spectraProcessor.getScaledChart(scaleOptions));
+    try {
+      if (preferences.display.original === 'true') {
+        let chart = spectraProcessor.getChart({ ids });
+        API.createData('chart', chart);
       } else {
-        API.createData('chart', spectraProcessor.getNormalizedChart({ ids }));
+        spectraProcessor.setNormalization(preferences.normalization);
+
+        if (preferences.scale) {
+          let scaleOptions = JSON.parse(JSON.stringify(preferences.scale));
+          scaleOptions.range = API.getData('ranges')
+            .resurrect()
+            .filter((range) => range.label === scaleOptions.range)[0];
+          scaleOptions.ids = ids;
+
+          API.createData(
+            'chart',
+            spectraProcessor.getScaledChart(scaleOptions),
+          );
+        } else {
+          API.createData('chart', spectraProcessor.getNormalizedChart({ ids }));
+        }
       }
+    } catch (e) {
+      API.createData('chart', {});
+      UI.showNotification(e.toString(), 'warning');
     }
 
     let chartPrefs = spectraDataSet.getChartPrefs();

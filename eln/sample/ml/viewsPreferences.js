@@ -72,7 +72,8 @@ export const dataNormalization = `
                             <option value="scaleSD">Divide by SD</option>
                             <option value="rescale">Rescale (0 to 1)</option>
                             <option value="normalize">Normalize (sum to 1)</option>
-                            <option value="realign" data-options="from,to,nbPeaks,targetX">Realign</option>
+                            <option value="align" data-options="from,to,nbPeaks,targetX">Align</option>
+                            <option value="sg" data-options="windowSize,derivative,polynomial">Savitzky-Golay</option>
                         </select>
                     </td>
                     <td>
@@ -83,6 +84,9 @@ export const dataNormalization = `
                         <input style="display:none" type='number' placeholder="to" data-field='options.to' size="5">
                         <input style="display:none" type='number' placeholder="nbPeaks" data-field='options.nbPeaks' size="5">
                         <input style="display:none" type='number' placeholder="targetX" data-field='options.targetX' size="5">
+                        <input style="display:none" type='number' placeholder="windowSize" data-field='options.windowSize' size="5">
+                        <input style="display:none" type='number' placeholder="derivative" data-field='options.derivative' size="5">
+                        <input style="display:none" type='number' placeholder="polynomial" data-field='options.polynomial' size="5">
                     </td>
                     </tr>
                 </table>
