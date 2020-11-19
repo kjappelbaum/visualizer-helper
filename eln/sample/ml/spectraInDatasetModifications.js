@@ -29,21 +29,33 @@ define(['src/util/api', 'src/util/ui'], function (API, UI) {
         );
         continue;
       }
-      promises.push(
-        roc
-          .getAttachment({ _id: spectrum.sampleID }, spectrum.jcamp.filename)
-          .then((jcamp) => {
-            spectraProcessor.addFromJcamp(jcamp, {
-              id,
-              meta: {
-                info: DataObject.resurrect(spectrum.toc),
-                color: DataObject.resurrect(spectrum.color),
-                selected: DataObject.resurrect(spectrum.selected),
-                category: DataObject.resurrect(spectrum.category),
-              },
-            });
-          }),
-      );
+      if (spectrum.jcamp) {
+        promises.push(
+          roc
+            .getAttachment({ _id: spectrum.sampleID }, spectrum.jcamp.filename)
+            .then((jcamp) => {
+              spectraProcessor.addFromJcamp(jcamp, {
+                id,
+                meta: {
+                  info: DataObject.resurrect(spectrum.toc),
+                  color: DataObject.resurrect(spectrum.color),
+                  selected: DataObject.resurrect(spectrum.selected),
+                  category: DataObject.resurrect(spectrum.category),
+                },
+              });
+            }),
+        );
+      } else if (spectrum.data) {
+        spectraProcessor.addFromData(DataObject.resurrect(spectrum.data), {
+          id,
+          meta: {
+            info: DataObject.resurrect(spectrum.toc),
+            color: DataObject.resurrect(spectrum.color),
+            selected: DataObject.resurrect(spectrum.selected),
+            category: DataObject.resurrect(spectrum.category),
+          },
+        });
+      }
     }
     if (promises.length) API.createData('chart', {});
     await Promise.all(promises);
