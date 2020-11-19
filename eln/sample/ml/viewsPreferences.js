@@ -65,17 +65,25 @@ export const dataNormalization = `
                         <th>Options</th>
                     </tr>
                     <tr data-repeat='normalization.filters'>
-                        <td>
-                            <select data-field='name'>
-                                <option value=""></option>
-                                <option value="centerMean">Center Mean</option>
-                                <option value="scaleSD">Divide by SD</option>
-                                <option value="rescale">Rescale (0 to 1)</option>
-                                <option value="normalize">Normalize (sum to 1)</option>
-                            </select>
-        
-                        </td>
-                        <td><input type='number' data-field='options' size="5"></td>
+                    <td>
+                        <select onchange="updateOptions(this);" data-field='name'>
+                            <option value=""></option>
+                            <option value="centerMean">Center Mean</option>
+                            <option value="scaleSD">Divide by SD</option>
+                            <option value="rescale">Rescale (0 to 1)</option>
+                            <option value="normalize">Normalize (sum to 1)</option>
+                            <option value="realign" data-options="from,to,nbPeaks,targetX">Realign</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input style="display:none" type='number' placeholder="min" data-field='options.min' size="5">
+                        <input style="display:none" type='number' placeholder="max" data-field='options.max' size="5">
+                        <input style="display:none" type='number' placeholder="value" data-field='options.value' size="5">
+                        <input style="display:none" type='number' placeholder="from" data-field='options.from' size="5">
+                        <input style="display:none" type='number' placeholder="to" data-field='options.to' size="5">
+                        <input style="display:none" type='number' placeholder="nbPeaks" data-field='options.nbPeaks' size="5">
+                        <input style="display:none" type='number' placeholder="targetX" data-field='options.targetX' size="5">
+                    </td>
                     </tr>
                 </table>
             </td>
@@ -97,6 +105,17 @@ export const dataNormalization = `
             </td>
         </tr>
     </table>
+    <script>
+        function updateOptions(source) {
+            let options=source.options[source.options.selectedIndex].getAttribute('data-options');
+            let show=options ? options.split(',') : [];
+            let optionsElement = $(source).parent().next();
+            optionsElement.find('input').hide();
+            for (let key of show) {
+                optionsElement.find('input[placeholder='+key+']').show();
+            }
+        }
+    </script>
 {% endif %}
 `;
 
