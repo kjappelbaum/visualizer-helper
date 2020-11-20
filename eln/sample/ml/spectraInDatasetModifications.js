@@ -29,6 +29,7 @@ define(['src/util/api', 'src/util/ui'], function (API, UI) {
         );
         continue;
       }
+
       if (spectrum.jcamp) {
         promises.push(
           roc
@@ -49,7 +50,7 @@ define(['src/util/api', 'src/util/ui'], function (API, UI) {
         spectraProcessor.addFromData(DataObject.resurrect(spectrum.data), {
           id,
           meta: {
-            info: DataObject.resurrect(spectrum.toc),
+            ...DataObject.resurrect(spectrum.toc),
             color: DataObject.resurrect(spectrum.color),
             selected: DataObject.resurrect(spectrum.selected),
             category: DataObject.resurrect(spectrum.category),

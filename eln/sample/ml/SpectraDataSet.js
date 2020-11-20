@@ -398,6 +398,12 @@ class SpectraDataSet {
         );
         API.stopLoading('loading');
         break;
+      case 'addDirectSpectrum': // data are in memory in data property
+        this.addDirectSpectrum(action.value.resurrect());
+        break;
+      case 'addDirectSpectra': // data are in memory in data property
+        this.addDirectSpectra();
+        break;
       default:
     }
   }
@@ -479,6 +485,29 @@ class SpectraDataSet {
     spectraInDataset.triggerChange();
   }
 
+  addDirectSpectrum(spectrum) {
+    let spectraInDataset = API.getData('spectraInDataset');
+    console.log({ spectraInDataset });
+    this.addDirectSpectrumToSelected(spectrum, spectraInDataset);
+    recolor(spectraInDataset);
+    spectraInDataset.triggerChange();
+  }
+
+  addDirectSpectra() {
+    let selectedSpectra = API.getData('selectedSpectra') || [];
+    if (selectedSpectra.length < 3) {
+      selectedSpectra = API.getData('spectra').resurrect();
+    } else {
+      selectedSpectra = selectedSpectra.resurrect();
+    }
+    let spectraInDataset = API.getData('spectraInDataset');
+    for (let spectrum of selectedSpectra) {
+      this.addDirectSpectrumToSelected(spectrum, spectraInDataset);
+    }
+    recolor(spectraInDataset);
+    spectraInDataset.triggerChange();
+  }
+
   async addSelectedSamples(tocSelected) {
     let spectraInDataset = API.getData('spectraInDataset');
     // count the number of sampleIDs to determine the number of colros
@@ -498,6 +527,32 @@ class SpectraDataSet {
     await Promise.all(promises);
     recolor(spectraInDataset);
     spectraInDataset.triggerChange();
+  }
+
+  addDirectSpectrumToSelected(spectrum, spectraInDataset) {
+    console.log(spectrum);
+    if (spectrum.data) {
+      let spectrumID = String(spectrum.id);
+      let sampleID = String(spectrum.name);
+      if (
+        spectraInDataset.filter(
+          (spectrum) => String(spectrum.id) === spectrumID,
+        ).length > 0
+      ) {
+        return;
+      }
+      spectrum.sampleID = sampleID;
+      spectrum.id = spectrumID;
+      spectrum.selected = true;
+      for (let key in this.defaultAttributes) {
+        spectrum[key] = this.defaultAttributes[key];
+      }
+
+      spectrum.sampleCode = spectrum.id;
+      spectrum.category = spectrum.sampleCode;
+      spectrum._highlight = spectrumID;
+      spectraInDataset.push(spectrum);
+    }
   }
 
   addSpectrumToSelected(spectrum, tocEntry, spectraInDataset) {
@@ -524,7 +579,6 @@ class SpectraDataSet {
         spectrum[key] = this.defaultAttributes[key];
       }
 
-      spectrum.deconvolutionReference = false;
       spectrum.sampleCode = tocEntry.key.slice(1).join('_');
       spectrum.toc = tocEntry;
       spectrum.category = spectrum.sampleCode;
