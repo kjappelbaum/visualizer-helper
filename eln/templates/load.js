@@ -50,6 +50,7 @@ module.exports = async function load(categories, options = {}) {
 
 // https://www.cheminfo.org/couch/templates-public/_design/customApp/_view/template?reduce=false&startkey=%5B%22admin@cheminfo.org%22%2C%22org.cheminfo%22%5D&endkey=%5B%22admin@cheminfo.org%22%2C%22org.cheminfo.default%22%5D
 async function fetchPublicAndLink(categories) {
+  if (!Array.isArray(categories)) categories = [categories];
   var templates = [];
   for (let category of categories) {
     let startkey = escape(JSON.stringify(['admin@cheminfo.org', category]));

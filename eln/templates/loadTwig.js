@@ -7,7 +7,7 @@ module.exports = async function loadTwig(category, options = {}) {
 
   try {
     // eslint-disable-next-line no-undef
-    let templates = DataObject(await load([category]));
+    let templates = DataObject(await load(category));
     var twigTemplate = await templates.getChild([
       '0',
       'document',
