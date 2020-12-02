@@ -810,7 +810,7 @@ define([
       await this.__ready;
       options = createOptions(options, 'getAttachment');
       const cdb = this._getCdb(entry);
-      return cdb.get(name).catch(handleError(this, options));
+      return cdb.get(name, options).catch(handleError(this, options));
     }
 
     async getAttachmentList(entry) {
