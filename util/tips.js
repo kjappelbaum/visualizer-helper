@@ -62,57 +62,53 @@ define([
 
   async function addPageHelp(options = {}) {
     const { iconSize = 'fa-3x' } = options;
-    let info =
+    const info =
       options._id === undefined ? await getViewInfo() : { _id: options._id };
     if (!info._id) return;
 
-    try {
-      await fetch(`${pagesURL + info._id}/index.html`, { method: 'HEAD' })
+    const response = await fetch(`${pagesURL + info._id}/index.html`, { method: 'HEAD' });
+    if (response.status !== 200) return;
 
-      let target = document.getElementById('modules-grid');
-      let div = document.createElement('DIV');
-      div.innerHTML = `
-        <i style="color: lightgrey; cursor: pointer;" class="fa fa-question-circle ${iconSize}"></i>
-        `;
-      div.style.zIndex = 99;
-      div.style.position = 'fixed';
+    let target = document.getElementById('modules-grid');
+    let div = document.createElement('DIV');
+    div.innerHTML = `
+      <i style="color: lightgrey; cursor: pointer;" class="fa fa-question-circle ${iconSize}"></i>
+      `;
+    div.style.zIndex = 99;
+    div.style.position = 'fixed';
 
-      div.addEventListener('click', () => {
-        UI.dialog(
-          `
-              <iframe frameBorder="0" width="100%" height="100%" 
-              src="${pagesURL + info._id}">
-          `,
-          { width: 900, height: 700, title: 'Information about the page' },
-        );
-      });
-
-      target.prepend(div);
-
-      window.addEventListener(
-        'keypress',
-        (event) => {
-          if (
-            event.altKey &&
-            event.shiftKey &&
-            event.ctrlKey &&
-            event.keyCode === 8
-          ) {
-            UI.dialog(
-              `
-                  <iframe frameBorder="0" width="100%" height="100%" 
-                  src="${pagesURL + info._id}">
-              `,
-              { width: 900, height: 700, title: 'Information about the page' },
-            );
-          }
-        },
-        false,
+    div.addEventListener('click', () => {
+      UI.dialog(
+        `
+            <iframe frameBorder="0" width="100%" height="100%" 
+            src="${pagesURL + info._id}">
+        `,
+        { width: 900, height: 700, title: 'Information about the page' },
       );
-    } catch (e) {
-      console.log('Help not found');
-    }
+    });
 
+    target.prepend(div);
+
+    window.addEventListener(
+      'keypress',
+      (event) => {
+        if (
+          event.altKey &&
+          event.shiftKey &&
+          event.ctrlKey &&
+          event.keyCode === 8
+        ) {
+          UI.dialog(
+            `
+                <iframe frameBorder="0" width="100%" height="100%" 
+                src="${pagesURL + info._id}">
+            `,
+            { width: 900, height: 700, title: 'Information about the page' },
+          );
+        }
+      },
+      false,
+    );
   }
 
   return {
