@@ -30,7 +30,7 @@ define([
     if (!toc.tips) return;
     let userPrefs = JSON.parse(
       window.localStorage.getItem('tipsPreferences') ||
-        '{"lastTip":0, "views":{}}',
+      '{"lastTip":0, "views":{}}',
     );
     if ((Date.now() - userPrefs.lastTip || 0) < minDelayBetweenTips) return;
     if (!userPrefs.views[info._id]) {
@@ -66,50 +66,53 @@ define([
       options._id === undefined ? await getViewInfo() : { _id: options._id };
     if (!info._id) return;
 
-    await fetch(`${pagesURL + info._id}/index.html`, { method: 'HEAD' })
-      .then(async () => {})
-      .catch();
+    try {
+      await fetch(`${pagesURL + info._id}/index.html`, { method: 'HEAD' })
 
-    let target = document.getElementById('modules-grid');
-    let div = document.createElement('DIV');
-    div.innerHTML = `
-      <i style="color: lightgrey; cursor: pointer;" class="fa fa-question-circle ${iconSize}"></i>
-      `;
-    div.style.zIndex = 99;
-    div.style.position = 'fixed';
+      let target = document.getElementById('modules-grid');
+      let div = document.createElement('DIV');
+      div.innerHTML = `
+        <i style="color: lightgrey; cursor: pointer;" class="fa fa-question-circle ${iconSize}"></i>
+        `;
+      div.style.zIndex = 99;
+      div.style.position = 'fixed';
 
-    div.addEventListener('click', () => {
-      UI.dialog(
-        `
-            <iframe frameBorder="0" width="100%" height="100%" 
-            src="${pagesURL + info._id}">
-        `,
-        { width: 900, height: 700, title: 'Information about the page' },
+      div.addEventListener('click', () => {
+        UI.dialog(
+          `
+              <iframe frameBorder="0" width="100%" height="100%" 
+              src="${pagesURL + info._id}">
+          `,
+          { width: 900, height: 700, title: 'Information about the page' },
+        );
+      });
+
+      target.prepend(div);
+
+      window.addEventListener(
+        'keypress',
+        (event) => {
+          if (
+            event.altKey &&
+            event.shiftKey &&
+            event.ctrlKey &&
+            event.keyCode === 8
+          ) {
+            UI.dialog(
+              `
+                  <iframe frameBorder="0" width="100%" height="100%" 
+                  src="${pagesURL + info._id}">
+              `,
+              { width: 900, height: 700, title: 'Information about the page' },
+            );
+          }
+        },
+        false,
       );
-    });
+    } catch (e) {
+      console.log('Help not found');
+    }
 
-    target.prepend(div);
-
-    window.addEventListener(
-      'keypress',
-      (event) => {
-        if (
-          event.altKey &&
-          event.shiftKey &&
-          event.ctrlKey &&
-          event.keyCode === 8
-        ) {
-          UI.dialog(
-            `
-                <iframe frameBorder="0" width="100%" height="100%" 
-                src="${pagesURL + info._id}">
-            `,
-            { width: 900, height: 700, title: 'Information about the page' },
-          );
-        }
-      },
-      false,
-    );
   }
 
   return {
