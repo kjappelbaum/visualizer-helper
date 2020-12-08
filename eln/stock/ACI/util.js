@@ -215,6 +215,11 @@ var salts = {
     mf: '',
     mw: 0
   },
+  TT: {
+    name: 'Tritiated compound',
+    mf: '',
+    mw: 0
+  },
   XX: {
     name: 'Unknown salt',
     mf: '',
