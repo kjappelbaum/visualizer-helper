@@ -43,35 +43,6 @@ export const dataNormalization = `
     <h1>Data normalization</h1>
     <table>
         <tr>
-            <th align="left">Range:</th>
-            <td>
-                from: <input type="number" name="normalization.from" step="any"> - 
-                to: <input type="number" name="normalization.to" step="any">
-            </td>
-        </tr>
-        <tr>
-            <th align="left">Exclusions</th>
-            <td>
-                <table>
-                    <tr>
-                        <th></th><th></th>
-                        <th>From</th>
-                        <th>To</th>
-                    </tr>
-                    <tr data-repeat='normalization.exclusions'>
-                        <td><input type='number' data-field='from' size="5"></td>
-                        <td><input type='number' data-field='to' size="5"></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <th align="left">Nb points:</th>
-            <td>
-                <input type='number' name='normalization.numberOfPoints' size="6">
-            </td>
-        </tr>
-        <tr>
             <th align="left">Filters</th>
             <td>
                 <table>
@@ -106,6 +77,35 @@ export const dataNormalization = `
                     </td>
                     </tr>
                 </table>
+            </td>
+        </tr>
+        <tr>
+            <th align="left">Range:</th>
+            <td>
+                from: <input type="number" name="normalization.from" step="any"> - 
+                to: <input type="number" name="normalization.to" step="any">
+            </td>
+        </tr>
+        <tr>
+            <th align="left">Exclusions</th>
+            <td>
+                <table>
+                    <tr>
+                        <th></th><th></th>
+                        <th>From</th>
+                        <th>To</th>
+                    </tr>
+                    <tr data-repeat='normalization.exclusions'>
+                        <td><input type='number' data-field='from' size="5"></td>
+                        <td><input type='number' data-field='to' size="5"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <th align="left">Nb points:</th>
+            <td>
+                <input type='number' name='normalization.numberOfPoints' size="6">
             </td>
         </tr>
     </table>
