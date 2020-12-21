@@ -50,6 +50,22 @@ export const dataNormalization = `
             </td>
         </tr>
         <tr>
+            <th align="left">Exclusions</th>
+            <td>
+                <table>
+                    <tr>
+                        <th></th><th></th>
+                        <th>From</th>
+                        <th>To</th>
+                    </tr>
+                    <tr data-repeat='normalization.exclusions'>
+                        <td><input type='number' data-field='from' size="5"></td>
+                        <td><input type='number' data-field='to' size="5"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
             <th align="left">Nb points:</th>
             <td>
                 <input type='number' name='normalization.numberOfPoints' size="6">
@@ -88,22 +104,6 @@ export const dataNormalization = `
                         <input style="display:none" type='number' placeholder="derivative" data-field='options.derivative' size="5">
                         <input style="display:none" type='number' placeholder="polynomial" data-field='options.polynomial' size="5">
                     </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <th align="left">Exclusions</th>
-            <td>
-                <table>
-                    <tr>
-                        <th></th><th></th>
-                        <th>From</th>
-                        <th>To</th>
-                    </tr>
-                    <tr data-repeat='normalization.exclusions'>
-                        <td><input type='number' data-field='from' size="5"></td>
-                        <td><input type='number' data-field='to' size="5"></td>
                     </tr>
                 </table>
             </td>
