@@ -320,6 +320,9 @@ class SpectraDataSet {
   async processAction(action) {
     console.log({ action });
     switch (action.name) {
+      case 'resetMinMax':
+        this.resetMinMax();
+        break;
       case 'clickedSample':
         this.clickedSample(action.value);
         break;
@@ -586,6 +589,17 @@ class SpectraDataSet {
       spectraInDataset.push(spectrum);
     }
   }
+
+  resetMinMax() {
+    let minMax = API.cache('spectraProcessor').getMinMaxX();
+    const preferences = API.getData('preferences');
+    if (preferences && preferences.normalization) {
+      preferences.normalization.from = minMax.min;
+      preferences.normalization.to = minMax.max;
+      preferences.triggerChange();
+    }
+  }
+
 }
 
 function recolor(spectraInDataset) {

@@ -87,6 +87,7 @@ export const dataNormalization = `
             <td>
                 from: <input type="number" name="normalization.from" step="any"> - 
                 to: <input type="number" name="normalization.to" step="any">
+                <button onclick="resetFromTo()">Reset</button>
             </td>
         </tr>
         <tr>
@@ -123,6 +124,11 @@ export const dataNormalization = `
                 optionsElement.find('input[placeholder='+key+']').show();
                 optionsElement.find('textarea[placeholder='+key+']').show();
             }
+        }
+        function resetFromTo() {
+            require(['src/util/api'], function(API) {
+                API.doAction('resetMinMax');
+            });
         }
     </script>
 {% endif %}
