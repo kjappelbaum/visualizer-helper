@@ -61,6 +61,8 @@ export const dataNormalization = `
                             <option value="normalize">Normalize (sum to 1)</option>
                             <option value="align" data-options="from,to,nbPeaks,targetX">Align</option>
                             <option value="sg" data-options="windowSize,derivative,polynomial">Savitzky-Golay</option>
+                            <option value="xFunction" data-options="function">X function</option>
+                            <option value="yFunction" data-options="function">Y function</option>
                         </select>
                     </td>
                     <td>
@@ -74,6 +76,7 @@ export const dataNormalization = `
                         <input style="display:none" type='number' placeholder="windowSize" data-field='options.windowSize' size="5">
                         <input style="display:none" type='number' placeholder="derivative" data-field='options.derivative' size="5">
                         <input style="display:none" type='number' placeholder="polynomial" data-field='options.polynomial' size="5">
+                        <textarea style="display:none" placeholder="function" data-field="options.function" cols="20" rows=3"></textarea>
                     </td>
                     </tr>
                 </table>
@@ -115,8 +118,10 @@ export const dataNormalization = `
             let show=options ? options.split(',') : [];
             let optionsElement = $(source).parent().next();
             optionsElement.find('input').hide();
+            optionsElement.find('textarea').hide();
             for (let key of show) {
                 optionsElement.find('input[placeholder='+key+']').show();
+                optionsElement.find('textarea[placeholder='+key+']').show();
             }
         }
     </script>
