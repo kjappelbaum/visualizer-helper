@@ -591,11 +591,11 @@ class SpectraDataSet {
   }
 
   resetMinMax() {
-    let minMax = API.cache('spectraProcessor').getMinMaxX();
+    let boundary = API.cache('spectraProcessor').getNormalizedCommonBoundary();
     const preferences = API.getData('preferences');
     if (preferences && preferences.normalization) {
-      preferences.normalization.from = minMax.min;
-      preferences.normalization.to = minMax.max;
+      preferences.normalization.from = boundary.x.min;
+      preferences.normalization.to = boundary.x.max;
       preferences.triggerChange();
     }
   }
