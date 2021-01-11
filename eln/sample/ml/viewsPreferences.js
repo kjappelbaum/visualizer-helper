@@ -112,6 +112,29 @@ export const dataNormalization = `
                 <input type='number' name='normalization.numberOfPoints' size="6">
             </td>
         </tr>
+        <tr>
+            <th align="left">Post processing</th>
+            <td>
+                <table>
+                    <tr>
+                        <th></th><th></th>
+                        <th>Name</th>
+                        <th>Options</th>
+                    </tr>
+                    <tr data-repeat='postProcessing.filters'>
+                    <td>
+                        <select onchange="updateOptions(this);" data-field='name'>
+                            <option value=""></option>
+                            <option value="pqn">Probabilistic Quotient Normalization</option>
+                         </select>
+                    </td>
+                    <td>
+                        <input style="display:none" type='number' placeholder="min" data-field='options.min' size="5">
+                          </td>
+                    </tr>
+                </table>
+            </td>
+    </tr>
     </table>
     <script>
         function updateOptions(source) {
