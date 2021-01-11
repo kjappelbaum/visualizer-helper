@@ -125,7 +125,7 @@ export const dataNormalization = `
                     <td>
                         <select onchange="updateOptions(this);" data-field='name'>
                             <option value=""></option>
-                            <option value="pqn">Probabilistic Quotient Normalization</option>
+                            <option value="pqn">PQN</option>
                          </select>
                     </td>
                     <td>
