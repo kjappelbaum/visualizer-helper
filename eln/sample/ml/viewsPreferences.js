@@ -59,6 +59,7 @@ export const dataNormalization = `
                             <option value="scaleSD">Divide by SD</option>
                             <option value="rescale">Rescale (0 to 1)</option>
                             <option value="normalize">Normalize (sum to 1)</option>
+                            <option value="pareto">Pareto normalization</option>
                             <option value="align" data-options="from,to,nbPeaks,targetX">Align</option>
                             <option value="sg" data-options="windowSize,derivative,polynomial">Savitzky-Golay</option>
                             <option value="xFunction" data-options="function">X function</option>
