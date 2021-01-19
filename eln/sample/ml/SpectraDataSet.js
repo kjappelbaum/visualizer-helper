@@ -242,7 +242,15 @@ class SpectraDataSet {
   }
 
   getChartPrefs() {
-    return this.spectraConfig.chartPrefs;
+    if (this.spectraConfig && this.spectraConfig.chartPrefs) {
+      return this.spectraConfig.chartPrefs;
+    }
+    return {
+      yLabel: 'Y axis',
+      displayYAxis: ['display', 'main', 'sec'],
+      xLabel: 'X axis',
+      dislayXAxis: ['display', 'main', 'sec'],
+    }
   }
 
   /**

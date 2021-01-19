@@ -47,18 +47,19 @@ define([
       // var user = await this.roc.getUser();
       const queryOptions = key
         ? {
-            key: ['userAnalysisResults', this.viewID, sampleID, key],
-          }
+          key: ['userAnalysisResults', this.viewID, sampleID, key],
+        }
         : {
-            startkey: ['userAnalysisResults', this.viewID, sampleID, '\u0000'],
-            endkey: ['userAnalysisResults', this.viewID, sampleID, '\uffff'],
-          };
+          startkey: ['userAnalysisResults', this.viewID, sampleID, '\u0000'],
+          endkey: ['userAnalysisResults', this.viewID, sampleID, '\uffff'],
+        };
       queryOptions.mine = false;
 
       const entries = await this.roc.query('userAnalysisToc', queryOptions);
       /* if (sampleID) {
         return entries.filter((entry) => entry.$id[2].match(/^[0-9a-f]{32}$/i));
       }*/
+      console.log({ entries })
       return entries;
     }
 
@@ -76,6 +77,8 @@ define([
       if (!this.roc) {
         return loadTemplateFromLocalStorage(this.viewID, String(entry._id));
       }
+      this.lastEntry = entry;
+      console.log(this.lastEntry);
       return this.roc.getAttachment(entry, 'result.json');
     }
 
@@ -100,7 +103,10 @@ define([
       this.viewID = this.viewID || (await getViewInfo())._id;
       let entry = (await this.loadResults(key, { sampleID }))[0];
       if (entry) {
+        if (!entry._id) entry._id = entry.id;
+        if (!entry._rev) entry._rev = await this.roc.getLastRevision(entry);
         entry.$content = meta;
+        console.log({ entry })
         await this.roc.update(entry);
       } else {
         entry = await this.roc.create({

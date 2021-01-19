@@ -590,6 +590,12 @@ define([
         .catch(handleError(this, options));
     }
 
+    async getLastRevision(entry) {
+      const uuid = getUuid(entry);
+      const header = await this.getHeader(uuid);
+      return header.etag.replace(/"/g, "");
+    }
+
     async update(entry, options) {
       await this.__ready;
       options = createOptions(options, 'update');
