@@ -40,10 +40,10 @@ export const style = `
 
 export const dataNormalization = `
 {% if keepOriginal %}
-    <h1>Data normalization</h1>
+    <h1>Preprocessing</h1>
     <table>
         <tr>
-            <th align="left">Filters</th>
+            <th align="left">Filters:</th>
             <td>
                 <table>
                     <tr>
@@ -60,7 +60,7 @@ export const dataNormalization = `
                             <option value="rescale">Rescale (0 to 1)</option>
                             <option value="normalize">Normalize (sum to 1)</option>
                             <option value="pareto">Pareto normalization</option>
-                            <option value="align" data-options="from,to,nbPeaks,targetX">Align</option>
+                            <option value="calibrate" data-options="from,to,nbPeaks,targetX">Calibrate</option>
                             <option value="sg" data-options="windowSize,derivative,polynomial">Savitzky-Golay</option>
                             <option value="xFunction" data-options="function">X function</option>
                             <option value="yFunction" data-options="function">Y function</option>
@@ -92,7 +92,7 @@ export const dataNormalization = `
             </td>
         </tr>
         <tr>
-            <th align="left">Exclusions</th>
+            <th align="left">Exclusions:</th>
             <td>
                 <table>
                     <tr>
@@ -113,8 +113,11 @@ export const dataNormalization = `
                 <input type='number' name='normalization.numberOfPoints' size="6">
             </td>
         </tr>
+      </table>
+      <h1>Matrix processing</h1>
+      <table>
         <tr>
-            <th align="left">Post processing</th>
+            <th align="left">Scaling (matrix columns):</th>
             <td>
                 <table>
                     <tr>
@@ -127,6 +130,8 @@ export const dataNormalization = `
                         <select onchange="updateOptions(this);" data-field='name'>
                             <option value=""></option>
                             <option value="pqn">PQN</option>
+                            <option value="centerMean">Center Mean</option>
+                            <option value="rescale">Rescale (0 to 1)</option>
                          </select>
                     </td>
                     <td>
