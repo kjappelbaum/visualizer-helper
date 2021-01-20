@@ -104,7 +104,7 @@ define([
       let entry = (await this.loadResults(key, { sampleID }))[0];
       if (entry) {
         if (!entry._id) entry._id = entry.id;
-        if (!entry._rev) entry._rev = await this.roc.getLastRevision(entry);
+        entry = await this.roc.get(entry);
         entry.$content = meta;
         console.log({ entry })
         await this.roc.update(entry);
