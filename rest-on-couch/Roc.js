@@ -304,10 +304,12 @@ define([
               for (var i = 0; i < res.body.length; i++) {
                 res.body[i].anonymousRead = {
                   type: 'boolean',
+                  withCredentials: true,
                   url: `${this.entryUrl}/${res.body[i].id}/_rights/read?asAnonymous=true`
                 };
                 res.body[i].userWrite = {
                   type: 'boolean',
+                  withCredentials: true,
                   url: `${this.entryUrl}/${res.body[i].id}/_rights/write`
                 };
               }
