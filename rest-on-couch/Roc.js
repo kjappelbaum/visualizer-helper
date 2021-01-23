@@ -317,6 +317,7 @@ define([
             for (let i = 0; i < res.body.length; i++) {
               res.body[i].document = {
                 type: 'object',
+                withCredentials: true,
                 url: `${this.entryUrl}/${res.body[i].id}`
               };
             }
@@ -1222,8 +1223,8 @@ define([
       });
     }
 
-    typeUrl(v, entry) {
-      this._traverseFilename(v, (v) => {
+    typeUrl(content, entry) {
+      this._traverseFilename(content, (v) => {
         var filename = String(v.filename);
         if (!entry._attachments) return;
         var att = entry._attachments[filename];
