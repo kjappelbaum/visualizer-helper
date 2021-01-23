@@ -29,11 +29,7 @@ define([
     }
 
     async deleteTemplate(template) {
-      console.log(template);
-      return;
       let result = await UI.confirm('Are you sure you want to delete this template ?', 'Delete', 'Cancel', {});
-
-      return;
       if (!result) return;
       await this.roc.delete(template.id);
       this.refreshTemplates();
