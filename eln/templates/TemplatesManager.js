@@ -17,85 +17,114 @@ define([
       this.roc = new Roc({ ...couchDB, database: 'templates' });
       this.roc.getGroupMembership().then(groups => this.allGroups = groups);
       this.basename = options.basename || '';
+      if (this.basename && !this.basename.endsWith('.')) this.basename += '.'
       this.refreshTemplates();
     }
 
-
-    async createTemplate() {
-      let template = {
-        $kind: 'template',
-        $owners: ['anonymousRead'],
-        $id: ''.padStart(8).replace(/ /g, () => (Math.random() * 36 | 0).toString(36)),
-        $content: {
-          title: '',
-          description: '',
-          twig: '',
-          category: [{
-            value: "org.cheminfo.default"
-          }],
-          example: [
-            {
-              description: 'Default data',
-              data: {
-              },
-              form: {
-              }
-            }
-          ]
-        }
-      }
-      let entry = await this.roc.create(template);
-      API.createData('currentTemplate', entry);
+    async updateTemplate() {
+      console.log('UPDATE TEMPLATE');
+      const template = API.getData('currentTemplate');
+      await this.roc.update(template.value);
       this.refreshTemplates();
-      return entry;
-    }
-
-    async updateTemplate(template) {
-      await this.roc.update(template);
-      this.refreshTemplates();
-    }
-
-    async getTemplate(template) {
-      if (!template) return;
-      let entry = await this.roc.document(template.id);
-      await API.createData('currentTemplate', entry);
-      updateVariables();
-      this.doAction('setSelectedData', 0);
-      return entry;
     }
 
     async deleteTemplate(template) {
-      console.log('Delete', template);
+      console.log(template);
       return;
+      let result = await UI.confirm('Are you sure you want to delete this template ?', 'Delete', 'Cancel', {});
+
+      return;
+      if (!result) return;
       await this.roc.delete(template.id);
-      API.createData('currentTemplate', {
-      });
-      updateVariables();
       this.refreshTemplates();
     }
 
+    async createTemplate(options = {}) {
+      const { defaultTwig = '' } = options;
+      const form = await UI.form(`
+          <div>
+          <form>
+              <table>
+              <tr>
+              <th align=right>Category<br><span style='font-size: smaller'>Reaction code</span></th>
+              <td>
+                  <select name="category">
+                    <option value="chemical">Chemical</option>
+                  </select>
+                  <i>
+                      The sample category (currently only 'chemical')
+                  </i>
+              </td>
+              </tr>
+              <tr>
+              <th align=right>Name<br><span style='font-size: smaller'>Template name</span></th>
+              <td>
+                  <input type="text" name="name" pattern="[A-Za-z0-9 ,-]*"/><br>
+                  <i>
+                      Only letters, numbers, space, comma and dash
+                  </i>
+              </td>
+              </tr>
+              </table>
+              <input type="submit" value="Create template"/>
+          </form>
+          </div>
+      `, {});
+      if (!form || !form.name || form.category == null) return;
+      const templateEntry = {
+        $id: Math.random().toString(36).replace('0.', ''),
+        $kind: 'template',
+        $content: {
+          title: '',
+          description: '',
+          twig: defaultTwig,
+          category: [{
+            value: this.basename + form.category + '.' + form.name
+          }]
+        },
+      }
+
+      const template = await this.roc.create(templateEntry);
+      await this.refreshTemplates();
+      console.log(template);
+      return template
+    }
+
+
     async refreshTemplates() {
-      var templates = await this.roc.query('toc', {
-        addRightsInfo: true,
-        sort: (a, b) => a.modificationDate - b.modificationDate
-      });
-      console.log(templates)
+      const filter = (template) => template.value.category && template.value.category.find(
+        (category) => category.value && category.value.startsWith(this.basename)
+      );
+
+      let templates = await this.roc.query('toc', { mine: true, filter });
+      templates.forEach(template => template.readWrite = true)
+
+      const allTemplates = await this.roc.query('toc', { filter });
+      for (let newTemplate of allTemplates) {
+        if (!templates.find((template) => template.id === newTemplate.id)) {
+          newTemplate.readWrite = false;
+          templates.push(newTemplate);
+        }
+      }
+
+      templates = templates.sort((a, b) => b.value.modificationDate - a.value.modificationDate)
       await API.createData('templates', templates);
-      this.doAction('setSelectedTemplate', 0);
+      setTimeout(() => {
+        API.doAction('setSelectedTemplate', 0);
+      })
       return templates;
     }
 
-    async doAction(action) {
+    async doAction(action, options) {
       if (!action) return;
       var actionName = action.name;
       var actionValue = action.value;
 
       console.log('ACTION:', actionName, actionValue);
 
-
       switch (actionName) {
         case 'createTemplate':
-          return this.createTemplate(actionValue);
+          return this.createTemplate(options);
         case 'updateTemplate':
           return this.updateTemplate(actionValue);
         case 'deleteTemplate':
