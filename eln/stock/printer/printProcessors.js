@@ -87,7 +87,7 @@ define([
     text = text.replace(
       /\^XZ[\r\n]+$/,
       `^FO${printFormat.molfileOptions.x || 0},${printFormat.molfileOptions.y ||
-        0}^XGR:SAMPLE.GRF,1,1\r\n^XZ`
+      0}^XGR:SAMPLE.GRF,1,1\r\n^XZ`
     );
     return `~DGR:SAMPLE.GRF,${totalBytes},${bytesPerRow},${hexa}\r\n${text}`;
   }
@@ -228,6 +228,15 @@ define([
   }
 
   function fillFields(fields, data) {
+    // if all the fields are already defined we don't ask for the values
+    let allDefined = true;
+    for (let field of fields) {
+      if (data[field.name] === undefined) {
+        allDefined = false;
+      }
+    }
+    if (allDefined) return data;
+
     return UI.form(
       `
             <div>

@@ -139,7 +139,6 @@ define([
 
     async editTemplateAccess(entry) {
       const record = await this.roc.get(entry.id);
-      console.log(record, this.allGroups);
       const changed = await getChangedGroups(record, this.allGroups);
       if (!changed) return;
       try {
