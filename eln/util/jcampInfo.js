@@ -9,6 +9,8 @@ async function jcampInfo(value) {
     keepRecordsRegExp: /.*/,
   }).flatten[0];
 
+  console.log(parsed);
+
   let data = [];
 
   for (let key of Object.keys(parsed.meta)) {
@@ -49,19 +51,18 @@ async function jcampInfo(value) {
         <table id='allParameters'>
             <tbody>
                 ${data
-                  .map(
-                    (datum) => `
+      .map(
+        (datum) => `
                     <tr>
                         <td class="limited"><b>${datum.label}</b></td>
-                        <td><pre>${
-                          datum.value.replace
-                            ? datum.value.replace(/[\r\n]+$/, '')
-                            : datum.value
-                        }</pre></td>
+                        <td><pre>${datum.value.replace
+            ? datum.value.replace(/[\r\n]+$/, '')
+            : datum.value
+          }</pre></td>
                     </tr>
                 `,
-                  )
-                  .join('\n')}
+      )
+      .join('\n')}
             </tbody>
         </table>
         <script>
