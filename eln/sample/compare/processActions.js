@@ -64,7 +64,7 @@ function getSampleID(entry) {
 }
 
 async function addSpectrum(action) {
-  const CommonSpectrum = API.cache('CommonSpectrum');
+  const ExtendedCommonSpectrum = API.cache('ExtendedCommonSpectrum');
   let selectedSpectra = API.getData("selectedSpectra");
   const analysesManager = API.cache("analysesManager");
   let sampleID = getSampleID(action.value);
@@ -90,7 +90,7 @@ async function addSpectrum(action) {
   }
 
   if (jcamp) {
-    let spectrum = CommonSpectrum.fromJcamp(jcamp, { id: spectrumUUID, label: spectrumID });
+    let spectrum = ExtendedCommonSpectrum.fromJcamp(jcamp, { id: spectrumUUID, label: spectrumID });
 
     analysesManager.addAnalysis(spectrum);
 

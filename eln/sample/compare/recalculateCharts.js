@@ -1,7 +1,7 @@
 import API from 'src/util/api';
 
 export default function recalculateCharts(action) {
-  const CommonSpectrum = API.cache('CommonSpectrum');
+  const ExtendedCommonSpectrum = API.cache('ExtendedCommonSpectrum');
   const analysesManager = API.cache('analysesManager');
   const selectedSpectra = API.getData('selectedSpectra');
   const preferences = JSON.parse(JSON.stringify(API.getData('preferences')));
@@ -16,7 +16,7 @@ export default function recalculateCharts(action) {
   console.log('Calculate chart')
 
   if (preferences.normalization.processing) {
-    let chartProcessed = CommonSpectrum.JSGraph.getJSGraph(analyses, {
+    let chartProcessed = ExtendedCommonSpectrum.JSGraph.getJSGraph(analyses, {
       colors,
       opacities: [0.2],
       linesWidth: [3],
@@ -37,7 +37,7 @@ export default function recalculateCharts(action) {
     API.createData('chartProcessed', {});
   }
 
-  let chart = CommonSpectrum.JSGraph.getJSGraph(analyses, {
+  let chart = ExtendedCommonSpectrum.JSGraph.getJSGraph(analyses, {
     colors,
     ids,
     selector: preferences.selector,
@@ -48,7 +48,7 @@ export default function recalculateCharts(action) {
 
   API.createData('chart', chart);
 
-  let filterAnnotations = CommonSpectrum.JSGraph.getNormalizationAnnotations(preferences.normalization, {
+  let filterAnnotations = ExtendedCommonSpectrum.JSGraph.getNormalizationAnnotations(preferences.normalization, {
     y: { min: '0px', max: '2000px' },
   })
 
