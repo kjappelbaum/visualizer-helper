@@ -105,6 +105,7 @@ export const dataNormalization = `
                   <option value=""></option>
                   <option value="firstDerivative">First derivative</option>
                   <option value="secondDerivative">Second derivative</option>
+                  <option value="thirdDerivative">Third derivative</option>
               </select>
           </td>
       </tr>
