@@ -59,6 +59,11 @@ export const dataNormalization = `
                               <option value="normalize" data-options="value">Normalize (sum to n)</option>
                               <option value="multiply" data-options="value">Multiply (value)</option>
                               <option value="add" data-options="value">Add (value)</option>
+                              <option value="airplsbaseline" data-options="">AirPLS baseline</option>
+                              <option value="rollingaveragebaseline" data-options="">Rolling average baseline</option>
+                              <option value="iterativepolynomialbaseline" data-options="">Iterative polynomial baseline</option>
+                              <option value="rollingballbaseline" data-options="">Rolling ball basline</option>
+                              <option value="rollingmedianbaseline" data-options="">Rolling median baseline</option>
                           </select>
                       </td>
                       <td>
