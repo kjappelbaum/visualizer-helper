@@ -33,6 +33,7 @@ jpaths.bp = ['$content', 'physical', 'bp'];
 jpaths.nd = ['$content', 'physical', 'nd'];
 jpaths.mp = ['$content', 'physical', 'mp'];
 jpaths.density = ['$content', 'physical', 'density'];
+jpaths.stock = ['$content', 'stock'];
 jpaths.stockHistory = ['$content', 'stock', 'history'];
 jpaths.lastStock = ['$content', 'stock', 'history', 0];
 jpaths.supplier = ['$content', 'stock', 'supplier'];

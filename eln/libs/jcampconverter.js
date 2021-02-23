@@ -1,1 +1,1 @@
-export { convert } from '../../../../../../../../lib/jcampconverter/7.6.1/jcampconverter.min';
+export { convert } from '../../../../../../../../lib/jcampconverter/7.6.6/jcampconverter.min';
