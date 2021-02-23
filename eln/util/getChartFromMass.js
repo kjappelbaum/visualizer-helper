@@ -14,7 +14,7 @@ export async function getChartFromMass(experiment, options = {}) {
   if (experiment.jcamp) {
     let name =
       options.name || String(experiment.jcamp.filename).match(/([^/]+)\..+/)[1];
-    if (!experiment.jcamp.data) return undefined;
+    if (!experiment.jcamp.data && !experiment.jcamp.content) return undefined;
 
     let data = experiment.jcamp.content
       ? experiment.jcamp.content
