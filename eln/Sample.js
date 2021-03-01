@@ -316,13 +316,13 @@ Your local changes will be lost.</p>`;
             'Chromatogram LC, GC, LC/MS, GC/MS (csv, tsv, txt, jcamp, pdf, netcdf, xml)',
           thermogravimetricAnalysis:
             'Thermogravimetric Analysis (csv, tsv, txt, jcamp)',
-          xrd: 'Powder XRD Analysis (csv, tsv, txt, jcamp)',
+          xrd: 'Powder XRD (csv, tsv, txt, jcamp)',
           xps: 'XPS (csv, tsv, txt, jcamp)',
           isotherm: 'Isotherm (csv, tsv, txt, jcamp, xls)',
           cyclicVoltammetry: 'Cyclic voltammetry (csv, tsv, txt, jcamp, pdf)',
           differentialScanningCalorimetry:
             'Differential Scanning Calorimetry (csv, tsv, txt, jcamp)',
-          xray: 'Single cristal Xray (cif, pdb)',
+          xray: 'Crystal structure (cif, pdb)',
           image: 'Images (jpg, png or tiff)',
           video: 'Videos (mp4, m4a, avi, wav)',
           other: 'Other',
