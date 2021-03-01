@@ -933,10 +933,17 @@ define([
       await this.__ready;
       options = createOptions(options, 'createToken');
       const uuid = getUuid(entry);
-      return superagent
+      const request = superagent
         .post(`${this.entryUrl}/${uuid}/_token`)
-        .withCredentials()
-        .then(handleSuccess(this, options))
+        .withCredentials();
+      if (options.rights) {
+        let rights = options.rights;
+        if (Array.isArray(rights)) {
+          rights = options.rights.join(',');
+        }
+        request.query({ rights });
+      }
+      return request.then(handleSuccess(this, options))
         .then((res) => res.body)
         .catch(handleError(this, options));
     }
