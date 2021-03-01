@@ -948,7 +948,11 @@ define([
         .post(`${this.databaseUrl}/user/_me/token`)
         .withCredentials();
       if (options.rights) {
-        request.query({ rights: options.rights.join(',') });
+        let rights = options.rights;
+        if (Array.isArray(rights)) {
+          rights = options.rights.join(',');
+        }
+        request.query({ rights });
       }
       return request
         .then(handleSuccess(this, options))
