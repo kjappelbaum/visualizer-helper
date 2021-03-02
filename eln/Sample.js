@@ -290,6 +290,8 @@ Your local changes will be lost.</p>`;
         droppedTGA: 'thermogravimetricAnalysis',
         droppedIsotherm: 'isotherm',
         droppedDSC: 'differentialScanningCalorimetry',
+        droppedHg: 'hgPorosimetry',
+        droppedDCS: 'differentialCentrifugalSedimentation',
         droppedXray: 'xray',
         droppedXRD: 'xrd',
         droppedXPS: 'xps',
@@ -318,6 +320,8 @@ Your local changes will be lost.</p>`;
             'Thermogravimetric Analysis (csv, tsv, txt, jcamp)',
           xrd: 'Powder XRD Analysis (csv, tsv, txt, jcamp)',
           xps: 'XPS (csv, tsv, txt, jcamp)',
+          differentialCentrifugalSedimentation: 'Differential Centrifugal Sedimentation (csv, tsv, txt, jcamp)',
+          hgPorosimetry: 'Hg porosimetry (csv, tsv, txt, jcamp)',
           isotherm: 'Isotherm (csv, tsv, txt, jcamp, xls)',
           cyclicVoltammetry: 'Cyclic voltammetry (csv, tsv, txt, jcamp, pdf)',
           differentialScanningCalorimetry:
@@ -450,6 +454,16 @@ Your local changes will be lost.</p>`;
           type: 'Thermogravimetric analysis',
           xUnit: 'Temperature [°C]',
           yUnit: 'Weight [mg]',
+        },
+        hgPorosimetry: {
+          type: 'Hg porosimetry',
+          xUnit: 'Pressure [MPa]',
+          yUnit: 'Volume [mm³/g]',
+        },
+        differentialCentrifugalSedimentation: {
+          type: 'Differential Centrifugal Sedimentation',
+          xUnit: 'Diameter [nm]',
+          yUnit: 'Quantity',
         },
         differentialScanningCalorimetry: {
           type: 'Differentical scanning calorimetry',
