@@ -48,6 +48,7 @@ jpaths.peptidic = ['$content', 'biology', 'peptidic'];
 jpaths.chromatogram = ['$content', 'spectra', 'chromatogram'];
 jpaths.biology = ['$content', 'biology'];
 jpaths.xrd = ['$content', 'spectra', 'xrd'];
+jpaths.xrf = ['$content', 'spectra', 'xrf'];
 jpaths.xps = ['$content', 'spectra', 'xps'];
 jpaths.isotherm = ['$content', 'spectra', 'isotherm'];
 jpaths.thermogravimetricAnalysis = [
@@ -56,6 +57,9 @@ jpaths.thermogravimetricAnalysis = [
   'thermogravimetricAnalysis',
 ];
 jpaths.cyclicVoltammetry = ['$content', 'spectra', 'cyclicVoltammetry'];
+jpaths.hgPorosimetry = ['$content', 'spectra', 'hgPorosimetry'];
+jpaths.differentialCentrifugalSedimentation = ['$content', 'spectra', 'differentialCentrifugalSedimentation'];
+jpaths.disc = ['$content', 'spectra', 'hgPorosimetry'];
 jpaths.elementalAnalysis = ['$content', 'spectra', 'elementalAnalysis'];
 jpaths.differentialScanningCalorimetry = [
   '$content',

@@ -151,8 +151,11 @@ Your local changes will be lost.</p>`;
     createVar(sampleVar, 'xray');
     createVar(sampleVar, 'chromatogram');
     createVar(sampleVar, 'thermogravimetricAnalysis');
+    createVar(sampleVar, 'hgPorosimetry')
+    createVar(sampleVar, 'differentialCentrifugalSedimentation')
     createVar(sampleVar, 'isotherm');
     createVar(sampleVar, 'xrd');
+    createVar(sampleVar, 'xrf');
     createVar(sampleVar, 'xps');
     createVar(sampleVar, 'cyclicVoltammetry');
     createVar(sampleVar, 'elementalAnalysis');
@@ -290,8 +293,11 @@ Your local changes will be lost.</p>`;
         droppedTGA: 'thermogravimetricAnalysis',
         droppedIsotherm: 'isotherm',
         droppedDSC: 'differentialScanningCalorimetry',
+        droppedHg: 'hgPorosimetry',
+        droppedDCS: 'differentialCentrifugalSedimentation',
         droppedXray: 'xray',
         droppedXRD: 'xrd',
+        droppedXRF: 'xrf',
         droppedXPS: 'xps',
         droppedOverview: 'image',
         droppedImage: 'image',
@@ -317,7 +323,11 @@ Your local changes will be lost.</p>`;
           thermogravimetricAnalysis:
             'Thermogravimetric Analysis (csv, tsv, txt, jcamp)',
           xrd: 'Powder XRD (csv, tsv, txt, jcamp)',
+          xrd: 'Powder XRD Analysis (csv, tsv, txt, jcamp)',
+          xrf: 'Xray fluoresence (csv, tsv, txt, jcamp)',
           xps: 'XPS (csv, tsv, txt, jcamp)',
+          differentialCentrifugalSedimentation: 'Differential Centrifugal Sedimentation (csv, tsv, txt, jcamp)',
+          hgPorosimetry: 'Hg porosimetry (csv, tsv, txt, jcamp)',
           isotherm: 'Isotherm (csv, tsv, txt, jcamp, xls)',
           cyclicVoltammetry: 'Cyclic voltammetry (csv, tsv, txt, jcamp, pdf)',
           differentialScanningCalorimetry:
@@ -451,6 +461,16 @@ Your local changes will be lost.</p>`;
           xUnit: 'Temperature [°C]',
           yUnit: 'Weight [mg]',
         },
+        hgPorosimetry: {
+          type: 'Hg porosimetry',
+          xUnit: 'Pressure [MPa]',
+          yUnit: 'Volume [mm³/g]',
+        },
+        differentialCentrifugalSedimentation: {
+          type: 'Differential Centrifugal Sedimentation',
+          xUnit: 'Diameter [nm]',
+          yUnit: 'Quantity',
+        },
         differentialScanningCalorimetry: {
           type: 'Differentical scanning calorimetry',
           xUnit: 'I [mA]',
@@ -465,6 +485,11 @@ Your local changes will be lost.</p>`;
           type: 'X-ray powder diffraction',
           xUnit: '2ϴ [°]',
           yUnit: 'counts',
+        },
+        xrf: {
+          type: 'X-ray fluoresence',
+          xUnit: 'Energy [keV]',
+          yUnit: 'Intensity',
         },
       };
 
