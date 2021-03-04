@@ -641,7 +641,7 @@ Your local changes will be lost.</p>`;
           'Are you sure you want to delete the attachment?',
         );
         if (!ok) return;
-        var attachment = action.value.name;
+        const attachment = action.value.name;
         await this.roc.deleteAttachment(this.sample, attachment);
         this.updateOtherAttachments();
         break;
