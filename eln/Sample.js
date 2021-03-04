@@ -637,6 +637,10 @@ Your local changes will be lost.</p>`;
       case 'recreateVariables':
         this.createVariables();
       case 'deleteAttachment':
+        const ok = await UI.confirm(
+          'Are you sure you want to delete the attachment?',
+        );
+        if (!ok) return;
         var attachment = action.value.name;
         await this.roc.deleteAttachment(this.sample, attachment);
         this.updateOtherAttachments();
