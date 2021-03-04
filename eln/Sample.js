@@ -155,6 +155,7 @@ Your local changes will be lost.</p>`;
     createVar(sampleVar, 'differentialCentrifugalSedimentation')
     createVar(sampleVar, 'isotherm');
     createVar(sampleVar, 'xrd');
+    createVar(sampleVar, 'xrf');
     createVar(sampleVar, 'xps');
     createVar(sampleVar, 'cyclicVoltammetry');
     createVar(sampleVar, 'elementalAnalysis');
@@ -296,6 +297,7 @@ Your local changes will be lost.</p>`;
         droppedDCS: 'differentialCentrifugalSedimentation',
         droppedXray: 'xray',
         droppedXRD: 'xrd',
+        droppedXRF: 'xrf',
         droppedXPS: 'xps',
         droppedOverview: 'image',
         droppedImage: 'image',
@@ -321,6 +323,7 @@ Your local changes will be lost.</p>`;
           thermogravimetricAnalysis:
             'Thermogravimetric Analysis (csv, tsv, txt, jcamp)',
           xrd: 'Powder XRD Analysis (csv, tsv, txt, jcamp)',
+          xrf: 'Xray fluoresence (csv, tsv, txt, jcamp)',
           xps: 'XPS (csv, tsv, txt, jcamp)',
           differentialCentrifugalSedimentation: 'Differential Centrifugal Sedimentation (csv, tsv, txt, jcamp)',
           hgPorosimetry: 'Hg porosimetry (csv, tsv, txt, jcamp)',
@@ -481,6 +484,11 @@ Your local changes will be lost.</p>`;
           type: 'X-ray powder diffraction',
           xUnit: '2ϴ [°]',
           yUnit: 'counts',
+        },
+        xrf: {
+          type: 'X-ray fluoresence',
+          xUnit: 'Energy [keV]',
+          yUnit: 'Intensity',
         },
       };
 
