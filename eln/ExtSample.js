@@ -63,7 +63,11 @@ class Sample {
     API.setVariable('mass', sampleVar, ['$content', 'spectra', 'mass']);
     API.setVariable('nmr', sampleVar, ['$content', 'spectra', 'nmr']);
     API.setVariable('ir', sampleVar, ['$content', 'spectra', 'ir']);
-    API.setVariable('chromatogram', sampleVar, ['$content', 'spectra', 'chromatogram']);
+    API.setVariable('chromatogram', sampleVar, [
+      '$content',
+      'spectra',
+      'chromatogram',
+    ]);
     API.setVariable('description', sampleVar, [
       '$content',
       'general',
@@ -147,7 +151,8 @@ class Sample {
     this.sample.unbindChange(this.onChange);
   }
 
-  handleDrop(name) {
+  async handleDrop(name, askType, options = {}) {
+    let { converters, autoJcamp, autoKind } = options;
     if (!name) {
       throw new Error('handleDrop expects a variable name');
     }
@@ -181,6 +186,44 @@ class Sample {
     droppedDatas = droppedDatas.file || droppedDatas.str;
     for (let droppedData of droppedDatas) {
       if (!droppedData.filename.includes('.')) droppedData.filename += '.txt';
+
+      const extension = droppedData.filename.replace(/.*\./, '').toLowerCase();
+      let kind = extension;
+      if (autoKind) {
+        kind = autoKind(droppedData) || kind;
+      }
+
+      if (converters[kind]) {
+        autoJcamp = false;
+
+        let converted = await converters[kind](droppedData.content);
+        if (!Array.isArray(converted)) {
+          converted = [converted];
+        }
+
+        for (let i = 1; i < converted.length; i++) {
+          newData.push({
+            filename: droppedData.filename.replace(
+              '.' + extension,
+              '_' + i + '.jdx',
+            ),
+            mimetype: 'chemical/x-jcamp-dx',
+            contentType: 'chemical/x-jcamp-dx',
+            encoding: 'utf8',
+            content: converted[i],
+          });
+        }
+
+        droppedData.filename = droppedData.filename.replace(
+          '.' + extension,
+          '.jdx',
+        );
+        droppedData.mimetype = 'chemical/x-jcamp-dx';
+        droppedData.contentType = 'chemical/x-jcamp-dx';
+        droppedData.encoding = 'utf8';
+        droppedData.content = converted[0];
+      }
+
       elnPlugin.process(
         types[name],
         this.sample.$content,
