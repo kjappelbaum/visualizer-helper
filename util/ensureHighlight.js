@@ -1,6 +1,6 @@
 import API from 'src/util/api';
 
-export function ensureHighlight(variableName) {
+function ensureHighlight(variableName) {
   let array = API.getData(variableName);
   let changed = false;
   for (let item of array) {
@@ -14,4 +14,7 @@ export function ensureHighlight(variableName) {
     }
   }
   if (changed) array.triggerChange();
+  return changed;
 }
+
+module.exports = ensureHighlight;
