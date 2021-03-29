@@ -2,10 +2,13 @@ function toHTML(value, options = {}) {
   const { parenthesis = false, ascending = false } = options;
   value = JSON.parse(JSON.stringify(value));
   if (value && value.peak) {
+    value.peak.forEach((item) => {
+      if (!item.wavenumber) item.wavenumber = item.wavelength;
+    });
     if (ascending) {
-      value.peak.sort((a, b) => a.wavelength - b.wavelength);
+      value.peak.sort((a, b) => a.wavenumber - b.wavelength);
     } else {
-      value.peak.sort((a, b) => b.wavelength - a.wavelength);
+      value.peak.sort((a, b) => b.wavenumber - a.wavelength);
     }
   }
   if (parenthesis) return format2(value);
@@ -18,7 +21,7 @@ function format1(value) {
   if (value && value.peak) {
     acsString += 'IR (cm<sup>-1</sup>): ';
     acsString += value.peak
-      .map((a) => Math.round(a.wavelength) + (a.kind ? `<i>${a.kind}</i>` : ''))
+      .map((a) => Math.round(a.wavenumber) + (a.kind ? `<i>${a.kind}</i>` : ''))
       .join(', ');
   }
   return acsString;
@@ -32,8 +35,8 @@ function format2(value) {
     acsString += value.peak
       .map(
         (a) =>
-          Math.round(a.wavelength) +
-          (a.kind ? ` (${a.kind.toLowerCase()})` : '')
+          Math.round(a.wavenumber) +
+          (a.kind ? ` (${a.kind.toLowerCase()})` : ''),
       )
       .join(', ');
   }
