@@ -30,7 +30,7 @@ define([
     if (!toc.tips) return;
     let userPrefs = JSON.parse(
       window.localStorage.getItem('tipsPreferences') ||
-      '{"lastTip":0, "views":{}}',
+        '{"lastTip":0, "views":{}}',
     );
     if ((Date.now() - userPrefs.lastTip || 0) < minDelayBetweenTips) return;
     if (!userPrefs.views[info._id]) {
@@ -52,7 +52,7 @@ define([
       window.localStorage.setItem('tipsPreferences', JSON.stringify(userPrefs));
       UI.dialog(
         `
-            <iframe frameBorder="0" width="100%" height="100%" 
+            <iframe frameBorder="0" width="100%" height="100%" allowfullscreen="true"
             src="${tipsURL}${info._id}/${tips[0].name}">
         `,
         { width: 800, height: 600, title: 'Did you know ?' },
@@ -66,7 +66,9 @@ define([
       options._id === undefined ? await getViewInfo() : { _id: options._id };
     if (!info._id) return;
 
-    const response = await fetch(`${pagesURL + info._id}/index.html`, { method: 'HEAD' });
+    const response = await fetch(`${pagesURL + info._id}/index.html`, {
+      method: 'HEAD',
+    });
     if (response.status !== 200) return;
 
     let target = document.getElementById('modules-grid');
@@ -80,11 +82,11 @@ define([
     div.addEventListener('click', () => {
       UI.dialog(
         `
-            <iframe frameBorder="0" width="100%" height="100%" 
+            <iframe frameBorder="0" width="100%" height="100%" allowfullscreen="true"
             src="${pagesURL + info._id}">
         `,
-        { width: 900, height: 700, title: 'Information about the page' },
-      );
+        { width: 1000, height: 800, title: 'Information about the page' },
+      ).css('overflow', 'hidden');
     });
 
     target.prepend(div);
@@ -100,7 +102,7 @@ define([
         ) {
           UI.dialog(
             `
-                <iframe frameBorder="0" width="100%" height="100%" 
+                <iframe frameBorder="0" width="100%" height="100%" allowfullscreen="true"
                 src="${pagesURL + info._id}">
             `,
             { width: 900, height: 700, title: 'Information about the page' },
