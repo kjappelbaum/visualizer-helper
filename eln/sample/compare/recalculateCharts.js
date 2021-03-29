@@ -1,19 +1,21 @@
 import API from 'src/util/api';
 
-export default function recalculateCharts(action) {
+export default function recalculateCharts() {
   const ExtendedCommonSpectrum = API.cache('ExtendedCommonSpectrum');
   const analysesManager = API.cache('analysesManager');
   const selectedSpectra = API.getData('selectedSpectra');
   const preferences = JSON.parse(JSON.stringify(API.getData('preferences')));
 
-  let ids = selectedSpectra.filter(entry => DataObject.resurrect(entry.display)).map(entry => String(entry.id));
+  let ids = selectedSpectra
+    .filter((entry) => DataObject.resurrect(entry.display))
+    .map((entry) => String(entry.id));
   let colors = selectedSpectra
-    .filter(entry => DataObject.resurrect(entry.display))
-    .map(entry => String(entry.color));
+    .filter((entry) => DataObject.resurrect(entry.display))
+    .map((entry) => String(entry.color));
 
   let analyses = analysesManager.getAnalyses({ ids });
 
-  console.log('Calculate chart')
+  console.log('Calculate chart');
 
   if (preferences.normalization.processing) {
     let chartProcessed = ExtendedCommonSpectrum.JSGraph.getJSGraph(analyses, {
@@ -26,9 +28,9 @@ export default function recalculateCharts(action) {
         processing: preferences.normalization.processing,
         filters: [
           {
-            name: "rescale"
-          }
-        ]
+            name: 'rescale',
+          },
+        ],
       },
     });
     delete preferences.normalization.processing;
@@ -48,9 +50,12 @@ export default function recalculateCharts(action) {
 
   API.createData('chart', chart);
 
-  let filterAnnotations = ExtendedCommonSpectrum.JSGraph.getNormalizationAnnotations(preferences.normalization, {
-    y: { min: '0px', max: '2000px' },
-  })
+  let filterAnnotations = ExtendedCommonSpectrum.JSGraph.getNormalizationAnnotations(
+    preferences.normalization,
+    {
+      y: { min: '0px', max: '2000px' },
+    },
+  );
 
   API.createData('filterAnnotations', filterAnnotations);
 }
