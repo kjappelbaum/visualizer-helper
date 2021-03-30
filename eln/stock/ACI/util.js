@@ -24,12 +24,12 @@ module.exports = function (roc, prefix) {
 
   function getOclDistinguishOr(mol) {
     const idCode = mol.getCanonizedIDCode(
-      OCL.Molecule.CANONIZER_DISTINGUISH_RACEMIC_OR_GROUPS
+      OCL.Molecule.CANONIZER_DISTINGUISH_RACEMIC_OR_GROUPS,
     );
     const { coordinates } = mol.getIDCodeAndCoordinates();
     return {
       idCode,
-      coordinates
+      coordinates,
     };
   }
 
@@ -50,7 +50,7 @@ module.exports = function (roc, prefix) {
     general.ocl = {
       value: newOclid,
       coordinates: newOclCoordinates || freeBaseOcl.coordinates,
-      index: freeBaseMolecule.getIndex()
+      index: freeBaseMolecule.getIndex(),
     };
   }
 
@@ -95,7 +95,7 @@ module.exports = function (roc, prefix) {
 
   async function getNextID() {
     var v = await roc.view('sampleId', {
-      reduce: true
+      reduce: true,
     });
 
     if (!v.length || !v[0].value || !v[0].value[prefix]) {
@@ -112,8 +112,8 @@ module.exports = function (roc, prefix) {
   async function getDups(oclid) {
     const oclidStr = String(oclid);
     let dups = await roc.query('idWithOCLID', {
-      startkey: [oclidStr],
-      endkey: [oclidStr, '\ufff0']
+      startkey: [oclidStr, `${prefix}-`],
+      endkey: [oclidStr, `${prefix}-\ufff0`],
     });
 
     if (!isUnique(dups)) {
@@ -188,7 +188,10 @@ module.exports = function (roc, prefix) {
 
   function getNextBatchNumber(values) {
     return (
-      Math.max.apply(null, values.map((v) => v.value[v.value.length - 1])) + 1
+      Math.max.apply(
+        null,
+        values.map((v) => v.value[v.value.length - 1]),
+      ) + 1
     );
   }
 
@@ -205,7 +208,7 @@ module.exports = function (roc, prefix) {
     getInternalIDInfo,
     salts,
     getMoleculeWithSalts,
-    getOclDistinguishOr
+    getOclDistinguishOr,
   };
 };
 
@@ -213,167 +216,167 @@ var salts = {
   NX: {
     name: 'Free base',
     mf: '',
-    mw: 0
+    mw: 0,
   },
   TT: {
     name: 'Tritiated compound',
     mf: '',
-    mw: 0
+    mw: 0,
   },
   XX: {
     name: 'Unknown salt',
     mf: '',
-    mw: 0
+    mw: 0,
   },
   AA: {
     idCode: 'fHdP@@',
     name: 'Hydrochloride',
     mf: 'HCl',
-    mw: 36.46094
+    mw: 36.46094,
   },
   AB: {
     idCode: 'fHv`d@',
     name: 'Sodium',
     mf: 'Na+',
-    mw: 22.99
+    mw: 22.99,
   },
   AC: {
     idCode: 'fHfH@@',
     mf: 'HBr',
     mw: 80.91194,
-    name: 'Hydrobromide'
+    name: 'Hydrobromide',
   },
   AD: {
     idCode: 'fHeX@@',
     mf: 'HI',
     mw: 127.90794000000001,
-    name: 'Hydroiodide'
+    name: 'Hydroiodide',
   },
   AE: {
     idCode: 'daxB@@QnR[VZY`cD',
     mf: 'C4H4O4',
     mw: 116.07176,
-    name: 'Maleate'
+    name: 'Maleate',
   },
   AG: {
     idCode: 'gJQhHl@bOV`@',
     mf: 'CH4O3S',
     mw: 96.10576,
-    name: 'Mesylate'
+    name: 'Mesylate',
   },
   AH: {
     idCode: 'gGPP@cTfyi`@',
     mf: 'C2H2O4',
     mw: 90.03388,
-    name: 'Oxalate'
+    name: 'Oxalate',
   },
   AI: {
     idCode: 'gNplJqHJPtadTaeTp@',
     mf: 'C2HO2F3',
     mw: 114.02194,
-    name: 'Trifluoroacetate'
+    name: 'Trifluoroacetate',
   },
   AJ: {
     idCode: 'gJPXHlPDQzt@@',
     mf: 'H2O4S',
     mw: 98.07788000000001,
-    name: 'Sulfate'
+    name: 'Sulfate',
   },
   AK: {
     idCode: 'gC``@dfZ@@',
     mf: 'C2H4O2',
     mw: 60.05176,
-    name: 'Acetate'
+    name: 'Acetate',
   },
   AL: {
     idCode: 'fHvPd@',
     mf: 'K',
     mw: 39.098,
-    name: 'Potassium'
+    name: 'Potassium',
   },
   AM: {
     idCode: 'dedF@@PfFTf{nZjf@@',
     mf: 'C4H6O6',
     mw: 150.08564,
-    name: 'Tartrate'
+    name: 'Tartrate',
   },
   AN: {
     idCode: 'dmtL`HS@BLddlRVFUh@H@@',
     mf: 'C7H8O3S',
     mw: 172.20352,
-    name: 'p-Toluenesulfonate'
+    name: 'p-Toluenesulfonate',
   },
   AO: {
     idCode: 'dkLN@@PiWSR[kVYjjfX@@',
     mf: 'C6H8O7',
     mw: 192.12252,
-    name: 'Citrate'
+    name: 'Citrate',
   },
   AP: {
     idCode: 'dmvL`BaL@HrRRjIJUVjjh@@',
     mf: 'C6H13NO3S',
     mw: 179.23922000000002,
-    name: 'n-Cyclohexylsulfamate'
+    name: 'n-Cyclohexylsulfamate',
   },
   AQ: {
     idCode: 'gGPXHlPDYIHUj@@',
     mf: 'CH4O4S',
     mw: 112.10476,
-    name: 'Methylsulfate'
+    name: 'Methylsulfate',
   },
   AR: {
     idCode: 'fHv@d@',
     mf: 'Li',
     mw: 6.941,
-    name: 'Lithium'
+    name: 'Lithium',
   },
   AS: {
     idCode: 'dazL@LAnRVmjj`@',
     mf: 'C4H11NO3',
     mw: 121.13534,
-    name: 'Tris(hydroxymethyl)-methylammonium'
+    name: 'Tris(hydroxymethyl)-methylammonium',
   },
   AT: {
     idCode: 'gCi`hEiNyIf`@',
     mf: 'HNO3',
     mw: 63.011939999999996,
-    name: 'Nitrate'
+    name: 'Nitrate',
   },
   AU: {
     idCode: 'gNpP@jtfvZf@@',
     mf: 'C3H4O4',
     mw: 104.06076,
-    name: 'Malonate'
+    name: 'Malonate',
   },
   AV: {
     idCode: 'fJ@@',
     mf: 'H3N',
     mw: 17.03082,
-    name: 'Ammonium'
+    name: 'Ammonium',
   },
   AW: {
     idCode: 'gNx@@eRmUP@',
     mf: 'C6H15N',
     mw: 101.19210000000001,
-    name: 'Triethylammonium'
+    name: 'Triethylammonium',
   },
   AX: {
     idCode: 'fdy@q@HHqxLPAE`cIIKEDhmCIKQgKP@@Pl@@@',
     mf: 'C10H8O6S2',
     mw: 288.29952000000003,
-    name: 'Naphthalene-1,5-disulfonic acid'
+    name: 'Naphthalene-1,5-disulfonic acid',
   },
   AY: {
     idCode: 'dk^@@@RfYU\\]Tzjjjj@@',
     mf: 'C12H23N',
     mw: 181.32162,
-    name: 'Dicyclohexyl-ammonium'
+    name: 'Dicyclohexyl-ammonium',
   },
   DB: {
     idCode: 'gJPXHlQDQzl@@',
     mf: 'HO4Cl',
     mw: 100.45694,
-    name: 'Perchlorate'
+    name: 'Perchlorate',
   },
   WA: {
     code: 'WA',
@@ -402,5 +405,5 @@ var salts = {
     mw: 150.076888,
     mf: 'CHF3O3S',
     name: 'Triflate',
-  }
+  },
 };
