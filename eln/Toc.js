@@ -112,7 +112,7 @@ class Toc {
     if (listAllGroups) {
       groups = (await this.roc.getGroupsInfo()).map((g) => g.name);
     } else {
-      groups = (await this.roc.getGroupsMembership()).map((g) => g.name);
+      groups = (await this.roc.getGroupMembership()).map((g) => g.name);
     }
 
     var possibleGroups = ['all', 'mine'].concat(groups);
