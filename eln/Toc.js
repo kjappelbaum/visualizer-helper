@@ -95,6 +95,7 @@ class Toc {
    * @param {string} [cookieName='eln-default-sample-group''] cookie name containing the last selected group
    * @param {string} [filter] filter applied on first refresh
    * @param {string} [autoRefresh=true] refresh least after initialization
+   * @param {boolean} [listAllGroups=true] select from any group, even if not the a member
    * @return {string} the form to select group}
    */
   async initializeGroupForm(options = {}) {
@@ -103,10 +104,16 @@ class Toc {
       varName = 'groupForm',
       cookieName = 'eln-default-sample-group',
       filter,
-      autoRefresh = true
+      autoRefresh = true,
+      listAllGroups = false
     } = options;
 
-    let groups = (await this.roc.getGroupsInfo()).map((g) => g.name);
+    let groups = [];
+    if (listAllGroups) {
+      groups = (await this.roc.getGroupsInfo()).map((g) => g.name);
+    } else {
+      groups = (await this.roc.getGroupsMembership()).map((g) => g.name);
+    }
 
     var possibleGroups = ['all', 'mine'].concat(groups);
     var defaultGroup = localStorage.getItem(cookieName);
