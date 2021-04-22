@@ -69,6 +69,7 @@ define([
     'getQuery',
     'getTokens',
     'getGroups',
+    'getGroupsInfo',
     'getToken'
   ];
 
@@ -117,6 +118,7 @@ define([
       404: 'Query does not exist'
     },
     getGroups: {},
+    getGroupsInfo: {},
     addGroup: {
       401: 'Unauthorized to add group',
       200: 'Group added to entry'
@@ -213,7 +215,11 @@ define([
     async getUserPrefs(defaultPrefs = {}) {
       await this.__ready;
       try {
-        return (await fetch(`${this.databaseUrl}/user/_me`, { credentials: 'include' })).json();
+        return (
+          await fetch(`${this.databaseUrl}/user/_me`, {
+            credentials: 'include'
+          })
+        ).json();
       } catch (e) {
         this.setUserPrefs(defaultPrefs);
         return defaultPrefs;
@@ -235,7 +241,11 @@ define([
 
     async getUserInfo() {
       await this.__ready;
-      return (await fetch(`${this.databaseUrl}/userInfo/_me`, { credentials: 'include' })).json();
+      return (
+        await fetch(`${this.databaseUrl}/userInfo/_me`, {
+          credentials: 'include'
+        })
+      ).json();
     }
 
     async view(viewName, options) {
@@ -540,6 +550,21 @@ define([
         .catch(handleError(this, options));
     }
 
+    // Get basic info about every group (only name and description)
+    async getGroupsInfo(options) {
+      await this.__ready;
+      options = createOptions(options, 'getGroupsInfo');
+      const groupsInfoUrl = new URI(this.databaseUrl)
+        .segment('groups/info')
+        .normalize()
+        .href();
+      return superagent
+        .get(groupsInfoUrl)
+        .withCredentials()
+        .then((res) => res.body)
+        .catch(handleError(this, options));
+    }
+
     // Get the groups the user is member of
     // Returns a promise that resolves with an array of strings
     async getGroupMembership(options) {
@@ -596,7 +621,7 @@ define([
     async getLastRevision(entry) {
       const uuid = getUuid(entry);
       const header = await this.getHeader(uuid);
-      return header.etag.replace(/"/g, "");
+      return header.etag.replace(/"/g, '');
     }
 
     async update(entry, options) {
@@ -943,7 +968,8 @@ define([
         }
         request.query({ rights });
       }
-      return request.then(handleSuccess(this, options))
+      return request
+        .then(handleSuccess(this, options))
         .then((res) => res.body)
         .catch(handleError(this, options));
     }
