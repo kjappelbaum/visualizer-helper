@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import OCL from 'openchemlib/openchemlib-core';
 
@@ -11,9 +11,10 @@ define(['src/util/ui', 'src/util/api'], function (UI, API) {
     return fromSMILES(smiles, options);
   }
 
-
   async function fromSMILES(smiles, options = {}) {
-    const html = `<iframe src="https://www.lactame.com/react/views/v1.2.0/chemistry/pubchem.html?smiles=${encodeURIComponent(smiles)}" frameborder="0" style="overflow:hidden;height:95%;width:100%" height="95%" width="100%"></iframe>`
+    const html = `<iframe src="https://www.lactame.com/react/views/v1.2.1/chemistry/pubchem.html?smiles=${encodeURIComponent(
+      smiles,
+    )}" frameborder="0" style="overflow:hidden;height:95%;width:100%" height="95%" width="100%"></iframe>`;
 
     UI.dialog(html, {
       width: 1000,
@@ -25,7 +26,6 @@ define(['src/util/ui', 'src/util/api'], function (UI, API) {
 
   return { fromIDCode, fromSMILES };
 });
-
 
 const ghsTemplate = `
 <style>
@@ -207,4 +207,4 @@ const ghsFullTemplate = `
         {% endfor %}
     {% endif %}
 </div>
-`
+`;
