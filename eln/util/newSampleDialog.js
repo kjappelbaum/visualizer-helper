@@ -15,11 +15,11 @@ define(['src/util/ui', 'lodash'], function (ui, _) {
               <form>
                   <table>
                   <tr>
-                  <th align=right>Reference<br><span style='font-size: smaller'>Reaction code</span></th>
+                  <th align=right>Reference<br><span style='font-size: smaller'>Product code</span></th>
                   <td><input type="text" name="code" pattern="[A-Za-z0-9 .-]{3,}"/></td>
                   </tr>
                   <tr>
-                  <th align=right>Batch<br><span style='font-size: smaller'>Fraction</span></th>
+                  <th align=right>Batch<br><span style='font-size: smaller'>Batch code</span></th>
                   <td><input type="text" name="batch" pattern="[A-Za-z0-9 .-]*"/></td>
                   </tr>
                   <tr>
