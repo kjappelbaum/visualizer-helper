@@ -1,7 +1,7 @@
 import API from 'src/util/api';
-import trackMove from './trackMove'
-import recalculateCharts from './recalculateCharts'
-import Color from 'src/util/color'
+import trackMove from './trackMove';
+import recalculateCharts from './recalculateCharts';
+import Color from 'src/util/color';
 
 const nbColors = 8;
 const colors = Color.getDistinctColorsAsString(nbColors);
@@ -24,49 +24,45 @@ async function processActions(action) {
       removeSpectrum(action);
       break;
     }
-    case "setSpectrum": {
-      const analysesManager = API.cache("analysesManager");
-      let selectedSpectra = API.getData("selectedSpectra");
+    case 'setSpectrum': {
+      const analysesManager = API.cache('analysesManager');
+      let selectedSpectra = API.getData('selectedSpectra');
       analysesManager.analyses.splice(0);
       selectedSpectra.length = 0;
-      await addSpectrum(action);
-      break;
+      return await addSpectrum(action);
     }
-    case "addSpectrum":
-      await addSpectrum(action);
-      break;
-    case "hideSpectra":
+    case 'addSpectrum':
+      return await addSpectrum(action);
+    case 'hideSpectra':
       hideSpectra();
       break;
-    case "hideAllSpectra":
+    case 'hideAllSpectra':
       hideAllSpectra();
       break;
-    case "showOnlySpectra":
+    case 'showOnlySpectra':
       showOnlySpectra();
       break;
-    case "showSpectra":
+    case 'showSpectra':
       showSpectra();
       break;
-    case "showAllSpectra":
+    case 'showAllSpectra':
       showAllSpectra();
       break;
   }
 }
 
-
-
 function getSampleID(entry) {
   while ((entry = entry.__parent)) {
-    if (entry.$id) return entry.$id.join(" ");
-    if (entry.value && entry.value.$id) return entry.value.$id.join(" ");
+    if (entry.$id) return entry.$id.join(' ');
+    if (entry.value && entry.value.$id) return entry.value.$id.join(' ');
   }
-  return "";
+  return '';
 }
 
 async function addSpectrum(action) {
   const ExtendedCommonSpectrum = API.cache('ExtendedCommonSpectrum');
-  let selectedSpectra = API.getData("selectedSpectra");
-  const analysesManager = API.cache("analysesManager");
+  let selectedSpectra = API.getData('selectedSpectra');
+  const analysesManager = API.cache('analysesManager');
   let sampleID = getSampleID(action.value);
   let sampleUUID = getSampleUUID(action.value);
   let spectrumUUID = getSpectrumUUID(action.value);
@@ -76,21 +72,39 @@ async function addSpectrum(action) {
   let jcamp = '';
 
   if (action.value.jcamp && action.value.jcamp.filename) {
-    jcamp += await API.cache('roc').getAttachment({ _id: sampleUUID }, action.value.jcamp.filename);
+    jcamp += await API.cache('roc').getAttachment(
+      { _id: sampleUUID },
+      action.value.jcamp.filename
+    );
   }
 
-  if (!jcamp) { // compatibility with old approach
-    if (action.value.jcampTemperature && action.value.jcampTemperature.filename) {
-      jcamp += await API.cache('roc').getAttachment({ _id: sampleUUID }, action.value.jcampTemperature.filename);
+  if (!jcamp) {
+    // compatibility with old approach
+    if (
+      action.value.jcampTemperature &&
+      action.value.jcampTemperature.filename
+    ) {
+      jcamp += await API.cache('roc').getAttachment(
+        { _id: sampleUUID },
+        action.value.jcampTemperature.filename
+      );
     }
 
     if (action.value.jcampTime && action.value.jcampTime.filename) {
-      jcamp += '\n' + await API.cache('roc').getAttachment({ _id: sampleUUID }, action.value.jcampTime.filename);
+      jcamp +=
+        '\n' +
+        (await API.cache('roc').getAttachment(
+          { _id: sampleUUID },
+          action.value.jcampTime.filename
+        ));
     }
   }
 
   if (jcamp) {
-    let spectrum = ExtendedCommonSpectrum.fromJcamp(jcamp, { id: spectrumUUID, label: spectrumID });
+    let spectrum = ExtendedCommonSpectrum.fromJcamp(jcamp, {
+      id: spectrumUUID,
+      label: spectrumID
+    });
 
     analysesManager.addAnalysis(spectrum);
 
@@ -106,6 +120,7 @@ async function addSpectrum(action) {
       toc: JSON.parse(JSON.stringify(API.getData('currentSampleTOC')))
     };
     selectedSpectra.triggerChange();
+    return spectrum;
   }
 }
 
@@ -114,33 +129,32 @@ function getSampleUUID(entry) {
     if (entry._id) return entry._id;
     if (entry.value && entry.value._id) return entry.value._id;
   }
-  return "";
+  return '';
 }
-
 
 function getSpectrumUUID(entry) {
   return getSampleUUID(entry) + '_' + entry.__name;
 }
 
 function showAllSpectra() {
-  let selectedSpectra = API.getData("selectedSpectra");
+  let selectedSpectra = API.getData('selectedSpectra');
   for (let spectrum of selectedSpectra) {
     spectrum.display = true;
   }
-  API.getData("selectedSpectra").triggerChange();
+  API.getData('selectedSpectra').triggerChange();
 }
 
 function hideAllSpectra() {
-  let selectedSpectra = API.getData("selectedSpectra");
+  let selectedSpectra = API.getData('selectedSpectra');
   for (let spectrum of selectedSpectra) {
     spectrum.display = false;
   }
-  API.getData("selectedSpectra").triggerChange();
+  API.getData('selectedSpectra').triggerChange();
 }
 
 function removeSpectrum(action) {
-  const analysesManager = API.cache("analysesManager");
-  const selectedSpectra = API.getData("selectedSpectra");
+  const analysesManager = API.cache('analysesManager');
+  const selectedSpectra = API.getData('selectedSpectra');
   let spectrumUUID = String(action.value.id);
   analysesManager.removeAnalysis(spectrumUUID);
   for (let i = 0; i < selectedSpectra.length; i++) {
@@ -153,48 +167,43 @@ function removeSpectrum(action) {
 }
 
 function showSpectra() {
-  let selectedSpectra = API.getData("selectedSpectra");
-  let currentlySelectedSpectra = API.getData("currentlySelectedSpectra");
+  let selectedSpectra = API.getData('selectedSpectra');
+  let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
   for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
     let spectrum = selectedSpectra.filter(
       (spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id)
     )[0];
     spectrum.display = true;
   }
-  API.getData("selectedSpectra").triggerChange();
+  API.getData('selectedSpectra').triggerChange();
 }
 
 function showOnlySpectra() {
-  let selectedSpectra = API.getData("selectedSpectra");
+  let selectedSpectra = API.getData('selectedSpectra');
   if (!Array.isArray(selectedSpectra)) return;
   for (let spectrum of selectedSpectra) {
     spectrum.display = false;
   }
-  let currentlySelectedSpectra = API.getData("currentlySelectedSpectra");
+  let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
   for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
     let spectrum = selectedSpectra.filter(
       (spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id)
     )[0];
     spectrum.display = true;
   }
-  API.getData("selectedSpectra").triggerChange();
+  API.getData('selectedSpectra').triggerChange();
 }
 
 function hideSpectra() {
-  let selectedSpectra = API.getData("selectedSpectra");
-  let currentlySelectedSpectra = API.getData("currentlySelectedSpectra");
+  let selectedSpectra = API.getData('selectedSpectra');
+  let currentlySelectedSpectra = API.getData('currentlySelectedSpectra');
   for (let currentlySelectedSpectrum of currentlySelectedSpectra) {
     let spectrum = selectedSpectra.filter(
       (spectrum) => String(spectrum.id) === String(currentlySelectedSpectrum.id)
     )[0];
     spectrum.display = false;
   }
-  API.getData("selectedSpectra").triggerChange();
+  API.getData('selectedSpectra').triggerChange();
 }
 
-
 module.exports = processActions;
-
-
-
-
