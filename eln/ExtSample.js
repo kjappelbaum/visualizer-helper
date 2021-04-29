@@ -8,7 +8,7 @@ import elnPlugin from './libs/elnPlugin';
 const idb = new IDB('external-samples');
 
 const defaultOptions = {
-  varName: 'sample',
+  varName: 'sample'
 };
 
 class Sample {
@@ -19,8 +19,8 @@ class Sample {
           $content: {
             general: sample.$content.general,
             identifier: sample.$content.identifier,
-            stock: sample.$content.stock,
-          },
+            stock: sample.$content.stock
+          }
         }
       : {
           $content: {
@@ -28,16 +28,16 @@ class Sample {
               title: '',
               description: '',
               mf: '',
-              molfile: '',
+              molfile: ''
             },
             spectra: {
               nmr: [],
               mass: [],
               ir: [],
-              chromatogram: [],
+              chromatogram: []
             },
-            image: [],
-          },
+            image: []
+          }
         };
 
     this.sample = JSON.parse(JSON.stringify(s));
@@ -66,12 +66,12 @@ class Sample {
     API.setVariable('chromatogram', sampleVar, [
       '$content',
       'spectra',
-      'chromatogram',
+      'chromatogram'
     ]);
     API.setVariable('description', sampleVar, [
       '$content',
       'general',
-      'description',
+      'description'
     ]);
     API.setVariable('title', sampleVar, ['$content', 'general', 'title']);
     API.setVariable('iupac', sampleVar, ['$content', 'general', 'iupac']);
@@ -128,7 +128,7 @@ class Sample {
       }
       sample = await API.createData(
         this.options.varName,
-        sample || this.sample,
+        sample || this.sample
       );
 
       if (sample.$content.general.molfile) {
@@ -170,9 +170,14 @@ class Sample {
       droppedXPS: 'xps',
       droppedTGA: 'thermogravimetricAnalysis',
       droppedDSC: 'differentialScanningCalorimetry',
-      droppedOverview: 'image',
+      droppedHg: 'hgPorosimetry',
+      droppedDCS: 'differentialCentrifugalSedimentation',
+      droppedXray: 'xray',
+      droppedXRD: 'xrd',
+      droppedXRF: 'xrf',
+      droppedXPS: 'xps',
       droppedImage: 'image',
-      droppedGenbank: 'genbank',
+      droppedGenbank: 'genbank'
     };
 
     if (!types[name]) {
@@ -205,18 +210,18 @@ class Sample {
           newData.push({
             filename: droppedData.filename.replace(
               '.' + extension,
-              '_' + i + '.jdx',
+              '_' + i + '.jdx'
             ),
             mimetype: 'chemical/x-jcamp-dx',
             contentType: 'chemical/x-jcamp-dx',
             encoding: 'utf8',
-            content: converted[i],
+            content: converted[i]
           });
         }
 
         droppedData.filename = droppedData.filename.replace(
           '.' + extension,
-          '.jdx',
+          '.jdx'
         );
         droppedData.mimetype = 'chemical/x-jcamp-dx';
         droppedData.contentType = 'chemical/x-jcamp-dx';
@@ -229,7 +234,7 @@ class Sample {
         this.sample.$content,
         droppedData,
         {},
-        { keepContent: true },
+        { keepContent: true }
       );
     }
     this.sample.triggerChange();
