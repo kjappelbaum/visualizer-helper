@@ -1,4 +1,3 @@
-
 import superagent from 'superagent';
 import util from 'src/util/util';
 import ui from 'src/util/ui';
@@ -6,7 +5,12 @@ import _ from 'lodash';
 
 module.exports = {
   search(term) {
-    return superagent.get(`https://www.chemexper.com/search/reference/json2/quick/${encodeURIComponent(term)}`)
+    return superagent
+      .get(
+        `https://mastersearch.chemexper.com/search/reference/json2/quick/${encodeURIComponent(
+          term
+        )}`
+      )
       .then(function (result) {
         result = result.body && result.body.entry;
         if (!result) {
@@ -20,20 +24,24 @@ module.exports = {
             val.code = val.catalogID;
             list.push({
               id: i,
-              name: (val && val.iupac && val.iupac[0]) ? val.iupac[0].value : '',
+              name: val && val.iupac && val.iupac[0] ? val.iupac[0].value : '',
               row: val
             });
           }
         }
         return list;
-      }).then((data) => data.map(fromChemexper)).then(
-        (data) => data.sort((a, b) => {
-          let rn1 = (a.$content.identifier.cas.length > 0) ?
-            Number(a.$content.identifier.cas[0].value.replace(/-/g, '')) :
-            Number.MAX_SAFE_INTEGER;
-          let rn2 = (b.$content.identifier.cas.length > 0) ?
-            Number(b.$content.identifier.cas[0].value.replace(/-/g, '')) :
-            Number.MAX_SAFE_INTEGER;
+      })
+      .then((data) => data.map(fromChemexper))
+      .then((data) =>
+        data.sort((a, b) => {
+          let rn1 =
+            a.$content.identifier.cas.length > 0
+              ? Number(a.$content.identifier.cas[0].value.replace(/-/g, ''))
+              : Number.MAX_SAFE_INTEGER;
+          let rn2 =
+            b.$content.identifier.cas.length > 0
+              ? Number(b.$content.identifier.cas[0].value.replace(/-/g, ''))
+              : Number.MAX_SAFE_INTEGER;
           return rn1 - rn2;
         })
       );
@@ -42,8 +50,11 @@ module.exports = {
 
 function fromChemexper(chemexper) {
   const mol = chemexper.row.mol;
-  const mf = chemexper.row.mf && chemexper.row.mf[0] && chemexper.row.mf[0].value.value;
-  const cas = chemexper.row.rn && chemexper.row.rn.map((rn) => ({ value: numberToCas(rn.value.value) }));
+  const mf =
+    chemexper.row.mf && chemexper.row.mf[0] && chemexper.row.mf[0].value.value;
+  const cas =
+    chemexper.row.rn &&
+    chemexper.row.rn.map((rn) => ({ value: numberToCas(rn.value.value) }));
   if (!chemexper.row.iupac) chemexper.row.iupac = [];
   return {
     $content: {
@@ -70,7 +81,6 @@ function fromChemexper(chemexper) {
     source: 'reference'
   };
 }
-
 
 function numberToCas(nb) {
   nb = String(nb);
