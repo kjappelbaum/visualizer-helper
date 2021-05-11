@@ -1,7 +1,7 @@
 import API from 'src/util/api';
 import UI from 'src/util/ui';
 
-import OCLE from './libs/OCLE';
+import OCL from './libs/OCLUtils';
 import MolecularFormula from './libs/MolecularFormula';
 
 class MF {
@@ -72,7 +72,7 @@ class MF {
   _mfInfoFromMolfile() {
     var molfile = this.getMolfile();
     if (molfile) {
-      var molecule = OCLE.Molecule.fromMolfile(molfile);
+      var molecule = OCL.Molecule.fromMolfile(molfile);
       var mf = molecule.getMF().parts.join(' . ');
       try {
         let mfInfo = new MolecularFormula.MF(mf).getInfo();
@@ -142,7 +142,7 @@ class MF {
     var existingMF = this.getMF();
     var molfile = this.getMolfile();
     if (molfile) {
-      var molecule = OCLE.Molecule.fromMolfile(molfile);
+      var molecule = OCL.Molecule.fromMolfile(molfile);
       var mf = molecule.getMolecularFormula().formula;
       var existingMW = existingMF
         ? new MolecularFormula.MF(existingMF).getInfo().mw
