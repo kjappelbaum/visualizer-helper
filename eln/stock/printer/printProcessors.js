@@ -1,12 +1,12 @@
+import OCL from 'openchemlib/openchemlib-core';
+
 define([
   'src/main/datas',
   'src/util/ui',
   'browserified/twig/twig',
   'canvg',
-  '../../libs/Image',
-  '../../libs/OCLE',
-], function (Datas, UI, twig, canvg, IJS, OCL) {
-  OCL = OCL.default;
+  '../../libs/Image'
+], function (Datas, UI, twig, canvg, IJS) {
   IJS = IJS.default;
   const DataObject = Datas.DataObject;
   let chars =
@@ -33,7 +33,7 @@ define([
         throw new Error('twig processor expect twig property in format');
       }
       var template = twig.twig({
-        data: DataObject.resurrect(printFormat.twig),
+        data: DataObject.resurrect(printFormat.twig)
       });
       // Render molfile if exists
       var text = template.render(DataObject.resurrect(data));
@@ -59,7 +59,7 @@ define([
         return Promise.resolve(text);
       }
     },
-    getMolImage,
+    getMolImage
   };
 
   function checkIfMolfile(data) {
@@ -77,7 +77,7 @@ define([
     const molfileOptions = Object.assign({}, printFormat.molfileOptions, {
       width,
       height,
-      renderingScale,
+      renderingScale
     });
     let image = await getMolImage(data.molfile, molfileOptions);
     image = image.invert(); // Why do we need to invert here but not when encoding in BMP?
@@ -86,8 +86,9 @@ define([
     const bytesPerRow = image.width / 8;
     text = text.replace(
       /\^XZ[\r\n]+$/,
-      `^FO${printFormat.molfileOptions.x || 0},${printFormat.molfileOptions.y ||
-      0}^XGR:SAMPLE.GRF,1,1\r\n^XZ`
+      `^FO${printFormat.molfileOptions.x || 0},${
+        printFormat.molfileOptions.y || 0
+      }^XGR:SAMPLE.GRF,1,1\r\n^XZ`
     );
     return `~DGR:SAMPLE.GRF,${totalBytes},${bytesPerRow},${hexa}\r\n${text}`;
   }
@@ -98,8 +99,9 @@ define([
     }
     const encoder = new TextEncoder();
     text = text.replace(/END\s*$/, '');
-    text += `GRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${printFormat
-      .molfileOptions.y || 0}\n`;
+    text += `GRAPHIC BMP ${printFormat.molfileOptions.x || 0} ${
+      printFormat.molfileOptions.y || 0
+    }\n`;
     const mol = await getMolBmp(data.molfile, printFormat.molfileOptions);
     const end = '\n!+ 0 100 200 1\nEND\n';
     return concatenate(
@@ -128,7 +130,7 @@ define([
 
   async function getMolImage(molfile, options = {}) {
     const defaultMolOptions = {
-      width: 100,
+      width: 100
     };
     const renderingScale = options.renderingScale || 1;
     options = Object.assign({}, defaultMolOptions, options);
@@ -146,7 +148,7 @@ define([
         noStereoProblem: true,
         fontWeight: 'bold',
         strokeWidth: 1.5,
-        factorTextSize: 1.4,
+        factorTextSize: 1.4
       }
     );
     const canvas = document.createElement('canvas');
@@ -156,7 +158,7 @@ define([
       ignoreDimensions: true,
       log: true,
       scaleWidth: options.width,
-      scaleHeight: options.height,
+      scaleHeight: options.height
     });
 
     var pngUrl = canvas.toDataURL('png');
