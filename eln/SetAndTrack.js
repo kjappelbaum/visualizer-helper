@@ -3,6 +3,7 @@
 import API from 'src/util/api';
 import Versioning from 'src/util/versioning';
 import URI from 'uri/URI';
+import OCL from 'openchemlib/openchemlib-core';
 
 async function track() {
   var sample = JSON.parse(
@@ -19,29 +20,17 @@ async function track() {
   }
 
   var data = Versioning.getData();
-  data.onChange(function(evt) {
+  data.onChange(function (evt) {
     if (evt.jpath.length === 1 && evt.jpath[0] === 'molfile') {
       localStorage.setItem('molfile', evt.target.get());
     }
   });
 
   if (sample.molfile) {
-    if (typeof OCLE === 'undefined') {
-      let OCLE = await API.require('vh/eln/libs/OCLE');
-      let Molecule = OCLE.default ? OCLE.default.Molecule : OCLE.Molecule;
-      const molecule = Molecule.fromMolfile(sample.molfile);
-      API.createData('molfile', molecule.toMolfile());
-    } else {
-      const molecule = OCLE.Molecule.fromMolfile(sample.molfile);
-      API.createData('molfile', molecule.toMolfile());
-    }
+    const molecule = OCL.Molecule.fromMolfile(sample.molfile);
+    API.createData('molfile', molecule.toMolfile());
   } else if (sample.smiles) {
-    let OCLE;
-    if (typeof OCLE === 'undefined') {
-      OCLE = await API.require('vh/eln/libs/OCLE');
-    }
-    let Molecule = OCLE.default ? OCLE.default.Molecule : OCLE.Molecule;
-    const molecule = Molecule.fromSmiles(sample.smiles);
+    const molecule = OCL.Molecule.fromSmiles(sample.smiles);
     sample.molfile = molecule.toMolfile();
     API.createData('molfile', sample.molfile);
   } else {
