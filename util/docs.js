@@ -1,7 +1,7 @@
 define(['src/util/ui', './getViewInfo'], function (UI, getViewInfo) {
   let baseUrl = require.s.contexts._.config.baseUrl;
 
-  let pagesURL = baseUrl + '../../docs/uuid/';
+  let pagesURL = baseUrl + '../../docs/docs/uuid/';
 
   async function addPageHelp(options = {}) {
     const { iconSize = 'fa-3x' } = options;
