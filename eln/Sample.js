@@ -154,6 +154,7 @@ Your local changes will be lost.</p>`;
     createVar(sampleVar, 'hgPorosimetry');
     createVar(sampleVar, 'differentialCentrifugalSedimentation');
     createVar(sampleVar, 'isotherm');
+    createVar(sampleVar, 'pelletHardness');
     createVar(sampleVar, 'xrd');
     createVar(sampleVar, 'xrf');
     createVar(sampleVar, 'xps');
