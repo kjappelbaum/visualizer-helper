@@ -54,17 +54,22 @@ jpaths.isotherm = ['$content', 'spectra', 'isotherm'];
 jpaths.thermogravimetricAnalysis = [
   '$content',
   'spectra',
-  'thermogravimetricAnalysis',
+  'thermogravimetricAnalysis'
 ];
 jpaths.cyclicVoltammetry = ['$content', 'spectra', 'cyclicVoltammetry'];
 jpaths.hgPorosimetry = ['$content', 'spectra', 'hgPorosimetry'];
-jpaths.differentialCentrifugalSedimentation = ['$content', 'spectra', 'differentialCentrifugalSedimentation'];
+jpaths.pelletHardness = ['$content', 'spectra', 'pelletHardness'];
+jpaths.differentialCentrifugalSedimentation = [
+  '$content',
+  'spectra',
+  'differentialCentrifugalSedimentation'
+];
 jpaths.disc = ['$content', 'spectra', 'hgPorosimetry'];
 jpaths.elementalAnalysis = ['$content', 'spectra', 'elementalAnalysis'];
 jpaths.differentialScanningCalorimetry = [
   '$content',
   'spectra',
-  'differentialScanningCalorimetry',
+  'differentialScanningCalorimetry'
 ];
 jpaths.xray = ['$content', 'spectra', 'xray'];
 
