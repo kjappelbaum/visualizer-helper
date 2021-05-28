@@ -59,6 +59,7 @@ jpaths.thermogravimetricAnalysis = [
 jpaths.cyclicVoltammetry = ['$content', 'spectra', 'cyclicVoltammetry'];
 jpaths.hgPorosimetry = ['$content', 'spectra', 'hgPorosimetry'];
 jpaths.pelletHardness = ['$content', 'spectra', 'pelletHardness'];
+jpaths.oan = ['$content', 'spectra', 'oan'];
 jpaths.differentialCentrifugalSedimentation = [
   '$content',
   'spectra',

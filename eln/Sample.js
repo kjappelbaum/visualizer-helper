@@ -155,6 +155,7 @@ Your local changes will be lost.</p>`;
     createVar(sampleVar, 'differentialCentrifugalSedimentation');
     createVar(sampleVar, 'isotherm');
     createVar(sampleVar, 'pelletHardness');
+    createVar(sampleVar, 'oan');
     createVar(sampleVar, 'xrd');
     createVar(sampleVar, 'xrf');
     createVar(sampleVar, 'xps');
@@ -296,6 +297,7 @@ Your local changes will be lost.</p>`;
         droppedDSC: 'differentialScanningCalorimetry',
         droppedHg: 'hgPorosimetry',
         droppedPelletHardness: 'pelletHardness',
+        droppedOAN: 'oan',
         droppedDCS: 'differentialCentrifugalSedimentation',
         droppedXray: 'xray',
         droppedXRD: 'xrd',
