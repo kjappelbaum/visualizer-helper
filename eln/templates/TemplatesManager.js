@@ -3,21 +3,24 @@ define([
   '../../rest-on-couch/getChangedGroups',
   'src/util/api',
   'vh/rest-on-couch/showRecordInfo',
-  'src/util/ui',
-], function (
-  Roc,
-  getChangedGroups,
-  API,
-  showRecordInfo,
-  UI,
-) {
-
+  'src/util/ui'
+], function (Roc, getChangedGroups, API, showRecordInfo, UI) {
   class TemplatesManager {
+    /**
+     *
+     * @param {*} couchDB
+     * @param {object} [options={}]
+     * @param {string} [options.basename='']
+     * @param {Array} [options.categories=[{value: 'chemical', description: 'Chemical'}]]
+     */
     constructor(couchDB, options = {}) {
       this.roc = new Roc({ ...couchDB, database: 'templates' });
-      this.roc.getGroupMembership().then(groups => this.allGroups = groups);
+      this.roc.getGroupMembership().then((groups) => (this.allGroups = groups));
       this.basename = options.basename || '';
-      if (this.basename && !this.basename.endsWith('.')) this.basename += '.'
+      if (this.basename && !this.basename.endsWith('.')) this.basename += '.';
+      this.categories = options.categories || [
+        { value: 'chemical', description: 'Chemical' }
+      ];
       this.refreshTemplates();
     }
 
@@ -29,7 +32,12 @@ define([
     }
 
     async deleteTemplate(template) {
-      let result = await UI.confirm('Are you sure you want to delete this template ?', 'Delete', 'Cancel', {});
+      let result = await UI.confirm(
+        'Are you sure you want to delete this template ?',
+        'Delete',
+        'Cancel',
+        {}
+      );
       if (!result) return;
       await this.roc.delete(template.id);
       this.refreshTemplates();
@@ -37,7 +45,8 @@ define([
 
     async createTemplate(options = {}) {
       const { defaultTwig = '' } = options;
-      const form = await UI.form(`
+      const form = await UI.form(
+        `
           <div>
           <form>
               <table>
@@ -45,7 +54,10 @@ define([
               <th align=right>Category<br><span style='font-size: smaller'>Reaction code</span></th>
               <td>
                   <select name="category">
-                    <option value="chemical">Chemical</option>
+		  ${this.categories.map(
+        (category) =>
+          `<option value="${category.value}">${category.description}</option>`
+      )}
                   </select>
                   <i>
                       The sample category (currently only 'chemical')
@@ -65,7 +77,9 @@ define([
               <input type="submit" value="Create template"/>
           </form>
           </div>
-      `, {});
+      `,
+        {}
+      );
       if (!form || !form.name || form.category == null) return;
       const templateEntry = {
         $id: Math.random().toString(36).replace('0.', ''),
@@ -74,26 +88,30 @@ define([
           title: '',
           description: '',
           twig: defaultTwig,
-          category: [{
-            value: this.basename + form.category + '.' + form.name
-          }]
-        },
-      }
+          category: [
+            {
+              value: this.basename + form.category + '.' + form.name
+            }
+          ]
+        }
+      };
 
       const template = await this.roc.create(templateEntry);
       await this.refreshTemplates();
       console.log(template);
-      return template
+      return template;
     }
 
-
     async refreshTemplates() {
-      const filter = (template) => template.value.category && template.value.category.find(
-        (category) => category.value && category.value.startsWith(this.basename)
-      );
+      const filter = (template) =>
+        template.value.category &&
+        template.value.category.find(
+          (category) =>
+            category.value && category.value.startsWith(this.basename)
+        );
 
       let templates = await this.roc.query('toc', { mine: true, filter });
-      templates.forEach(template => template.readWrite = true)
+      templates.forEach((template) => (template.readWrite = true));
 
       const allTemplates = await this.roc.query('toc', { filter });
       for (let newTemplate of allTemplates) {
@@ -103,11 +121,13 @@ define([
         }
       }
 
-      templates = templates.sort((a, b) => b.value.modificationDate - a.value.modificationDate)
+      templates = templates.sort(
+        (a, b) => b.value.modificationDate - a.value.modificationDate
+      );
       await API.createData('templates', templates);
       setTimeout(() => {
         API.doAction('setSelectedTemplate', 0);
-      })
+      });
       return templates;
     }
 
@@ -136,7 +156,6 @@ define([
       }
     }
 
-
     async editTemplateAccess(entry) {
       const record = await this.roc.get(entry.id);
       const changed = await getChangedGroups(record, this.allGroups);
@@ -156,11 +175,9 @@ define([
     async showTemplateInfo(entry) {
       const record = await this.roc.get(entry.id);
       console.log('got record');
-      console.log({ record })
+      console.log({ record });
       return showRecordInfo(record);
     }
-
   }
   return TemplatesManager;
-
 });
