@@ -21,7 +21,10 @@ define(['jquery', 'src/util/api', 'src/util/versioning'], function (
     try {
       data = JSON.parse(window.localStorage.getItem(cookieName)) || {};
       if (defaultValue) {
-        if (defaultValue.version && defaultValue.version > (data.version || 0)) {
+        if (
+          defaultValue.version &&
+          defaultValue.version > (data.version || 0)
+        ) {
           data = JSON.parse(JSON.stringify(defaultValue));
         } else {
           data = $.extend(true, JSON.parse(JSON.stringify(defaultValue)), data);
